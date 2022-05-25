@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+
+// 인터페이스 import
 import { SlideProps } from './CarouselProps';
 
 const Wrapper = styled.div<SlideProps>`

@@ -1,4 +1,4 @@
-export interface CarouselProps {
+export interface ImageProps {
   url: string;
   id: string;
   title: string;
@@ -15,5 +15,15 @@ export interface SlideProps {
 
 export interface ChevronProps {
   direction: string;
+  onClick: React.EventHandler<React.MouseEvent<HTMLDivElement>>;
+}
+
+export interface ToggleAutoSlideProps {
+  onClick: React.EventHandler<React.MouseEvent<HTMLDivElement>>;
+  autoInterval: number;
+}
+
+export interface DotNavProps {
+  active: boolean;
   onClick: React.EventHandler<React.MouseEvent<HTMLDivElement>>;
 }
