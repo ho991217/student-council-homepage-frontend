@@ -120,6 +120,7 @@ function Carousel(): JSX.Element {
             index={index}
             cur={currentSlide}
             size={imgUrls.length}
+            alt={obj.alt}
           />
         ))}
     </Wrapper>

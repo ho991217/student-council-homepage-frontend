@@ -10,6 +10,7 @@ export interface SlideProps {
   index: number;
   cur: number;
   size: number;
+  alt?: string;
 }
 
 export interface ChevronProps {

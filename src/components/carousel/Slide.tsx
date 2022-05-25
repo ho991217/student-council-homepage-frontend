@@ -15,8 +15,12 @@ const Wrapper = styled.div<SlideProps>`
   transition: transform 0.25s ease-in-out;
 `;
 
-function Slide({ url, index, cur, size }: SlideProps): JSX.Element {
-  return <Wrapper url={url} index={index} cur={cur} size={size} />;
+function Slide({ url, index, cur, size, alt }: SlideProps): JSX.Element {
+  return (
+    <Wrapper url={url} index={index} cur={cur} size={size}>
+      {!url && alt}
+    </Wrapper>
+  );
 }
 
 export default Slide;
