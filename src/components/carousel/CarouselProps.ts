@@ -11,3 +11,8 @@ export interface SlideProps {
   cur: number;
   size: number;
 }
+
+export interface ChevronProps {
+  direction: string;
+  onClick: React.EventHandler<React.MouseEvent<HTMLDivElement>>;
+}
