@@ -4,8 +4,19 @@ import { DefaultTheme } from 'styled-components';
 export const theme: DefaultTheme = {
   colors: {
     primary: '#9B88BF',
-    secondary: '#3C638F',
-    white: '#3C638F',
-    grey: '#F2F2F2',
+    secondary: '#9753DC',
+    white: '#FFFFFF',
+    gray020: '#F9F9F9',
+    gray040: '#F2F3F5',
+    gray050: '#EBEDF0',
+    gray100: '#E1E3E6',
+    gray200: '#C4C8CC',
+    gray300: '#AAAEB3',
+    gray400: '#909499',
+    gray500: '#76787A',
+    gray600: '#5D5F61',
+    gray700: '#454647',
+    gray800: '#2C2D2E',
+    gray900: '#19191A',
   },
 };
