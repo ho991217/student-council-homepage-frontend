@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 // static 이미지 import
-import DefaultImg from '../../static/images/carousel/carousel-default.png';
+import DefaultImg from 'static/images/carousel/carousel-default.png';
 
 // 인터페이스 import
 import { ImageProps } from './CarouselProps';
