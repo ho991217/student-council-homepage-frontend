@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import styled, { ThemeProvider } from 'styled-components'
+import styled, { ThemeProvider, css } from 'styled-components'
 import { theme } from 'styles/Theme'
 import { NavItems } from './NavItems'
+import Dropdown from './Dropdown';
 
 
 const Nav = styled.nav`
@@ -29,6 +31,9 @@ const Ul = styled.ul`
   align-items: center;
   width: 45vw;
   margin-right: 13%;
+  ${(props) => (props.dropDown && css`
+    display: 'none';
+  `)}
 `
 
 const Li = styled.li`
@@ -44,10 +49,18 @@ const Li = styled.li`
 `
 
 function Gnb() {
+  const [dropDown, setDropDown] = useState(false);
+
+  const closeMenuHandler = () => setDropDown(false);
+
+  const dropDownHandler = () => {
+    setDropDown(dropDown => !dropDown)
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Nav>
-        <LogoLink to='/'>
+        <LogoLink to='/' onClick={closeMenuHandler}>
           <Img
             src="https://portal.dankook.ac.kr/portal-theme/images/custom/common/h1_logo.png" 
             alt="dankook logo"
@@ -56,11 +69,23 @@ function Gnb() {
           />
         </LogoLink>
 
-        <Ul>
+        <Ul dropDown={dropDown}>
+          <Li>
+            <Link
+              to='/' 
+              onClick={dropDownHandler}
+            >
+              총학생회
+            </Link>
+            {dropDown && <Dropdown />}
+          </Li>
           {NavItems.map((item) => {
             return (
               <Li key={item.id}>
-                <Link to={item.path}>
+                <Link 
+                  to={item.path}
+                  onClick={closeMenuHandler}
+                >
                   {item.title}
                 </Link>
               </Li>
