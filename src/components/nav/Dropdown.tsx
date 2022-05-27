@@ -1,17 +1,23 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { MenuItems } from './MenuItems';
+import { NavigationProps } from './NavItems';
 
 const Ul = styled.ul`
   position: absolute;
-  top: 120px;
-  max-width: 150px;
-  width: 9%;
-  font-style: normal;
-  font-weight: 700;
+  width: 150px;
   background-color: ${(props) => props.theme.colors.primary};
-  list-style: none;
-  z-index: 1000;
+  z-index: 15;
+  animation: popOpen 0.5s ease-out forwards;
+  @keyframes popOpen {
+    0% {
+      opacity: 0;
+      top: 0;
+    }
+    100% {
+      opacity: 1;
+      top: 3.02rem;
+    }
+  }
 `;
 
 const Li = styled.li`
@@ -23,26 +29,16 @@ const Li = styled.li`
   &:hover {
     background-color: ${(props) => props.theme.colors.secondary};
   }
-
-  #menus {
-    color: ${(props) => props.theme.colors.white};
-    font-size: 1.125rem;
-    text-decoration: none;
-  }
 `;
 
-function Dropdown(): JSX.Element {
+function Dropdown({ path }: { path: NavigationProps[] }): JSX.Element {
   return (
     <Ul>
-      {MenuItems.map((item) => {
-        return (
-          <Li key={item.id}>
-            <Link to={item.path} id="menus">
-              {item.title}
-            </Link>
-          </Li>
-        );
-      })}
+      {path.map((item) => (
+        <Li key={item.id}>
+          <Link to="/">{item.title}</Link>
+        </Li>
+      ))}
     </Ul>
   );
 }
