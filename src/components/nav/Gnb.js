@@ -12,7 +12,7 @@ const Nav = styled.nav`
   align-items: center;
   width: 100vw;
   height: 80px;
-  font-family: 'Apple SD Gothic Neo';
+  font-family: 'Apple SD Gothic Neo'; // TODO: GlobalStyles에 root 폰트 명시 되어 있음
   font-style: normal;
   font-weight: 700;
   overflow: hidden;
@@ -22,7 +22,7 @@ const LogoLink = styled(Link)`
 `;
 
 const Img = styled.img`
-  cursor: pointer;
+  cursor: pointer; // FIXME: 불필요한 코드 같습니다.
 `;
 
 const Ul = styled.ul`
@@ -50,6 +50,8 @@ const Li = styled.li`
   }
 `;
 
+// FIXME: hover 시에 dropdown 되면 좋을 것 같습니다.
+// TODO: sticky로 동작하게 만들어주시면 좋겠습니다.
 function Gnb() {
   const [dropDown, setDropDown] = useState(false);
 

@@ -7,7 +7,7 @@ const Container = styled.div`
   align-items: center;
   color: ${(props) => props.theme.colors.white};
   font-size: 0.8125rem;
-  font-family: 'Apple SD Gothic Neo';
+  font-family: 'Apple SD Gothic Neo';     // TODO: 마찬가지로 폰트 통일 위해서 글로벌 폰트 사용 부탁드립니다.
   font-style: normal;
   font-weight: 700;
   line-height: 0.8125;

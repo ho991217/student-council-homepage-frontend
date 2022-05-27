@@ -1,4 +1,6 @@
 // TODO: s각 페이지 만들어지면 경로 수정
+
+// NavItem 파일 참고
 export const MenuItems = [
   {
     title: '인사말',
