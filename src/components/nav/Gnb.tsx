@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Logo from 'static/images/logos/logo-transparent.png';
 import { NavItems } from './NavItems';
 import Dropdown from './Dropdown';
+import UserMenu from './UserMenu';
 
 const Nav = styled.nav`
   display: flex;
@@ -51,50 +52,42 @@ const Li = styled.li`
 function Gnb() {
   const [open, setOpen] = useState([false, false, false, false]);
   return (
-    <Nav>
-      <LogoLink to="/">
-        <Img src={Logo} alt="dankook logo" width={200} height={40} />
-      </LogoLink>
+    <>
+      <UserMenu />
+      <Nav>
+        <LogoLink to="/">
+          <Img src={Logo} alt="dankook logo" width={200} height={40} />
+        </LogoLink>
 
-      <Ul>
-        {NavItems.map((item) => (
-          <Li
-            key={item.id}
-            onMouseOver={() => {
-              setOpen(() => {
-                const newOpen = [...open];
-                newOpen[Number(item.id)] = true;
-                return newOpen;
-              });
-            }}
-            onMouseLeave={() => {
-              setOpen(() => {
-                const newOpen = [...open];
-                newOpen[Number(item.id)] = false;
-                return newOpen;
-              });
-            }}
-          >
-            <Link to={item.path}>{item.title}</Link>
-            {item.subPath && open[Number(item.id)] && (
-              <Dropdown path={item.subPath} />
-            )}
-          </Li>
-        ))}
-      </Ul>
-    </Nav>
+        <Ul>
+          {NavItems.map((item) => (
+            <Li
+              key={item.id}
+              onMouseOver={() => {
+                setOpen(() => {
+                  const newOpen = [...open];
+                  newOpen[Number(item.id)] = true;
+                  return newOpen;
+                });
+              }}
+              onMouseLeave={() => {
+                setOpen(() => {
+                  const newOpen = [...open];
+                  newOpen[Number(item.id)] = false;
+                  return newOpen;
+                });
+              }}
+            >
+              <Link to={item.path}>{item.title}</Link>
+              {item.subPath && open[Number(item.id)] && (
+                <Dropdown path={item.subPath} />
+              )}
+            </Li>
+          ))}
+        </Ul>
+      </Nav>
+    </>
   );
 }
 
 export default Gnb;
-//           }}>
-//             <Link to={item.path}>{item.title}</Link>
-//             {item.subPath && <Dropdown path={item.subPath} />}
-//           </Li>
-//         ))}
-//       </Ul>
-//     </Nav>
-//   );
-// }
-
-// export default Gnb;
