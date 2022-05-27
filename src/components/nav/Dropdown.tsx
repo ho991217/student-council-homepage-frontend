@@ -4,20 +4,10 @@ import { NavigationProps } from './NavItems';
 
 const Ul = styled.ul`
   position: absolute;
+  top: 80px;
   width: 150px;
   background-color: ${(props) => props.theme.colors.primary};
   z-index: 15;
-  animation: popOpen 0.5s ease-out forwards;
-  @keyframes popOpen {
-    0% {
-      opacity: 0;
-      top: 0;
-    }
-    100% {
-      opacity: 1;
-      top: 3.02rem;
-    }
-  }
 `;
 
 const Li = styled.li`

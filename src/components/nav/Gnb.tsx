@@ -31,12 +31,17 @@ const Ul = styled.ul`
   align-items: center;
   width: 45vw;
   margin-right: 13%;
+  height: 100%;
 `;
 
 const Li = styled.li`
   width: 9.375rem;
+  height: 100%;
   text-align: center;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   a {
     color: ${(props) => props.theme.colors.gray900};
     font-size: 1.125rem;
@@ -46,7 +51,7 @@ const Li = styled.li`
 // FIXME: hover 시에 dropdown 되면 좋을 것 같습니다.
 // TODO: sticky로 동작하게 만들어주시면 좋겠습니다.
 function Gnb() {
-  const [infoOpen, setInfoOpen] = useState(false);
+  const [open, setOpen] = useState([false, false, false, false]);
   return (
     <Nav>
       <LogoLink to="/">
@@ -55,9 +60,27 @@ function Gnb() {
 
       <Ul>
         {NavItems.map((item) => (
-          <Li key={item.id} onMouseOver={() => console.log('z')}>
+          <Li
+            key={item.id}
+            onMouseOver={() => {
+              setOpen(() => {
+                const newOpen = [...open];
+                newOpen[Number(item.id)] = true;
+                return newOpen;
+              });
+            }}
+            onMouseLeave={() => {
+              setOpen(() => {
+                const newOpen = [...open];
+                newOpen[Number(item.id)] = false;
+                return newOpen;
+              });
+            }}
+          >
             <Link to={item.path}>{item.title}</Link>
-            {item.subPath && <Dropdown path={item.subPath} />}
+            {item.subPath && open[Number(item.id)] && (
+              <Dropdown path={item.subPath} />
+            )}
           </Li>
         ))}
       </Ul>
@@ -66,3 +89,14 @@ function Gnb() {
 }
 
 export default Gnb;
+//           }}>
+//             <Link to={item.path}>{item.title}</Link>
+//             {item.subPath && <Dropdown path={item.subPath} />}
+//           </Li>
+//         ))}
+//       </Ul>
+//     </Nav>
+//   );
+// }
+
+// export default Gnb;
