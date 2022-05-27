@@ -1,4 +1,4 @@
-import Home from 'pages/Home';
+import Home from 'pages/home/Home';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import UserMenu from './components/nav/UserMenu';
 import Gnb from './components/nav/Gnb';
