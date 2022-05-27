@@ -63,13 +63,14 @@ const Li = styled.li`
 
 const SubMenuLink = styled(Link)`
   color: ${(props) => props.theme.colors.white};
-  font-weight: 600;
+  font-weight: 500;
   font-size: 1.125rem;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
+  user-select: none;
 `;
 
 const Svg = styled.svg`

@@ -11,7 +11,7 @@ const Container = styled.div`
   font-size: 0.8125rem;
   width: 100%;
   height: 40px;
-
+  user-select: none;
   a {
     color: ${(props) => props.theme.colors.white};
   }

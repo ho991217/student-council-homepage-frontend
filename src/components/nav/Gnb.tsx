@@ -16,6 +16,7 @@ const Nav = styled.nav`
   top: 0;
   z-index: 99;
   background-color: white;
+  user-select: none;
 `;
 
 const InnerNav = styled.div`
@@ -43,6 +44,10 @@ const Li = styled.li`
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.1s ease-in-out;
+  :hover {
+    background-color: rgba(0, 0, 0, 0.09);
+  }
 `;
 
 const MenuLink = styled(Link)`
@@ -57,7 +62,16 @@ const MenuLink = styled(Link)`
 `;
 
 function Gnb(): JSX.Element {
-  const [open, setOpen] = useState<boolean[]>([false, false, false, false]);
+  const [open, setOpen] = useState<boolean[]>(
+    Array.from({ length: NavItems.length }, () => false),
+  );
+
+  const handleHover = (index: number, state: boolean): void => {
+    const newOpen = [...open];
+    newOpen[index] = state;
+    setOpen(newOpen);
+  };
+
   return (
     <>
       <UserMenu />
@@ -68,20 +82,8 @@ function Gnb(): JSX.Element {
             {NavItems.map((item) => (
               <Li
                 key={item.id}
-                onMouseOver={() => {
-                  setOpen(() => {
-                    const newOpen = [...open];
-                    newOpen[Number(item.id)] = true;
-                    return newOpen;
-                  });
-                }}
-                onMouseLeave={() => {
-                  setOpen(() => {
-                    const newOpen = [...open];
-                    newOpen[Number(item.id)] = false;
-                    return newOpen;
-                  });
-                }}
+                onMouseOver={() => handleHover(Number(item.id), true)}
+                onMouseLeave={() => handleHover(Number(item.id), false)}
               >
                 <MenuLink to={item.path}>{item.title}</MenuLink>
                 {item.subPath && open[Number(item.id)] && (

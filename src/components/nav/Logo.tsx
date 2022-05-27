@@ -1,8 +1,10 @@
+// 클릭시에 홈으로 돌아가는 로고 링크 (재사용 가능)
+
 import { Link } from 'react-router-dom';
 import LogoImg from 'static/images/logos/logo-transparent.png';
 import styled from 'styled-components';
 
-const Container = styled(Link).attrs({ to: '/home' })`
+const Container = styled(Link).attrs({ to: '/' })`
   display: flex;
   height: 100%;
   align-items: center;
