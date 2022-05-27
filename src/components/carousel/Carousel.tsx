@@ -56,7 +56,7 @@ function Carousel(): JSX.Element {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [autoInterval, setAutoInterval] = useState(5000);
 
-  // 이미지를 불러오는 함수, 백엔드 통신시에 변경해야 할 부분
+  // TODO: 이미지를 불러오는 함수, 백엔드 통신시에 변경해야 할 부분
   // 권장 해상도: 1920x530 (1440x530 영역 밖으로는 넘어가지 않는 것 권장)
   const getImages = async () => {
     axios.get('https://picsum.photos/1920/530').then((res) => {
