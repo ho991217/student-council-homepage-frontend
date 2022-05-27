@@ -1,4 +1,4 @@
-// 각 페이지 만들어지면 경로 수정
+// TODO: s각 페이지 만들어지면 경로 수정
 export const MenuItems = [
   {
     title: '인사말',
