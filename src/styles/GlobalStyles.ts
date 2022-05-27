@@ -8,7 +8,4 @@ export const GlobalStyles = createGlobalStyle`
     :root {
         font-family: 'Pretendard', sans-serif;
     }
-    a {
-        text-decoration: none;
-    }
 `;
