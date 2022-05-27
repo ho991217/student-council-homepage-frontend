@@ -9,7 +9,7 @@ const Container = styled(Link).attrs({ to: '/' })`
   height: 100%;
   align-items: center;
   justify-content: center;
-  margin-left: 25px;
+  margin-left: 50px;
 `;
 
 function Logo(): JSX.Element {

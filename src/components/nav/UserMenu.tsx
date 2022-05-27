@@ -14,6 +14,7 @@ const Container = styled.div`
   user-select: none;
   a {
     color: ${(props) => props.theme.colors.white};
+    margin: 0px 20px;
   }
 `;
 
@@ -30,12 +31,11 @@ const Links = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  a {
-    margin-right: 20px;
-  }
 `;
 
-const LoginLink = styled(Link)``;
+const LoginLink = styled(Link)`
+  margin: 0px 20px;
+`;
 
 function UserMenu(): JSX.Element {
   return (
