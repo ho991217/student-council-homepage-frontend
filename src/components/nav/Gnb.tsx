@@ -48,8 +48,6 @@ const Li = styled.li`
   }
 `;
 
-// FIXME: hover 시에 dropdown 되면 좋을 것 같습니다.
-// TODO: sticky로 동작하게 만들어주시면 좋겠습니다.
 function Gnb() {
   const [open, setOpen] = useState([false, false, false, false]);
   return (
