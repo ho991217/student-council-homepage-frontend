@@ -53,8 +53,8 @@ const DotNavContainer = styled.div`
 // 메인 컴포넌트
 function Carousel(): JSX.Element {
   const [images, setImages] = useState<ImageProps[]>([]);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [autoInterval, setAutoInterval] = useState(5000);
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+  const [autoInterval, setAutoInterval] = useState<number>(5000);
 
   // TODO: 이미지를 불러오는 함수, 백엔드 통신시에 변경해야 할 부분
   // 권장 해상도: 1920x530 (1440x530 영역 밖으로는 넘어가지 않는 것 권장)
