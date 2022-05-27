@@ -12,7 +12,6 @@ const Nav = styled.nav`
   align-items: center;
   width: 100vw;
   height: 80px;
-  font-family: 'Apple SD Gothic Neo'; // TODO: GlobalStyles에 root 폰트 명시 되어 있음
   font-style: normal;
   font-weight: 700;
   overflow: hidden;
@@ -21,11 +20,9 @@ const LogoLink = styled(Link)`
   margin-left: 12.5%;
 `;
 
-const Img = styled.img`
-  cursor: pointer; // FIXME: 불필요한 코드 같습니다.
-`;
+const Img = styled.img``;
 
-const Ul = styled.ul`
+const Ul = styled.ul<{ dropDown: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;

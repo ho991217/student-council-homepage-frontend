@@ -1,13 +1,12 @@
-import Home from "pages/Home";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import UserMenu from './components/nav/UserMenu'
-import Gnb from './components/nav/Gnb'
-
+import Home from 'pages/Home';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import UserMenu from './components/nav/UserMenu';
+import Gnb from './components/nav/Gnb';
 
 function Router() {
   return (
     <BrowserRouter>
-      <UserMenu />  
+      <UserMenu />
       <Gnb />
       <Routes>
         <Route path="/" element={<Home />} />
