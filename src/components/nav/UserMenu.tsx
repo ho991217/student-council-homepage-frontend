@@ -35,12 +35,9 @@ const Links = styled.div`
   }
 `;
 
-const LoginLink = styled(Link)`
-  /* text-align: right;
-  margin-right: 12.4%; */
-`;
+const LoginLink = styled(Link)``;
 
-function UserMenu() {
+function UserMenu(): JSX.Element {
   return (
     <Container>
       <InnerContainer>
