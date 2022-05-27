@@ -4,6 +4,7 @@ import { ChevronProps } from './CarouselProps';
 const Wrapper = styled.div<{ direction: string }>`
   height: 100%;
   width: 100px;
+  margin: -40px;
   display: flex;
   align-items: center;
   justify-content: center;
