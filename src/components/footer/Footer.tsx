@@ -3,14 +3,15 @@ import styled from 'styled-components';
 import Logo from 'components/global/Logo';
 
 const Wrapper = styled.footer`
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 40px;
   width: 100%;
-  height: 185px;
-  bottom: 0;
-  z-index: 99;
+  min-height: 185px;
+  flex-grow: 1;
   background-color: ${({ theme }) => theme.colors.white};
-  user-select: none;
+  border-top: 1px solid ${({ theme }) => theme.colors.gray050};
 `;
 
 const Container = styled.div`

@@ -7,7 +7,6 @@ export const GlobalStyles = createGlobalStyle`
     ${reset}
     :root {
         font-family: 'Pretendard', sans-serif;
-        
     }
     * {
         box-sizing: border-box;
@@ -20,7 +19,9 @@ export const GlobalStyles = createGlobalStyle`
         background-color: ${(props) => props.theme.colors.gray040};
         position: relative;
     }
-    body {
-        background-color: ${(props) => props.theme.colors.gray040};
+    #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
     }
 `;
