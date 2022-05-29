@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { NavigationProps } from './NavItems';
+import { NavigationProps } from './NavigationProps';
 
 const Ul = styled.ul`
   position: absolute;
