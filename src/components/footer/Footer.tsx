@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import LogoImg from '../../static/images/logos/logo-transparent.png';
+import LogoImg from 'static/images/logos/logo-transparent.png';
 
 const Wrapper = styled.footer`
   display: grid;
@@ -35,7 +35,7 @@ const Logo = styled.div`
 `;
 
 const Policy = styled.div`
-  display: flex:
+  display: flex;
   flex-direction: row;
 `;
 
