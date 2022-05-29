@@ -14,7 +14,7 @@ export const NavItems: NavigationProps[] = [
       },
       {
         title: '조직도',
-        path: '/',
+        path: '/organization',
         id: 2,
       },
       {
