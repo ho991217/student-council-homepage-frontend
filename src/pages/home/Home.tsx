@@ -3,7 +3,7 @@ import Tiles from 'components/home/Tiles';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  height: 100vh;
+  /* height: 100vh; */
   width: 100vw;
   display: flex;
   flex-direction: column;
