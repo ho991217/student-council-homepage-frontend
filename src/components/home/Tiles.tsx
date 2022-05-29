@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Tile from './Tile';
 
 const Container = styled.div`
   width: 950px;
@@ -33,7 +34,9 @@ const SmallTile = styled.div`
 function Tiles(): JSX.Element {
   return (
     <Container>
-      <BigTile>학사일정</BigTile>
+      <BigTile>
+        <Tile title="학사일정" linkTitle="학사일정바로가기" to="/" />
+      </BigTile>
       <SmallTileContainer>
         <SmallTile>총학소식</SmallTile>
         <SmallTile>실시간 인기청원</SmallTile>

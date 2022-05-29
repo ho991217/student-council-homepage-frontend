@@ -7,6 +7,9 @@ export const GlobalStyles = createGlobalStyle`
     ${reset}
     :root {
         font-family: 'Pretendard', sans-serif;
+        
+    }
+    * {
         box-sizing: border-box;
     }
     a {
