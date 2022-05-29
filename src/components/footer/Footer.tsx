@@ -6,7 +6,6 @@ const Wrapper = styled.footer`
   place-items: center;
   width: 100%;
   height: 185px;
-  position: absolute;
   bottom: 0;
   z-index: 99;
   background-color: ${({ theme }) => theme.colors.white};
@@ -41,7 +40,7 @@ const Policy = styled.div`
 
 const Span = styled.span`
   font-weight: 400;
-  font-size: 12px;
+  font-size: 11px;
   margin: 3px;
   line-height: 14px;
   margin-right: 10px;

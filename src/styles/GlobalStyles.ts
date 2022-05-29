@@ -18,5 +18,6 @@ export const GlobalStyles = createGlobalStyle`
     }
     body {
         background-color: ${(props) => props.theme.colors.gray040};
+        position: relative;
     }
 `;

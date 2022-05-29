@@ -8,6 +8,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-top: 40px;
+  margin-bottom: 80px;
 `;
 
 const BigTile = styled.div`
