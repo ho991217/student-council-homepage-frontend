@@ -21,10 +21,15 @@ const TitleContainer = styled.div`
 
 const Title = styled.h1`
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.accent};
 `;
 
-const MoreLink = styled(Link)``;
+const MoreLink = styled(Link)`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.gray600};
+`;
 
 function Tile({ title, linkTitle, to }: TileProps): JSX.Element {
   return (
