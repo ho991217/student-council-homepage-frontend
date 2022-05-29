@@ -93,7 +93,7 @@ function Dropdown({ path }: { path: NavigationProps[] }): JSX.Element {
 
       {path.map((item) => (
         <Li key={item.id}>
-          <SubMenuLink to="/">{item.title}</SubMenuLink>
+          <SubMenuLink to={item.path}>{item.title}</SubMenuLink>
         </Li>
       ))}
     </Ul>
