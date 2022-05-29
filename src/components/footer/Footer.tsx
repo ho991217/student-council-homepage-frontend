@@ -6,8 +6,8 @@ const Wrapper = styled.footer`
   place-items: center;
   width: 100%;
   height: 185px;
-  position: sticky;
-  top: 0;
+  position: absolute;
+  bottom: 0;
   z-index: 99;
   background-color: ${({ theme }) => theme.colors.white};
   user-select: none;
@@ -58,14 +58,16 @@ function Footer(): JSX.Element {
         </Logo>
         <InnerContainer>
           <Span>
-          {' 주소: 경기도 용인시 수지구 죽전동 1491 단국대학교 혜당관 406호 총학생회실 | 전화: 031)8005-2680~1 | 이메일: 54thplay@naver.com | 페이스북: @dkuplay54 | 인스타: @dku_play '}
+            {
+              ' 주소: 경기도 용인시 수지구 죽전동 1491 단국대학교 혜당관 406호 총학생회실 | 전화: 031)8005-2680~1 | 이메일: 54thplay@naver.com | 페이스북: @dkuplay54 | 인스타: @dku_play '
+            }
           </Span>
           <Policy>
             <Span>이용약관</Span>
             <Span>개인정보 처리방침</Span>
             <Span>만든사람들</Span>
           </Policy>
-        </InnerContainer>      
+        </InnerContainer>
       </Container>
     </Wrapper>
   );
