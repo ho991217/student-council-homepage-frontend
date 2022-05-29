@@ -1,12 +1,6 @@
+import { NavigationProps } from './NavigationProps';
+
 // TODO: 각 페이지 만들어지면 경로 수정v
-
-export interface NavigationProps {
-  title: string;
-  path: string;
-  id: string;
-  subPath?: NavigationProps[];
-}
-
 export const NavItems: NavigationProps[] = [
   {
     title: '총학생회 정보',
