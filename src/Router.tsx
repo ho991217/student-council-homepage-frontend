@@ -1,7 +1,7 @@
-import Footer from 'components/footer/Footer';
+import Footer from 'components/global/footer/Footer';
 import Home from 'pages/home/Home';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Gnb from './components/nav/Gnb';
+import Gnb from './components/global/nav/Gnb';
 
 function Router() {
   return (

@@ -1,4 +1,4 @@
-import Carousel from 'components/carousel/Carousel';
+import Carousel from 'components/home/carousel/Carousel';
 import Tiles from 'components/home/Tiles';
 import styled from 'styled-components';
 

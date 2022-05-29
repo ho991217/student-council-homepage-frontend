@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Logo from '../global/Logo';
+import Logo from '../Logo';
 import { NavItems } from './NavItems';
 import Dropdown from './Dropdown';
 import UserMenu from './UserMenu';
