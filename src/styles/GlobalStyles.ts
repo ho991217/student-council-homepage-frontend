@@ -14,6 +14,7 @@ export const GlobalStyles = createGlobalStyle`
     }
     a {
         text-decoration: none;
+        color: inherit;
     }
     body {
         background-color: ${(props) => props.theme.colors.gray040};
