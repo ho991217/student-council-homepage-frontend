@@ -45,7 +45,7 @@ const Span = styled.span`
   margin: 3px;
   line-height: 14px;
   margin-right: 10px;
-  color: ${({ theme }) => theme.colors.gray030};
+  color: ${({ theme }) => theme.colors.gray300};
 `;
 
 // 이용약관 등등 디자인 나오면 수정
