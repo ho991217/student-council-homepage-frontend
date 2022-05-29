@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-// import LogoImg from 'static/images/logos/logo-transparent.png';
 
-import Logo from 'components/nav/Logo';
+import Logo from 'components/global/Logo';
 
 const Wrapper = styled.footer`
   display: grid;
@@ -25,6 +24,7 @@ const Container = styled.div`
 const InnerContainer = styled.div`
   display: flex;
   flex-direction: column;
+  margin-left: 20px;
 `;
 
 const Policy = styled.div`
