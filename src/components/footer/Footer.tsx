@@ -1,5 +1,7 @@
 import styled from 'styled-components';
-import LogoImg from 'static/images/logos/logo-transparent.png';
+// import LogoImg from 'static/images/logos/logo-transparent.png';
+
+import Logo from 'components/nav/Logo';
 
 const Wrapper = styled.footer`
   display: grid;
@@ -25,14 +27,6 @@ const InnerContainer = styled.div`
   flex-direction: column;
 `;
 
-const Logo = styled.div`
-  display: flex;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  margin: 0px 50px;
-`;
-
 const Policy = styled.div`
   display: flex;
   flex-direction: row;
@@ -52,9 +46,7 @@ function Footer(): JSX.Element {
   return (
     <Wrapper>
       <Container>
-        <Logo>
-          <img src={LogoImg} alt="dankook logo" height={50} />
-        </Logo>
+        <Logo />
         <InnerContainer>
           <Span>
             {
