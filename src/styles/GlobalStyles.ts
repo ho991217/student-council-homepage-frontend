@@ -20,4 +20,7 @@ export const GlobalStyles = createGlobalStyle`
         background-color: ${(props) => props.theme.colors.gray040};
         position: relative;
     }
+    body {
+        background-color: ${(props) => props.theme.colors.gray040};
+    }
 `;
