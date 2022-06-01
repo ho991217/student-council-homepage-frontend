@@ -9,7 +9,7 @@ export const NavItems: NavigationProps[] = [
     subPath: [
       {
         title: '인사말',
-        path: '/hello',
+        path: '/greeting',
         id: 1,
       },
       {
@@ -19,19 +19,19 @@ export const NavItems: NavigationProps[] = [
       },
       {
         title: '오시는길',
-        path: '/',
+        path: '/location',
         id: 3,
       },
     ],
   },
   {
     title: '회칙',
-    path: '/',
+    path: '/rules',
     id: 2,
   },
   {
     title: '회의록',
-    path: '/',
+    path: '/conference',
     id: 3,
   },
   {
@@ -41,12 +41,12 @@ export const NavItems: NavigationProps[] = [
     subPath: [
       {
         title: '청원게시판',
-        path: '/',
+        path: '/board-petition',
         id: 1,
       },
       {
         title: '문의게시판',
-        path: '/',
+        path: '/board-inquiry',
         id: 2,
       },
     ],

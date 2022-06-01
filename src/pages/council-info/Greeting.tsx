@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
-function Hello(): JSX.Element {
+function Greeting(): JSX.Element {
   const [url, setUrl] = useState('');
   const getImages = async () => {
     axios.get('https://picsum.photos/1200/620').then((res) => {
@@ -49,4 +49,4 @@ function Hello(): JSX.Element {
   );
 }
 
-export default Hello;
+export default Greeting;
