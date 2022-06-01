@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Block from 'components/council-info/Block';
+import Block from 'components/global/Block';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 

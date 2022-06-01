@@ -25,4 +25,9 @@ export const theme: DefaultTheme = {
     smallSubTitle: 'font-size: 14px; font-weight: 500;',
     smallDescription: 'font-size: 11px; font-weight: 400;',
   },
+  media: {
+    mobile: '@media (max-width: 768px)',
+    tablet: '@media (max-width: 1024px)',
+    desktop: '@media (min-width: 1024px)',
+  },
 };

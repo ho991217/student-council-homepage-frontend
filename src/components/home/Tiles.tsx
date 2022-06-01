@@ -9,12 +9,19 @@ const Container = styled.div`
   justify-content: space-between;
   margin-top: 40px;
   margin-bottom: 80px;
+  ${({ theme }) => theme.media.mobile} {
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
 `;
 
 const BigTile = styled.div`
   height: 100%;
   width: 465px;
   background-color: ${({ theme }) => theme.colors.white};
+  ${({ theme }) => theme.media.mobile} {
+    margin-bottom: 10px;
+  }
 `;
 
 const SmallTileContainer = styled.div`
@@ -30,6 +37,9 @@ const SmallTile = styled.div`
   width: 100%;
   height: 178px;
   background-color: ${({ theme }) => theme.colors.white};
+  ${({ theme }) => theme.media.mobile} {
+    margin-bottom: 10px;
+  }
 `;
 
 function Tiles(): JSX.Element {

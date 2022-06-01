@@ -25,5 +25,10 @@ declare module 'styled-components' {
       smallSubTitle: string;
       smallDescription: string;
     };
+    media: {
+      mobile: string;
+      tablet: string;
+      desktop: string;
+    };
   }
 }
