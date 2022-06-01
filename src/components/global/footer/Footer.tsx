@@ -34,8 +34,7 @@ const Policy = styled.div`
 `;
 
 const Span = styled.span`
-  font-weight: 400;
-  font-size: 11px;
+  ${({ theme }) => theme.fonts.smallDescription}
   margin: 3px;
   line-height: 14px;
   margin-right: 10px;

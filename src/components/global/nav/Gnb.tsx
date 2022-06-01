@@ -52,8 +52,7 @@ const Li = styled.li`
 
 const MenuLink = styled(Link)`
   color: ${(props) => props.theme.colors.gray900};
-  font-weight: 600;
-  font-size: 1.125rem;
+  ${({ theme }) => theme.fonts.smallTitle}
   display: flex;
   align-items: center;
   justify-content: center;

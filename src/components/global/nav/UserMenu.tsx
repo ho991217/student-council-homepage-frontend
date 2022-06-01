@@ -7,8 +7,7 @@ const Container = styled.div`
 
   color: ${(props) => props.theme.colors.white};
   background-color: ${(props) => props.theme.colors.primary};
-
-  font-size: 0.8125rem;
+  ${({ theme }) => theme.fonts.smallSubTitle}
   width: 100%;
   height: 40px;
   user-select: none;

@@ -20,5 +20,10 @@ declare module 'styled-components' {
       gray800: string;
       gray900: string;
     };
+    fonts: {
+      smallTitle: string;
+      smallSubTitle: string;
+      smallDescription: string;
+    };
   }
 }

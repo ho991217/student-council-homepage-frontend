@@ -20,14 +20,12 @@ const TitleContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 18px;
-  font-weight: 600;
+  ${({ theme }) => theme.fonts.smallTitle}
   color: ${({ theme }) => theme.colors.accent};
 `;
 
 const MoreLink = styled(Link)`
-  font-size: 14px;
-  font-weight: 500;
+  ${({ theme }) => theme.fonts.smallSubTitle}
   color: ${({ theme }) => theme.colors.gray600};
 `;
 
