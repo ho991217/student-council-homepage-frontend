@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 
 import Logo from '../Logo';
 import { NavItems } from './NavItems';
@@ -79,20 +80,45 @@ function Gnb(): JSX.Element {
           <Link to="/">
             <Logo />
           </Link>
-          <Ul>
-            {NavItems.map((item) => (
-              <Li
-                key={item.id}
-                onMouseOver={() => handleHover(Number(item.id), true)}
-                onMouseLeave={() => handleHover(Number(item.id), false)}
-              >
-                <MenuLink to={item.path}>{item.title}</MenuLink>
-                {item.subPath && open[Number(item.id)] && (
-                  <Dropdown path={item.subPath} />
-                )}
-              </Li>
-            ))}
-          </Ul>
+
+          <Desktop>
+            <Ul>
+              {NavItems.map((item) => (
+                <Li
+                  key={item.id}
+                  onMouseOver={() => handleHover(Number(item.id), true)}
+                  onMouseLeave={() => handleHover(Number(item.id), false)}
+                >
+                  <MenuLink to={item.path}>{item.title}</MenuLink>
+                  {item.subPath && open[Number(item.id)] && (
+                    <Dropdown path={item.subPath} />
+                  )}
+                </Li>
+              ))}
+            </Ul>
+          </Desktop>
+
+          <Tablet>
+            <Ul>
+              {NavItems.map((item) => (
+                <Li
+                  key={item.id}
+                  onMouseOver={() => handleHover(Number(item.id), true)}
+                  onMouseLeave={() => handleHover(Number(item.id), false)}
+                >
+                  <MenuLink to={item.path}>{item.title}</MenuLink>
+                  {item.subPath && open[Number(item.id)] && (
+                    <Dropdown path={item.subPath} />
+                  )}
+                </Li>
+              ))}
+            </Ul>
+          </Tablet>
+
+          <Mobile>
+            {/* 모바일 코드 영역 */}
+            <div>모바일</div>
+          </Mobile>
         </InnerNav>
       </Nav>
     </>

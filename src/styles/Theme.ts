@@ -26,8 +26,8 @@ export const theme: DefaultTheme = {
     smallDescription: 'font-size: 11px; font-weight: 400;',
   },
   media: {
-    mobile: '@media (max-width: 768px)',
-    tablet: '@media (max-width: 1024px)',
-    desktop: '@media (min-width: 1024px)',
+    mobile: '@media (max-width: 767px)',
+    tablet: '@media (min-width: 768px) and (max-width: 991px)',
+    desktop: '@media (min-width: 992px)',
   },
 };
