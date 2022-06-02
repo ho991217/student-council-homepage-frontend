@@ -61,6 +61,10 @@ const MenuLink = styled(Link)`
   height: 100%;
 `;
 
+const Svg = styled.svg`
+  margin-right: 10px;
+`;
+
 function Gnb(): JSX.Element {
   const [open, setOpen] = useState<boolean[]>(
     Array.from({ length: NavItems.length }, () => false),
@@ -117,7 +121,33 @@ function Gnb(): JSX.Element {
 
           <Mobile>
             {/* 모바일 코드 영역 */}
-            <div>모바일</div>
+
+            <Svg
+              width="36"
+              height="36"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M5 7H19"
+                stroke="#19191A"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <path
+                d="M5 12H19"
+                stroke="#19191A"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <path
+                d="M5 17H19"
+                stroke="#19191A"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </Svg>
           </Mobile>
         </InnerNav>
       </Nav>
