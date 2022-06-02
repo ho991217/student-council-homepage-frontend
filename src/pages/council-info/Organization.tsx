@@ -13,6 +13,10 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
+const Img = styled.img`
+  width: 100%;
+`;
+
 function Organization() {
   // const [url, setUrl] = useState('');
   // const getImages = async () => {
@@ -25,10 +29,7 @@ function Organization() {
   // }, []);
   return (
     <Wrapper>
-      <Block
-        title="조직도"
-        contents={<img src={sampleImage} alt="" width={1000} />}
-      />
+      <Block title="조직도" contents={<Img src={sampleImage} alt="" />} />
     </Wrapper>
   );
 }

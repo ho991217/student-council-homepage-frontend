@@ -53,10 +53,14 @@ function Tiles(): JSX.Element {
           <Tile title="총학소식" linkTitle="더보기" to="/" />
         </SmallTile>
         <SmallTile>
-          <Tile title="실시간 인기청원" linkTitle="더보기" to="/" />
+          <Tile
+            title="실시간 인기청원"
+            linkTitle="더보기"
+            to="/board-petition"
+          />
         </SmallTile>
         <SmallTile>
-          <Tile title="금주의 회의록" linkTitle="더보기" to="/" />
+          <Tile title="금주의 회의록" linkTitle="더보기" to="/board-inquiry" />
         </SmallTile>
       </SmallTileContainer>
     </Container>

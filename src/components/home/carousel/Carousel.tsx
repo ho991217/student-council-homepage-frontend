@@ -112,23 +112,25 @@ function Carousel(): JSX.Element {
     <Wrapper>
       {images.length > 0 && (
         <>
-          <ControlsWrapper>
-            <Chevron onClick={prevSlide} direction="left" />
-            <DotNavContainer>
-              <AutoSlide
-                onClick={toggleAutoSlide}
-                autoInterval={autoInterval}
-              />
-              {images.map((img: ImageProps, index: number) => (
-                <DotNav
-                  onClick={() => setCurrentSlide(index)}
-                  key={img.id}
-                  active={index === currentSlide}
+          {images.length > 1 && (
+            <ControlsWrapper>
+              <Chevron onClick={prevSlide} direction="left" />
+              <DotNavContainer>
+                <AutoSlide
+                  onClick={toggleAutoSlide}
+                  autoInterval={autoInterval}
                 />
-              ))}
-            </DotNavContainer>
-            <Chevron onClick={nextSlide} direction="right" />
-          </ControlsWrapper>
+                {images.map((img: ImageProps, index: number) => (
+                  <DotNav
+                    onClick={() => setCurrentSlide(index)}
+                    key={img.id}
+                    active={index === currentSlide}
+                  />
+                ))}
+              </DotNavContainer>
+              <Chevron onClick={nextSlide} direction="right" />
+            </ControlsWrapper>
+          )}
           {images.map((obj: ImageProps, index: number) => (
             <Slide
               key={obj.id}

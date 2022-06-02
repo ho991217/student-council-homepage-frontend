@@ -120,8 +120,6 @@ function Gnb(): JSX.Element {
           </Tablet>
 
           <Mobile>
-            {/* 모바일 코드 영역 */}
-
             <Svg
               width="36"
               height="36"

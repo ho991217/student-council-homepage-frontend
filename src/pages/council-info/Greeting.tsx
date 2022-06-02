@@ -13,6 +13,10 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 
+const Img = styled.img`
+  width: 100%;
+`;
+
 function Greeting(): JSX.Element {
   const [url, setUrl] = useState('');
   // const getImages = async () => {
@@ -45,7 +49,7 @@ function Greeting(): JSX.Element {
               <br />
               감사합니다.
             </p>
-            <img src={samplePhoto} alt="" width={1000} />
+            <Img src={samplePhoto} alt="" width={1000} />
           </div>
         }
       />
