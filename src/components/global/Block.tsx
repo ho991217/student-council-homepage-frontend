@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
-  width: 1440px;
-  padding: 50px 120px 60px 120px;
+  max-width: 1440px;
+  width: 100%;
+  padding: 70px 120px 60px 120px;
   background-color: ${({ theme }) => theme.colors.white};
   margin-top: 40px;
   margin-bottom: 100px;

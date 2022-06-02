@@ -24,6 +24,8 @@ declare module 'styled-components' {
       smallTitle: string;
       smallSubTitle: string;
       smallDescription: string;
+      detailBold: string;
+      detailThin: string;
     };
     media: {
       mobile: string;
