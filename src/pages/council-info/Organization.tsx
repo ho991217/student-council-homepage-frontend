@@ -2,6 +2,8 @@ import axios from 'axios';
 import Block from 'components/global/Block';
 import styled from 'styled-components';
 
+import sampleImage from 'static/images/samples/hierachy.png';
+
 import { useState, useEffect } from 'react';
 
 const Wrapper = styled.div`
@@ -12,18 +14,21 @@ const Wrapper = styled.div`
 `;
 
 function Organization() {
-  const [url, setUrl] = useState('');
-  const getImages = async () => {
-    axios.get('https://picsum.photos/1200/620').then((res) => {
-      setUrl(res.request.responseURL);
-    });
-  };
-  useEffect(() => {
-    getImages();
-  }, []);
+  // const [url, setUrl] = useState('');
+  // const getImages = async () => {
+  //   axios.get('https://picsum.photos/1200/620').then((res) => {
+  //     setUrl(res.request.responseURL);
+  //   });
+  // };
+  // useEffect(() => {
+  //   getImages();
+  // }, []);
   return (
     <Wrapper>
-      <Block title="조직도" contents={<img src={url} alt="" />} />
+      <Block
+        title="조직도"
+        contents={<img src={sampleImage} alt="" width={1000} />}
+      />
     </Wrapper>
   );
 }

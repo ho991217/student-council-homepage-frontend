@@ -3,6 +3,9 @@ import Block from 'components/global/Block';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
+// TODO: 이미지 스토리지 서버에 올라가면 변경하기
+import samplePhoto from 'static/images/samples/sample-image-1.png';
+
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
@@ -12,14 +15,15 @@ const Wrapper = styled.div`
 
 function Greeting(): JSX.Element {
   const [url, setUrl] = useState('');
-  const getImages = async () => {
-    axios.get('https://picsum.photos/1200/620').then((res) => {
-      setUrl(res.request.responseURL);
-    });
-  };
-  useEffect(() => {
-    getImages();
-  }, []);
+  // const getImages = async () => {
+  //   axios.get('https://picsum.photos/1200/620').then((res) => {
+  //     setUrl(res.request.responseURL);
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   getImages();
+  // }, []);
   return (
     <Wrapper>
       <Block
@@ -41,7 +45,7 @@ function Greeting(): JSX.Element {
               <br />
               감사합니다.
             </p>
-            <img src={url} alt="" />
+            <img src={samplePhoto} alt="" width={1000} />
           </div>
         }
       />
