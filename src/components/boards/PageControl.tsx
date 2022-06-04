@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -32,6 +32,7 @@ function PageControl({
   currentPage: number;
 }) {
   const [pageCount, setPageCount] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
   const url = (page: number, fltr: string) =>
     `/board-petition/boards?page=${page}&filter=${fltr}`;
 

@@ -1,4 +1,5 @@
 import Board from 'components/boards/Board';
+import FilterControl from 'components/boards/FilterControl';
 import PageControl from 'components/boards/PageControl';
 import { Post } from 'components/boards/PostProps';
 import { useState, useEffect } from 'react';
@@ -133,21 +134,33 @@ const Container = styled.div`
 
 function PetitionBoard(): JSX.Element {
   const [board, setBoard] = useState<Post[]>([]);
-  const [boardsCount, setBoardsCount] = useState<number>(0);
+  const [boardsCount, setBoardsCount] = useState<number>(dummyBoard.length);
   const [curFilter, setCurFilter] = useState<string>('전체');
   const [page, setPage] = useState(1);
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    setBoard(dummyBoard);
-    setBoardsCount(dummyBoard.length);
+    // setBoard(dummyBoard);
     setPage(Number(searchParams.get('page')) || 1);
     setCurFilter(searchParams.get('filter') || '전체');
   }, [dummyBoard, searchParams]);
 
+  useEffect(() => {
+    const filteredBoard = dummyBoard.filter((post) => post.tag === curFilter);
+
+    if (curFilter === '전체') {
+      setBoard(dummyBoard.slice((page - 1) * 6, page * 6));
+      setBoardsCount(dummyBoard.length);
+    } else {
+      setBoard(filteredBoard.slice((page - 1) * 6, page * 6));
+      setBoardsCount(filteredBoard.length);
+    }
+  }, [dummyBoard, page, curFilter]);
+
   return (
     <Container>
-      <Board posts={board} filter={curFilter} currentPage={page} />
+      <FilterControl currentTag={curFilter} />
+      <Board posts={board} currentPage={page} />
       <PageControl
         postCount={boardsCount}
         filter={curFilter}
