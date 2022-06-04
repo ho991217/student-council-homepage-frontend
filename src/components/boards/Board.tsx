@@ -59,32 +59,23 @@ const Svg = styled.svg`
 
 interface BoardProps {
   posts: PostProps[];
+  totalBoards: number;
   currentPage: number;
 }
 
-function Board({ posts, currentPage }: BoardProps): JSX.Element {
+function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<PostProps[]>([]);
 
   useEffect(() => {
     setBoard(posts);
   }, [posts]);
 
-  // useEffect(() => {
-  //   setBoard(
-  //     filter === '전체'
-  //       ? posts.slice((currentPage - 1) * 6, currentPage * 6)
-  //       : posts
-  //           .filter((post) => post.tag === filter)
-  //           .slice((currentPage - 1) * 6, currentPage * 6),
-  //   );
-  // }, [posts, currentPage, filter]);
-
   return (
     <Container>
       <Wrapper>
         <BoardsContainer>
           <PageInfo>
-            Total {posts.length}건, {currentPage}/{Math.ceil(posts.length / 6)}
+            Total {totalBoards}건, {currentPage}/{Math.ceil(totalBoards / 6)}
           </PageInfo>
           <BoardHead>
             <Row>

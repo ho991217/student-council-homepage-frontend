@@ -41,7 +41,7 @@ function PetitionBoard(): JSX.Element {
   return (
     <Container>
       <FilterControl currentTag={curFilter} />
-      <Board posts={board} currentPage={page} />
+      <Board posts={board} totalBoards={boardsCount} currentPage={page} />
       <PageControl
         postCount={boardsCount}
         filter={curFilter}
