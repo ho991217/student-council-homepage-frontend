@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Post } from './PostProps';
+import { PostProps } from './PostProps';
 
 const Container = styled.div`
   width: 100%;
@@ -58,12 +58,12 @@ const Svg = styled.svg`
 `;
 
 interface BoardProps {
-  posts: Post[];
+  posts: PostProps[];
   currentPage: number;
 }
 
 function Board({ posts, currentPage }: BoardProps): JSX.Element {
-  const [board, setBoard] = useState<Post[]>([]);
+  const [board, setBoard] = useState<PostProps[]>([]);
 
   useEffect(() => {
     setBoard(posts);

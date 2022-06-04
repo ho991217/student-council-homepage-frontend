@@ -1,6 +1,6 @@
-import { Post } from '../PostProps';
+import { PostProps } from '../PostProps';
 
-export const dummyPost: Post[] = [
+export const dummyPost: PostProps[] = [
   {
     id: 1,
     header: '진행중',

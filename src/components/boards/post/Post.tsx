@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { Post } from '../PostProps';
+import { PostProps } from '../PostProps';
 import { dummyPost } from '../api/DummyPost';
 
 const Container = styled.div`
@@ -31,13 +31,13 @@ const Separator = styled.div<{ bold?: boolean }>`
   height: ${({ bold }) => (bold ? '2px' : '1px')};
   background-color: ${({ bold, theme }) =>
     bold ? theme.colors.gray600 : theme.colors.gray300};
-  margin: 20px 0px 40px 0px;
+  margin: 20px 0px;
 `;
 
 const Header = styled.h2`
   color: ${({ theme }) => theme.colors.secondary};
   ${({ theme }) => theme.fonts.smallTitle}
-  margin-bottom: 15px;
+  margin: 15px 0px;
 `;
 
 const Title = styled.h1`
@@ -51,46 +51,61 @@ const Etcs = styled.div`
   justify-content: space-between;
   max-width: 500px;
   width: 100%;
+  margin-bottom: 15px;
 `;
 
 const Contents = styled.div`
-  max-width: 1000px;
+  max-width: 1080px;
   width: 100%;
+  margin-top: 15px;
 `;
+
+const Comments = styled.section``;
 
 function Post() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [post, setPost] = useState<Post>();
-
-  const [title, setTitle] = useState<string>('');
+  const [post, setPost] = useState<PostProps>();
   const [id, setId] = useState<number>(0);
-  const [contents, setContents] = useState<JSX.Element>();
-  const [header, setHeader] = useState<string>('답변완료');
+
+  const [comment, setComment] = useState<string>('동의합니다.');
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(comment);
+  };
 
   useEffect(() => {
     const postId = Number(searchParams.get('id'));
 
     setPost(dummyPost.filter((post) => post.id === postId)[0]);
     setId(postId || 0);
-    setTitle(dummyPost.filter((post) => post.id === postId)[0].title);
-    setContents(dummyPost.filter((post) => post.id === postId)[0].contents);
-    setHeader(dummyPost.filter((post) => post.id === postId)[0].header);
   }, []);
 
   return (
     <Container>
       <Wrapper>
         <Separator bold />
-        <Header>[ {header} ]</Header>
-        <Title>{title}</Title>
+        <Header>[ {post?.header} ]</Header>
+        <Title>{post?.title}</Title>
         <Etcs>
-          <div>등록일 : {}</div>
-          <div>청원 마감 : {}</div>
-          <div>작성자 : {}</div>
+          <div>등록일 : {post?.createdAt}</div>
+          <div>청원 마감 : {post?.dueDate}</div>
+          <div>작성자 : {post?.writer}</div>
         </Etcs>
         <Separator />
-        <Contents>{contents}</Contents>
+        <Contents>{post?.contents}</Contents>
+        <Comments>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="동의 내용을 입력해 주세요."
+              value={comment}
+              onChange={(e) => setComment(e.currentTarget.value)}
+            />
+            <input type="submit" value="전송" />
+          </form>
+        </Comments>
       </Wrapper>
     </Container>
   );

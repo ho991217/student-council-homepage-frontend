@@ -3,7 +3,7 @@ import Board from 'components/boards/Board';
 import FilterControl from 'components/boards/FilterControl';
 import PageControl from 'components/boards/PageControl';
 
-import { Post } from 'components/boards/PostProps';
+import { PostProps } from 'components/boards/PostProps';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -13,7 +13,7 @@ const Container = styled.div`
 `;
 
 function PetitionBoard(): JSX.Element {
-  const [board, setBoard] = useState<Post[]>([]);
+  const [board, setBoard] = useState<PostProps[]>([]);
   const [boardsCount, setBoardsCount] = useState<number>(dummyPost.length);
   const [curFilter, setCurFilter] = useState<string>('전체');
   const [page, setPage] = useState(1);
@@ -25,7 +25,7 @@ function PetitionBoard(): JSX.Element {
   }, [dummyPost, searchParams]);
 
   useEffect(() => {
-    const filteredBoard: Post[] = dummyPost.filter(
+    const filteredBoard: PostProps[] = dummyPost.filter(
       (post) => post.tag === curFilter,
     );
 
