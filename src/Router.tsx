@@ -9,6 +9,7 @@ import Conference from 'pages/Conference';
 import PetitionBoard from 'pages/communication/PetitionBoard';
 import InquiryBoard from 'pages/communication/InquiryBoard';
 import Location from 'pages/council-info/Location';
+import GlobalBanner from 'components/global/banner/GlobalBanner';
 import Gnb from './components/global/nav/Gnb';
 
 function Router() {
@@ -22,8 +23,24 @@ function Router() {
         <Route path="location" element={<Location />} />
         <Route path="/rules" element={<Rules />} />
         <Route path="/conference" element={<Conference />} />
-        <Route path="/board-petition" element={<PetitionBoard />} />
-        <Route path="/board-inquiry" element={<InquiryBoard />} />
+        <Route
+          path="/board-petition"
+          element={
+            <>
+              <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
+              <PetitionBoard />
+            </>
+          }
+        />
+        <Route
+          path="/board-inquiry"
+          element={
+            <>
+              <GlobalBanner title="문의게시판" detail="문의게시판 입니다." />
+              <InquiryBoard />
+            </>
+          }
+        />
       </Routes>
       <Footer />
     </BrowserRouter>

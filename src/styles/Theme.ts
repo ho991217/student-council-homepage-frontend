@@ -21,6 +21,7 @@ export const theme: DefaultTheme = {
     gray900: '#19191A',
   },
   fonts: {
+    title: 'font-size: 36px; font-weight: 600;',
     smallTitle: 'font-size: 18px; font-weight: 600;',
     smallSubTitle: 'font-size: 14px; font-weight: 500;',
     smallDescription: 'font-size: 11px; font-weight: 400;',

@@ -93,7 +93,9 @@ function Gnb(): JSX.Element {
                   onMouseOver={() => handleHover(Number(item.id), true)}
                   onMouseLeave={() => handleHover(Number(item.id), false)}
                 >
-                  <MenuLink to={item.path}>{item.title}</MenuLink>
+                  <MenuLink to={item.path === '/' ? '#' : item.path}>
+                    {item.title}
+                  </MenuLink>
                   {item.subPath && open[Number(item.id)] && (
                     <Dropdown path={item.subPath} />
                   )}

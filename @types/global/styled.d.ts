@@ -21,6 +21,7 @@ declare module 'styled-components' {
       gray900: string;
     };
     fonts: {
+      title: string;
       smallTitle: string;
       smallSubTitle: string;
       smallDescription: string;
