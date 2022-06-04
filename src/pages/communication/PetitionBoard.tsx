@@ -2,7 +2,7 @@ import Board from 'components/boards/Board';
 import PageControl from 'components/boards/PageControl';
 import { Post } from 'components/boards/PostProps';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 const dummyBoard = [
@@ -72,7 +72,7 @@ const dummyBoard = [
     comments: 150,
   },
   {
-    id: 7,
+    id: 8,
     header: '진행중',
     title: '청원게시판 테스트입니다.',
     writer: '총학생회',
@@ -81,7 +81,7 @@ const dummyBoard = [
     comments: 150,
   },
   {
-    id: 7,
+    id: 9,
     header: '진행중',
     title: '청원게시판 테스트입니다.',
     writer: '총학생회',
@@ -90,7 +90,7 @@ const dummyBoard = [
     comments: 150,
   },
   {
-    id: 7,
+    id: 10,
     header: '진행중',
     title: '청원게시판 테스트입니다.',
     writer: '총학생회',
@@ -99,7 +99,7 @@ const dummyBoard = [
     comments: 150,
   },
   {
-    id: 7,
+    id: 11,
     header: '진행중',
     title: '청원게시판 테스트입니다.',
     writer: '총학생회',
@@ -108,7 +108,7 @@ const dummyBoard = [
     comments: 150,
   },
   {
-    id: 7,
+    id: 12,
     header: '진행중',
     title: '청원게시판 테스트입니다.',
     writer: '총학생회',
@@ -117,7 +117,7 @@ const dummyBoard = [
     comments: 150,
   },
   {
-    id: 7,
+    id: 13,
     header: '진행중',
     title: '청원게시판 테스트입니다. (기타)',
     writer: '총학생회',
@@ -134,22 +134,24 @@ const Container = styled.div`
 function PetitionBoard(): JSX.Element {
   const [board, setBoard] = useState<Post[]>([]);
   const [boardsCount, setBoardsCount] = useState<number>(0);
-  const [curFilter, setCurFilter] = useState<string>('all');
-  const { page, filter } = useParams();
+  const [curFilter, setCurFilter] = useState<string>('전체');
+  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     setBoard(dummyBoard);
     setBoardsCount(dummyBoard.length);
-    setCurFilter(filter === undefined ? 'all' : filter);
-  }, [dummyBoard, filter]);
+    setPage(Number(searchParams.get('page')) || 1);
+    setCurFilter(searchParams.get('filter') || '전체');
+  }, [dummyBoard, searchParams]);
 
   return (
     <Container>
-      <Board posts={board} filter={curFilter} currentPage={Number(page)} />
+      <Board posts={board} filter={curFilter} currentPage={page} />
       <PageControl
         postCount={boardsCount}
         filter={curFilter}
-        currentPage={Number(page)}
+        currentPage={page}
       />
     </Container>
   );

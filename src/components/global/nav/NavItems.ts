@@ -41,7 +41,7 @@ export const NavItems: NavigationProps[] = [
     subPath: [
       {
         title: '청원게시판',
-        path: '/board-petition/boards/all/1',
+        path: '/board-petition/boards?page=1&filter=전체',
         id: 1,
       },
       {

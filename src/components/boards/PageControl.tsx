@@ -32,6 +32,9 @@ function PageControl({
   currentPage: number;
 }) {
   const [pageCount, setPageCount] = useState(0);
+  const url = (page: number, fltr: string) =>
+    `/board-petition/boards?page=${page}&filter=${fltr}`;
+
   useEffect(() => {
     setPageCount(Math.ceil(postCount / 6));
   }, [postCount]);
@@ -39,13 +42,7 @@ function PageControl({
   return (
     <Container>
       {currentPage !== 1 && (
-        <a href={`/board-petition/boards/${currentPage - 1}`}>
-          {/* 
-
-            FIXME: Link로 구현 시 rerender가 일어나지 않아 게시글이 중첩되는 버그가 발생,
-                따라서 a태그로 구현함
-
-        */}
+        <Link to={url(currentPage - 1, filter)}>
           <Arrow
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 48 48"
@@ -54,17 +51,17 @@ function PageControl({
           >
             <path d="M28.05 36 16 23.95 28.05 11.9 30.2 14.05 20.3 23.95 30.2 33.85Z" />
           </Arrow>
-        </a>
+        </Link>
       )}
       <Indexes>
         {Array.from({ length: pageCount }, (_, i) => (
           <Index cur={i + 1 === currentPage} key={i}>
-            <a href={`/board-petition/boards/${i + 1}`}>{i + 1}</a>
+            <Link to={url(i + 1, filter)}>{i + 1}</Link>
           </Index>
         ))}
       </Indexes>
       {currentPage !== pageCount && (
-        <a href={`/board-petition/boards/${currentPage + 1}`}>
+        <Link to={url(currentPage + 1, filter)}>
           <Arrow
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 48 48"
@@ -73,7 +70,7 @@ function PageControl({
           >
             <path d="M18.75 36 16.6 33.85 26.5 23.95 16.6 14.05 18.75 11.9 30.8 23.95Z" />
           </Arrow>
-        </a>
+        </Link>
       )}
     </Container>
   );

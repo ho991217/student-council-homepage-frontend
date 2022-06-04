@@ -25,7 +25,7 @@ function Router() {
         <Route path="/conference" element={<Conference />} />
         <Route path="/board-petition">
           <Route
-            path="boards/:filter/:page"
+            path="boards"
             element={
               <>
                 <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
