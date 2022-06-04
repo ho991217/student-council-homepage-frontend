@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import Footer from 'components/global/footer/Footer';
 import Greeting from 'pages/council-info/Greeting';
 import Home from 'pages/Home';
 import Organization from 'pages/council-info/Organization';
@@ -9,8 +8,11 @@ import Conference from 'pages/Conference';
 import PetitionBoard from 'pages/communication/PetitionBoard';
 import InquiryBoard from 'pages/communication/InquiryBoard';
 import Location from 'pages/council-info/Location';
+
 import GlobalBanner from 'components/global/banner/GlobalBanner';
-import Gnb from './components/global/nav/Gnb';
+import Post from 'components/boards/post/Post';
+import Gnb from 'components/global/nav/Gnb';
+import Footer from 'components/global/footer/Footer';
 
 function Router() {
   return (
@@ -30,6 +32,15 @@ function Router() {
               <>
                 <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
                 <PetitionBoard />
+              </>
+            }
+          />
+          <Route
+            path="board"
+            element={
+              <>
+                <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
+                <Post />
               </>
             }
           />
