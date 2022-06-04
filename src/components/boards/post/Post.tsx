@@ -15,7 +15,7 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  max-width: 1290px;
+  max-width: 1280px;
   width: 100%;
   margin: 40px 0px;
   padding: 30px 50px;
@@ -26,7 +26,18 @@ const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.gray040};
 `;
 
-const Separator = styled.div<{ bold?: boolean }>`
+const Hashtag = styled.div`
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 15px;
+  margin: 0px 5px;
+  border-radius: 25px;
+`;
+
+const HSeparator = styled.div<{ bold?: boolean }>`
   width: 100%;
   height: ${({ bold }) => (bold ? '2px' : '1px')};
   background-color: ${({ bold, theme }) =>
@@ -45,7 +56,7 @@ const Title = styled.h1`
   margin-bottom: 25px;
 `;
 
-const Etcs = styled.div`
+const Etc = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -55,12 +66,98 @@ const Etcs = styled.div`
 `;
 
 const Contents = styled.div`
-  max-width: 1080px;
+  max-width: 1100px;
   width: 100%;
   margin-top: 15px;
+  margin-bottom: 45px;
 `;
 
-const Comments = styled.section``;
+const CommentSection = styled.section`
+  max-width: 1280px;
+  width: 100%;
+`;
+
+const CommentForm = styled.form`
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const CommentInput = styled.textarea`
+  all: unset;
+  flex-grow: 1;
+  height: 100%;
+  background-color: ${({ theme }) => theme.colors.gray100};
+  margin-right: 10px;
+  border-radius: 5px;
+  padding: 20px;
+  box-sizing: border-box;
+  color: ${({ theme }) => theme.colors.gray600};
+`;
+
+const CommentSubmit = styled.input.attrs({ type: 'submit' })`
+  all: unset;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  width: 160px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  ${({ theme }) => theme.fonts.detailBold}
+`;
+
+const CommentLists = styled.ul`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-top: 20px;
+  width: 100%;
+`;
+
+const Comment = styled.li`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray300};
+  padding: 0px 10px 15px 10px;
+  width: 100%;
+`;
+
+const CommentInfo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+  height: 14px;
+`;
+
+const VSeparator = styled.div`
+  height: 100%;
+  width: 1px;
+  background-color: ${({ theme }) => theme.colors.gray400};
+  margin: 0px 10px;
+`;
+
+const CommentAuthor = styled.div`
+  margin-right: 10px;
+  ${({ theme }) => theme.fonts.detailThin}
+`;
+
+const CommentDate = styled.div`
+  color: ${({ theme }) => theme.colors.gray400};
+  ${({ theme }) => theme.fonts.smallDescription}
+`;
+
+const CommentText = styled.div`
+  ${({ theme }) => theme.fonts.smallSubTitle}
+`;
 
 function Post() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -85,27 +182,39 @@ function Post() {
   return (
     <Container>
       <Wrapper>
-        <Separator bold />
+        <Hashtag>#{post?.tag}</Hashtag>
+        <HSeparator bold />
         <Header>[ {post?.header} ]</Header>
         <Title>{post?.title}</Title>
-        <Etcs>
+        <Etc>
           <div>등록일 : {post?.createdAt}</div>
           <div>청원 마감 : {post?.dueDate}</div>
           <div>작성자 : {post?.writer}</div>
-        </Etcs>
-        <Separator />
+        </Etc>
+        <HSeparator />
         <Contents>{post?.contents}</Contents>
-        <Comments>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
+        <CommentSection>
+          <CommentForm onSubmit={handleSubmit}>
+            <CommentInput
               placeholder="동의 내용을 입력해 주세요."
               value={comment}
               onChange={(e) => setComment(e.currentTarget.value)}
             />
-            <input type="submit" value="전송" />
-          </form>
-        </Comments>
+            <CommentSubmit value="전송" />
+          </CommentForm>
+          <CommentLists>
+            {post?.commentList.map((comment) => (
+              <Comment key={comment.id}>
+                <CommentInfo>
+                  <CommentAuthor>{comment.writer}</CommentAuthor>
+                  <VSeparator />
+                  <CommentDate>{comment.createdAt}</CommentDate>
+                </CommentInfo>
+                <CommentText>{comment.contents}</CommentText>
+              </Comment>
+            ))}
+          </CommentLists>
+        </CommentSection>
       </Wrapper>
     </Container>
   );
