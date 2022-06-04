@@ -20,27 +20,32 @@ function Router() {
         <Route path="/" element={<Home />} />
         <Route path="/greeting" element={<Greeting />} />
         <Route path="/organization" element={<Organization />} />
-        <Route path="location" element={<Location />} />
+        <Route path="/location" element={<Location />} />
         <Route path="/rules" element={<Rules />} />
         <Route path="/conference" element={<Conference />} />
-        <Route
-          path="/board-petition"
-          element={
-            <>
-              <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
-              <PetitionBoard />
-            </>
-          }
-        />
-        <Route
-          path="/board-inquiry"
-          element={
-            <>
-              <GlobalBanner title="문의게시판" detail="문의게시판 입니다." />
-              <InquiryBoard />
-            </>
-          }
-        />
+        <Route path="/board-petition">
+          <Route
+            path="boards/:filter/:page"
+            element={
+              <>
+                <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
+                <PetitionBoard />
+              </>
+            }
+          />
+        </Route>
+        <Route path="/board-inquiry">
+          <Route
+            path="boards/:page"
+            element={
+              <>
+                <GlobalBanner title="문의게시판" detail="문의게시판 입니다." />
+                <InquiryBoard />
+              </>
+            }
+          />
+        </Route>
+        <Route path="*" element={<div>404</div>} />
       </Routes>
       <Footer />
     </BrowserRouter>

@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 import BannerImg from 'static/images/global-banner/dankook.png';
-import { useLocation } from 'react-router-dom';
-import { NavItems } from '../nav/NavItems';
 
 const Container = styled.div`
   background-image: url(${BannerImg});
@@ -40,8 +38,13 @@ const Detail = styled.h2`
   ${({ theme }) => theme.fonts.detailThin}
 `;
 
-function GlobalBanner({ title, detail }: { title: string; detail: string }) {
-  const { pathname } = useLocation();
+function GlobalBanner({
+  title,
+  detail,
+}: {
+  title: string;
+  detail: string;
+}): JSX.Element {
   return (
     <Container>
       <Banner>
