@@ -17,7 +17,7 @@ function PetitionBoard(): JSX.Element {
   const [boardsCount, setBoardsCount] = useState<number>(dummyPost.length);
   const [curFilter, setCurFilter] = useState<string>('전체');
   const [page, setPage] = useState(1);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     setPage(Number(searchParams.get('page')) || 1);

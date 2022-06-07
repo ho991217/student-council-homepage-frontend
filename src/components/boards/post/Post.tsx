@@ -160,23 +160,19 @@ const CommentText = styled.div`
 `;
 
 function Post() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [post, setPost] = useState<PostProps>();
-  const [id, setId] = useState<number>(0);
 
   const [comment, setComment] = useState<string>('동의합니다.');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(comment);
   };
 
   useEffect(() => {
     const postId = Number(searchParams.get('id'));
-
     setPost(dummyPost.filter((post) => post.id === postId)[0]);
-    setId(postId || 0);
   }, []);
 
   return (
