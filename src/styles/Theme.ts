@@ -19,6 +19,7 @@ export const theme: DefaultTheme = {
     gray700: '#454647',
     gray800: '#2C2D2E',
     gray900: '#19191A',
+    red: '#B35141',
   },
   fonts: {
     title: 'font-size: 36px; font-weight: 600;',
