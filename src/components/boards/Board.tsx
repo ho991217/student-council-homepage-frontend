@@ -27,6 +27,7 @@ const BoardsContainer = styled.div`
 const PageInfo = styled.div`
   width: 100%;
   margin-bottom: 10px;
+  display: flex;
 `;
 
 const BoardHead = styled.div`
@@ -40,7 +41,7 @@ const Row = styled.div`
   width: 100%;
   height: 70px;
   display: grid;
-  grid-template-columns: 1fr 2fr 8fr 2fr 1fr 1fr;
+  grid-template-columns: 1fr 2fr 8fr 2fr 1fr;
   place-items: center;
   padding: 0px 50px;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
@@ -55,6 +56,11 @@ const Svg = styled.svg`
   width: 16px;
   height: 16px;
   margin-right: 5px;
+`;
+
+const PointText = styled.div`
+  color: ${({ theme }) => theme.colors.accent};
+  margin: 0 5px;
 `;
 
 interface BoardProps {
@@ -75,14 +81,14 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
       <Wrapper>
         <BoardsContainer>
           <PageInfo>
-            Total {totalBoards}건, {currentPage}/{Math.ceil(totalBoards / 6)}
+            Total <PointText>{totalBoards}건,</PointText> {currentPage}/
+            {Math.ceil(totalBoards / 6)}
           </PageInfo>
           <BoardHead>
             <Row>
               <div>번호</div>
               <div>머릿말</div>
               <div>제목</div>
-              <div>작성자</div>
               <div>추천수</div>
               <div>댓글수</div>
             </Row>
@@ -91,13 +97,12 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
           {board.map((post) => (
             <Row key={post.id}>
               <div>{post.id}</div>
-              <div>{post.header}</div>
+              <div>{post.status}</div>
               <div>
                 <Link to={`/board-petition/board?id=${post.id}`}>
                   {post.title}
                 </Link>
               </div>
-              <div>{post.writer}</div>
               <div>
                 <Svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +123,7 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
                 >
                   <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
                 </Svg>
-                {post.comments}
+                {post.commentList.length}
               </div>
             </Row>
           ))}
