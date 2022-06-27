@@ -10,9 +10,9 @@ const Container = styled.div`
   margin-top: 40px;
   margin-bottom: 80px;
   ${({ theme }) => theme.media.mobile} {
+    height: 100%;
     flex-direction: column;
     margin-bottom: 10px;
-    height: 100%;
   }
 `;
 

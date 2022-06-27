@@ -12,8 +12,8 @@ const Wrapper = styled.footer`
   flex-grow: 1;
   background-color: ${({ theme }) => theme.colors.white};
   border-top: 1px solid ${({ theme }) => theme.colors.gray050};
-  ${({ theme }) => theme.media.mobile} {
-    bottom:0;
+  ${({ theme }) => theme.media.mobile}{
+    bottom: 0;
   }
 `;
 
