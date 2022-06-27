@@ -1,11 +1,9 @@
 export interface PostProps {
   id: number;
-  header: string;
+  status: string;
   title: string;
-  writer: string;
   likes: number;
   tag: string;
-  comments: number;
   commentList: Comment[];
   createdAt: string;
   dueDate: string;

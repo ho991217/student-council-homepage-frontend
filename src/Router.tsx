@@ -13,6 +13,7 @@ import GlobalBanner from 'components/global/banner/GlobalBanner';
 import Post from 'components/boards/post/Post';
 import Gnb from 'components/global/nav/Gnb';
 import Footer from 'components/global/footer/Footer';
+import Login from 'pages/Login';
 
 function Router() {
   return (
@@ -20,6 +21,7 @@ function Router() {
       <Gnb />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/greeting" element={<Greeting />} />
         <Route path="/organization" element={<Organization />} />
         <Route path="/location" element={<Location />} />

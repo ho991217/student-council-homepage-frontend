@@ -46,7 +46,7 @@ function UserMenu(): JSX.Element {
         </Links>
 
         {/* TODO: 로그인 페이지 만들어지면 경로 수정 */}
-        <LoginLink to="/">로그인</LoginLink>
+        <LoginLink to="/login">로그인</LoginLink>
       </InnerContainer>
     </Container>
   );

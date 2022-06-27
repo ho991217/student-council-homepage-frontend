@@ -3,10 +3,9 @@ import { PostProps } from '../PostProps';
 export const dummyPost: PostProps[] = [
   {
     id: 1,
-    header: '진행중',
+    status: '진행중',
     title: '청원게시판 테스트입니다.',
-    comments: 12,
-    writer: '총학생회',
+
     likes: 15,
     tag: '학교생활',
     commentList: [
@@ -94,10 +93,9 @@ export const dummyPost: PostProps[] = [
   },
   {
     id: 2,
-    header: '답변완료',
+    status: '답변완료',
     title: '청원게시판 테스트입니다.',
-    comments: 12,
-    writer: '총학생회',
+
     likes: 8,
     tag: '교내시설',
     commentList: [
@@ -185,10 +183,9 @@ export const dummyPost: PostProps[] = [
   },
   {
     id: 3,
-    header: '답변완료',
+    status: '답변완료',
     title: '청원게시판 테스트입니다.',
-    comments: 12,
-    writer: '총학생회',
+
     likes: 10,
     tag: '코로나19',
     commentList: [
@@ -276,10 +273,9 @@ export const dummyPost: PostProps[] = [
   },
   {
     id: 4,
-    header: '진행중',
+    status: '진행중',
     title: '청원게시판 테스트입니다.',
-    comments: 12,
-    writer: '총학생회',
+
     dueDate: '2020-01-01',
     likes: 15,
     tag: '코로나19',
@@ -367,10 +363,9 @@ export const dummyPost: PostProps[] = [
   },
   {
     id: 5,
-    header: '진행중',
+    status: '진행중',
     title: '청원게시판 테스트입니다.',
-    comments: 12,
-    writer: '총학생회',
+
     dueDate: '2020-01-01',
     likes: 22,
     tag: '장학금',
@@ -458,10 +453,9 @@ export const dummyPost: PostProps[] = [
   },
   {
     id: 6,
-    header: '진행중',
+    status: '진행중',
     title: '청원게시판 테스트입니다.',
-    comments: 12,
-    writer: '총학생회',
+
     likes: 22,
     tag: '학교생활',
     commentList: [
@@ -549,10 +543,9 @@ export const dummyPost: PostProps[] = [
   },
   {
     id: 7,
-    header: '진행중',
+    status: '진행중',
     title: '청원게시판 테스트입니다.',
-    comments: 12,
-    writer: '총학생회',
+
     likes: 2,
     tag: '수업',
     commentList: [
@@ -640,10 +633,9 @@ export const dummyPost: PostProps[] = [
   },
   {
     id: 8,
-    header: '진행중',
+    status: '진행중',
     title: '청원게시판 테스트입니다.',
-    comments: 12,
-    writer: '총학생회',
+
     likes: 2,
     tag: '기타',
     commentList: [
@@ -731,10 +723,9 @@ export const dummyPost: PostProps[] = [
   },
   {
     id: 9,
-    header: '진행중',
+    status: '진행중',
     title: '청원게시판 테스트입니다.',
-    comments: 12,
-    writer: '총학생회',
+
     likes: 2,
     tag: '기타',
     commentList: [
@@ -822,10 +813,9 @@ export const dummyPost: PostProps[] = [
   },
   {
     id: 10,
-    header: '진행중',
+    status: '진행중',
     title: '청원게시판 테스트입니다.',
-    comments: 12,
-    writer: '총학생회',
+
     likes: 2,
     tag: '기타',
     commentList: [
@@ -913,10 +903,9 @@ export const dummyPost: PostProps[] = [
   },
   {
     id: 11,
-    header: '진행중',
+    status: '진행중',
     title: '청원게시판 테스트입니다.',
-    comments: 12,
-    writer: '총학생회',
+
     likes: 2,
     tag: '학교생활',
     commentList: [
@@ -1004,10 +993,9 @@ export const dummyPost: PostProps[] = [
   },
   {
     id: 12,
-    header: '진행중',
+    status: '진행중',
     title: '청원게시판 테스트입니다.',
-    comments: 12,
-    writer: '총학생회',
+
     likes: 2,
     tag: '장학금',
     commentList: [
@@ -1095,12 +1083,12 @@ export const dummyPost: PostProps[] = [
   },
   {
     id: 13,
-    header: '진행중',
+    status: '진행중',
     title: '청원게시판 테스트입니다. (기타)',
-    writer: '총학생회',
+
     likes: 2,
     tag: '기타',
-    comments: 9,
+
     commentList: [
       {
         id: 1,

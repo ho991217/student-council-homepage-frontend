@@ -180,12 +180,11 @@ function Post() {
       <Wrapper>
         <Hashtag>#{post?.tag}</Hashtag>
         <HSeparator bold />
-        <Header>[ {post?.header} ]</Header>
+        <Header>[ {post?.status} ]</Header>
         <Title>{post?.title}</Title>
         <Etc>
           <div>등록일 : {post?.createdAt}</div>
           <div>청원 마감 : {post?.dueDate}</div>
-          <div>작성자 : {post?.writer}</div>
         </Etc>
         <HSeparator />
         <Contents>{post?.contents}</Contents>
