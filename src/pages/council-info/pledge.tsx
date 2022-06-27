@@ -48,7 +48,7 @@ const Dl = styled.dl`
 
 const Dt = styled.dt`
   font-weight: 700;
-  border-bottom: 1px solid #808080;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray300};
   padding-bottom: 12px;
 `;
 
