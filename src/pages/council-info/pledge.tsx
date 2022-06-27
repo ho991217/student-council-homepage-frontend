@@ -35,6 +35,8 @@ const DetailContainer = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 0 25px 0px 10px;
+  ${({ theme }) => theme.media.tablet} { flex-direction: column; }
+  ${({ theme }) => theme.media.mobile} { flex-direction: column; }
 `;
 
 const Img = styled.img``;
@@ -44,6 +46,8 @@ const InfoWrapper = styled.div``;
 const Dl = styled.dl`
   margin: 10px 0 30px 0;
   font-size: 1.3rem;
+  ${({ theme }) => theme.media.tablet} { margin-top: 50px; }
+  ${({ theme }) => theme.media.mobile} { margin-top: 50px; }
 `;
 
 const Dt = styled.dt`
