@@ -17,12 +17,16 @@ const Span = styled.span`
   color: ${({ theme }) => theme.colors.gray900};
 `;
 
-// ToDo: detail 내용 동적으로 바꾸기
+// TODO: detail 내용 동적으로 바꾸기
 function Petition(): JSX.Element {
   return (
     <Wrapper>
-      <P><Span>[D-3] </Span>학교 오르막에 에스컬레이터를 설치해주세요.</P>
-      <P><Span>[D-12] </Span>코로나를 없애주세요.</P>
+      <P>
+        <Span>[D-3] </Span>학교 오르막에 에스컬레이터를 설치해주세요.
+      </P>
+      <P>
+        <Span>[D-12] </Span>코로나를 없애주세요.
+      </P>
     </Wrapper>
   );
 }
