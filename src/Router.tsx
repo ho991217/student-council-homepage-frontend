@@ -8,6 +8,7 @@ import Conference from 'pages/Conference';
 import PetitionBoard from 'pages/communication/PetitionBoard';
 import InquiryBoard from 'pages/communication/InquiryBoard';
 import Location from 'pages/council-info/Location';
+import Pledge from 'pages/council-info/pledge';
 
 import GlobalBanner from 'components/global/banner/GlobalBanner';
 import Post from 'components/boards/post/Post';
@@ -25,6 +26,7 @@ function Router() {
         <Route path="/greeting" element={<Greeting />} />
         <Route path="/organization" element={<Organization />} />
         <Route path="/location" element={<Location />} />
+        <Route path="/pledge" element={<Pledge />} />
         <Route path="/rules" element={<Rules />} />
         <Route path="/conference" element={<Conference />} />
         <Route path="/board-petition">
