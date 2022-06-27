@@ -12,7 +12,7 @@ const P = styled.p`
   margin-bottom: 7px;
 `;
 
-// ToDo: detail 내용 동적으로 바꾸기
+// TODO: detail 내용 동적으로 바꾸기
 function News(): JSX.Element {
   return (
     <Wrapper>

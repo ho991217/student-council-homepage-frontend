@@ -41,7 +41,7 @@ const NextMonthDateDiv = styled(Div)`
 `;
 
 
-// ToDo: detail 내용 동적으로 바꾸기
+// TODO: detail 내용 동적으로 바꾸기
 function Schedule(): JSX.Element {
   const days: string[] = ['일', '월', '화', '수', '목', '금', '토'];
   const dates: number[] = [];
