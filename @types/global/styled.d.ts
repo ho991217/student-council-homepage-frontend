@@ -6,6 +6,7 @@ declare module 'styled-components' {
       primary: string;
       secondary: string;
       accent: string;
+      blur: string;
       white: string;
       gray020: string;
       gray040: string;
@@ -20,6 +21,7 @@ declare module 'styled-components' {
       gray800: string;
       gray900: string;
       red: string;
+      blue: string;
     };
     fonts: {
       title: string;

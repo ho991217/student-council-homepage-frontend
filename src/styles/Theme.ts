@@ -6,6 +6,7 @@ export const theme: DefaultTheme = {
     primary: '#9B88BF',
     secondary: '#9753DC',
     accent: '#79C0D5',
+    blur: '#F2F6F9',
     white: '#FFFFFF',
     gray020: '#F9F9F9',
     gray040: '#F2F3F5',
@@ -20,6 +21,7 @@ export const theme: DefaultTheme = {
     gray800: '#2C2D2E',
     gray900: '#19191A',
     red: '#B35141',
+    blue: '#0022F5',
   },
   fonts: {
     title: 'font-size: 36px; font-weight: 600;',

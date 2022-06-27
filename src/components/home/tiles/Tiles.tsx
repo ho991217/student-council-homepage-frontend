@@ -46,21 +46,37 @@ function Tiles(): JSX.Element {
   return (
     <Container>
       <BigTile>
-        <Tile title="학사일정" linkTitle="학사일정바로가기" to="/" />
+        <Tile 
+          title="학사일정" 
+          linkTitle="학사일정바로가기" 
+          to="/" 
+          detail="schedule" 
+        />
       </BigTile>
       <SmallTileContainer>
         <SmallTile>
-          <Tile title="총학소식" linkTitle="더보기" to="/" />
+          <Tile 
+            title="총학소식" 
+            linkTitle="더보기" 
+            to="/" 
+            detail="news" 
+          />
         </SmallTile>
         <SmallTile>
           <Tile
             title="실시간 인기청원"
             linkTitle="더보기"
             to="/board-petition"
+            detail="petition" 
           />
         </SmallTile>
         <SmallTile>
-          <Tile title="금주의 회의록" linkTitle="더보기" to="/board-inquiry" />
+          <Tile 
+            title="금주의 회의록" 
+            linkTitle="더보기" 
+            to="/board-inquiry"
+            detail="proceeding" 
+           />
         </SmallTile>
       </SmallTileContainer>
     </Container>

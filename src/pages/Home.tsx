@@ -1,5 +1,5 @@
 import Carousel from 'components/home/carousel/Carousel';
-import Tiles from 'components/home/Tiles';
+import Tiles from 'components/home/tiles/Tiles';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`

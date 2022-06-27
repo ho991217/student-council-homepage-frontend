@@ -1,6 +1,11 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { TileProps } from './TileProps';
+import Schedule from './components/Schedule'
+import News from './components/News';
+import Petition from './components/Petition';
+import Proceeding from './components/Proceeding';
+
 
 const Container = styled.div`
   width: 100%;
@@ -29,13 +34,17 @@ const MoreLink = styled(Link)`
   color: ${({ theme }) => theme.colors.gray600};
 `;
 
-function Tile({ title, linkTitle, to }: TileProps): JSX.Element {
+function Tile({ title, linkTitle, to, detail }: TileProps): JSX.Element {
   return (
     <Container>
       <TitleContainer>
         <Title>{title}</Title>
         <MoreLink to={to}>{linkTitle}</MoreLink>
       </TitleContainer>
+      { detail==="schedule" && <Schedule /> }
+      { detail==="news" && <News /> }
+      { detail==="petition" && <Petition /> }
+      { detail==="proceeding" && <Proceeding /> }
     </Container>
   );
 }
