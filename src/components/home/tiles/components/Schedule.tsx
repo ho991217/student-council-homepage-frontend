@@ -15,12 +15,20 @@ const P = styled.p`
   ${({ theme }) => theme.fonts.detailThin}
   color: ${({ theme }) => theme.colors.gray900};
   margin-bottom: 7px;
+  ${({ theme }) => theme.media.mobile} {
+    margin-bottom: 15px;
+  }
 `;
 
 const Span = styled.span`
   ${({ theme }) => theme.fonts.detailBold}
   color: ${({ theme }) => theme.colors.gray900};
-`;
+  ${({ theme }) => theme.media.mobile} {
+    display: block;
+    width: 100%;
+    margin-bottom: 4px;
+  }
+  `;
 
 // TODO: detail 내용 동적으로 바꾸기
 function Schedule(): JSX.Element {
