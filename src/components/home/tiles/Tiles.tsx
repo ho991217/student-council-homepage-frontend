@@ -12,6 +12,7 @@ const Container = styled.div`
   ${({ theme }) => theme.media.mobile} {
     flex-direction: column;
     margin-bottom: 10px;
+    height: 100%;
   }
 `;
 

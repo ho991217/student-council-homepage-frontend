@@ -31,9 +31,7 @@ const DayDiv = styled(Div)`
 
 const DateDiv = styled(Div)`
   cursor: pointer;
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.blur};
-  }
+  &:hover { background-color: ${({ theme }) => theme.colors.blur}; }
   &:nth-child(7n+1) { color: ${({ theme }) => theme.colors.red}; }
   &:nth-child(7n+7) { color: ${({ theme }) => theme.colors.blue}; }
 `;
