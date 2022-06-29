@@ -33,5 +33,6 @@ export const GlobalStyles = createGlobalStyle`
         min-height: 100vh;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
     }
 `;

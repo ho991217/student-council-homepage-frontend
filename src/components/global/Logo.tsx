@@ -13,7 +13,7 @@ const Container = styled.div`
     margin-left: 50px;
   }
   ${({ theme }) => theme.media.tablet} {
-    margin-left: 50px;
+    margin-left: 25px;
   }
   ${({ theme }) => theme.media.mobile} {
     margin-left: 25px;

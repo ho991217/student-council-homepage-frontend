@@ -5,12 +5,12 @@ interface MediaProps {
 }
 
 export function Desktop({ children }: MediaProps): JSX.Element | null {
-  const isDesktop = useMediaQuery({ minWidth: 992 });
+  const isDesktop = useMediaQuery({ minWidth: 1280 });
   return isDesktop ? children : null;
 }
 
 export function Tablet({ children }: MediaProps): JSX.Element | null {
-  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1279 });
   return isTablet ? children : null;
 }
 
