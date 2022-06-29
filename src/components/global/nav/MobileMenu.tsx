@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { NavItems } from './NavItems';
@@ -75,6 +75,7 @@ const MenuContainer = styled.div<{ opened: boolean }>`
   top: 0;
   background-color: ${({ theme }) => theme.colors.white};
   transition: right 0.3s ease-in-out;
+  overflow-y: scroll;
 `;
 
 const UserSection = styled.section`
@@ -84,6 +85,9 @@ const UserSection = styled.section`
   padding-right: 30px;
   align-items: center;
   justify-content: flex-end;
+  position: sticky;
+  top: 0;
+  background-color: ${({ theme }) => theme.colors.white};
 `;
 
 const NavSection = styled.ul`
@@ -97,7 +101,6 @@ const NavSection = styled.ul`
 
 const NavBlock = styled.li`
   width: 100%;
-  border: 1px solid black;
 `;
 
 const PathTitle = styled.div`
@@ -106,13 +109,26 @@ const PathTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  background-color: ${({ theme }) => theme.colors.gray040};
 `;
 
 function MobileMenu(): JSX.Element {
   const [opened, setOpened] = useState<boolean>(false);
+  const navRef = useRef(null);
+
+  // ios 스크롤락에 대한 부분
+  useEffect(() => {
+    if (opened) {
+      document.body.style.touchAction = 'none';
+    }
+    return () => {
+      document.body.style.touchAction = '';
+    };
+  }, [opened]);
+
   return (
     <>
-      <Container opened={opened}>
+      <Container ref={navRef} opened={opened}>
         <Svg
           onClick={() => setOpened((prev) => !prev)}
           width="36"
