@@ -1,4 +1,5 @@
 import GlobalBanner from 'components/global/banner/GlobalBanner';
+import { Desktop } from 'hooks/MediaQueries';
 import { useState } from 'react';
 import styled from 'styled-components';
 
@@ -10,7 +11,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 0px 40px;
+  padding: 0px 2rem;
 `;
 
 const Header = styled.div`
@@ -34,6 +35,9 @@ const InnerContainer = styled.div`
   max-width: 1400px;
   width: 100%;
   height: 270px;
+  ${({ theme }) => theme.media.mobile} {
+    height: 160px;
+  }
   background-color: ${({ theme }) => theme.colors.gray040};
   display: flex;
   flex-direction: column;
@@ -43,6 +47,10 @@ const InnerContainer = styled.div`
 
 const LoginForm = styled.form`
   display: flex;
+  align-items: center;
+  ${({ theme }) => theme.media.mobile} {
+    flex-direction: column;
+  }
 `;
 
 const InputContainers = styled.div`
@@ -51,6 +59,9 @@ const InputContainers = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
+  ${({ theme }) => theme.media.mobile} {
+    margin-bottom: 15px;
+  }
 `;
 
 const IdContainer = styled.div`
@@ -111,6 +122,7 @@ const PasswordContainer = styled.div`
 const PasswordLabel = styled.span`
   width: 60px;
   display: flex;
+  margin-right: 10px;
   align-items: center;
   justify-content: flex-start;
 `;
@@ -123,13 +135,16 @@ const PasswordInput = styled.input.attrs({
   background-color: ${({ theme }) => theme.colors.white};
   height: 100%;
   width: 300px;
-  margin: 10px;
   padding: 0 10px;
   border: 1px solid ${({ theme }) => theme.colors.gray100};
 `;
 
 const LoginButton = styled.input.attrs({ type: 'submit' })`
   all: unset;
+  ${({ theme }) => theme.media.mobile} {
+    width: 100%;
+    height: 80px;
+  }
   width: 90px;
   height: 90px;
   background-color: ${({ theme }) => theme.colors.primary};
@@ -199,7 +214,9 @@ function Login(): JSX.Element {
           <LoginForm onSubmit={handleLogin}>
             <InputContainers>
               <IdContainer>
-                <IdLabel>아이디</IdLabel>
+                <Desktop>
+                  <IdLabel>아이디</IdLabel>
+                </Desktop>
                 <IdInput
                   placeholder="학번을 입력해주세요"
                   value={id}
@@ -208,7 +225,9 @@ function Login(): JSX.Element {
                 <IdMessage isValid={isValidId}>{idMessage}</IdMessage>
               </IdContainer>
               <PasswordContainer>
-                <PasswordLabel>비밀번호</PasswordLabel>
+                <Desktop>
+                  <PasswordLabel>비밀번호</PasswordLabel>
+                </Desktop>
                 <PasswordInput
                   placeholder="비밀번호를 입력해주세요."
                   value={password}

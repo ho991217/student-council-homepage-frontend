@@ -7,7 +7,7 @@ const Container = styled.div<{ opened: boolean }>`
   position: absolute;
   z-index: 100;
   /* background-color: ${({ theme }) => theme.colors.white}; */
-  height: 100vh;
+
   width: 80px;
   display: flex;
   align-items: center;
@@ -88,11 +88,14 @@ const UserSection = styled.section`
   position: sticky;
   top: 0;
   background-color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.fonts.size.xl};
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
+  color: ${({ theme }) => theme.colors.gray700};
 `;
 
 const NavSection = styled.ul`
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -103,8 +106,13 @@ const NavBlock = styled.li`
   width: 100%;
 `;
 
+const NavLink = styled(Link)`
+  width: 100%;
+  height: 100%;
+`;
+
 const PathTitle = styled.div`
-  height: 100px;
+  /* height: 100px; */
   padding: 30px;
   display: flex;
   align-items: center;
@@ -150,7 +158,9 @@ function MobileMenu(): JSX.Element {
       </Container>
       {opened && <Blur onClick={() => setOpened(false)} />}
       <MenuContainer opened={opened}>
-        <UserSection>로그인</UserSection>
+        <UserSection>
+          <Link to="/login">로그인</Link>
+        </UserSection>
         <NavSection>
           {NavItems.map((item) => (
             <NavBlock key={item.id}>
@@ -159,7 +169,9 @@ function MobileMenu(): JSX.Element {
                   <PathTitle>expand</PathTitle>
                 </div>
               ) : (
-                <PathTitle>{item.path}</PathTitle>
+                <NavLink to={item.path} onClick={() => setOpened(false)}>
+                  <PathTitle>{item.title}</PathTitle>
+                </NavLink>
               )}
             </NavBlock>
           ))}
