@@ -24,12 +24,31 @@ declare module 'styled-components' {
       blue: string;
     };
     fonts: {
-      title: string;
-      smallTitle: string;
-      smallSubTitle: string;
-      smallDescription: string;
-      detailBold: string;
-      detailThin: string;
+      weight: {
+        thin: number;
+        light: number;
+        regular: number;
+        medium: number;
+        bold: number;
+        black: number;
+      };
+      size: {
+        xs: string;
+        sm: string;
+        base: string;
+        md: string;
+        lg: string;
+        xl: string;
+        xxl: string;
+        x3xl: string;
+        x4xl: string;
+        x5xl: string;
+        x6xl: string;
+        x7xl: string;
+        x8xl: string;
+        x9xl: string;
+        x10xl: string;
+      };
     };
     media: {
       mobile: string;

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import Logo from 'components/global/Logo';
 
 const Wrapper = styled.footer`
@@ -12,12 +11,13 @@ const Wrapper = styled.footer`
   flex-grow: 1;
   background-color: ${({ theme }) => theme.colors.white};
   border-top: 1px solid ${({ theme }) => theme.colors.gray050};
-  ${({ theme }) => theme.media.mobile}{
+
+  ${({ theme }) => theme.media.mobile} {
     bottom: 0;
   }
 `;
 
-const Container = styled.div` 
+const Container = styled.div`
   max-width: 1440px;
   width: 100%;
   height: 100%;
@@ -37,11 +37,12 @@ const Policy = styled.div`
 `;
 
 const Span = styled.span`
-  ${({ theme }) => theme.fonts.smallDescription}
   margin: 3px;
   line-height: 14px;
   margin-right: 10px;
   color: ${({ theme }) => theme.colors.gray300};
+  font-size: ${({ theme }) => theme.fonts.size.xs};
+  font-weight: ${({ theme }) => theme.fonts.weight.regular};
 `;
 
 // 이용약관 등등 디자인 나오면 수정

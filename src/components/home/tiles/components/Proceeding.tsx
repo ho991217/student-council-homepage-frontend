@@ -7,8 +7,9 @@ const Wrapper = styled.div`
 `;
 
 const P = styled.p`
-  ${({ theme }) => theme.fonts.detailThin}
   color: ${({ theme }) => theme.colors.gray900};
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
   margin-bottom: 7px;
 `;
 

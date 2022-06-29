@@ -47,12 +47,14 @@ const HSeparator = styled.div<{ bold?: boolean }>`
 
 const Header = styled.h2`
   color: ${({ theme }) => theme.colors.secondary};
-  ${({ theme }) => theme.fonts.smallTitle}
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  font-weight: ${({ theme }) => theme.fonts.weight.regular};
   margin: 15px 0px;
 `;
 
 const Title = styled.h1`
-  ${({ theme }) => theme.fonts.smallTitle}
+  font-size: ${({ theme }) => theme.fonts.size.lg};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
   margin-bottom: 25px;
 `;
 
@@ -107,7 +109,8 @@ const CommentSubmit = styled.input.attrs({ type: 'submit' })`
   align-items: center;
   justify-content: center;
   border-radius: 5px;
-  ${({ theme }) => theme.fonts.detailBold}
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
 const CommentLists = styled.ul`
@@ -147,21 +150,23 @@ const VSeparator = styled.div`
 
 const CommentAuthor = styled.div`
   margin-right: 10px;
-  ${({ theme }) => theme.fonts.detailThin}
+  font-size: ${({ theme }) => theme.fonts.size.sm};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
 const CommentDate = styled.div`
   color: ${({ theme }) => theme.colors.gray400};
-  ${({ theme }) => theme.fonts.smallDescription}
+  font-size: ${({ theme }) => theme.fonts.size.xs};
+  font-weight: ${({ theme }) => theme.fonts.weight.regular};
 `;
 
 const CommentText = styled.div`
-  ${({ theme }) => theme.fonts.smallSubTitle}
+  font-size: ${({ theme }) => theme.fonts.size.sm};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
 function Post() {
   const [searchParams] = useSearchParams();
-
   const [post, setPost] = useState<PostProps>();
 
   const [comment, setComment] = useState<string>('동의합니다.');

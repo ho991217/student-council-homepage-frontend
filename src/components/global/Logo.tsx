@@ -16,7 +16,7 @@ const Container = styled.div`
     margin-left: 50px;
   }
   ${({ theme }) => theme.media.mobile} {
-    margin-left: 15px;
+    margin-left: 25px;
   }
 `;
 

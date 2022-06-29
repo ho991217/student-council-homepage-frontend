@@ -10,18 +10,19 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  padding: 0px 40px;
 `;
 
 const Header = styled.div`
-  margin-top: 40px;
-  margin-bottom: 15px;
+  margin: 40px 0 15px 0;
   max-width: 1400px;
   width: 100%;
   padding: 20px 0;
   display: flex;
   align-items: center;
   border-bottom: 2px solid ${({ theme }) => theme.colors.primary};
-  ${({ theme }) => theme.fonts.smallTitle}
+  font-size: ${({ theme }) => theme.fonts.size.lg};
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
 `;
 
 const HeaderPoint = styled.div`
@@ -86,11 +87,13 @@ const IdInput = styled.input.attrs({
 
 const IdMessage = styled.div<{ isValid: boolean }>`
   position: absolute;
+  pointer-events: none;
   right: ${({ isValid }) => (isValid ? '120px' : '200px')};
   top: ${({ isValid }) => (isValid ? '13px' : '-25px')};
-  pointer-events: none;
-  font-size: ${({ isValid }) => (isValid ? '16px' : '14px')};
-  font-weight: ${({ isValid }) => (isValid ? 'normal' : 'bold')};
+  font-size: ${({ isValid, theme }) =>
+    isValid ? theme.fonts.size.base : theme.fonts.size.sm};
+  font-weight: ${({ isValid, theme }) =>
+    isValid ? theme.fonts.weight.regular : theme.fonts.weight.bold};
   color: ${({ isValid, theme }) =>
     isValid ? theme.colors.gray900 : theme.colors.red};
   transition: right 0.2s ease-in-out, top 0.2s ease-in-out,
@@ -134,17 +137,20 @@ const LoginButton = styled.input.attrs({ type: 'submit' })`
   justify-content: center;
   align-items: center;
   border-radius: 2px;
-  font-size: ${({ theme }) => theme.fonts.smallTitle};
   color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.fonts.size.lg};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
 const Detail = styled.div`
-  ${({ theme }) => theme.fonts.smallDescription}
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin: 15px 0;
+  font-size: ${({ theme }) => theme.fonts.size.xs};
+  font-weight: ${({ theme }) => theme.fonts.weight.regular};
+
   span:first-child {
     margin-bottom: 5px;
     color: ${({ theme }) => theme.colors.gray400};
@@ -161,8 +167,6 @@ function Login(): JSX.Element {
   const [isValidId, setIsValidId] = useState<boolean>(false);
 
   const validateDankookEmail = (email: string) => {
-    // const regex = /^[0-9]{8}@(?:dankook.ac.kr)$/;
-    // return regex.test(email);
     const regex = /^[0-9]{8}$/;
     return regex.test(email);
   };
@@ -182,18 +186,6 @@ function Login(): JSX.Element {
     }
 
     setId(currentInput);
-
-    // if (id === '') {
-    //   setIdMessage('');
-    // } else {
-    //   const validEmail = validateDankookEmail(e.target.value);
-    //   if (validEmail) {
-    //     setIdMessage('@dankook.ac.kr');
-    //   } else {
-    //     setIdMessage('정확한 학번을 입력해주세요.');
-    //   }
-    // }
-    // setId((prev) => e.target.value + idMessage);
   };
 
   return (

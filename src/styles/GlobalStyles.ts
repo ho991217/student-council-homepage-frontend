@@ -7,6 +7,16 @@ export const GlobalStyles = createGlobalStyle`
     ${reset}
     :root {
         font-family: 'Pretendard', sans-serif;
+        ${({ theme }) => theme.media.mobile} {
+            font-size: 12px
+        };
+        ${({ theme }) => theme.media.tablet} {
+            font-size: 14px
+        };
+        ${({ theme }) => theme.media.desktop} {
+            font-size: 16px
+        };
+
     }
     * {
         box-sizing: border-box;

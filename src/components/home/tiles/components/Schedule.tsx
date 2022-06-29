@@ -8,27 +8,45 @@ const Container = styled.div`
 `;
 
 const DetailWrapper = styled.div`
-  margin-top: 27px;
+  margin-top: 20px;
 `;
 
 const P = styled.p`
-  ${({ theme }) => theme.fonts.detailThin}
+  font-weight: ${({ theme }) => theme.fonts.weight.regular};
   color: ${({ theme }) => theme.colors.gray900};
-  margin-bottom: 7px;
+  display: flex;
+  ${({ theme }) => theme.media.desktop} {
+    font-size: ${({ theme }) => theme.fonts.size.base};
+    margin-bottom: 8px;
+  }
+
+  ${({ theme }) => theme.media.tablet} {
+    font-size: ${({ theme }) => theme.fonts.size.md};
+    margin-bottom: 8px;
+  }
+
   ${({ theme }) => theme.media.mobile} {
-    margin-bottom: 15px;
+    font-size: ${({ theme }) => theme.fonts.size.lg};
+    margin-bottom: 7px;
   }
 `;
 
 const Span = styled.span`
-  ${({ theme }) => theme.fonts.detailBold}
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
   color: ${({ theme }) => theme.colors.gray900};
-  ${({ theme }) => theme.media.mobile} {
-    display: block;
-    width: 100%;
-    margin-bottom: 4px;
+  margin-right: 10px;
+  ${({ theme }) => theme.media.desktop} {
+    font-size: ${({ theme }) => theme.fonts.size.base};
   }
-  `;
+
+  ${({ theme }) => theme.media.tablet} {
+    font-size: ${({ theme }) => theme.fonts.size.md};
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    font-size: ${({ theme }) => theme.fonts.size.lg};
+  }
+`;
 
 // TODO: detail 내용 동적으로 바꾸기
 function Schedule(): JSX.Element {

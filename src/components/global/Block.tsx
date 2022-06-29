@@ -18,8 +18,8 @@ const TitleContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 36px;
-  font-weight: 600;
+  font-size: ${({ theme }) => theme.fonts.size.x3xl};
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
 `;
 
 const Contents = styled.div`

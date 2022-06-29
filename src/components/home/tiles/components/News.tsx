@@ -7,9 +7,10 @@ const Wrapper = styled.div`
 `;
 
 const P = styled.p`
-  ${({ theme }) => theme.fonts.detailThin}
   color: ${({ theme }) => theme.colors.gray900};
   margin-bottom: 7px;
+  font-size: ${({ theme }) => theme.fonts.size.md};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
 // TODO: detail 내용 동적으로 바꾸기

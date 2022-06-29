@@ -4,13 +4,13 @@ import styled from 'styled-components';
 const Container = styled.div`
   display: grid;
   place-items: center;
-
   color: ${(props) => props.theme.colors.white};
   background-color: ${(props) => props.theme.colors.primary};
-  ${({ theme }) => theme.fonts.smallSubTitle}
   width: 100%;
   height: 40px;
   user-select: none;
+  font-size: ${({ theme }) => theme.fonts.size.sm};
+  font-weight: ${({ theme }) => theme.fonts.weight.light};
   a {
     color: ${(props) => props.theme.colors.white};
     margin: 0px 20px;

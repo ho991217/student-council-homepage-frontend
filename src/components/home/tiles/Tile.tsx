@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { TileProps } from './TileProps';
-import Schedule from './components/Schedule'
+import { Link } from 'react-router-dom';
+import Schedule from './components/Schedule';
 import News from './components/News';
 import Petition from './components/Petition';
 import Proceeding from './components/Proceeding';
 
+import { TileProps } from './TileProps';
 
 const Container = styled.div`
   width: 100%;
@@ -25,13 +25,15 @@ const TitleContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  ${({ theme }) => theme.fonts.smallTitle}
   color: ${({ theme }) => theme.colors.accent};
+  font-size: ${({ theme }) => theme.fonts.size.lg};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
 const MoreLink = styled(Link)`
-  ${({ theme }) => theme.fonts.smallSubTitle}
   color: ${({ theme }) => theme.colors.gray600};
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  font-weight: ${({ theme }) => theme.fonts.weight.light};
 `;
 
 function Tile({ title, linkTitle, to, detail }: TileProps): JSX.Element {
@@ -41,10 +43,10 @@ function Tile({ title, linkTitle, to, detail }: TileProps): JSX.Element {
         <Title>{title}</Title>
         <MoreLink to={to}>{linkTitle}</MoreLink>
       </TitleContainer>
-      { detail==="schedule" && <Schedule /> }
-      { detail==="news" && <News /> }
-      { detail==="petition" && <Petition /> }
-      { detail==="proceeding" && <Proceeding /> }
+      {detail === 'schedule' && <Schedule />}
+      {detail === 'news' && <News />}
+      {detail === 'petition' && <Petition />}
+      {detail === 'proceeding' && <Proceeding />}
     </Container>
   );
 }

@@ -4,7 +4,17 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   width: 100%;
-  height: 500px;
+  ${({ theme }) => theme.media.desktop} {
+    height: 500px;
+  }
+
+  ${({ theme }) => theme.media.tablet} {
+    height: 400px;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    height: 300px;
+  }
 `;
 
 function CouncilMap() {

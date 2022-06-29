@@ -24,12 +24,14 @@ const Li = styled.li`
 `;
 
 const Title = styled.h1`
-  ${({ theme }) => theme.fonts.detailBold}
+  font-size: ${({ theme }) => theme.fonts.size.lg};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
   width: 100px;
 `;
 
 const Detail = styled.span`
-  ${({ theme }) => theme.fonts.detailThin}
+  font-size: ${({ theme }) => theme.fonts.size.md};
+  font-weight: ${({ theme }) => theme.fonts.weight.regular};
 `;
 
 interface infoProps {

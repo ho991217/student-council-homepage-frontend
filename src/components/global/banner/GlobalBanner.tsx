@@ -14,6 +14,7 @@ const Container = styled.div`
     height: 200px;
   }
   ${({ theme }) => theme.media.mobile} {
+    height: 150px;
   }
 `;
 
@@ -30,12 +31,15 @@ const Banner = styled.div`
 `;
 
 const Title = styled.h1`
-  ${({ theme }) => theme.fonts.title}
+  font-size: ${({ theme }) => theme.fonts.size.x3xl};
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
+
   margin-bottom: 12px;
 `;
 
 const Detail = styled.h2`
-  ${({ theme }) => theme.fonts.detailThin}
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  font-weight: ${({ theme }) => theme.fonts.weight.regular};
 `;
 
 function GlobalBanner({

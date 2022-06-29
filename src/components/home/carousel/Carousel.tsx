@@ -17,9 +17,17 @@ import DotNav from './DotNav';
 import Slide from './Slide';
 
 // 스타일드 컴포넌트
-const Wrapper = styled.div<{ theme: string }>`
+const Wrapper = styled.div`
   width: 100%;
-  height: 530px;
+  ${({ theme }) => theme.media.desktop} {
+    height: 530px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    height: 300px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    height: 200px;
+  }
   background-color: ${(props) => props.theme.colors.primary};
   display: flex;
   align-items: center;
