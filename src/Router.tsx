@@ -8,13 +8,13 @@ import Conference from 'pages/Conference';
 import PetitionBoard from 'pages/communication/PetitionBoard';
 import InquiryBoard from 'pages/communication/InquiryBoard';
 import Location from 'pages/council-info/Location';
+import Login from 'pages/Login';
 import Pledge from 'pages/council-info/Pledge';
 
 import GlobalBanner from 'components/global/banner/GlobalBanner';
 import Post from 'components/boards/post/Post';
 import Gnb from 'components/global/nav/Gnb';
 import Footer from 'components/global/footer/Footer';
-import Login from 'pages/Login';
 
 function Router() {
   return (
