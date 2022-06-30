@@ -7,7 +7,7 @@ import { NavItems } from './NavItems';
 const Container = styled.div<{ opened: boolean }>`
   position: absolute;
   z-index: 100;
-  height: ${({ opened }) => (opened ? 'calc(var(--vh, 1vh) * 100)' : '80px')};
+  height: 80px;
   width: 80px;
   display: flex;
   align-items: center;
@@ -16,7 +16,8 @@ const Container = styled.div<{ opened: boolean }>`
   transition: right 0.3s ease-in-out;
 `;
 
-const Svg = styled.svg`
+const Hamburger = styled.svg`
+  cursor: pointer;
   path {
     fill: none;
     stroke: black;
@@ -118,6 +119,7 @@ const Expandable = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 `;
 
 const PathTitle = styled.div<{ mainPath?: boolean }>`
@@ -126,16 +128,20 @@ const PathTitle = styled.div<{ mainPath?: boolean }>`
   color: ${({ theme }) => theme.colors.white};
   background-color: ${({ theme, mainPath }) =>
     mainPath ? theme.colors.secondary : theme.colors.primary};
-  padding: 30px;
+  border-top: 0.25px solid rgba(255, 255, 255, 0.25);
+  height: 60px;
+  padding: 0 20px;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
 `;
 
-const Chevron = styled.svg`
+const Chevron = styled.svg<{ opened: boolean }>`
   width: 16px;
   fill: ${({ theme }) => theme.colors.white};
+  transform: ${({ opened }) => opened && 'rotateZ(180deg)'};
+  transition: transform 0.2s ease-out;
 `;
 
 const MainPath = styled.div`
@@ -151,7 +157,7 @@ const SubPath = styled.div<{ pathCount: number; opened: boolean }>`
   background-color: ${({ theme }) => theme.colors.primary};
   position: relative;
   overflow: hidden;
-  height: ${({ opened, pathCount }) => (opened ? 80 * pathCount : 0)}px;
+  height: ${({ opened, pathCount }) => (opened ? 60 * pathCount : 0)}px;
   transition: height 0.2s ease-in-out;
 `;
 
@@ -179,7 +185,7 @@ function MobileMenu(): JSX.Element {
   return (
     <>
       <Container opened={opened}>
-        <Svg
+        <Hamburger
           onClick={() => setOpened((prev) => !prev)}
           width="36"
           height="36"
@@ -196,13 +202,20 @@ function MobileMenu(): JSX.Element {
             opened={opened}
             d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942"
           />
-        </Svg>
+        </Hamburger>
       </Container>
       {opened && <Blur onClick={() => setOpened(false)} />}
       <MenuContainer ref={navRef} opened={opened}>
         <UserSection>
-          <a href="https://portal.dankook.ac.kr/web/portal">Portal</a>
-          <Link to="/login">로그인</Link>
+          <a
+            href="https://portal.dankook.ac.kr/web/portal"
+            onClick={() => setOpened(false)}
+          >
+            Portal
+          </a>
+          <Link to="/login" onClick={() => setOpened(false)}>
+            로그인
+          </Link>
         </UserSection>
         <NavSection>
           {NavItems.map((item) => (
@@ -218,7 +231,10 @@ function MobileMenu(): JSX.Element {
                   <MainPath>
                     <PathTitle mainPath>
                       {item.title}
-                      <Chevron viewBox="0 0 448 512">
+                      <Chevron
+                        opened={subpathOpened[Number(item.id)]}
+                        viewBox="0 0 448 512"
+                      >
                         <path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z" />
                       </Chevron>
                     </PathTitle>
