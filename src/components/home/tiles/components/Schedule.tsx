@@ -41,7 +41,7 @@ const Span = styled.span`
   }
 
   ${({ theme }) => theme.media.tablet} {
-    font-size: ${({ theme }) => theme.fonts.size.md};
+    font-size: ${({ theme }) => theme.fonts.size.base};
   }
 
   ${({ theme }) => theme.media.mobile} {

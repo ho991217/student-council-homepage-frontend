@@ -5,16 +5,17 @@ const Container = styled.div`
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
     padding: 70px 120px 60px 120px;
+    margin-top: 40px;
+    margin-bottom: 100px;
   }
   ${({ theme }) => theme.media.tablet} {
     padding: 70px 120px 60px 120px;
+    margin-top: 30px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 70px 20px 60px 20px;
+    padding: 20px 20px 60px 20px;
   }
   background-color: ${({ theme }) => theme.colors.white};
-  margin-top: 40px;
-  margin-bottom: 100px;
 `;
 
 const TitleContainer = styled.div`

@@ -17,7 +17,7 @@ const Nav = styled.nav`
   position: sticky;
   top: 0;
   z-index: 98;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.white};
   user-select: none;
   padding: 0px 20px;
 `;
