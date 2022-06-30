@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -37,6 +37,7 @@ const LoginLink = styled(Link)`
 `;
 
 function UserMenu(): JSX.Element {
+  const location = useLocation();
   return (
     <Container>
       <InnerContainer>
@@ -46,7 +47,9 @@ function UserMenu(): JSX.Element {
         </Links>
 
         {/* TODO: 로그인 페이지 만들어지면 경로 수정 */}
-        <LoginLink to="/login">로그인</LoginLink>
+        {location.pathname !== '/login' && (
+          <LoginLink to="/login">로그인</LoginLink>
+        )}
       </InnerContainer>
     </Container>
   );

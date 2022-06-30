@@ -1,6 +1,7 @@
 import GlobalBanner from 'components/global/banner/GlobalBanner';
 import { Desktop } from 'hooks/MediaQueries';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -61,6 +62,12 @@ const InputContainers = styled.div`
   justify-content: center;
   ${({ theme }) => theme.media.mobile} {
     margin-bottom: 15px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    margin-right: 5px;
+  }
+  ${({ theme }) => theme.media.desktop} {
+    margin-right: 15px;
   }
 `;
 
@@ -175,11 +182,86 @@ const Detail = styled.div`
   }
 `;
 
+const ExtrasContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 350px;
+  padding: 0 35px 0 0;
+  margin-top: 15px;
+`;
+
+const Extras = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const SignUpButton = styled(Link)`
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: ${({ theme }) => theme.fonts.size.sm};
+`;
+
+const Vseparator = styled.div`
+  width: 1px;
+  height: 12px;
+  background-color: ${({ theme }) => theme.colors.primary};
+  margin: 0 10px;
+`;
+
+const FindPasswordButton = styled(Link)`
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: ${({ theme }) => theme.fonts.size.sm};
+`;
+
+const SaveId = styled.div<{ saveId: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: ${({ theme }) => theme.fonts.size.sm};
+  font-weight: ${({ theme, saveId }) =>
+    saveId ? theme.fonts.weight.medium : theme.fonts.weight.regular};
+  color: ${({ theme, saveId }) =>
+    saveId ? theme.colors.primary : theme.colors.gray400};
+  transition: color 0.2s ease-in-out;
+`;
+
+const SaveIdToggleContainer = styled.div<{ saveId: boolean }>`
+  width: 30px;
+  height: 18px;
+  margin-right: 5px;
+  border-radius: 20px;
+  background-color: ${({ theme, saveId }) =>
+    saveId ? theme.colors.primary : theme.colors.white};
+  border: 1px solid ${({ theme }) => theme.colors.gray100};
+  position: relative;
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  :active {
+    div {
+      transform: scale(0.9);
+      box-shadow: 0 0 1px 1.5px rgba(0, 0, 0, 0.1) inset;
+    }
+  }
+`;
+
+const SaveIdToggle = styled.div<{ saveId: boolean }>`
+  position: absolute;
+  top: 1px;
+  left: ${({ saveId }) => (saveId ? '13px' : '1px')};
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: ${({ theme, saveId }) =>
+    saveId ? theme.colors.gray040 : theme.colors.primary};
+  transition: background-color 0.2s ease-in-out, left 0.2s ease-in-out; ;
+`;
+
 function Login(): JSX.Element {
   const [id, setId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [idMessage, setIdMessage] = useState<string>('');
   const [isValidId, setIsValidId] = useState<boolean>(false);
+  const [saveId, setSaveId] = useState<boolean>(false);
 
   const validateDankookEmail = (email: string) => {
     const regex = /^[0-9]{8}$/;
@@ -202,6 +284,24 @@ function Login(): JSX.Element {
 
     setId(currentInput);
   };
+
+  useEffect(() => {
+    const localSaveId = localStorage.getItem('saveId');
+    if (localSaveId) {
+      setId(JSON.parse(localSaveId));
+      setSaveId(true);
+    } else {
+      setSaveId(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (saveId && validateDankookEmail(id)) {
+      localStorage.setItem('saveId', JSON.stringify(id));
+    } else {
+      localStorage.removeItem('saveId');
+    }
+  }, [saveId]);
 
   return (
     <>
@@ -237,6 +337,22 @@ function Login(): JSX.Element {
             </InputContainers>
             <LoginButton value="로그인" />
           </LoginForm>
+          <ExtrasContainer>
+            <SaveId saveId={saveId}>
+              <SaveIdToggleContainer
+                saveId={saveId}
+                onClick={() => setSaveId((prev) => !prev)}
+              >
+                <SaveIdToggle saveId={saveId} />
+              </SaveIdToggleContainer>
+              아이디 저장
+            </SaveId>
+            <Extras>
+              <SignUpButton to="/">회원가입</SignUpButton>
+              <Vseparator />
+              <FindPasswordButton to="/">비밀번호 찾기</FindPasswordButton>
+            </Extras>
+          </ExtrasContainer>
         </InnerContainer>
         <Detail>
           <span>
