@@ -95,7 +95,6 @@ const UserSection = styled.section`
 
 const NavSection = styled.ul`
   width: 100%;
-  /* height: 100%; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -107,22 +106,59 @@ const NavBlock = styled.li`
 `;
 
 const NavLink = styled(Link)`
-  width: 100%;
-  height: 100%;
-`;
-
-const PathTitle = styled.div`
-  /* height: 100px; */
-  padding: 30px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  background-color: ${({ theme }) => theme.colors.gray040};
+`;
+
+const Expandable = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PathTitle = styled.div<{ mainPath?: boolean }>`
+  font-size: ${({ theme }) => theme.fonts.size.xl};
+  font-weight: ${({ theme }) => theme.fonts.weight.regular};
+  color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme, mainPath }) =>
+    mainPath ? theme.colors.secondary : theme.colors.primary};
+  padding: 30px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const Chevron = styled.svg`
+  width: 16px;
+  fill: ${({ theme }) => theme.colors.white};
+`;
+
+const MainPath = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: ${({ theme }) => theme.colors.secondary};
+`;
+
+const SubPath = styled.div<{ pathCount: number; opened: boolean }>`
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.primary};
+  position: relative;
+  overflow: hidden;
+  height: ${({ opened, pathCount }) => (opened ? 80 * pathCount : 0)}px;
+  transition: height 0.2s ease-in-out;
 `;
 
 function MobileMenu(): JSX.Element {
   const [opened, setOpened] = useState<boolean>(false);
   const navRef = useRef(null);
+  const [subpathOpened, setSubpathOpened] = useState<boolean[]>(
+    Array.from({ length: NavItems.length }, () => false),
+  );
 
   // ios 스크롤락에 대한 부분
   useEffect(() => {
@@ -165,12 +201,39 @@ function MobileMenu(): JSX.Element {
           {NavItems.map((item) => (
             <NavBlock key={item.id}>
               {item.subPath ? (
-                <div>
-                  <PathTitle>expand</PathTitle>
-                </div>
+                <Expandable
+                  onClick={() => {
+                    const newOpen = [...subpathOpened];
+                    newOpen[Number(item.id)] = !newOpen[Number(item.id)];
+                    setSubpathOpened(newOpen);
+                  }}
+                >
+                  <MainPath>
+                    <PathTitle mainPath>
+                      {item.title}
+                      <Chevron viewBox="0 0 448 512">
+                        <path d="M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z" />
+                      </Chevron>
+                    </PathTitle>
+                  </MainPath>
+                  <SubPath
+                    opened={subpathOpened[Number(item.id)]}
+                    pathCount={item.subPath.length}
+                  >
+                    {item.subPath.map((sub) => (
+                      <NavLink
+                        key={sub.id}
+                        to={sub.path}
+                        onClick={() => setOpened(false)}
+                      >
+                        <PathTitle>{sub.title}</PathTitle>
+                      </NavLink>
+                    ))}
+                  </SubPath>
+                </Expandable>
               ) : (
                 <NavLink to={item.path} onClick={() => setOpened(false)}>
-                  <PathTitle>{item.title}</PathTitle>
+                  <PathTitle mainPath>{item.title}</PathTitle>
                 </NavLink>
               )}
             </NavBlock>
