@@ -11,7 +11,6 @@ const Container = styled.div`
     width: 100%;
   }
   ${({ theme }) => theme.media.mobile} {
-    max-width: 500px;
     width: 100%;
   }
   overflow-x: hidden;
@@ -37,11 +36,11 @@ const BigTile = styled.div`
     width: 435px;
   }
   ${({ theme }) => theme.media.mobile} {
-    width: 350px;
+    width: 100%;
   }
   background-color: ${({ theme }) => theme.colors.white};
   ${({ theme }) => theme.media.mobile} {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -54,7 +53,7 @@ const SmallTileContainer = styled.div`
     width: 435px;
   }
   ${({ theme }) => theme.media.mobile} {
-    width: 350px;
+    width: 100%;
   }
   display: flex;
   flex-direction: column;
@@ -67,7 +66,7 @@ const SmallTile = styled.div`
   height: 178px;
   background-color: ${({ theme }) => theme.colors.white};
   ${({ theme }) => theme.media.mobile} {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
 `;
 

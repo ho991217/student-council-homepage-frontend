@@ -7,14 +7,12 @@ import { NavItems } from './NavItems';
 const Container = styled.div<{ opened: boolean }>`
   position: absolute;
   z-index: 100;
-  /* background-color: ${({ theme }) => theme.colors.white}; */
-
+  height: ${({ opened }) => (opened ? 'calc(var(--vh, 1vh) * 100)' : '80px')};
   width: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
   right: ${({ opened }) => (opened ? '220px' : '0px')};
-  /* border-bottom-left-radius: 10px; */
   transition: right 0.3s ease-in-out;
 `;
 
@@ -52,7 +50,7 @@ const Blur = styled.div`
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   backdrop-filter: blur(1.5px);
   background-color: rgb(0, 0, 0);
   transition: background-color 0.2s ease-in-out;
@@ -92,6 +90,9 @@ const UserSection = styled.section`
   font-size: ${({ theme }) => theme.fonts.size.xl};
   font-weight: ${({ theme }) => theme.fonts.weight.bold};
   color: ${({ theme }) => theme.colors.gray700};
+  a:first-child {
+    margin-right: 25px;
+  }
 `;
 
 const NavSection = styled.ul`
@@ -177,7 +178,7 @@ function MobileMenu(): JSX.Element {
 
   return (
     <>
-      <Container ref={navRef} opened={opened}>
+      <Container opened={opened}>
         <Svg
           onClick={() => setOpened((prev) => !prev)}
           width="36"
@@ -200,6 +201,7 @@ function MobileMenu(): JSX.Element {
       {opened && <Blur onClick={() => setOpened(false)} />}
       <MenuContainer ref={navRef} opened={opened}>
         <UserSection>
+          <a href="https://portal.dankook.ac.kr/web/portal">Portal</a>
           <Link to="/login">로그인</Link>
         </UserSection>
         <NavSection>

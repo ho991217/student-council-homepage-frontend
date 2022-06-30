@@ -12,11 +12,29 @@ const tags = [
 ];
 
 const Container = styled.div`
+  ${({ theme }) => theme.media.mobile} {
+    /* padding: 0px 50px; */
+    width: 100vw;
+    height: 50px;
+    overflow: scroll;
+    justify-content: flex-start;
+  }
   margin: 20px 0px;
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  scrollbar-width: 0;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  ::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
+  a:first-child {
+    margin-left: 30px;
+  }
+  a:last-child {
+    margin-right: 30px;
+  }
 `;
 
 const Hashtag = styled(Link)<{ cur: boolean }>`
@@ -24,12 +42,18 @@ const Hashtag = styled(Link)<{ cur: boolean }>`
     cur ? theme.colors.accent : theme.colors.gray050};
   color: ${({ cur, theme }) =>
     cur ? theme.colors.white : theme.colors.gray700};
+  ${({ theme }) => theme.media.mobile} {
+    min-width: 90px;
+    min-height: 40px;
+    font-size: ${({ theme }) => theme.fonts.size.md};
+  }
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 5px 15px;
   margin: 0px 5px;
   border-radius: 25px;
+  font-size: ${({ theme }) => theme.fonts.size.base};
 `;
 
 function FilterControl({ currentTag }: { currentTag: string }): JSX.Element {

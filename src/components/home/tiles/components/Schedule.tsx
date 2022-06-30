@@ -21,13 +21,14 @@ const P = styled.p`
   }
 
   ${({ theme }) => theme.media.tablet} {
-    font-size: ${({ theme }) => theme.fonts.size.md};
+    font-size: ${({ theme }) => theme.fonts.size.base};
     margin-bottom: 8px;
   }
 
   ${({ theme }) => theme.media.mobile} {
+    flex-direction: column;
     font-size: ${({ theme }) => theme.fonts.size.lg};
-    margin-bottom: 7px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -45,6 +46,7 @@ const Span = styled.span`
 
   ${({ theme }) => theme.media.mobile} {
     font-size: ${({ theme }) => theme.fonts.size.lg};
+    margin-bottom: 5px;
   }
 `;
 
