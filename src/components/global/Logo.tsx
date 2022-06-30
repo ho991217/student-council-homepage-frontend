@@ -12,12 +12,6 @@ const Container = styled.div`
   ${({ theme }) => theme.media.desktop} {
     margin-left: 50px;
   }
-  ${({ theme }) => theme.media.tablet} {
-    margin-left: 25px;
-  }
-  ${({ theme }) => theme.media.mobile} {
-    margin-left: 25px;
-  }
 `;
 
 function Logo(): JSX.Element {

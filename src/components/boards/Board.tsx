@@ -13,7 +13,16 @@ const Container = styled.div`
 const Wrapper = styled.div`
   max-width: 1290px;
   width: 100%;
-  padding: 30px 50px;
+
+  ${({ theme }) => theme.media.desktop} {
+    padding: 30px 50px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    padding: 30px 50px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    padding: 30px 10px;
+  }
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -43,7 +52,15 @@ const Row = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr 8fr 2fr 1fr;
   place-items: center;
-  padding: 0px 50px;
+  ${({ theme }) => theme.media.desktop} {
+    padding: 0px 50px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    padding: 0px 50px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    padding: 0px 10px;
+  }
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   text-align: center;
 

@@ -3,7 +3,15 @@ import styled from 'styled-components';
 const Container = styled.div`
   max-width: 1440px;
   width: 100%;
-  padding: 70px 120px 60px 120px;
+  ${({ theme }) => theme.media.desktop} {
+    padding: 70px 120px 60px 120px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    padding: 70px 120px 60px 120px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    padding: 70px 20px 60px 20px;
+  }
   background-color: ${({ theme }) => theme.colors.white};
   margin-top: 40px;
   margin-bottom: 100px;

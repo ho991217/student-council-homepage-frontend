@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { lock, unlock, clearBodyLocks } from 'tua-body-scroll-lock';
 import styled from 'styled-components';
 import { NavItems } from './NavItems';
 
@@ -162,13 +163,17 @@ function MobileMenu(): JSX.Element {
 
   // ios 스크롤락에 대한 부분
   useEffect(() => {
-    if (opened) {
-      document.body.style.touchAction = 'none';
+    if (navRef.current) {
+      if (opened) {
+        lock(navRef.current);
+      } else {
+        unlock(navRef.current);
+      }
     }
     return () => {
-      document.body.style.touchAction = '';
+      clearBodyLocks();
     };
-  }, [opened]);
+  }, [opened, navRef]);
 
   return (
     <>
@@ -193,7 +198,7 @@ function MobileMenu(): JSX.Element {
         </Svg>
       </Container>
       {opened && <Blur onClick={() => setOpened(false)} />}
-      <MenuContainer opened={opened}>
+      <MenuContainer ref={navRef} opened={opened}>
         <UserSection>
           <Link to="/login">로그인</Link>
         </UserSection>
@@ -238,6 +243,7 @@ function MobileMenu(): JSX.Element {
               )}
             </NavBlock>
           ))}
+          <div style={{ width: '100%', height: 80 }} />
         </NavSection>
       </MenuContainer>
     </>

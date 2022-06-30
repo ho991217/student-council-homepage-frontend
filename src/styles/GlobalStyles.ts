@@ -29,6 +29,12 @@ export const GlobalStyles = createGlobalStyle`
         background-color: ${(props) => props.theme.colors.gray040};
         position: relative;
     }
+    /* html, body {
+        touch-action: none;s
+        -webkit-overflow-scrolling: none;
+        overflow: hidden;
+        overscroll-behavior: none;
+    } */
     #root {
         min-height: 100vh;
         display: flex;

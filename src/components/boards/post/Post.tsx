@@ -18,7 +18,15 @@ const Wrapper = styled.div`
   max-width: 1280px;
   width: 100%;
   margin: 40px 0px;
-  padding: 30px 50px;
+  ${({ theme }) => theme.media.desktop} {
+    padding: 30px 50px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    padding: 30px 50px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    padding: 30px 20px;
+  }
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -81,7 +89,16 @@ const CommentSection = styled.section`
 
 const CommentForm = styled.form`
   width: 100%;
-  height: 100px;
+
+  ${({ theme }) => theme.media.desktop} {
+    height: 100px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    height: 100px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    height: 80px;
+  }
   display: flex;
   align-items: center;
   justify-content: center;

@@ -19,6 +19,7 @@ const Nav = styled.nav`
   z-index: 98;
   background-color: white;
   user-select: none;
+  padding: 0px 20px;
 `;
 
 const InnerNav = styled.div`
