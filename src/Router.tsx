@@ -9,7 +9,7 @@ import PetitionBoard from 'pages/communication/PetitionBoard';
 import InquiryBoard from 'pages/communication/InquiryBoard';
 import Location from 'pages/council-info/Location';
 import Login from 'pages/Login';
-import Pledge from 'pages/council-info/Pledge';
+import Pledge from 'pages/council-info/pledge';
 
 import GlobalBanner from 'components/global/banner/GlobalBanner';
 import Post from 'components/boards/post/Post';
@@ -28,7 +28,15 @@ function Router() {
         <Route path="/location" element={<Location />} />
         <Route path="/pledge" element={<Pledge />} />
         <Route path="/rules" element={<Rules />} />
-        <Route path="/conference" element={<Conference />} />
+        <Route 
+          path="/conference" 
+          element={
+            <>
+              <GlobalBanner title="회의록" detail="회의록 입니다." />
+              <Conference />
+            </>
+          } 
+        />
         <Route path="/board-petition">
           <Route
             path="boards"
