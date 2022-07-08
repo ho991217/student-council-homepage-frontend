@@ -52,13 +52,12 @@ const Row = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr 2fr 2fr 1fr;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
+  text-align: center;
 
   div {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-    position: relative;
+    place-content: center;
+    place-items: center;
     border-right: 1px solid ${({ theme }) => theme.colors.gray100};
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
 
