@@ -37,7 +37,7 @@ const InnerContainer = styled.div`
   width: 100%;
   height: 270px;
   ${({ theme }) => theme.media.mobile} {
-    height: 160px;
+    height: 200px;
   }
   background-color: ${({ theme }) => theme.colors.gray040};
   display: flex;
