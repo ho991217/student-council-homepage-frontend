@@ -7,7 +7,7 @@ export const dummyConference: ConferenceProps[] = [
     title: '학생회 회의록(20220515)',
     conferenceDate: '2022-05-15',
     createdAt: '2022-05-16',
-    fileUrl: 'http://',
+    fileUrl: 'https://drive.google.com/file/d/18ja1Hy6aAwBJNQDfv0ExyKyY3oMMpMZt/view',
   },
   {
     id: 2,
