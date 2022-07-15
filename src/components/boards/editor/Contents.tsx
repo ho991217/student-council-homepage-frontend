@@ -27,9 +27,9 @@ const Label = styled.label`
 const Input = css`
   background-color: ${({ theme }) => theme.colors.gray040};
   ::placeholder {
-    color: ${({ theme }) => theme.colors.gray300};
+    color: ${({ theme }) => theme.colors.gray200};
   }
-  border: 1px solid ${({ theme }) => theme.colors.gray300};
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
   font-size: ${({ theme }) => theme.fonts.size.md};
   margin-top: 15px;
   padding-left: 15px;
