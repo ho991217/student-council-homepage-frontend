@@ -1,11 +1,26 @@
 import React, { useState } from "react";
 import styled, {css} from "styled-components";
 import { theme } from "styles/Theme";
+import ReactModal from "react-modal";
+import Modal from "./Modal";
 
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    padding: 0,
+  }, 
+};
 
 const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.colors.white};
+  width: 100%;
   padding: 70px 100px;
+  background-color: ${({ theme }) => theme.colors.white};
   ${({ theme }) => theme.media.tablet} { padding: 50px 50px; }
   ${({ theme }) => theme.media.mobile} { padding: 40px 20px 120px 20px; }
 `;
@@ -18,38 +33,38 @@ const Form = styled.form`
 const Label = styled.label`
   display: flex;
   flex-direction: column;
-  font-weight: ${({ theme }) => theme.fonts.weight.bold};
   margin-bottom: 50px;
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
   font-size: ${({ theme }) => theme.fonts.size.lg};
   user-select: none;
 `;
 
-const Input = css`
+const Content = css`
+  margin-top: 15px;
+  padding-left: 15px;
   background-color: ${({ theme }) => theme.colors.gray040};
-  ::placeholder {
-    color: ${({ theme }) => theme.colors.gray200};
+  ::placeholder { 
+    color: ${({ theme }) => theme.colors.gray200}; 
   }
   border: 1px solid ${({ theme }) => theme.colors.gray200};
   font-size: ${({ theme }) => theme.fonts.size.md};
-  margin-top: 15px;
-  padding-left: 15px;
   ${({ theme }) => theme.media.mobile} { max-width: 100%; }
 `;
 
-const WriteInput = styled.input`
-  ${Input}
+const WriteInput = styled.input.attrs({ required: true })`
+  ${Content}
   width: 360px;
   height: 40px;
 `;
 
-const TitleInput = styled.input`
-  ${Input}
+const TitleInput = styled.input.attrs({ required: true })`
+  ${Content}
   width: 100%;
   height: 40px;
 `;
 
-const Textarea = styled.textarea`
-  ${Input}
+const Textarea = styled.textarea.attrs({ required: true })`
+  ${Content}
   width: 100%;
   height: 450px;
   padding-top: 10px;
@@ -64,27 +79,26 @@ const ButtonDiv = styled.div`
 const Button = styled.button`
   width: 260px;
   height: 50px;
+  border: none;
+  cursor: pointer;
   font-size: ${({ theme }) => theme.fonts.size.base};
   background-color: ${({ theme }) => theme.colors.darkblue};
   color: ${({ theme }) => theme.colors.white};
-  border: none;
-  cursor: pointer;
   ${({ theme }) => theme.media.mobile} { width: 100%; }
 `;
 
+function Contents(): JSX.Element {
+  const [writer, setWriter] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-// TODO: 사용자 이름이 작성자 이름이 되도록
-function Contents() {
-  // const [writer, setWriter] = useState("");
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-
-  // const onWriterHandler = (event: React.FormEvent<HTMLInputElement>) => {
-  //   const {
-  //     currentTarget: { value },
-  //   } = event;
-  //   setWriter(value);
-  // }
+  const onWriterHandler = (event: React.FormEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { value },
+    } = event;
+    setWriter(value);
+  }
 
   const onTitleHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const {
@@ -100,9 +114,11 @@ function Contents() {
     setContent(value);
   }
 
-  const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const onModalHandler = () => {
+    setIsOpen(isOpen => !isOpen);
+  };
 
+  const onSubmitHandler = () => {
     // TODO: 백으로 데이터 전송
   }
 
@@ -114,9 +130,9 @@ function Contents() {
           <WriteInput 
             id="writer" 
             type="text" 
-            // value={writer}
-            placeholder="작성자를 입력해주세요." 
-            // onChange={onWriterHandler}
+            value={writer}
+            onChange={onWriterHandler}
+            placeholder="작성자를 입력해주세요."
           />
         </Label>
         <Label htmlFor="title">
@@ -125,8 +141,8 @@ function Contents() {
             id="title" 
             type="text" 
             value={title}
-            placeholder="청원 제목을 입력해주세요." 
             onChange={onTitleHandler}
+            placeholder="청원 제목을 입력해주세요." 
           />  
         </Label>
         <Label htmlFor="content">
@@ -138,9 +154,18 @@ function Contents() {
           />
         </Label>
         <ButtonDiv>
-          <Button type="submit">작성완료</Button>
+          <Button type="button" onClick={onModalHandler}>작성완료</Button>
         </ButtonDiv>
       </Form>
+      <ReactModal
+        isOpen={isOpen}
+        style={customStyles}
+        ariaHideApp={false}
+        contentLabel="개인정보 수집 및 이용 동의"
+        onRequestClose={() => setIsOpen(false)}
+      >
+        <Modal onModalHandler={onModalHandler} onSubmitHandler={onSubmitHandler} />
+      </ReactModal>
     </Wrapper>
   );
 }

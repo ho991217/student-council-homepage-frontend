@@ -8,7 +8,7 @@ const Container = styled.div`
   margin: 60px auto;
   ${({ theme }) => theme.media.tablet} { max-width: 750px;}
   ${({ theme }) => theme.media.mobile} { 
-    max-width: 380px;
+    max-width: 375px;
     margin: 0 auto;
   }
 `;
