@@ -33,10 +33,26 @@ const BoardsContainer = styled.div`
   width: 100%;
 `;
 
+const SideWrapper = styled.div`
+  display: flex;
+  margin-bottom: 10px;
+`;
+
 const PageInfo = styled.div`
   width: 100%;
-  margin-bottom: 10px;
   display: flex;
+  align-items: flex-end;
+`;
+
+const Button = styled.button`
+  all: unset;
+  text-align: center;
+  font-size: ${({ theme }) => theme.fonts.size.md};
+  background-color: ${({ theme }) => theme.colors.gray200};
+  width: 75px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
 `;
 
 const BoardHead = styled.div`
@@ -86,6 +102,7 @@ interface BoardProps {
   currentPage: number;
 }
 
+// TODO: 로그인 했는지 안했는지 체크
 function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<PostProps[]>([]);
 
@@ -97,10 +114,15 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
     <Container>
       <Wrapper>
         <BoardsContainer>
-          <PageInfo>
-            Total <PointText>{totalBoards}건,</PointText> {currentPage}/
-            {Math.ceil(totalBoards / 6)}
-          </PageInfo>
+          <SideWrapper>
+            <PageInfo>
+              Total <PointText>{totalBoards}건,</PointText> {currentPage}/
+              {Math.ceil(totalBoards / 6)}
+            </PageInfo>
+            <Link to="/editor">
+              <Button type="button">작성</Button>
+            </Link>
+          </SideWrapper>
           <BoardHead>
             <Row>
               <div>번호</div>

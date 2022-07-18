@@ -10,12 +10,14 @@ import InquiryBoard from 'pages/communication/InquiryBoard';
 import Location from 'pages/council-info/Location';
 import Login from 'pages/Login';
 import Pledge from 'pages/council-info/Pledge';
+import Editor from 'pages/communication/Editor';
 
 import GlobalBanner from 'components/global/banner/GlobalBanner';
 import Post from 'components/boards/post/Post';
 import Gnb from 'components/global/nav/Gnb';
 import Footer from 'components/global/footer/Footer';
 import Makers from 'components/global/footer/sub-routes/Makers';
+
 
 function Router() {
   return (
@@ -29,6 +31,8 @@ function Router() {
         <Route path="/location" element={<Location />} />
         <Route path="/pledge" element={<Pledge />} />
         <Route path="/rules" element={<Rules />} />
+        <Route path="/editor" element={<Editor />} />
+
         <Route
           path="/conference"
           element={
