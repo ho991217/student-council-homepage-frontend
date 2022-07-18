@@ -50,8 +50,6 @@ const ChanJinPics = styled.img.attrs({ src: chanJinImg })`
   top: -140px;
   left: -55px;
   pointer-events: none;
-
-  }
 `;
 
 const SuJeongPics = styled.img.attrs({ src: suJeongImg })`
