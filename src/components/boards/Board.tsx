@@ -13,7 +13,6 @@ const Container = styled.div`
 const Wrapper = styled.div`
   max-width: 1290px;
   width: 100%;
-
   ${({ theme }) => theme.media.desktop} {
     padding: 30px 50px;
   }
@@ -78,7 +77,6 @@ const Row = styled.div`
   }
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   text-align: center;
-
   div:last-child {
     width: 60px;
   }
