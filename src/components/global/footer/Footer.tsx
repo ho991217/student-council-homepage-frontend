@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import Logo from 'components/global/Logo';
+import { Link } from 'react-router-dom';
 
 const Wrapper = styled.footer`
   display: flex;
@@ -67,7 +68,9 @@ function Footer(): JSX.Element {
           <Policy>
             <Span>이용약관</Span>
             <Span>개인정보 처리방침</Span>
-            <Span>만든사람들</Span>
+            <Span>
+              <Link to="/who-made-this">만든사람들</Link>
+            </Span>
           </Policy>
         </InnerContainer>
       </Container>
