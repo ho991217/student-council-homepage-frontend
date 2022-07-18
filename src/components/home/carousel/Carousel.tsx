@@ -59,26 +59,9 @@ const DotNavContainer = styled.div`
 `;
 
 // 메인 컴포넌트
-function Carousel(): JSX.Element {
-  const [images, setImages] = useState<ImageProps[]>([]);
+function Carousel({ images }: { images: Array<ImageProps> }): JSX.Element {
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [autoInterval, setAutoInterval] = useState<number>(5000);
-
-  // TODO: 이미지를 불러오는 함수, 백엔드 통신시에 변경해야 할 부분
-  // 권장 해상도: 1920x530 (1440x530 영역 밖으로는 넘어가지 않는 것 권장)
-  const getImages = async () => {
-    axios.get('https://picsum.photos/1920/530').then((res) => {
-      setImages((prev) => [
-        ...prev,
-        {
-          url: res.request.responseURL,
-          id: res.headers['picsum-id'],
-          title: '제목',
-          alt: 'picsum image',
-        },
-      ]);
-    });
-  };
 
   // 캐러셀 조작 함수
   const prevSlide = () => {
@@ -104,14 +87,6 @@ function Carousel(): JSX.Element {
       setAutoInterval(5000);
     }
   };
-
-  // 컴포넌트가 처음 렌더링 될 때
-  useEffect(() => {
-    // 스토리지 서버에서 캐러셀 이미지 받아올 것
-    getImages();
-    getImages();
-    getImages();
-  }, []);
 
   // 5초 마다 자동으로 슬라이드 넘김
   useInterval(nextSlide, images.length > 0 ? autoInterval : 0);
