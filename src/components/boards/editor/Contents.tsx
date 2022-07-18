@@ -126,9 +126,21 @@ function Contents(): JSX.Element {
     setContent(value);
   }
 
-  const onModalHandler = () => {
-    setIsOpen(isOpen => !isOpen);
+  const onOpenModalHandler = () => {
+    if (category === "") {
+      alert("카테고리를 선택해주세요.");
+    } else if (title === "") {  
+      alert("청원 제목을 입력해주세요");
+    } else if (content === "") {
+      alert("청원 내용을 입력해주세요");
+    } else {
+      setIsOpen(true);
+    }
   };
+
+  const onCloseModalHandler = () => {
+    setIsOpen(false);
+  }
 
   const onSubmitHandler = () => {
     // TODO: 백으로 데이터 전송
@@ -174,7 +186,7 @@ function Contents(): JSX.Element {
           />
         </Label>
         <ButtonDiv>
-          <Button type="button" onClick={onModalHandler}>작성완료</Button>
+          <Button type="button" onClick={onOpenModalHandler}>작성완료</Button>
         </ButtonDiv>
       </Form>
       <ReactModal
@@ -184,7 +196,7 @@ function Contents(): JSX.Element {
         contentLabel="개인정보 수집 및 이용 동의"
         onRequestClose={() => setIsOpen(false)}
       >
-        <Modal onModalHandler={onModalHandler} onSubmitHandler={onSubmitHandler} />
+        <Modal onCloseModalHandler={onCloseModalHandler} onSubmitHandler={onSubmitHandler} />
       </ReactModal>
     </Wrapper>
   );

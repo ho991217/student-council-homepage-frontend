@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 
 
 interface propTypes {
-  onModalHandler: () => void;
+  onCloseModalHandler: () => void;
   onSubmitHandler: () => void;
 }
 
@@ -92,7 +92,7 @@ const CancelButton = styled.button`
   ${({ theme }) => theme.media.mobile} { width: 80px;}
 `;
 
-function Modal({ onModalHandler, onSubmitHandler }: propTypes): JSX.Element {
+function Modal({ onCloseModalHandler, onSubmitHandler }: propTypes): JSX.Element {
   const placeholder = `1. 개인정보 수집목적 및 이용목적
 
   (1) 홈페이지 회원 가입 및 관리
@@ -118,7 +118,7 @@ function Modal({ onModalHandler, onSubmitHandler }: propTypes): JSX.Element {
       />
       <Buttons>
         <AgreeButton type="button" onClick={onSubmitHandler}>약관에 동의합니다.</AgreeButton>
-        <CancelButton type="button" onClick={onModalHandler}>취소</CancelButton>
+        <CancelButton type="button" onClick={onCloseModalHandler}>취소</CancelButton>
       </Buttons>
     </Container>
   )
