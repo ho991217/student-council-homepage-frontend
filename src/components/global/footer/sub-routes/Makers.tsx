@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import seungYongImg from 'static/images/makers-profile-pics/seung-yong.png';
 import hoYeonImg from 'static/images/makers-profile-pics/ho-yeon.png';
 import yeJiImg from 'static/images/makers-profile-pics/ye-ji.png';
+import suJeongImg from 'static/images/makers-profile-pics/su-jeong.png';
+import chanJinImg from 'static/images/makers-profile-pics/chan-jin.png';
 
 import Card from './Card';
 
@@ -41,6 +43,26 @@ const YeJiPics = styled.img.attrs({ src: yeJiImg })`
   pointer-events: none;
 `;
 
+const ChanJinPics = styled.img.attrs({ src: chanJinImg })`
+  position: absolute;
+  width: 400px;
+  transform: scale(0.55);
+  top: -140px;
+  left: -55px;
+  pointer-events: none;
+
+  }
+`;
+
+const SuJeongPics = styled.img.attrs({ src: suJeongImg })`
+  position: absolute;
+  width: 400px;
+  transform: scale(1.33);
+  top: -140px;
+  left: -90px;
+  pointer-events: none;
+`;
+
 function Makers(): JSX.Element {
   return (
     <Wrapper>
@@ -56,7 +78,7 @@ function Makers(): JSX.Element {
               pjrole="Project Manager"
               ghid=""
               instaid=""
-              img={null}
+              img={<ChanJinPics />}
             />
             <Card
               bgFromColor="#434449"
@@ -67,6 +89,16 @@ function Makers(): JSX.Element {
               ghid="ho991217"
               instaid="it.s_ho"
               img={<HoYeonPics />}
+            />
+            <Card
+              bgFromColor="#434449"
+              bgToColor="#4E505A"
+              name="이수정"
+              info="소프트웨어학과 20학번"
+              pjrole="Frontend Development"
+              ghid="sujeong11"
+              instaid=""
+              img={<SuJeongPics />}
             />
             <Card
               bgFromColor="#353b2d"
