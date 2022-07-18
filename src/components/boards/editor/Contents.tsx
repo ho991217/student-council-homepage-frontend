@@ -42,13 +42,16 @@ const Label = styled.label`
 const Select = styled.select`
   font-size: ${({ theme }) => theme.fonts.size.md};
   color: black;
-  width: 280px;
+  width: 350px;
   height: 40px;
   margin-top: 15px;
   padding-left: 10px;
   -webkit-appearance: none;
   -moz-appearance: none; 
   appearance: none;
+  ${({ theme }) => theme.media.tablet} { 
+    width: 280px;
+  }
   ${({ theme }) => theme.media.mobile} { 
     width: 180px; 
   }
@@ -66,7 +69,7 @@ const Content = css`
   ${({ theme }) => theme.media.mobile} { width: 100%; }
 `;
 
-const TitleInput = styled.input.attrs({ required: true })`
+const TitleInput = styled.input.attrs({ type: "text", required: true })`
   ${Content}
   width: 100%;
   height: 40px;
@@ -156,7 +159,7 @@ function Contents(): JSX.Element {
           청원 제목
           <TitleInput 
             id="title" 
-            type="text" 
+
             value={title}
             onChange={onTitleHandler}
             placeholder="청원 제목을 입력해주세요." 

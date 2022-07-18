@@ -13,6 +13,7 @@ const Container = styled.div`
 const Wrapper = styled.div`
   max-width: 1290px;
   width: 100%;
+
   ${({ theme }) => theme.media.desktop} {
     padding: 30px 50px;
   }
@@ -34,23 +35,24 @@ const BoardsContainer = styled.div`
 
 const SideWrapper = styled.div`
   display: flex;
+  margin-bottom: 10px;
 `;
 
 const PageInfo = styled.div`
   width: 100%;
-  margin-bottom: 10px;
   display: flex;
-  align-items: end;
+  align-items: flex-end;
 `;
 
 const Button = styled.button`
+  all: unset;
+  text-align: center;
   font-size: ${({ theme }) => theme.fonts.size.md};
   background-color: ${({ theme }) => theme.colors.gray200};
-  width: 80px;
+  width: 75px;
   height: 40px;
   border: none;
   cursor: pointer;
-  margin-bottom: 10px;
 `;
 
 const BoardHead = styled.div`
@@ -77,6 +79,7 @@ const Row = styled.div`
   }
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   text-align: center;
+
   div:last-child {
     width: 60px;
   }
