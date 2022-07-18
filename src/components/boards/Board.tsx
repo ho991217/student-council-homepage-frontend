@@ -107,7 +107,7 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
               <div>머릿말</div>
               <div>제목</div>
               <div>추천수</div>
-              <div>댓글수</div>
+              <div>동의수</div>
             </Row>
           </BoardHead>
 
