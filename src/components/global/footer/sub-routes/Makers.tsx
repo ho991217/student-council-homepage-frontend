@@ -42,7 +42,7 @@ function Makers(): JSX.Element {
               bgFromColor="#192a56"
               bgToColor="#273c75"
               name="박찬진"
-              info="소프트웨어학과 18학번"
+              info="소프트웨어학과 19학번"
               pjrole="Project Manager"
               ghid=""
               instaid=""
