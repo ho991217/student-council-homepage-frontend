@@ -1,3 +1,4 @@
+import { Desktop } from 'hooks/MediaQueries';
 import styled from 'styled-components';
 
 const GHIcon = (
@@ -54,6 +55,14 @@ const PersonSectionContainer = styled.div<{
   overflow: hidden;
   display: flex;
   align-items: center;
+  ${({ theme }) => theme.media.desktop} {
+  }
+  ${({ theme }) => theme.media.tablet} {
+    justify-content: center;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    justify-content: center;
+  }
   margin-bottom: 30px;
   background: ${({ from }) => from};
   background: ${({ from, to }) =>
@@ -66,7 +75,9 @@ const PersonSectionContainer = styled.div<{
 `;
 
 const TextsContainer = styled.div`
-  margin: 0 300px;
+  ${({ theme }) => theme.media.desktop} {
+    margin: 0 300px;
+  }
 `;
 
 const TitleContainer = styled.div`
@@ -125,7 +136,8 @@ function Card({
 }): JSX.Element {
   return (
     <PersonSectionContainer from={bgFromColor} to={bgToColor}>
-      {img && img}
+      {img && <Desktop>{img}</Desktop>}
+
       <TextsContainer>
         <TitleContainer>
           <Title>{name}</Title>

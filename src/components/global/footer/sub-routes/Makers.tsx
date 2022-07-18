@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import seungYongImg from 'static/images/makers-profile-pics/seung-yong.png';
 import hoYeonImg from 'static/images/makers-profile-pics/ho-yeon.png';
+import yeJiImg from 'static/images/makers-profile-pics/ye-ji.png';
 
 import Card from './Card';
 
@@ -25,9 +26,18 @@ const SeungYongPics = styled.img.attrs({ src: seungYongImg })`
 const HoYeonPics = styled.img.attrs({ src: hoYeonImg })`
   position: absolute;
   width: 400px;
-  transform: scale(0.8);
+  transform: scale(0.75);
   top: -100px;
   left: -40px;
+  pointer-events: none;
+`;
+
+const YeJiPics = styled.img.attrs({ src: yeJiImg })`
+  position: absolute;
+  width: 400px;
+  transform: scale(1.33);
+  top: -140px;
+  left: -90px;
   pointer-events: none;
 `;
 
@@ -67,6 +77,16 @@ function Makers(): JSX.Element {
               ghid="SeungYongChoi"
               instaid=""
               img={<SeungYongPics />}
+            />
+            <Card
+              bgFromColor="#2E4A66"
+              bgToColor="#7B97B4"
+              name="심예지"
+              info="커뮤니케이션디자인과 18학번"
+              pjrole="UX/UI Design Team Leader"
+              ghid=""
+              instaid=""
+              img={<YeJiPics />}
             />
           </div>
         }
