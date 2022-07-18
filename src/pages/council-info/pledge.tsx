@@ -8,19 +8,27 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
   padding: 60px 80px;
   margin: 40px auto;
+  ${({ theme }) => theme.media.mobile} { 
+    font-size: 12px;
+    padding: 50px 10px; 
+  }
 `;
 
 const Title = styled.h1`
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #6F49B7;
+  font-size: ${({ theme }) => theme.fonts.size.xxl};
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
+  color: ${({ theme }) => theme.colors.secondary};
   margin: 0 0 40px 25px;
+  ${({ theme }) => theme.media.mobile} { margin: 0 5px; }
 `;
 
 const SubTitle = styled.div`
-  font-size: 1.6rem;
+  font-size: ${({ theme }) => theme.fonts.size.xl};
   font-weight: 600;
   margin: 0 0 20px 25px;
+  ${({ theme }) => theme.media.mobile} { 
+    margin: 20px 5px; 
+  }
 `;
 
 const Line = styled.div`
@@ -29,6 +37,8 @@ const Line = styled.div`
   border: 1.5px solid ${({ theme }) => theme.colors.accent};
   border-radius: 3px;
   margin-bottom: 70px;
+  ${({ theme }) => theme.media.tablet} { margin-bottom: 50px; }
+  ${({ theme }) => theme.media.mobile} { margin-bottom: 30px; }
 `;
 
 const DetailContainer = styled.div`
@@ -39,19 +49,24 @@ const DetailContainer = styled.div`
   ${({ theme }) => theme.media.mobile} { flex-direction: column; }
 `;
 
-const Img = styled.img``;
+const Img = styled.img`
+  ${({ theme }) => theme.media.mobile} { 
+    width: 335px; 
+    height: 180px;
+  }
+`;
 
 const InfoWrapper = styled.div``;
 
 const Dl = styled.dl`
   margin: 10px 0 30px 0;
-  font-size: 1.3rem;
+  font-size: ${({ theme }) => theme.fonts.size.lg};
   ${({ theme }) => theme.media.tablet} { margin-top: 50px; }
   ${({ theme }) => theme.media.mobile} { margin-top: 50px; }
 `;
 
 const Dt = styled.dt`
-  font-weight: 700;
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray300};
   padding-bottom: 12px;
 `;
