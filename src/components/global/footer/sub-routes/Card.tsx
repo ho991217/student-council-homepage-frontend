@@ -47,9 +47,10 @@ const InstaIcon = (
 const PersonSectionContainer = styled.div<{
   from: string;
   to: string;
+  teamleader?: boolean;
 }>`
   width: 100%;
-  height: 200px;
+  height: ${({ teamleader }) => (teamleader ? '200px' : '130px')};
   border-radius: 10px;
   position: relative;
   overflow: hidden;
@@ -124,25 +125,33 @@ function Card({
   ghid,
   instaid,
   img,
+  teamleader,
+  otherUniv,
 }: {
   bgFromColor: string;
   bgToColor: string;
   name: string;
-  info: string;
+  info?: string;
   pjrole: string;
-  instaid: string;
-  ghid: string;
-  img: JSX.Element | null;
+  instaid?: string;
+  ghid?: string;
+  img?: JSX.Element;
+  teamleader?: boolean;
+  otherUniv?: string;
 }): JSX.Element {
   return (
-    <PersonSectionContainer from={bgFromColor} to={bgToColor}>
+    <PersonSectionContainer
+      teamleader={teamleader}
+      from={bgFromColor}
+      to={bgToColor}
+    >
       {img && <Desktop>{img}</Desktop>}
 
       <TextsContainer>
         <TitleContainer>
           <Title>{name}</Title>
           <Info>
-            단국대학교
+            {otherUniv !== undefined ? otherUniv : '단국대학교'}
             <br />
             {info}
           </Info>
@@ -158,5 +167,14 @@ function Card({
     </PersonSectionContainer>
   );
 }
+
+Card.defaultProps = {
+  info: undefined,
+  img: undefined,
+  teamleader: false,
+  otherUniv: undefined,
+  ghid: undefined,
+  instaid: undefined,
+};
 
 export default Card;
