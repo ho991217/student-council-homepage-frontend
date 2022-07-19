@@ -44,7 +44,7 @@ const InstaIcon = (
   </svg>
 );
 
-const PersonSectionContainer = styled.div<{
+const Container = styled.div<{
   from: string;
   to: string;
   teamleader?: boolean;
@@ -56,6 +56,7 @@ const PersonSectionContainer = styled.div<{
   overflow: hidden;
   display: flex;
   align-items: center;
+
   ${({ theme }) => theme.media.desktop} {
   }
   ${({ theme }) => theme.media.tablet} {
@@ -75,7 +76,7 @@ const PersonSectionContainer = styled.div<{
   }
 `;
 
-const TextsContainer = styled.div`
+const InnerContainer = styled.div`
   ${({ theme }) => theme.media.desktop} {
     margin: 0 300px;
   }
@@ -140,14 +141,10 @@ function Card({
   otherUniv?: string;
 }): JSX.Element {
   return (
-    <PersonSectionContainer
-      teamleader={teamleader}
-      from={bgFromColor}
-      to={bgToColor}
-    >
+    <Container teamleader={teamleader} from={bgFromColor} to={bgToColor}>
       {img && <Desktop>{img}</Desktop>}
 
-      <TextsContainer>
+      <InnerContainer>
         <TitleContainer>
           <Title>{name}</Title>
           <Info>
@@ -163,8 +160,8 @@ function Card({
             <a href={`https://www.instagram.com/${instaid}/`}>{InstaIcon}</a>
           )}
         </LinksContainer>
-      </TextsContainer>
-    </PersonSectionContainer>
+      </InnerContainer>
+    </Container>
   );
 }
 

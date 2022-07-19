@@ -66,7 +66,9 @@ function Footer(): JSX.Element {
             }
           </Span>
           <Policy>
-            <Span>이용약관</Span>
+            <Span>
+              <Link to="/term">이용약관</Link>
+            </Span>
             <Span>개인정보 처리방침</Span>
             <Span>
               <Link to="/who-made-this">만든사람들</Link>

@@ -18,6 +18,7 @@ import Gnb from 'components/global/nav/Gnb';
 import Footer from 'components/global/footer/Footer';
 import Makers from 'components/global/footer/sub-routes/Makers';
 import NotFound from 'pages/NotFound';
+import Term from 'components/global/footer/sub-routes/Term';
 
 function Router() {
   return (
@@ -74,6 +75,7 @@ function Router() {
           />
         </Route>
         <Route path="/who-made-this" element={<Makers />} />
+        <Route path="/term" element={<Term />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
