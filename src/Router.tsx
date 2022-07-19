@@ -17,7 +17,7 @@ import Post from 'components/boards/post/Post';
 import Gnb from 'components/global/nav/Gnb';
 import Footer from 'components/global/footer/Footer';
 import Makers from 'components/global/footer/sub-routes/Makers';
-
+import NotFound from 'pages/NotFound';
 
 function Router() {
   return (
@@ -74,7 +74,7 @@ function Router() {
           />
         </Route>
         <Route path="/who-made-this" element={<Makers />} />
-        <Route path="*" element={<div>404</div>} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </BrowserRouter>
