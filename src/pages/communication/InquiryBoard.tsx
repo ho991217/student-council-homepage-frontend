@@ -70,6 +70,7 @@ const Row = styled.div`
 
     &:last-child {
       border-right: none;
+    }
   }
 
 `;
