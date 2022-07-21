@@ -100,7 +100,7 @@ function ConferenceBoard({ posts, totalBoards, currentPage }: BoardProps): JSX.E
           </PageInfo>
           <BoardHead>
             <Row>
-              <div><span>회차</span></div>
+              <div>회차</div>
               <div>개최일자</div>
               <div>등록일자</div>
               <div>회의록</div>
