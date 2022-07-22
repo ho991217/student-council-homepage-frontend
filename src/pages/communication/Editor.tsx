@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import GlobalBanner from "components/global/banner/GlobalBanner";
 import Content from "components/boards/editor/Contents";
 
 
@@ -15,12 +14,9 @@ const Container = styled.div`
 
 function Editor() {
   return (
-    <>
-      <GlobalBanner title="청원게시판" detail="설명, 들어갈 내용과 사진 주시면 감사하겠습니다!"/>
-      <Container>
-        <Content />
-      </Container>
-    </>
+    <Container>
+      <Content />
+    </Container>
   );
 }
 

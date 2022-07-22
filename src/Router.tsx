@@ -31,15 +31,30 @@ function Router() {
         <Route path="/organization" element={<Organization />} />
         <Route path="/location" element={<Location />} />
         <Route path="/pledge" element={<Pledge />} />
-        <Route path="/rules" element={<Rules />} />
-        <Route path="/editor" element={<Editor />} />
-
+        <Route 
+          path="/rules" 
+          element={
+            <>
+              <GlobalBanner title="회칙 및 세칙" detail="회칙 및 세칙입니다." />
+              <Rules />
+            </>
+          }
+        />
         <Route
           path="/conference"
           element={
             <>
               <GlobalBanner title="회의록" detail="회의록 입니다." />
               <Conference />
+            </>
+          }
+        />
+        <Route
+          path="/editor"
+          element={
+            <>
+              <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
+              <Editor />
             </>
           }
         />

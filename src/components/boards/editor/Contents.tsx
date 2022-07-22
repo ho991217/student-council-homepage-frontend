@@ -22,7 +22,7 @@ const Wrapper = styled.div`
   padding: 70px 100px;
   background-color: ${({ theme }) => theme.colors.white};
   ${({ theme }) => theme.media.tablet} { padding: 50px 50px; }
-  ${({ theme }) => theme.media.mobile} { padding: 40px 20px 120px 20px; overflow: visible;}
+  ${({ theme }) => theme.media.mobile} { padding: 40px 20px 120px 20px; }
 `;
 
 const Form = styled.form`
