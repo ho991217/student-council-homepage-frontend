@@ -22,6 +22,11 @@ export const NavItems: NavigationProps[] = [
         path: '/location',
         id: 3,
       },
+      {
+        title: '공약',
+        path: '/pledge',
+        id: 3,
+      },
     ],
   },
   {
