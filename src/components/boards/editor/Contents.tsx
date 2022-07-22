@@ -169,9 +169,9 @@ function Contents(): JSX.Element {
         
         <Label htmlFor="title">
           청원 제목
-          <TitleInput 
+          <TitleInput
+            type="text"
             id="title" 
-
             value={title}
             onChange={onTitleHandler}
             placeholder="청원 제목을 입력해주세요." 

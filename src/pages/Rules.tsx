@@ -6,6 +6,7 @@ import { RuleProps } from 'components/rules/RuleProps';
 import { dummyRules } from 'components/rules/api/DummyRules';
 import PageControl from 'components/rules/PageControl';
 import RulesBoard from 'components/rules/RulesBoard';
+import SideBar from 'components/rules/SideBar';
 
 
 const Container = styled.div`
@@ -30,10 +31,12 @@ function Rules() {
 
   return (
     <Container>
-      <RulesBoard 
-        posts={board} 
+      <SideBar 
         totalBoards={boardsCount} 
         currentPage={page} 
+      />
+      <RulesBoard 
+        posts={board} 
       />
       <PageControl
         postCount={boardsCount}

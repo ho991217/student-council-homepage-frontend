@@ -33,12 +33,6 @@ const BoardsContainer = styled.div`
   width: 100%;
 `;
 
-const PageInfo = styled.div`
-  width: 100%;
-  margin-bottom: 10px;
-  display: flex;
-`;
-
 const BoardHead = styled.div`
   width: 100%;
   height: 70px;
@@ -86,18 +80,11 @@ const Svg = styled.svg`
   height: 16px;
 `;
 
-const PointText = styled.div`
-  color: ${({ theme }) => theme.colors.accent};
-  margin: 0 3px 0 5px;
-`;
-
 interface BoardProps {
   posts: RuleProps[];
-  totalBoards: number;
-  currentPage: number;
 }
 
-function RulesBoard({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
+function RulesBoard({ posts }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<RuleProps[]>([]);
 
   useEffect(() => {
@@ -108,9 +95,6 @@ function RulesBoard({ posts, totalBoards, currentPage }: BoardProps): JSX.Elemen
     <Container>
       <Wrapper>
         <BoardsContainer>
-          <PageInfo>
-            총 게시물 <PointText>{totalBoards}건</PointText>, 페이지 <PointText>{currentPage}</PointText>/ {Math.ceil(totalBoards / 6)}
-          </PageInfo>
           <BoardHead>
             <Row>
               <Title>번호</Title>
