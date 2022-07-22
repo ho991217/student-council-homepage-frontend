@@ -25,7 +25,7 @@ export const NavItems: NavigationProps[] = [
       {
         title: '공약',
         path: '/pledge',
-        id: 3,
+        id: 4,
       },
     ],
   },
