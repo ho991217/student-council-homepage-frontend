@@ -6,22 +6,18 @@ const Container = styled.div`
   display: flex;
   align-divs: center;
   justify-content: center;
+  padding-top: 30px;
 `;
 
 const Wrapper = styled.div`
   max-width: 1190px;
   width: 100%;
   padding: 35px 60px;
-
   ${({ theme }) => theme.media.desktop} {
     margin: 0 50px;
   }
   ${({ theme }) => theme.media.tablet} {
     margin: 0 50px;
-  }
-  ${({ theme }) => theme.media.mobile} {
-    margin: 0 10px;
-    padding: 30px 30px;
   }
   background-color: ${({ theme }) => theme.colors.gray020};
 `;
@@ -31,6 +27,7 @@ const PageInfo = styled.div`
   margin-bottom: 20px;
   display: flex;
   font-size: ${({ theme }) => theme.fonts.size.md};
+  user-select: none;
 `;
 
 const Svg = styled.svg`
@@ -48,7 +45,6 @@ const PointText = styled.div`
 `;
 
 const Select = styled.select`
-  appearance: none;
   font-size: ${({ theme }) => theme.fonts.size.base};
   width: 90px;
   height: 30px;
@@ -56,6 +52,9 @@ const Select = styled.select`
   padding-left: 8px;
   color: black;
   cursor: pointer;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
 `;
 
 const Input = styled.input`

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { RuleProps } from './RuleProps';
+import { RuleProps } from '../RuleProps';
 
 const Container = styled.div`
   width: 100%;
@@ -11,14 +11,8 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  max-width: 1290px;
   width: 100%;
-  ${({ theme }) => theme.media.desktop} {
-    padding: 30px 50px;
-  }
-  ${({ theme }) => theme.media.tablet} {
-    padding: 30px 50px;
-  }
+  padding: 20px 10px;
   display: flex;
   flex-direction: column;
   align-divs: center;
@@ -32,44 +26,46 @@ const BoardsContainer = styled.div`
 const BoardHead = styled.div`
   width: 100%;
   height: 70px;
-  border-top: 3px solid ${({ theme }) => theme.colors.gray900};
   border-collapse: collapse;
   font-weight: ${({ theme }) => theme.fonts.weight.bold};
+  border-bottom: 2.5px solid ${({ theme }) => theme.colors.gray100};
+  :nth-child(1) { height: 30px; }
 `;
 
 const Row = styled.div`
   width: 100%;
   height: 70px;
   display: grid;
-  grid-template-columns: 0.8fr 3fr 1.2fr 0.8fr 1fr 0.8fr;
+  grid-template-columns: 1fr 3fr 1.3fr;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   text-align: center;
   div {
     display: flex;
     place-content: center;
     place-items: center;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
+    border-bottom: 0.5px solid ${({ theme }) => theme.colors.gray100};
   }
+  :nth-child(1) { border-bottom: none; }
 `;
 
 const Title = styled.div`
   border-right: 1px solid ${({ theme }) => theme.colors.gray100};
-  :last-child {
-    border-right: none;
+  height: 30px;
+  :nth-child(2) { 
+    display: flex;
+    justify-content: left;
+    padding-left: 25px; 
   }
+  :last-child { border-right: none; }
 `;
 
 const Content = styled.div`
   :nth-child(2) {
     display: flex;
     justify-content: left;
-    padding-left: 25px;
+    padding-left: 15px;
   }
-`;
-
-const Svg = styled.svg`
-  width: 16px;
-  height: 16px;
+  :last-child { color: ${({ theme }) => theme.colors.gray400}; }
 `;
 
 interface BoardProps {
@@ -92,9 +88,6 @@ function RulesBoard({ posts }: BoardProps): JSX.Element {
               <Title>번호</Title>
               <Title>제목</Title>
               <Title>부서명</Title>
-              <Title>조회수</Title>
-              <Title>등록일</Title>
-              <Title>첨부파일</Title>
             </Row>
           </BoardHead>
           {board.map((post) => (
@@ -102,23 +95,6 @@ function RulesBoard({ posts }: BoardProps): JSX.Element {
               <Content>{post.id}</Content>
               <Content>{post.title}</Content>
               <Content>{post.departmentName}</Content>
-              <Content>{post.views}</Content>
-              <Content>{post.createAt}</Content>
-              <Content>
-                <a 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={post.file}>
-                  <Svg 
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 64 64"
-                      height="64"
-                      width="64"
-                  >
-                    <path d="M45.414 36.586a2 2 0 0 0-2.828 0L41 38.172l-3.811-3.811A20.908 20.908 0 0 0 42 21C42 9.42 32.579 0 21 0S0 9.42 0 21s9.421 21 21 21c5.071 0 9.728-1.808 13.361-4.811L38.172 41l-1.586 1.586a2 2 0 0 0 0 2.828l18 18c.391.391.902.586 1.414.586s1.023-.195 1.414-.586l6-6a2 2 0 0 0 0-2.828l-18-18zM4 21c0-9.374 7.626-17 17-17s17 7.626 17 17-7.626 17-17 17S4 30.374 4 21zm52 38.171L40.828 44 44 40.829 59.172 56 56 59.171z" />
-                  </Svg>
-                </a>
-              </Content>
             </Row>
           ))}
         </BoardsContainer>

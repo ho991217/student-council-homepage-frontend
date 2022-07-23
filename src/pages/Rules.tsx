@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 import styled from 'styled-components';
 
 import { RuleProps } from 'components/rules/RuleProps';
 import { dummyRules } from 'components/rules/api/DummyRules';
 import PageControl from 'components/rules/PageControl';
 import RulesBoard from 'components/rules/RulesBoard';
+import MobileRulesBoard from 'components/rules/mobile/RulesBoard';
 import SideBar from 'components/rules/SideBar';
+import MobileSideBar from 'components/rules/mobile/SideBar';
+import GlobalBanner from 'components/global/banner/GlobalBanner';
 
 
 const Container = styled.div`
-  padding-top: 4%;
   background-color: ${(props) => props.theme.colors.white};
 `;
 
@@ -31,13 +34,41 @@ function Rules() {
 
   return (
     <Container>
-      <SideBar 
-        totalBoards={boardsCount} 
-        currentPage={page} 
-      />
-      <RulesBoard 
-        posts={board} 
-      />
+      <Desktop>
+        <>
+          <GlobalBanner title="회칙 및 세칙" detail="회칙 및 세칙 입니다."  />
+          <SideBar 
+            totalBoards={boardsCount} 
+            currentPage={page} 
+          />
+        </>
+      </Desktop>
+      <Tablet>
+        <>
+          <GlobalBanner title="회칙 및 세칙" detail="회칙 및 세칙 입니다."  />
+          <SideBar 
+            totalBoards={boardsCount} 
+            currentPage={page} 
+          />
+        </>
+      </Tablet>
+      <Mobile>
+        <MobileSideBar 
+          totalBoards={boardsCount} 
+          currentPage={page} 
+        />
+      </Mobile>
+      
+      <Desktop>
+        <RulesBoard posts={board} />
+      </Desktop>
+      <Tablet>
+        <RulesBoard posts={board} />
+      </Tablet>
+      <Mobile>
+        <MobileRulesBoard posts={board} />
+      </Mobile>
+
       <PageControl
         postCount={boardsCount}
         currentPage={page}
