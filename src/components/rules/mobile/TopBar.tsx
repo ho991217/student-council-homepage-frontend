@@ -28,8 +28,8 @@ const Svg = styled.svg`
 const ArrowSvg = styled.svg`
 	margin-left: -28px;
 	align-self: center;
-	width: 12px;
-	height: 12px;
+	width: 10px;
+	height: 10px;
 `;
 
 const Search = styled.div`
@@ -87,7 +87,7 @@ interface BoardProps {
   currentPage: number;
 }
 
-function SideBar({ totalBoards, currentPage }: BoardProps): JSX.Element {
+function TopBar({ totalBoards, currentPage }: BoardProps): JSX.Element {
   const [searchWord, setSearchWord] = useState<string>('');
 
   const onSearchWordHandler = (event: React.FormEvent<HTMLInputElement>) => {
@@ -138,4 +138,4 @@ function SideBar({ totalBoards, currentPage }: BoardProps): JSX.Element {
   );
 }
 
-export default SideBar;
+export default TopBar;

@@ -5,11 +5,12 @@ import styled from 'styled-components';
 
 import { RuleProps } from 'components/rules/RuleProps';
 import { dummyRules } from 'components/rules/api/DummyRules';
+
 import PageControl from 'components/rules/PageControl';
 import RulesBoard from 'components/rules/RulesBoard';
 import MobileRulesBoard from 'components/rules/mobile/RulesBoard';
-import SideBar from 'components/rules/SideBar';
-import MobileSideBar from 'components/rules/mobile/SideBar';
+import TopBar from 'components/rules/TopBar';
+import MobileTopBar from 'components/rules/mobile/TopBar';
 import GlobalBanner from 'components/global/banner/GlobalBanner';
 
 
@@ -37,7 +38,7 @@ function Rules() {
       <Desktop>
         <>
           <GlobalBanner title="회칙 및 세칙" detail="회칙 및 세칙 입니다."  />
-          <SideBar 
+          <TopBar 
             totalBoards={boardsCount} 
             currentPage={page} 
           />
@@ -46,14 +47,14 @@ function Rules() {
       <Tablet>
         <>
           <GlobalBanner title="회칙 및 세칙" detail="회칙 및 세칙 입니다."  />
-          <SideBar 
+          <TopBar 
             totalBoards={boardsCount} 
             currentPage={page} 
           />
         </>
       </Tablet>
       <Mobile>
-        <MobileSideBar 
+        <MobileTopBar 
           totalBoards={boardsCount} 
           currentPage={page} 
         />

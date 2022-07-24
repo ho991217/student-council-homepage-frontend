@@ -13,12 +13,7 @@ const Wrapper = styled.div`
   max-width: 1190px;
   width: 100%;
   padding: 35px 60px;
-  ${({ theme }) => theme.media.desktop} {
-    margin: 0 50px;
-  }
-  ${({ theme }) => theme.media.tablet} {
-    margin: 0 50px;
-  }
+  margin: 0 50px;
   background-color: ${({ theme }) => theme.colors.gray020};
 `;
 
@@ -48,13 +43,20 @@ const Select = styled.select`
   font-size: ${({ theme }) => theme.fonts.size.base};
   width: 90px;
   height: 30px;
-  margin-right: 8px;
   padding-left: 8px;
   color: black;
   cursor: pointer;
   -webkit-appearance:none;
   -moz-appearance:none;
   appearance:none;
+`;
+
+const ArrowSvg = styled.svg`
+	margin-left: -18px;
+  margin-right: 10px;
+	align-self: center;
+	width: 12px;
+	height: 12px;
 `;
 
 const Input = styled.input`
@@ -82,7 +84,7 @@ interface BoardProps {
   currentPage: number;
 }
 
-function SideBar({ totalBoards, currentPage }: BoardProps): JSX.Element {
+function TopBar({ totalBoards, currentPage }: BoardProps): JSX.Element {
   const [searchWord, setSearchWord] = useState<string>('');
 
   const onSearchWordHandler = (event: React.FormEvent<HTMLInputElement>) => {
@@ -111,6 +113,15 @@ function SideBar({ totalBoards, currentPage }: BoardProps): JSX.Element {
           <Select>
             <option value="ALL">ALL</option>
           </Select>
+          <ArrowSvg 
+            width="7" 
+            height="4" 
+            viewBox="0 0 7 4" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M3.33366 4L0.446906 0.249999L6.22041 0.25L3.33366 4Z" fill="#C4C4C4"/>
+          </ArrowSvg>
           <Input 
             type="text" 
             value={searchWord}
@@ -124,4 +135,4 @@ function SideBar({ totalBoards, currentPage }: BoardProps): JSX.Element {
   );
 }
 
-export default SideBar;
+export default TopBar;

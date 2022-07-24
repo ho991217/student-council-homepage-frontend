@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { RuleProps } from '../RuleProps';
@@ -93,7 +94,11 @@ function RulesBoard({ posts }: BoardProps): JSX.Element {
           {board.map((post) => (
             <Row key={post.id}>
               <Content>{post.id}</Content>
-              <Content>{post.title}</Content>
+              <Content>
+                <Link to={`/rule?id=${post.id}`}>
+                  {post.title}
+                </Link>
+              </Content>
               <Content>{post.departmentName}</Content>
             </Row>
           ))}

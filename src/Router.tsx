@@ -4,6 +4,7 @@ import Greeting from 'pages/council-info/Greeting';
 import Home from 'pages/Home';
 import Organization from 'pages/council-info/Organization';
 import Rules from 'pages/Rules';
+import Detail from 'components/rules/detail/Detail';
 import Conference from 'pages/Conference';
 import PetitionBoard from 'pages/communication/PetitionBoard';
 import InquiryBoard from 'pages/communication/InquiryBoard';
@@ -32,6 +33,15 @@ function Router() {
         <Route path="/location" element={<Location />} />
         <Route path="/pledge" element={<Pledge />} />
         <Route path="/rules" element={<Rules />} />
+        <Route
+            path="/rule"
+            element={
+              <>
+                <GlobalBanner title="회칙 및 세칙" detail="회칙 및 세칙 입니다." />
+                <Detail />
+              </>
+            }
+          />
         <Route
           path="/conference"
           element={

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { RuleProps } from './RuleProps';
@@ -13,12 +14,7 @@ const Container = styled.div`
 const Wrapper = styled.div`
   max-width: 1290px;
   width: 100%;
-  ${({ theme }) => theme.media.desktop} {
-    padding: 30px 50px;
-  }
-  ${({ theme }) => theme.media.tablet} {
-    padding: 30px 50px;
-  }
+  padding: 30px 50px;
   display: flex;
   flex-direction: column;
   align-divs: center;
@@ -64,6 +60,7 @@ const Content = styled.div`
     display: flex;
     justify-content: left;
     padding-left: 25px;
+    cursor: pointer;
   }
 `;
 
@@ -100,10 +97,14 @@ function RulesBoard({ posts }: BoardProps): JSX.Element {
           {board.map((post) => (
             <Row key={post.id}>
               <Content>{post.id}</Content>
-              <Content>{post.title}</Content>
+              <Content>
+                <Link to={`/rule?id=${post.id}`}>
+                  {post.title}
+                </Link>
+              </Content>
               <Content>{post.departmentName}</Content>
               <Content>{post.views}</Content>
-              <Content>{post.createAt}</Content>
+              <Content>{post.createdAt}</Content>
               <Content>
                 <a 
                   target="_blank"

@@ -6,7 +6,7 @@ export const dummyRules: RuleProps[] = [
     title: "[총학생회] 회칙 및 세칙",
     departmentName: "총학생회",
     views: 0,
-    createAt: "2022-05-16",
+    createdAt: "2022-05-16",
     file: "",
   },
   {
@@ -14,7 +14,7 @@ export const dummyRules: RuleProps[] = [
     title: "[총학생회] 회칙 및 세칙",
     departmentName: "총학생회",
     views: 0,
-    createAt: "2022-05-16",
+    createdAt: "2022-05-16",
     file: "",
   },
   {
@@ -22,7 +22,7 @@ export const dummyRules: RuleProps[] = [
     title: "[총학생회] 회칙 및 세칙",
     departmentName: "총학생회",
     views: 0,
-    createAt: "2022-05-16",
+    createdAt: "2022-05-16",
     file: "",
   },
   {
@@ -30,7 +30,7 @@ export const dummyRules: RuleProps[] = [
     title: "[총학생회] 회칙 및 세칙",
     departmentName: "총학생회",
     views: 0,
-    createAt: "2022-05-16",
+    createdAt: "2022-05-16",
     file: "",
   },
   {
@@ -38,7 +38,7 @@ export const dummyRules: RuleProps[] = [
     title: "[총학생회] 회칙 및 세칙",
     departmentName: "총학생회",
     views: 0,
-    createAt: "2022-05-16",
+    createdAt: "2022-05-16",
     file: "",
   },
   {
@@ -46,7 +46,7 @@ export const dummyRules: RuleProps[] = [
     title: "[총학생회] 회칙 및 세칙",
     departmentName: "총학생회",
     views: 0,
-    createAt: "2022-05-16",
+    createdAt: "2022-05-16",
     file: "",
   },
   {
@@ -54,7 +54,7 @@ export const dummyRules: RuleProps[] = [
     title: "[총학생회] 회칙 및 세칙",
     departmentName: "총학생회",
     views: 0,
-    createAt: "2022-05-16",
+    createdAt: "2022-05-16",
     file: "",
   },
   {
@@ -62,7 +62,7 @@ export const dummyRules: RuleProps[] = [
     title: "[총학생회] 회칙 및 세칙",
     departmentName: "총학생회",
     views: 0,
-    createAt: "2022-05-16",
+    createdAt: "2022-05-16",
     file: "",
   },
 ];
