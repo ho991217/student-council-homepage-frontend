@@ -1,0 +1,68 @@
+import { RuleProps } from "../RuleProps";
+
+export const dummyRules: RuleProps[] = [
+  {
+    id: 1,
+    title: "[총학생회] 회칙 및 세칙",
+    departmentName: "총학생회",
+    views: 0,
+    createdAt: "2022-05-16",
+    file: "",
+  },
+  {
+    id: 2,
+    title: "[총학생회] 회칙 및 세칙",
+    departmentName: "총학생회",
+    views: 0,
+    createdAt: "2022-05-16",
+    file: "",
+  },
+  {
+    id: 3,
+    title: "[총학생회] 회칙 및 세칙",
+    departmentName: "총학생회",
+    views: 0,
+    createdAt: "2022-05-16",
+    file: "",
+  },
+  {
+    id: 4,
+    title: "[총학생회] 회칙 및 세칙",
+    departmentName: "총학생회",
+    views: 0,
+    createdAt: "2022-05-16",
+    file: "",
+  },
+  {
+    id: 5,
+    title: "[총학생회] 회칙 및 세칙",
+    departmentName: "총학생회",
+    views: 0,
+    createdAt: "2022-05-16",
+    file: "",
+  },
+  {
+    id: 6,
+    title: "[총학생회] 회칙 및 세칙",
+    departmentName: "총학생회",
+    views: 0,
+    createdAt: "2022-05-16",
+    file: "",
+  },
+  {
+    id: 7,
+    title: "[총학생회] 회칙 및 세칙",
+    departmentName: "총학생회",
+    views: 0,
+    createdAt: "2022-05-16",
+    file: "",
+  },
+  {
+    id: 8,
+    title: "[총학생회] 회칙 및 세칙",
+    departmentName: "총학생회",
+    views: 0,
+    createdAt: "2022-05-16",
+    file: "",
+  },
+];

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import styled, {css} from "styled-components";
-import { theme } from "styles/Theme";
+import styled, { css } from "styled-components";
 import ReactModal from "react-modal";
 import Modal from "./Modal";
 
@@ -17,12 +16,20 @@ const customStyles = {
   }, 
 };
 
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  align-divs: center;
+  justify-content: center;
+`;
+
 const Wrapper = styled.div`
+  max-width: 1290px;
   width: 100%;
   padding: 70px 100px;
   background-color: ${({ theme }) => theme.colors.white};
   ${({ theme }) => theme.media.tablet} { padding: 50px 50px; }
-  ${({ theme }) => theme.media.mobile} { padding: 40px 20px 120px 20px; overflow: visible;}
+  ${({ theme }) => theme.media.mobile} { padding: 40px 20px 120px 20px; }
 `;
 
 const Form = styled.form`
@@ -42,15 +49,17 @@ const Label = styled.label`
 const Select = styled.select`
   font-size: ${({ theme }) => theme.fonts.size.md};
   color: black;
-  width: 350px;
+  width: 400px;
   height: 40px;
   margin-top: 15px;
   padding-left: 10px;
   -webkit-appearance: none;
   -moz-appearance: none; 
   appearance: none;
+  background-color: ${({ theme }) => theme.colors.white};
+  border: 1px solid ${({ theme }) => theme.colors.gray400};
   ${({ theme }) => theme.media.tablet} { 
-    width: 280px;
+    width: 300px;
   }
   ${({ theme }) => theme.media.mobile} { 
     width: 180px; 
@@ -147,58 +156,60 @@ function Contents(): JSX.Element {
   }
 
   return (
-    <Wrapper>
-      <Form onSubmit={onSubmitHandler}>
-        <Label htmlFor="category">
-          카테고리
-          <Select 
-            name="category" 
-            id="category" 
-            value={category}
-            onChange={onCategoryHandler} 
-          >
-            <option value="" disabled selected>카테고리를 선택해주세요.</option>
-            <option value="school-life">학교생활</option>
-            <option value="school-facilities">교내시설</option>
-            <option value="covid-19">코로나19</option>
-            <option value="scholarship">장학금</option>
-            <option value="lesson">수업</option>
-            <option value="etc">기타</option>
-          </Select>
-        </Label>
-        
-        <Label htmlFor="title">
-          청원 제목
-          <TitleInput 
-            id="title" 
-
-            value={title}
-            onChange={onTitleHandler}
-            placeholder="청원 제목을 입력해주세요." 
-          />  
-        </Label>
-        <Label htmlFor="content">
-          청원 내용
-          <Textarea
-            id="content" 
-            value={content}
-            onChange={onContentHandler}
-          />
-        </Label>
-        <ButtonDiv>
-          <Button type="button" onClick={onOpenModalHandler}>작성완료</Button>
-        </ButtonDiv>
-      </Form>
-      <ReactModal
-        isOpen={isOpen}
-        style={customStyles}
-        ariaHideApp={false}
-        contentLabel="개인정보 수집 및 이용 동의"
-        onRequestClose={() => setIsOpen(false)}
-      >
-        <Modal onCloseModalHandler={onCloseModalHandler} onSubmitHandler={onSubmitHandler} />
-      </ReactModal>
-    </Wrapper>
+    <Container>
+      <Wrapper>
+        <Form onSubmit={onSubmitHandler}>
+          <Label htmlFor="category">
+            카테고리
+            <Select 
+              name="category" 
+              id="category" 
+              value={category}
+              onChange={onCategoryHandler} 
+            >
+              <option value="" disabled selected>카테고리를 선택해주세요.</option>
+              <option value="school-life">학교생활</option>
+              <option value="school-facilities">교내시설</option>
+              <option value="covid-19">코로나19</option>
+              <option value="scholarship">장학금</option>
+              <option value="lesson">수업</option>
+              <option value="etc">기타</option>
+            </Select>
+          </Label>
+          
+          <Label htmlFor="title">
+            청원 제목
+            <TitleInput
+              type="text"
+              id="title" 
+              value={title}
+              onChange={onTitleHandler}
+              placeholder="청원 제목을 입력해주세요." 
+            />  
+          </Label>
+          <Label htmlFor="content">
+            청원 내용
+            <Textarea
+              id="content" 
+              value={content}
+              onChange={onContentHandler}
+            />
+          </Label>
+          <ButtonDiv>
+            <Button type="button" onClick={onOpenModalHandler}>작성완료</Button>
+          </ButtonDiv>
+        </Form>
+        <ReactModal
+          isOpen={isOpen}
+          style={customStyles}
+          ariaHideApp={false}
+          contentLabel="개인정보 수집 및 이용 동의"
+          onRequestClose={() => setIsOpen(false)}
+        >
+          <Modal onCloseModalHandler={onCloseModalHandler} onSubmitHandler={onSubmitHandler} />
+        </ReactModal>
+      </Wrapper>
+    </Container>
   );
 }
 
