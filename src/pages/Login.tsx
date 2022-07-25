@@ -187,6 +187,9 @@ const ExtrasContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 350px;
+  ${({ theme }) => theme.media.mobile} {
+    width: 320px;
+}
   padding: 0 35px 0 0;
   margin-top: 15px;
 `;
@@ -348,7 +351,7 @@ function Login(): JSX.Element {
               아이디 저장
             </SaveId>
             <Extras>
-              <SignUpButton to="/">회원가입</SignUpButton>
+              <SignUpButton to="/sign-up">회원가입</SignUpButton>
               <Vseparator />
               <FindPasswordButton to="/">비밀번호 찾기</FindPasswordButton>
             </Extras>

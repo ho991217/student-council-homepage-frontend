@@ -51,7 +51,7 @@ export const NavItems: NavigationProps[] = [
       },
       {
         title: '문의게시판',
-        path: '/board-inquiry/boards/1',
+        path: '/board-inquiry',
         id: 2,
       },
     ],
