@@ -102,7 +102,12 @@ function Detail() {
   useEffect(() => {
     const detailId = Number(searchParams.get('id'));
     setDetail(dummyDetails.filter((detail) => detail.id === detailId)[0]);
-    setNextList(dummyDetails.slice(detailId-1, detailId + 2));
+
+    if(detailId === 1) {
+      setNextList(dummyDetails.slice(detailId-1, detailId + 2));
+    } else {
+      setNextList(dummyDetails.slice(detailId-2, detailId + 1));
+    }
   }, [searchParams]);
 
   return (

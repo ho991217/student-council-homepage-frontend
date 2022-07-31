@@ -61,7 +61,15 @@ function Router() {
             </>
           }
         />
-        <Route path="/editor" element={<Editor />} />
+        <Route
+          path="/editor"
+          element={
+            <>
+              <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
+              <Editor />
+            </>
+          }
+        />
         <Route path="/board-petition">
           <Route
             path="boards"
