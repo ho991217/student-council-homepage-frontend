@@ -27,6 +27,7 @@ jobs:
 
     - name: build
       run: |
+        sudo npm install -g npm
         npm install
         yarn add react-scripts
         npm install -save react-scripts
