@@ -29,7 +29,7 @@ jobs:
       run: |
         yarn add react-scripts
         npm install -save react-scripts --legacy-peer-deps
-        npm run build
+        CI=false npm run build
       shell: bash
 
     - name: Docker build and push
