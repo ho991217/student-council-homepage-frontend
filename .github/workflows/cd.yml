@@ -27,8 +27,10 @@ jobs:
 
     - name: build
       run: |
+        yarn add react-scripts
+        npm install -save react-scripts
         npm run build
-      shell: bash
+        shell: bash
 
     - name: Docker build and push
       run: |
