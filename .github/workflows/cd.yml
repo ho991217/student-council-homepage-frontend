@@ -27,8 +27,7 @@ jobs:
 
     - name: build
       run: |
-        sudo npm install -g npm
-        npm install
+        npm install --save --legacy-peer-deps
         yarn add react-scripts
         npm install -save react-scripts
         npm run build
