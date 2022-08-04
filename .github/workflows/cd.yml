@@ -22,6 +22,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: build
+      run: |
+        npm run build
+      shell: bash
 
     - name: Docker build and push
       run: |
