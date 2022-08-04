@@ -26,7 +26,8 @@ jobs:
       uses: actions/setup-node@v3.4.1
 
     - name: build
-      run: |
+        yarn add react-scripts
+        npm install -save react-scripts
         npm run build
       shell: bash
 
