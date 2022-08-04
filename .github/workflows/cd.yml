@@ -1,0 +1,45 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: CD
+
+on:
+  push:
+    branches: [ "prod" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+
+    - name: Docker build and push
+      run: |
+        docker login -u ${{ secrets.USERNAME }} -p ${{ secrets.PASSWORD }}
+        docker build -t ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${GITHUB_SHA::7} .
+        docker push ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${GITHUB_SHA::7}
+        
+          
+    - name: SSH Remote Commands
+      uses: appleboy/ssh-action@v0.1.4
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ubuntu
+        key: ${{ secrets.SERVER_KEY }}
+        envs: GITHUB_SHA
+        script: |
+          docker pull ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${GITHUB_SHA::7}
+          docker tag ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${GITHUB_SHA::7} dku_council_front
+          docker stop dku_council_front
+          docker run -d --rm --name dku_council_front -p 80:80 dku_council_front
+        
