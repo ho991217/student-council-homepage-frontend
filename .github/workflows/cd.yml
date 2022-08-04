@@ -27,6 +27,7 @@ jobs:
 
     - name: build
       run: |
+        npm install
         yarn add react-scripts
         npm install -save react-scripts
         npm run build
