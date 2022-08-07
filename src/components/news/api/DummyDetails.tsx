@@ -1,0 +1,68 @@
+import { DetailProps } from "../NewsProps";
+
+export const dummyDetails: DetailProps[] = [
+  {
+    id: 1,
+    title: "[총학생회] 공지사항1", 
+    createdAt: "2022-05-16",
+    fileName: "",
+    fileCapacity: "",
+    fileUrl: "",
+  },
+  {
+    id: 2,
+    title: "[총학생회] 공지사항2", 
+    createdAt: "2022-05-16",
+    fileName: "",
+    fileCapacity: "",
+    fileUrl: "",
+  },
+  {
+    id: 3,
+    title: "[총학생회] 공지사항3", 
+    createdAt: "2022-05-16",
+    fileName: "",
+    fileCapacity: "",
+    fileUrl: "",
+  },
+  {
+    id: 4,
+    title: "[총학생회] 공지사항4",
+    createdAt: "2022-05-16",
+    fileName: "",
+    fileCapacity: "",
+    fileUrl: "",
+  },
+  {
+    id: 5,
+    title: "[총학생회] 공지사항5",
+    createdAt: "2022-05-16",
+    fileName: "",
+    fileCapacity: "",
+    fileUrl: "",
+  },
+  {
+    id: 6,
+    title: "[총학생회] 공지사항6",
+    createdAt: "2022-05-16",
+    fileName: "",
+    fileCapacity: "",
+    fileUrl: "",
+  },
+  {
+    id: 7,
+    title: "[총학생회] 공지사항7",
+    createdAt: "2022-05-16",
+    fileName: "",
+    fileCapacity: "",
+    fileUrl: "",
+  },
+  {
+    id: 8,
+    title: "[총학생회] 공지사항8",
+    createdAt: "2022-05-16",
+    fileName: "",
+    fileCapacity: "",
+    fileUrl: "",
+  },
+];
