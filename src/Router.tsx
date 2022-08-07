@@ -4,15 +4,17 @@ import Greeting from 'pages/council-info/Greeting';
 import Home from 'pages/Home';
 import Organization from 'pages/council-info/Organization';
 import Rules from 'pages/Rules';
-import Detail from 'components/rules/detail/Detail';
+import DetailRules from 'components/rules/detail/Detail';
 import Conference from 'pages/Conference';
 import PetitionBoard from 'pages/communication/PetitionBoard';
 import InquiryBoard from 'pages/communication/InquiryBoard';
 import Location from 'pages/council-info/Location';
 import Login from 'pages/Login';
 import SignUp from 'pages/SignUp';
-import Pledge from 'pages/council-info/Pledge';
+import Pledge from 'pages/council/Pledge';
 import Editor from 'pages/communication/Editor';
+import News from 'pages/council/News';
+import DetailNews from 'components/news/detail/Detail';
 
 import GlobalBanner from 'components/global/banner/GlobalBanner';
 import Post from 'components/boards/post/Post';
@@ -33,16 +35,26 @@ function Router() {
         <Route path="/organization" element={<Organization />} />
         <Route path="/location" element={<Location />} />
         <Route path="/pledge" element={<Pledge />} />
+        <Route path="/council-news" element={<News />} />
+        <Route
+            path="/news"
+            element={
+              <>
+                <GlobalBanner title="총학소식" detail="총학소식 입니다." />
+                <DetailNews />
+              </>
+            }
+        />
         <Route path="/rules" element={<Rules />} />
         <Route
             path="/rule"
             element={
               <>
                 <GlobalBanner title="회칙 및 세칙" detail="회칙 및 세칙 입니다." />
-                <Detail />
+                <DetailRules />
               </>
             }
-          />
+        />
         <Route
           path="/sign-up"
           element={
