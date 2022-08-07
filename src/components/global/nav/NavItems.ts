@@ -22,27 +22,39 @@ export const NavItems: NavigationProps[] = [
         path: '/location',
         id: 3,
       },
+    ],
+  },
+  {
+    title: '총학소식',
+    path: '/',
+    id: 2,
+    subPath: [
+      {
+        title: '총학소식',
+        path: '/council-news',
+        id: 1,
+      },
       {
         title: '공약',
         path: '/pledge',
-        id: 4,
+        id: 2,
       },
     ],
   },
   {
     title: '회칙',
     path: '/rules',
-    id: 2,
+    id: 3,
   },
   {
     title: '회의록',
     path: '/conference',
-    id: 3,
+    id: 4,
   },
   {
     title: '소통',
     path: '/',
-    id: 4,
+    id: 5,
     subPath: [
       {
         title: '청원게시판',
