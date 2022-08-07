@@ -50,7 +50,7 @@ const Container = styled.div<{
   teamleader?: boolean;
 }>`
   width: 100%;
-  height: ${({ teamleader }) => (teamleader ? '200px' : '130px')};
+  height: ${({ teamleader }) => (teamleader ? '200px' : '170px')};
   border-radius: 10px;
   position: relative;
   overflow: hidden;

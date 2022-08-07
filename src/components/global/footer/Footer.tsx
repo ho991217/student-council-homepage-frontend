@@ -53,7 +53,6 @@ const Span = styled.span`
   font-weight: ${({ theme }) => theme.fonts.weight.regular};
 `;
 
-// 이용약관 등등 디자인 나오면 수정
 function Footer(): JSX.Element {
   return (
     <Wrapper>
@@ -69,7 +68,9 @@ function Footer(): JSX.Element {
             <Span>
               <Link to="/term">이용약관</Link>
             </Span>
-            <Span>개인정보 처리방침</Span>
+            <Span>
+              <Link to="/privacy-policy">개인정보 처리방침</Link>
+            </Span>
             <Span>
               <Link to="/who-made-this">만든사람들</Link>
             </Span>
