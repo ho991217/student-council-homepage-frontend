@@ -21,6 +21,7 @@ import Footer from 'components/global/footer/Footer';
 import Makers from 'components/global/footer/sub-routes/Makers';
 import NotFound from 'pages/NotFound';
 import Term from 'components/global/footer/sub-routes/Term';
+import PrivacyPolicy from 'components/global/footer/sub-routes/PrivacyPolicy';
 
 function Router() {
   return (
@@ -35,14 +36,17 @@ function Router() {
         <Route path="/pledge" element={<Pledge />} />
         <Route path="/rules" element={<Rules />} />
         <Route
-            path="/rule"
-            element={
-              <>
-                <GlobalBanner title="회칙 및 세칙" detail="회칙 및 세칙 입니다." />
-                <Detail />
-              </>
-            }
-          />
+          path="/rule"
+          element={
+            <>
+              <GlobalBanner
+                title="회칙 및 세칙"
+                detail="회칙 및 세칙 입니다."
+              />
+              <Detail />
+            </>
+          }
+        />
         <Route
           path="/sign-up"
           element={
@@ -101,6 +105,7 @@ function Router() {
         />
         <Route path="/who-made-this" element={<Makers />} />
         <Route path="/term" element={<Term />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
