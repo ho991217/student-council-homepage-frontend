@@ -13,7 +13,7 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   width: 100%;
-  padding: 20px 10px;
+  padding: 25px 10px;
   display: flex;
   flex-direction: column;
   align-divs: center;
@@ -37,7 +37,7 @@ const Row = styled.div`
   width: 100%;
   height: 70px;
   display: grid;
-  grid-template-columns: 1fr 3fr 1.3fr;
+  grid-template-columns: 1fr 3fr 1.5fr;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   text-align: center;
   div {
@@ -88,17 +88,18 @@ function NewsBoard({ posts }: BoardProps): JSX.Element {
             <Row>
               <Title>번호</Title>
               <Title>제목</Title>
-              <Title>부서명</Title>
+              <Title>등록일</Title>
             </Row>
           </BoardHead>
           {board.map((post) => (
             <Row key={post.id}>
               <Content>{post.id}</Content>
               <Content>
-                <Link to={`/rule?id=${post.id}`}>
+                <Link to={`/news?id=${post.id}`}>
                   {post.title}
                 </Link>
               </Content>
+              <Content>{post.createdAt}</Content>
             </Row>
           ))}
         </BoardsContainer>

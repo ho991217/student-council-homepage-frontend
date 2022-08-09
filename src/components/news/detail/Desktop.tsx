@@ -36,13 +36,21 @@ const Head = styled.div`
   }
 `;
 
+const ContentWrapper = styled.div`
+  padding: 40px 35px;
+`;
+
 const Content = styled.div`
+  white-space: pre-wrap;
+  line-height: ${({ theme }) => theme.fonts.size.xl}
+`;
+
+const Download = styled.div`
   background-color: ${({ theme }) => theme.colors.gray040};
   width: 480px;
   height: 75px;
-  margin: 50px 20px;
+  margin: 120px auto 0 auto;
   border-radius: 10px;
-  margin: 60px 0 120px 0;
   display: grid;
   grid-template-columns: 0.4fr 2fr 0.3fr;
   div {
@@ -51,7 +59,7 @@ const Content = styled.div`
 `;
 
 const FolderIcon = styled.div`
-text-align: right;
+  text-align: right;
 `;
 
 const Data = styled.div`
@@ -73,6 +81,7 @@ const DownloadIcon = styled.div`
 
 const NextList = styled.div`
   width: 100%;
+  margin-top: 80px;
 `;
 
 const ListHead = styled.div`
@@ -142,20 +151,27 @@ function Detail() {
         <div>{detail?.title}</div>
         <div>{detail?.createdAt}</div>
       </Head>
-      <Content>
-        <FolderIcon>
-          <IoIosFolder size="35" />
-        </FolderIcon>
-        <Data>
-          {/* <Name>{detail?.fileName}</Name>
-          <Capacity>{detail?.fileCapacity}</Capacity> */}
-          <Name>Lorem ipsum.PDF</Name>
-          <Capacity>33.06KB</Capacity>
-        </Data>
-        <DownloadIcon>
-          <FiDownload size="15" color="76787A" />
-        </DownloadIcon>
-      </Content>
+      <ContentWrapper>
+        <Content>
+          {detail?.content}
+        </Content>
+        {detail?.fileUrl ?
+          <Download>
+            <FolderIcon>
+              <IoIosFolder size="35" />
+            </FolderIcon>
+            <Data>
+              {/* <Name>{detail?.fileName}</Name>
+              <Capacity>{detail?.fileCapacity}</Capacity> */}
+              <Name>Lorem ipsum.PDF</Name>
+              <Capacity>33.06KB</Capacity>
+            </Data>
+            <DownloadIcon>
+              <FiDownload size="15" color="76787A" />
+            </DownloadIcon>
+        </Download>
+        : null}
+      </ContentWrapper>
       <NextList>
         <ListHead>
           <Row>
