@@ -49,25 +49,40 @@ const NextMonthDateDiv = styled(Div)`
 `;
 
 // TODO: detail 내용 동적으로 바꾸기
-function Schedule(): JSX.Element {
+function Calendar({
+  curYear,
+  curMonth,
+}: {
+  curYear: number;
+  curMonth: number;
+}): JSX.Element {
   const days: string[] = ['일', '월', '화', '수', '목', '금', '토'];
+  const prevMonthDates: number[] = [];
   const dates: number[] = [];
   const nextMonthDates: number[] = [];
   const [selectDate, setSelectDate] = useState('');
-  const totalCell = 35;
 
-  // 해당 month의 마지막 날짜 구하기
-  const today = new Date();
-  const curYear = today.getFullYear();
-  const curMonth = today.getMonth();
-  const lastDate = new Date(curYear, curMonth + 1, 0).getDate();
+  // 이전 달의 마지막 날 날짜와 요일 구하기
+  const startDay = new Date(curYear, curMonth, 0);
+  const prevDate = startDay.getDate();
+  const prevDay = startDay.getDay();
 
-  for (let i = 1; i < lastDate + 1; i += 1) {
+  // 이번 달의 마지막날 날짜와 요일 구하기
+  const endDay = new Date(curYear, curMonth + 1, 0);
+  const nextDate = endDay.getDate();
+  const nextDay = endDay.getDay();
+  
+  
+  for (let i = prevDay + 1; i > 0; i -= 1) {
+    prevMonthDates.push(prevDate - i + 1);
+  }
+
+  for (let i = 1; i < nextDate + 1; i += 1) {
     dates.push(i);
   }
 
   // 해당 month의 다음 month 날짜가 보이도록
-  for (let i = 1; i < totalCell - lastDate + 1; i += 1) {
+  for (let i = 1; i <= 6 - nextDay; i += 1) {
     nextMonthDates.push(i);
   }
 
@@ -80,6 +95,9 @@ function Schedule(): JSX.Element {
     <Wrapper>
       {days.map((day: string) => (
         <DayDiv key={days.indexOf(day)}>{day}</DayDiv>
+      ))}
+      {prevMonthDates.map((date: number) => (
+        <NextMonthDateDiv key={dates.indexOf(date)}>{date}</NextMonthDateDiv>
       ))}
       {dates.map((date: number) => (
         <DateDiv key={dates.indexOf(date)} onClick={selectDateHandler}>
@@ -95,4 +113,4 @@ function Schedule(): JSX.Element {
   );
 }
 
-export default Schedule;
+export default Calendar;

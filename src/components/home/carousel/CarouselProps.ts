@@ -16,6 +16,7 @@ export interface SlideProps {
 export interface ChevronProps {
   direction: string;
   onClick: React.EventHandler<React.MouseEvent<HTMLDivElement>>;
+  color?: string;
 }
 
 export interface ToggleAutoSlideProps {

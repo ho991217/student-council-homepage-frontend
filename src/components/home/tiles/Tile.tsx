@@ -15,6 +15,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
+  overflow: hidden;
 `;
 
 const TitleContainer = styled.div`
@@ -39,10 +40,12 @@ const MoreLink = styled(Link)`
 function Tile({ title, linkTitle, to, detail }: TileProps): JSX.Element {
   return (
     <Container>
-      <TitleContainer>
-        <Title>{title}</Title>
-        <MoreLink to={to}>{linkTitle}</MoreLink>
-      </TitleContainer>
+      {title && linkTitle && (
+        <TitleContainer>
+          <Title>{title}</Title>
+          <MoreLink to={to}>{linkTitle}</MoreLink>
+        </TitleContainer>
+      )}
       {detail === 'schedule' && <Schedule />}
       {detail === 'news' && <News />}
       {detail === 'petition' && <Petition />}
