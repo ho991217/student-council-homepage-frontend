@@ -28,14 +28,22 @@ const Head = styled.div`
   padding: 5px 15px;
 `;
 
+const ContentWrapper = styled.div`
+  padding: 5px 10px;
+`;
+
 const Content = styled.div`
+  white-space: pre-line;
+  line-height: ${({ theme }) => theme.fonts.size.xl}
+`;
+
+const Download = styled.div`
   background-color: ${({ theme }) => theme.colors.gray040};
   max-width: 325px;
   width: 100%;
   height: 75px;
-  margin: 50px 20px;
   border-radius: 10px;
-  margin: 60px 0 100px 0;
+  margin-top: 50px;
   display: grid;
   grid-template-columns: 0.5fr 2fr 0.3fr;
   div {
@@ -67,6 +75,7 @@ const DownloadIcon = styled.div`
 const NextList = styled.div`
   width: 100%;
   border-top: 1px solid ${({ theme }) => theme.colors.gray100};
+  margin-top: 50px;
 `;
 
 const Row = styled.div`
@@ -116,27 +125,34 @@ function Detail() {
         <div>{detail?.title}</div>
         <div>{detail?.createdAt}</div>
       </Head>
-      <Content>
-        <FolderIcon>
-          <IoIosFolder size="30" />
-        </FolderIcon>
-        <Data>
-          {/* <Name>{detail?.fileName}</Name>
-          <Capacity>{detail?.fileCapacity}</Capacity> */}
-          <Name>Lorem ipsum.PDF</Name>
-          <Capacity>33.06KB</Capacity>
-        </Data>
-        <DownloadIcon>
-          <FiDownload size="15" color="76787A" />
-        </DownloadIcon>
-      </Content>
+      <ContentWrapper>
+        <Content>
+          {detail?.content}
+        </Content>
+        {detail?.fileUrl ?
+          <Download>
+            <FolderIcon>
+              <IoIosFolder size="35" />
+            </FolderIcon>
+            <Data>
+              {/* <Name>{detail?.fileName}</Name>
+              <Capacity>{detail?.fileCapacity}</Capacity> */}
+              <Name>Lorem ipsum.PDF</Name>
+              <Capacity>33.06KB</Capacity>
+            </Data>
+            <DownloadIcon>
+              <FiDownload size="15" color="76787A" />
+            </DownloadIcon>
+        </Download>
+        : null}
+      </ContentWrapper>
       <NextList>
         {nextList?.map((post) => (
           <Row key={post.id}>
             <Id>{post?.id}</Id>
             <Infos>
               <Info>
-                <Link to={`/rule?id=${post.id}`}>
+                <Link to={`/news?id=${post.id}`}>
                   {post?.title}
                 </Link>
               </Info>

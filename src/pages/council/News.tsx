@@ -11,7 +11,6 @@ import NewsBoard from 'components/news/NewsBoard';
 import MobileNewsBoard from 'components/news/mobile/NewsBoard';
 import TopBar from 'components/news/TopBar';
 import MobileTopBar from 'components/news/mobile/TopBar';
-import GlobalBanner from 'components/global/banner/GlobalBanner';
 
 
 const Container = styled.div`
@@ -36,22 +35,16 @@ function News() {
   return (
     <Container>
       <Desktop>
-        <>
-          <GlobalBanner title="총학소식" detail="총학소식 입니다."  />
-          <TopBar 
-            totalBoards={boardsCount} 
-            currentPage={page} 
-          />
-        </>
+        <TopBar 
+          totalBoards={boardsCount} 
+          currentPage={page} 
+        />
       </Desktop>
       <Tablet>
-        <>
-          <GlobalBanner title="총학소식" detail="총학소식 입니다."  />
-          <TopBar 
-            totalBoards={boardsCount} 
-            currentPage={page} 
-          />
-        </>
+        <TopBar 
+          totalBoards={boardsCount} 
+          currentPage={page} 
+        />
       </Tablet>
       <Mobile>
         <MobileTopBar 

@@ -36,7 +36,15 @@ function Router() {
         <Route path="/organization" element={<Organization />} />
         <Route path="/location" element={<Location />} />
         <Route path="/pledge" element={<Pledge />} />
-        <Route path="/council-news" element={<News />} />
+        <Route
+          path="/council-news"
+          element={
+            <>
+              <GlobalBanner title="총학소식" detail="총학소식 입니다." />
+              <News />
+            </>
+          }
+        />
         <Route
           path="/news"
           element={
