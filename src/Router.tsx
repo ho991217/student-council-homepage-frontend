@@ -94,7 +94,7 @@ function Router() {
             </>
           }
         />
-        <Route path="/board-petition">
+        <Route path="/board-petition" element={<NotFound />}>
           <Route
             path="boards"
             element={
