@@ -1,6 +1,6 @@
 export interface TileProps {
-  title: string;
-  linkTitle: string;
+  title?: string;
+  linkTitle?: string;
   to: string;
-  detail: string;
+  detail?: string;
 }

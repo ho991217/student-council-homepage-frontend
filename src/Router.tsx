@@ -4,15 +4,17 @@ import Greeting from 'pages/council-info/Greeting';
 import Home from 'pages/Home';
 import Organization from 'pages/council-info/Organization';
 import Rules from 'pages/Rules';
-import Detail from 'components/rules/detail/Detail';
+import DetailRules from 'components/rules/detail/Detail';
 import Conference from 'pages/Conference';
 import PetitionBoard from 'pages/communication/PetitionBoard';
 import InquiryBoard from 'pages/communication/InquiryBoard';
 import Location from 'pages/council-info/Location';
 import Login from 'pages/Login';
 import SignUp from 'pages/SignUp';
-import Pledge from 'pages/council-info/Pledge';
+import Pledge from 'pages/council/Pledge';
 import Editor from 'pages/communication/Editor';
+import News from 'pages/council/News';
+import DetailNews from 'components/news/detail/Detail';
 
 import GlobalBanner from 'components/global/banner/GlobalBanner';
 import Post from 'components/boards/post/Post';
@@ -21,6 +23,7 @@ import Footer from 'components/global/footer/Footer';
 import Makers from 'components/global/footer/sub-routes/Makers';
 import NotFound from 'pages/NotFound';
 import Term from 'components/global/footer/sub-routes/Term';
+import PrivacyPolicy from 'components/global/footer/sub-routes/PrivacyPolicy';
 
 function Router() {
   return (
@@ -33,16 +36,37 @@ function Router() {
         <Route path="/organization" element={<Organization />} />
         <Route path="/location" element={<Location />} />
         <Route path="/pledge" element={<Pledge />} />
+        <Route
+          path="/council-news"
+          element={
+            <>
+              <GlobalBanner title="총학소식" detail="총학소식 입니다." />
+              <News />
+            </>
+          }
+        />
+        <Route
+          path="/news"
+          element={
+            <>
+              <GlobalBanner title="총학소식" detail="총학소식 입니다." />
+              <DetailNews />
+            </>
+          }
+        />
         <Route path="/rules" element={<Rules />} />
         <Route
-            path="/rule"
-            element={
-              <>
-                <GlobalBanner title="회칙 및 세칙" detail="회칙 및 세칙 입니다." />
-                <Detail />
-              </>
-            }
-          />
+          path="/rule"
+          element={
+            <>
+              <GlobalBanner
+                title="회칙 및 세칙"
+                detail="회칙 및 세칙 입니다."
+              />
+              <DetailRules />
+            </>
+          }
+        />
         <Route
           path="/sign-up"
           element={
@@ -101,6 +125,7 @@ function Router() {
         />
         <Route path="/who-made-this" element={<Makers />} />
         <Route path="/term" element={<Term />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

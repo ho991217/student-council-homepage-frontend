@@ -74,12 +74,7 @@ function Tiles(): JSX.Element {
   return (
     <Container>
       <BigTile>
-        <Tile
-          title="학사일정"
-          linkTitle="학사일정바로가기"
-          to="/"
-          detail="schedule"
-        />
+        <Tile to="/" detail="schedule" />
       </BigTile>
       <SmallTileContainer>
         <SmallTile>
@@ -97,7 +92,7 @@ function Tiles(): JSX.Element {
           <Tile
             title="금주의 회의록"
             linkTitle="더보기"
-            to="/board-inquiry"
+            to="/conference"
             detail="proceeding"
           />
         </SmallTile>

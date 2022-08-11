@@ -4,11 +4,11 @@ import styled from 'styled-components';
 import seungYongImg from 'static/images/makers-profile-pics/seung-yong.png';
 import hoYeonImg from 'static/images/makers-profile-pics/ho-yeon.png';
 import yeJiImg from 'static/images/makers-profile-pics/ye-ji.png';
-// import suJeongImg from 'static/images/makers-profile-pics/su-jeong.png';
 import chanJinImg from 'static/images/makers-profile-pics/chan-jin.png';
 import yeonJuImg from 'static/images/makers-profile-pics/yeon-ju.png';
 import leeHyeon from 'static/images/makers-profile-pics/lee-hyeon.png';
 import seungHwan from 'static/images/makers-profile-pics/seung-hwan.png';
+import yuJin from 'static/images/makers-profile-pics/yu-jin.png';
 
 import Card from './Card';
 
@@ -58,8 +58,8 @@ const ChanJinPics = styled.img.attrs({ src: chanJinImg })`
 const YeonJuPics = styled.img.attrs({ src: yeonJuImg })`
   position: absolute;
   width: 400px;
-  transform: scale(0.4);
-  top: -185px;
+  transform: scale(0.5);
+  top: -170px;
   left: -50px;
   pointer-events: none;
 `;
@@ -67,8 +67,8 @@ const YeonJuPics = styled.img.attrs({ src: yeonJuImg })`
 const LeeHyeonPics = styled.img.attrs({ src: leeHyeon })`
   position: absolute;
   width: 400px;
-  transform: scale(0.5);
-  top: -260px;
+  transform: scale(0.66);
+  top: -270px;
   left: -55px;
   pointer-events: none;
 `;
@@ -76,20 +76,20 @@ const LeeHyeonPics = styled.img.attrs({ src: leeHyeon })`
 const SeungHwanPics = styled.img.attrs({ src: seungHwan })`
   position: absolute;
   width: 400px;
-  transform: scale(0.5);
-  top: -200px;
-  left: -75px;
+  transform: scale(0.66);
+  top: -180px;
+  left: -80px;
   pointer-events: none;
 `;
 
-// const SuJeongPics = styled.img.attrs({ src: suJeongImg })`
-//   position: absolute;
-//   width: 400px;
-//   transform: scale(1.33);
-//   top: -140px;
-//   left: -90px;
-//   pointer-events: none;
-// `;
+const YuJinPics = styled.img.attrs({ src: yuJin })`
+  position: absolute;
+  width: 400px;
+  transform: scale(0.7);
+  top: -50px;
+  left: -60px;
+  pointer-events: none;
+`;
 
 function Makers(): JSX.Element {
   return (
@@ -179,7 +179,10 @@ function Makers(): JSX.Element {
               bgFromColor="#2E4A66"
               bgToColor="#7B97B4"
               name="유 진"
+              info="커뮤니케이션디자인과 20학번"
+              img={<YuJinPics />}
               pjrole="UX/UI Design"
+              instaid="Cherish_Jin88"
             />
           </div>
         }
