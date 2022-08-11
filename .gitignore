@@ -23,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 /.vscode
-/.env
+/.env.development
+/.env.production
 localhost-key.pem
 localhost.pem
