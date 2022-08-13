@@ -29,7 +29,7 @@ const Wrapper = styled.div`
   padding: 70px 100px;
   background-color: ${({ theme }) => theme.colors.white};
   ${({ theme }) => theme.media.tablet} { padding: 50px 50px; }
-  ${({ theme }) => theme.media.mobile} { padding: 40px 20px 120px 20px; }
+  ${({ theme }) => theme.media.mobile} { padding: 40px 20px 60px 20px; }
 `;
 
 const Form = styled.form`
@@ -42,12 +42,12 @@ const Label = styled.label`
   flex-direction: column;
   margin-bottom: 50px;
   font-weight: ${({ theme }) => theme.fonts.weight.bold};
-  font-size: ${({ theme }) => theme.fonts.size.lg};
+  font-size: ${({ theme }) => theme.fonts.size.md};
   user-select: none;
 `;
 
 const Select = styled.select`
-  font-size: ${({ theme }) => theme.fonts.size.md};
+  font-size: ${({ theme }) => theme.fonts.size.base};
   color: black;
   width: 400px;
   height: 40px;
@@ -74,17 +74,17 @@ const Content = css`
     color: ${({ theme }) => theme.colors.gray200}; 
   }
   border: 1px solid ${({ theme }) => theme.colors.gray200};
-  font-size: ${({ theme }) => theme.fonts.size.md};
+  font-size: ${({ theme }) => theme.fonts.size.base};
   ${({ theme }) => theme.media.mobile} { width: 100%; }
 `;
 
-const TitleInput = styled.input.attrs({ type: "text", required: true })`
+const TitleInput = styled.input`
   ${Content}
   width: 100%;
   height: 40px;
 `;
 
-const Textarea = styled.textarea.attrs({ required: true })`
+const Textarea = styled.textarea`
   ${Content}
   width: 100%;
   height: 450px;
@@ -103,9 +103,10 @@ const Button = styled.button`
   border: none;
   cursor: pointer;
   font-size: ${({ theme }) => theme.fonts.size.base};
-  background-color: ${({ theme }) => theme.colors.darkblue};
+  background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.white};
   ${({ theme }) => theme.media.mobile} { width: 100%; }
+  border-radius: 5px;
 `;
 
 function Contents(): JSX.Element {

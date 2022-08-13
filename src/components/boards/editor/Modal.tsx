@@ -21,7 +21,7 @@ const Container = styled.div`
 
 const Title = styled.div`
   color: ${({ theme }) => theme.colors.white};
-  background-color: ${({ theme }) => theme.colors.darkblue }};
+  background-color: ${({ theme }) => theme.colors.primary }};
   font-size: ${({ theme }) => theme.fonts.size.xxl};
   font-weight: ${({ theme }) => theme.fonts.weight.bold};
   text-align: center;
@@ -74,9 +74,10 @@ const ButtonDefault = css`
   height: 50px;
   border-radius: 8px;
   cursor: pointer;
-  background-color: ${({ theme }) => theme.colors.darkblue }};
+  background-color: ${({ theme }) => theme.colors.primary }};
   color: ${({ theme }) => theme.colors.white }};
   font-size: ${({ theme }) => theme.fonts.size.base};
+  border: none;
 `;
 
 const AgreeButton = styled.button`

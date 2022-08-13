@@ -3,7 +3,7 @@ import Content from "components/boards/editor/Contents";
 
 
 const Container = styled.div`
-  margin: 50px 0;
+  margin: 40px 0;
   ${({ theme }) => theme.media.mobile} { 
     margin: 0;
   }
