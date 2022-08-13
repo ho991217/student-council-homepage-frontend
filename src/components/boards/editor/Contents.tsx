@@ -1,16 +1,29 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import ReactModal from "react-modal";
+import { Desktop, Tablet, Mobile } from "hooks/MediaQueries";
 import Modal from "./Modal";
 
 
-const customStyles = {
+const customStylesDesktop = {
   content: {
-    top: '50%',
+    top: '25%',
     left: '50%',
     right: 'auto',
     bottom: 'auto',
-    marginRight: '-50%',
+    marginTop: '290px',
+    transform: 'translate(-50%, -50%)',
+    padding: 0,
+  }, 
+};
+
+const customStylesMobile = {
+  content: {
+    top: '40%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginTop: '80px',
     transform: 'translate(-50%, -50%)',
     padding: 0,
   }, 
@@ -24,7 +37,7 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  max-width: 1290px;
+  max-width: 1150px;
   width: 100%;
   padding: 70px 100px;
   background-color: ${({ theme }) => theme.colors.white};
@@ -78,13 +91,13 @@ const Content = css`
   ${({ theme }) => theme.media.mobile} { width: 100%; }
 `;
 
-const TitleInput = styled.input`
+const TitleInput = styled.input.attrs({ type: "text", required: true })`
   ${Content}
   width: 100%;
   height: 40px;
 `;
 
-const Textarea = styled.textarea`
+const Textarea = styled.textarea.attrs({ required: true })`
   ${Content}
   width: 100%;
   height: 450px;
@@ -200,15 +213,39 @@ function Contents(): JSX.Element {
             <Button type="button" onClick={onOpenModalHandler}>작성완료</Button>
           </ButtonDiv>
         </Form>
-        <ReactModal
-          isOpen={isOpen}
-          style={customStyles}
-          ariaHideApp={false}
-          contentLabel="개인정보 수집 및 이용 동의"
-          onRequestClose={() => setIsOpen(false)}
-        >
-          <Modal onCloseModalHandler={onCloseModalHandler} onSubmitHandler={onSubmitHandler} />
-        </ReactModal>
+        <Desktop>
+          <ReactModal
+            isOpen={isOpen}
+            style={customStylesDesktop}
+            ariaHideApp={false}
+            contentLabel="개인정보 수집 및 이용 동의"
+            onRequestClose={() => setIsOpen(false)}
+          >
+            <Modal onCloseModalHandler={onCloseModalHandler} onSubmitHandler={onSubmitHandler} />
+          </ReactModal>
+        </Desktop>
+        <Tablet>
+          <ReactModal
+            isOpen={isOpen}
+            style={customStylesMobile}
+            ariaHideApp={false}
+            contentLabel="개인정보 수집 및 이용 동의"
+            onRequestClose={() => setIsOpen(false)}
+          >
+            <Modal onCloseModalHandler={onCloseModalHandler} onSubmitHandler={onSubmitHandler} />
+          </ReactModal>
+        </Tablet>
+        <Mobile>
+          <ReactModal
+            isOpen={isOpen}
+            style={customStylesMobile}
+            ariaHideApp={false}
+            contentLabel="개인정보 수집 및 이용 동의"
+            onRequestClose={() => setIsOpen(false)}
+          >
+            <Modal onCloseModalHandler={onCloseModalHandler} onSubmitHandler={onSubmitHandler} />
+          </ReactModal>
+        </Mobile>
       </Wrapper>
     </Container>
   );
