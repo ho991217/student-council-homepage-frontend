@@ -1,7 +1,11 @@
+import { LoginStateAtom } from 'atoms/LoginState';
+import axios from 'axios';
 import GlobalBanner from 'components/global/banner/GlobalBanner';
 import { Desktop } from 'hooks/MediaQueries';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import { Link, useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -189,7 +193,7 @@ const ExtrasContainer = styled.div`
   width: 350px;
   ${({ theme }) => theme.media.mobile} {
     width: 320px;
-}
+  }
   padding: 0 35px 0 0;
   margin-top: 15px;
 `;
@@ -265,6 +269,9 @@ function Login(): JSX.Element {
   const [idMessage, setIdMessage] = useState<string>('');
   const [isValidId, setIsValidId] = useState<boolean>(false);
   const [saveId, setSaveId] = useState<boolean>(false);
+  const [loginState, setLoginState] = useRecoilState(LoginStateAtom);
+  const [cookies, setCookie] = useCookies(['X-AUTH-TOKEN']);
+  const navigate = useNavigate();
 
   const validateDankookEmail = (email: string) => {
     const regex = /^[0-9]{8}$/;
@@ -273,6 +280,27 @@ function Login(): JSX.Element {
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const data = JSON.stringify({ classId: id, password });
+
+    const config = {
+      method: 'post',
+      url: 'http://133.186.132.198:8080/api/users/login',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+    };
+
+    axios(config)
+      .then(function (response) {
+        setLoginState(true);
+        const { accessToken } = response.data.data;
+        setCookie('X-AUTH-TOKEN', accessToken);
+        navigate('/');
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
   };
 
   const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {

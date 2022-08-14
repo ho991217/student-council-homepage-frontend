@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { lock, unlock, clearBodyLocks } from 'tua-body-scroll-lock';
 import styled from 'styled-components';
+import { useLogin } from 'hooks/UseLogin';
 import { NavItems } from './NavItems';
 
 const Container = styled.div<{ opened: boolean }>`
@@ -114,6 +115,11 @@ const NavLink = styled(Link)`
   justify-content: flex-start;
 `;
 
+const LogOut = styled.div`
+  margin: 0px 20px;
+  cursor: pointer;
+`;
+
 const Expandable = styled.div`
   display: flex;
   flex-direction: column;
@@ -163,6 +169,7 @@ const SubPath = styled.div<{ pathCount: number; opened: boolean }>`
 
 function MobileMenu(): JSX.Element {
   const [opened, setOpened] = useState<boolean>(false);
+  const { isLoggedIn, logOut } = useLogin();
   const navRef = useRef(null);
   const [subpathOpened, setSubpathOpened] = useState<boolean[]>(
     Array.from({ length: NavItems.length }, () => false),
@@ -213,9 +220,13 @@ function MobileMenu(): JSX.Element {
           >
             Portal
           </a>
-          <Link to="/login" onClick={() => setOpened(false)}>
-            로그인
-          </Link>
+          {isLoggedIn ? (
+            <LogOut onClick={logOut}>로그아웃</LogOut>
+          ) : (
+            <Link to="/login" onClick={() => setOpened(false)}>
+              로그인
+            </Link>
+          )}
         </UserSection>
         <NavSection>
           {NavItems.map((item) => (

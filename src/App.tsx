@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 // 스타일링 관련 import
+import { RecoilRoot } from 'recoil';
 import { GlobalStyles } from 'styles/GlobalStyles';
 import { ThemeProvider } from 'styled-components';
 import { theme } from 'styles/Theme';
@@ -25,10 +26,12 @@ function App() {
     };
   }, []);
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyles />
-      <Router />
-    </ThemeProvider>
+    <RecoilRoot>
+      <ThemeProvider theme={theme}>
+        <GlobalStyles />
+        <Router />
+      </ThemeProvider>
+    </RecoilRoot>
   );
 }
 

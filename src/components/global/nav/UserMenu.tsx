@@ -1,3 +1,4 @@
+import { useLogin } from 'hooks/UseLogin';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -36,7 +37,13 @@ const LoginLink = styled(Link)`
   margin: 0px 20px;
 `;
 
+const LogOut = styled.div`
+  margin: 0px 20px;
+  cursor: pointer;
+`;
+
 function UserMenu(): JSX.Element {
+  const { isLoggedIn, logOut } = useLogin();
   const location = useLocation();
   return (
     <Container>
@@ -46,9 +53,12 @@ function UserMenu(): JSX.Element {
           <a href="https://portal.dankook.ac.kr/web/portal">Portal</a>
         </Links>
 
-        {/* TODO: 로그인 페이지 만들어지면 경로 수정 */}
-        {location.pathname !== '/login' && (
-          <LoginLink to="/login">로그인</LoginLink>
+        {isLoggedIn ? (
+          <LogOut onClick={logOut}>로그아웃</LogOut>
+        ) : (
+          location.pathname !== '/login' && (
+            <LoginLink to="/login">로그인</LoginLink>
+          )
         )}
       </InnerContainer>
     </Container>

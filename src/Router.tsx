@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import Greeting from 'pages/council-info/Greeting';
 import Home from 'pages/Home';
@@ -24,14 +24,28 @@ import Makers from 'components/global/footer/sub-routes/Makers';
 import NotFound from 'pages/NotFound';
 import Term from 'components/global/footer/sub-routes/Term';
 import PrivacyPolicy from 'components/global/footer/sub-routes/PrivacyPolicy';
+import { useLogin } from 'hooks/UseLogin';
 
 function Router() {
+  const { isLoggedIn } = useLogin();
   return (
     <BrowserRouter>
       <Gnb />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={isLoggedIn ? <Navigate to="/" /> : <Login />}
+        />
+        <Route
+          path="/sign-up"
+          element={
+            <>
+              <GlobalBanner title="회원가입" detail="회원가입 입니다." />
+              <SignUp />
+            </>
+          }
+        />
         <Route path="/greeting" element={<Greeting />} />
         <Route path="/organization" element={<Organization />} />
         <Route path="/location" element={<Location />} />
@@ -68,15 +82,6 @@ function Router() {
           }
         />
         <Route
-          path="/sign-up"
-          element={
-            <>
-              <GlobalBanner title="회원가입" detail="회원가입 입니다." />
-              <SignUp />
-            </>
-          }
-        />
-        <Route
           path="/conference"
           element={
             <>
@@ -95,6 +100,7 @@ function Router() {
           }
         />
         <Route path="/board-petition">
+          {!isLoggedIn && <Route path="*" element={<Navigate to="/" />} />}
           <Route path="/board-petition" element={<NotFound />} />
           <Route
             path="boards"
