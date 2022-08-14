@@ -22,7 +22,6 @@ declare module 'styled-components' {
       gray900: string;
       red: string;
       blue: string;
-      darkblue: string;
     };
     fonts: {
       weight: {

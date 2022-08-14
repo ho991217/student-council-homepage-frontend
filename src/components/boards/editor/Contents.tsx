@@ -1,16 +1,29 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import ReactModal from "react-modal";
+import { Desktop, Tablet, Mobile } from "hooks/MediaQueries";
 import Modal from "./Modal";
 
 
-const customStyles = {
+const customStylesDesktop = {
   content: {
-    top: '50%',
+    top: '25%',
     left: '50%',
     right: 'auto',
     bottom: 'auto',
-    marginRight: '-50%',
+    marginTop: '290px',
+    transform: 'translate(-50%, -50%)',
+    padding: 0,
+  }, 
+};
+
+const customStylesMobile = {
+  content: {
+    top: '40%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginTop: '80px',
     transform: 'translate(-50%, -50%)',
     padding: 0,
   }, 
@@ -24,12 +37,12 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  max-width: 1290px;
+  max-width: 1150px;
   width: 100%;
   padding: 70px 100px;
   background-color: ${({ theme }) => theme.colors.white};
   ${({ theme }) => theme.media.tablet} { padding: 50px 50px; }
-  ${({ theme }) => theme.media.mobile} { padding: 40px 20px 120px 20px; }
+  ${({ theme }) => theme.media.mobile} { padding: 40px 20px 60px 20px; }
 `;
 
 const Form = styled.form`
@@ -42,12 +55,12 @@ const Label = styled.label`
   flex-direction: column;
   margin-bottom: 50px;
   font-weight: ${({ theme }) => theme.fonts.weight.bold};
-  font-size: ${({ theme }) => theme.fonts.size.lg};
+  font-size: ${({ theme }) => theme.fonts.size.md};
   user-select: none;
 `;
 
 const Select = styled.select`
-  font-size: ${({ theme }) => theme.fonts.size.md};
+  font-size: ${({ theme }) => theme.fonts.size.base};
   color: black;
   width: 400px;
   height: 40px;
@@ -74,7 +87,7 @@ const Content = css`
     color: ${({ theme }) => theme.colors.gray200}; 
   }
   border: 1px solid ${({ theme }) => theme.colors.gray200};
-  font-size: ${({ theme }) => theme.fonts.size.md};
+  font-size: ${({ theme }) => theme.fonts.size.base};
   ${({ theme }) => theme.media.mobile} { width: 100%; }
 `;
 
@@ -103,9 +116,10 @@ const Button = styled.button`
   border: none;
   cursor: pointer;
   font-size: ${({ theme }) => theme.fonts.size.base};
-  background-color: ${({ theme }) => theme.colors.darkblue};
+  background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.white};
   ${({ theme }) => theme.media.mobile} { width: 100%; }
+  border-radius: 5px;
 `;
 
 function Contents(): JSX.Element {
@@ -199,15 +213,39 @@ function Contents(): JSX.Element {
             <Button type="button" onClick={onOpenModalHandler}>작성완료</Button>
           </ButtonDiv>
         </Form>
-        <ReactModal
-          isOpen={isOpen}
-          style={customStyles}
-          ariaHideApp={false}
-          contentLabel="개인정보 수집 및 이용 동의"
-          onRequestClose={() => setIsOpen(false)}
-        >
-          <Modal onCloseModalHandler={onCloseModalHandler} onSubmitHandler={onSubmitHandler} />
-        </ReactModal>
+        <Desktop>
+          <ReactModal
+            isOpen={isOpen}
+            style={customStylesDesktop}
+            ariaHideApp={false}
+            contentLabel="개인정보 수집 및 이용 동의"
+            onRequestClose={() => setIsOpen(false)}
+          >
+            <Modal onCloseModalHandler={onCloseModalHandler} onSubmitHandler={onSubmitHandler} />
+          </ReactModal>
+        </Desktop>
+        <Tablet>
+          <ReactModal
+            isOpen={isOpen}
+            style={customStylesMobile}
+            ariaHideApp={false}
+            contentLabel="개인정보 수집 및 이용 동의"
+            onRequestClose={() => setIsOpen(false)}
+          >
+            <Modal onCloseModalHandler={onCloseModalHandler} onSubmitHandler={onSubmitHandler} />
+          </ReactModal>
+        </Tablet>
+        <Mobile>
+          <ReactModal
+            isOpen={isOpen}
+            style={customStylesMobile}
+            ariaHideApp={false}
+            contentLabel="개인정보 수집 및 이용 동의"
+            onRequestClose={() => setIsOpen(false)}
+          >
+            <Modal onCloseModalHandler={onCloseModalHandler} onSubmitHandler={onSubmitHandler} />
+          </ReactModal>
+        </Mobile>
       </Wrapper>
     </Container>
   );
