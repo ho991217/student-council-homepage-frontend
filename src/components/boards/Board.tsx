@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
 import styled from 'styled-components';
+
 import { PostProps } from './PostProps';
 
 const Container = styled.div`
@@ -105,6 +108,7 @@ interface BoardProps {
 // TODO: 로그인 했는지 안했는지 체크
 function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<PostProps[]>([]);
+  const [cookies] = useCookies(['X-AUTH-TOKEN']);
 
   useEffect(() => {
     setBoard(posts);

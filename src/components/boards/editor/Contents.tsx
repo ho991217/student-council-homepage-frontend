@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import styled, { css } from "styled-components";
-import ReactModal from "react-modal";
-import { Desktop, Tablet, Mobile } from "hooks/MediaQueries";
-import Modal from "./Modal";
-
+import React, { useState } from 'react';
+import styled, { css } from 'styled-components';
+import { useCookies } from 'react-cookie';
+import axios from 'axios';
+import ReactModal from 'react-modal';
+import { Desktop, Tablet, Mobile } from 'hooks/MediaQueries';
+import Modal from './Modal';
 
 const customStylesDesktop = {
   content: {
@@ -14,7 +15,7 @@ const customStylesDesktop = {
     marginTop: '290px',
     transform: 'translate(-50%, -50%)',
     padding: 0,
-  }, 
+  },
 };
 
 const customStylesMobile = {
@@ -26,7 +27,7 @@ const customStylesMobile = {
     marginTop: '80px',
     transform: 'translate(-50%, -50%)',
     padding: 0,
-  }, 
+  },
 };
 
 const Container = styled.div`
@@ -41,8 +42,12 @@ const Wrapper = styled.div`
   width: 100%;
   padding: 70px 100px;
   background-color: ${({ theme }) => theme.colors.white};
-  ${({ theme }) => theme.media.tablet} { padding: 50px 50px; }
-  ${({ theme }) => theme.media.mobile} { padding: 40px 20px 60px 20px; }
+  ${({ theme }) => theme.media.tablet} {
+    padding: 50px 50px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    padding: 40px 20px 60px 20px;
+  }
 `;
 
 const Form = styled.form`
@@ -67,15 +72,15 @@ const Select = styled.select`
   margin-top: 15px;
   padding-left: 10px;
   -webkit-appearance: none;
-  -moz-appearance: none; 
+  -moz-appearance: none;
   appearance: none;
   background-color: ${({ theme }) => theme.colors.white};
   border: 1px solid ${({ theme }) => theme.colors.gray400};
-  ${({ theme }) => theme.media.tablet} { 
+  ${({ theme }) => theme.media.tablet} {
     width: 300px;
   }
-  ${({ theme }) => theme.media.mobile} { 
-    width: 180px; 
+  ${({ theme }) => theme.media.mobile} {
+    width: 180px;
   }
 `;
 
@@ -83,15 +88,17 @@ const Content = css`
   margin-top: 15px;
   padding-left: 12px;
   background-color: ${({ theme }) => theme.colors.gray040};
-  ::placeholder { 
-    color: ${({ theme }) => theme.colors.gray200}; 
+  ::placeholder {
+    color: ${({ theme }) => theme.colors.gray200};
   }
   border: 1px solid ${({ theme }) => theme.colors.gray200};
   font-size: ${({ theme }) => theme.fonts.size.base};
-  ${({ theme }) => theme.media.mobile} { width: 100%; }
+  ${({ theme }) => theme.media.mobile} {
+    width: 100%;
+  }
 `;
 
-const TitleInput = styled.input.attrs({ type: "text", required: true })`
+const TitleInput = styled.input.attrs({ type: 'text', required: true })`
   ${Content}
   width: 100%;
   height: 40px;
@@ -107,7 +114,9 @@ const Textarea = styled.textarea.attrs({ required: true })`
 
 const ButtonDiv = styled.div`
   margin: auto;
-  ${({ theme }) => theme.media.mobile} { width: 100%; }
+  ${({ theme }) => theme.media.mobile} {
+    width: 100%;
+  }
 `;
 
 const Button = styled.button`
@@ -118,7 +127,9 @@ const Button = styled.button`
   font-size: ${({ theme }) => theme.fonts.size.base};
   background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.white};
-  ${({ theme }) => theme.media.mobile} { width: 100%; }
+  ${({ theme }) => theme.media.mobile} {
+    width: 100%;
+  }
   border-radius: 5px;
 `;
 
@@ -127,35 +138,36 @@ function Contents(): JSX.Element {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [cookies] = useCookies(['X-AUTH-TOKEN']);
 
   const onCategoryHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const {
       currentTarget: { value },
     } = event;
     setCategory(value);
-  }
+  };
 
   const onTitleHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
     } = event;
     setTitle(value);
-  }
+  };
 
   const onContentHandler = (event: React.FormEvent<HTMLTextAreaElement>) => {
     const {
       currentTarget: { value },
     } = event;
     setContent(value);
-  }
+  };
 
   const onOpenModalHandler = () => {
-    if (category === "") {
-      alert("카테고리를 선택해주세요.");
-    } else if (title === "") {  
-      alert("청원 제목을 입력해주세요");
-    } else if (content === "") {
-      alert("청원 내용을 입력해주세요");
+    if (category === '') {
+      alert('카테고리를 선택해주세요.');
+    } else if (title === '') {
+      alert('청원 제목을 입력해주세요');
+    } else if (content === '') {
+      alert('청원 내용을 입력해주세요');
     } else {
       setIsOpen(true);
     }
@@ -163,11 +175,11 @@ function Contents(): JSX.Element {
 
   const onCloseModalHandler = () => {
     setIsOpen(false);
-  }
+  };
 
   const onSubmitHandler = () => {
     // TODO: 백으로 데이터 전송
-  }
+  };
 
   return (
     <Container>
@@ -175,13 +187,16 @@ function Contents(): JSX.Element {
         <Form onSubmit={onSubmitHandler}>
           <Label htmlFor="category">
             카테고리
-            <Select 
-              name="category" 
-              id="category" 
+            <Select
+              name="category"
+              id="category"
               value={category}
-              onChange={onCategoryHandler} 
+              onChange={onCategoryHandler}
+              defaultValue=""
             >
-              <option value="" disabled selected>카테고리를 선택해주세요.</option>
+              <option value="" disabled>
+                카테고리를 선택해주세요.
+              </option>
               <option value="school-life">학교생활</option>
               <option value="school-facilities">교내시설</option>
               <option value="covid-19">코로나19</option>
@@ -190,27 +205,29 @@ function Contents(): JSX.Element {
               <option value="etc">기타</option>
             </Select>
           </Label>
-          
+
           <Label htmlFor="title">
             청원 제목
             <TitleInput
               type="text"
-              id="title" 
+              id="title"
               value={title}
               onChange={onTitleHandler}
-              placeholder="청원 제목을 입력해주세요." 
-            />  
+              placeholder="청원 제목을 입력해주세요."
+            />
           </Label>
           <Label htmlFor="content">
             청원 내용
             <Textarea
-              id="content" 
+              id="content"
               value={content}
               onChange={onContentHandler}
             />
           </Label>
           <ButtonDiv>
-            <Button type="button" onClick={onOpenModalHandler}>작성완료</Button>
+            <Button type="button" onClick={onOpenModalHandler}>
+              작성완료
+            </Button>
           </ButtonDiv>
         </Form>
         <Desktop>
@@ -221,7 +238,10 @@ function Contents(): JSX.Element {
             contentLabel="개인정보 수집 및 이용 동의"
             onRequestClose={() => setIsOpen(false)}
           >
-            <Modal onCloseModalHandler={onCloseModalHandler} onSubmitHandler={onSubmitHandler} />
+            <Modal
+              onCloseModalHandler={onCloseModalHandler}
+              onSubmitHandler={onSubmitHandler}
+            />
           </ReactModal>
         </Desktop>
         <Tablet>
@@ -232,7 +252,10 @@ function Contents(): JSX.Element {
             contentLabel="개인정보 수집 및 이용 동의"
             onRequestClose={() => setIsOpen(false)}
           >
-            <Modal onCloseModalHandler={onCloseModalHandler} onSubmitHandler={onSubmitHandler} />
+            <Modal
+              onCloseModalHandler={onCloseModalHandler}
+              onSubmitHandler={onSubmitHandler}
+            />
           </ReactModal>
         </Tablet>
         <Mobile>
@@ -243,7 +266,10 @@ function Contents(): JSX.Element {
             contentLabel="개인정보 수집 및 이용 동의"
             onRequestClose={() => setIsOpen(false)}
           >
-            <Modal onCloseModalHandler={onCloseModalHandler} onSubmitHandler={onSubmitHandler} />
+            <Modal
+              onCloseModalHandler={onCloseModalHandler}
+              onSubmitHandler={onSubmitHandler}
+            />
           </ReactModal>
         </Mobile>
       </Wrapper>

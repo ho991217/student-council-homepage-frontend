@@ -71,7 +71,7 @@ const DateContainer = styled.div`
   }
 `;
 
-const P = styled.p`
+const P = styled.div`
   font-weight: ${({ theme }) => theme.fonts.weight.regular};
   color: ${({ theme }) => theme.colors.gray900};
   display: flex;
@@ -121,7 +121,7 @@ function Schedule(): JSX.Element {
 
     const config = {
       method: 'get',
-      url: `${API_URL}/api/schedule?from=${dateString}01&to=${dateString}${new Date(
+      url: `http://133.186.132.198:8080/api/schedule?from=${dateString}01&to=${dateString}${new Date(
         curYear,
         curMonth + 1,
         0,

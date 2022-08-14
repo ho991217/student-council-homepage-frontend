@@ -292,7 +292,7 @@ function Login(): JSX.Element {
     };
 
     axios(config)
-      .then(function (response) {
+      .then((response) => {
         setLoginState(true);
         const { accessToken } = response.data.data;
         setCookie('X-AUTH-TOKEN', accessToken);
@@ -312,7 +312,6 @@ function Login(): JSX.Element {
       setIsValidId(false);
       setIdMessage('학번을 입력해주세요.');
     }
-
     setId(currentInput);
   };
 

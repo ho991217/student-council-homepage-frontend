@@ -34,9 +34,6 @@ function Home() {
   // 컴포넌트가 처음 렌더링 될 때
   useEffect(() => {
     // 스토리지 서버에서 캐러셀 이미지 받아올 것
-    getImages();
-    getImages();
-    getImages();
   }, []);
 
   return (

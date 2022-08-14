@@ -1,5 +1,4 @@
-import styled, { css } from "styled-components";
-
+import styled, { css } from 'styled-components';
 
 interface propTypes {
   onCloseModalHandler: () => void;
@@ -9,19 +8,19 @@ interface propTypes {
 const Container = styled.div`
   width: 880px;
   height: 680px;
-  ${({ theme }) => theme.media.tablet} { 
-    width: 590px; 
+  ${({ theme }) => theme.media.tablet} {
+    width: 590px;
     height: 520px;
-   }
-  ${({ theme }) => theme.media.mobile} { 
-    width: 300px; 
+  }
+  ${({ theme }) => theme.media.mobile} {
+    width: 300px;
     height: 500px;
   }
 `;
 
 const Title = styled.div`
   color: ${({ theme }) => theme.colors.white};
-  background-color: ${({ theme }) => theme.colors.primary }};
+  background-color: ${({ theme }) => theme.colors.primary};
   font-size: ${({ theme }) => theme.fonts.size.xxl};
   font-weight: ${({ theme }) => theme.fonts.weight.bold};
   text-align: center;
@@ -34,7 +33,7 @@ const SubTitle = styled.div`
   padding: 20px 0;
   user-select: none;
   font-size: ${({ theme }) => theme.fonts.size.base};
-  ${({ theme }) => theme.media.mobile} { 
+  ${({ theme }) => theme.media.mobile} {
     line-height: ${({ theme }) => theme.fonts.size.xl};
     padding: 8px 35px;
   }
@@ -45,19 +44,21 @@ const Detail = styled.textarea`
   height: 460px;
   resize: none;
   padding: 20px 20px;
-  :focus { outline: none; }
+  :focus {
+    outline: none;
+  }
   display: block;
   margin: 0 auto;
   white-space: pre-line;
-  background-color: ${({ theme }) => theme.colors.gray050 }};
-  color: ${({ theme }) => theme.colors.gray200 }};
+  background-color: ${({ theme }) => theme.colors.gray050};
+  color: ${({ theme }) => theme.colors.gray200};
   font-size: ${({ theme }) => theme.fonts.size.base};
   line-height: ${({ theme }) => theme.fonts.size.xl};
-  ${({ theme }) => theme.media.tablet} { 
-    width: 510px; 
+  ${({ theme }) => theme.media.tablet} {
+    width: 510px;
     height: 300px;
   }
-  ${({ theme }) => theme.media.mobile} { 
+  ${({ theme }) => theme.media.mobile} {
     width: 280px;
     height: 290px;
   }
@@ -67,15 +68,17 @@ const Buttons = styled.div`
   display: flex;
   justify-content: center;
   margin: 20px 0;
-  ${({ theme }) => theme.media.mobile} { margin: 15px 0; }
+  ${({ theme }) => theme.media.mobile} {
+    margin: 15px 0;
+  }
 `;
 
 const ButtonDefault = css`
   height: 50px;
   border-radius: 8px;
   cursor: pointer;
-  background-color: ${({ theme }) => theme.colors.primary }};
-  color: ${({ theme }) => theme.colors.white }};
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.fonts.size.base};
   border: none;
 `;
@@ -84,16 +87,23 @@ const AgreeButton = styled.button`
   ${ButtonDefault}
   width: 300px;
   margin-right: 10px;
-  ${({ theme }) => theme.media.mobile} { width: 130px;}
+  ${({ theme }) => theme.media.mobile} {
+    width: 130px;
+  }
 `;
 
 const CancelButton = styled.button`
   ${ButtonDefault}
   width: 150px;
-  ${({ theme }) => theme.media.mobile} { width: 80px;}
+  ${({ theme }) => theme.media.mobile} {
+    width: 80px;
+  }
 `;
 
-function Modal({ onCloseModalHandler, onSubmitHandler }: propTypes): JSX.Element {
+function Modal({
+  onCloseModalHandler,
+  onSubmitHandler,
+}: propTypes): JSX.Element {
   const placeholder = `1. 개인정보 수집목적 및 이용목적
 
   (1) 홈페이지 회원 가입 및 관리
@@ -112,17 +122,20 @@ function Modal({ onCloseModalHandler, onSubmitHandler }: propTypes): JSX.Element
   return (
     <Container>
       <Title>개인정보 수집 및 이용 동의</Title>
-      <SubTitle>청원 게시글을 올리기 전에 약관을 반드시 읽고, 약관에 동의해주세요!</SubTitle>
-      <Detail 
-        readOnly
-        placeholder={placeholder}
-      />
+      <SubTitle>
+        청원 게시글을 올리기 전에 약관을 반드시 읽고, 약관에 동의해주세요!
+      </SubTitle>
+      <Detail readOnly placeholder={placeholder} />
       <Buttons>
-        <AgreeButton type="button" onClick={onSubmitHandler}>약관에 동의합니다.</AgreeButton>
-        <CancelButton type="button" onClick={onCloseModalHandler}>취소</CancelButton>
+        <AgreeButton type="button" onClick={onSubmitHandler}>
+          약관에 동의합니다.
+        </AgreeButton>
+        <CancelButton type="button" onClick={onCloseModalHandler}>
+          취소
+        </CancelButton>
       </Buttons>
     </Container>
-  )
+  );
 }
 
 export default Modal;

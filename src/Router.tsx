@@ -1,30 +1,31 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-import Greeting from 'pages/council-info/Greeting';
+import { useLogin } from 'hooks/UseLogin';
+
 import Home from 'pages/Home';
+import Greeting from 'pages/council-info/Greeting';
 import Organization from 'pages/council-info/Organization';
+import Location from 'pages/council-info/Location';
 import Rules from 'pages/Rules';
 import DetailRules from 'components/rules/detail/Detail';
 import Conference from 'pages/Conference';
 import PetitionBoard from 'pages/communication/PetitionBoard';
 import InquiryBoard from 'pages/communication/InquiryBoard';
-import Location from 'pages/council-info/Location';
 import Login from 'pages/Login';
 import SignUp from 'pages/SignUp';
 import Pledge from 'pages/council/Pledge';
 import Editor from 'pages/communication/Editor';
 import News from 'pages/council/News';
-import DetailNews from 'components/news/detail/Detail';
 
+import NotFound from 'pages/NotFound';
+import DetailNews from 'components/news/detail/Detail';
 import GlobalBanner from 'components/global/banner/GlobalBanner';
 import Post from 'components/boards/post/Post';
 import Gnb from 'components/global/nav/Gnb';
 import Footer from 'components/global/footer/Footer';
 import Makers from 'components/global/footer/sub-routes/Makers';
-import NotFound from 'pages/NotFound';
 import Term from 'components/global/footer/sub-routes/Term';
 import PrivacyPolicy from 'components/global/footer/sub-routes/PrivacyPolicy';
-import { useLogin } from 'hooks/UseLogin';
 
 function Router() {
   const { isLoggedIn } = useLogin();
@@ -72,52 +73,77 @@ function Router() {
         <Route
           path="/rule"
           element={
-            <>
-              <GlobalBanner
-                title="회칙 및 세칙"
-                detail="회칙 및 세칙 입니다."
-              />
-              <DetailRules />
-            </>
+            isLoggedIn ? (
+              <>
+                <GlobalBanner
+                  title="회칙 및 세칙"
+                  detail="회칙 및 세칙 입니다."
+                />
+                <DetailRules />
+              </>
+            ) : (
+              <Navigate to="/" />
+            )
           }
         />
         <Route
           path="/conference"
           element={
-            <>
-              <GlobalBanner title="회의록" detail="회의록 입니다." />
-              <Conference />
-            </>
+            isLoggedIn ? (
+              <>
+                <GlobalBanner title="회의록" detail="회의록 입니다." />
+                <Conference />
+              </>
+            ) : (
+              <Navigate to="/" />
+            )
           }
         />
         <Route
           path="/editor"
           element={
-            <>
-              <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
-              <Editor />
-            </>
+            isLoggedIn ? (
+              <>
+                <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
+                <Editor />
+              </>
+            ) : (
+              <Navigate to="/" />
+            )
           }
         />
         <Route path="/board-petition">
-          {!isLoggedIn && <Route path="*" element={<Navigate to="/" />} />}
           <Route path="/board-petition" element={<NotFound />} />
           <Route
             path="boards"
             element={
-              <>
-                <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
-                <PetitionBoard />
-              </>
+              isLoggedIn ? (
+                <>
+                  <GlobalBanner
+                    title="청원게시판"
+                    detail="청원게시판 입니다."
+                  />
+                  <PetitionBoard />
+                </>
+              ) : (
+                <Navigate to="/" />
+              )
             }
           />
           <Route
             path="board"
             element={
-              <>
-                <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
-                <Post />
-              </>
+              isLoggedIn ? (
+                <>
+                  <GlobalBanner
+                    title="청원게시판"
+                    detail="청원게시판 입니다."
+                  />
+                  <Post />
+                </>
+              ) : (
+                <Navigate to="/" />
+              )
             }
           />
         </Route>
