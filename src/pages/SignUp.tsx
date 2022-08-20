@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import styled from 'styled-components';
 
 import { majorList } from 'components/user/Major';
+import { createBigIntLiteral } from 'typescript';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -119,12 +120,18 @@ const StudentNumInput = styled.input.attrs({
 const PasswordInput = styled.input.attrs({
   type: 'password',
   required: true,
+  maxLength: 20
 })`
   all: unset;
   background-color: ${({ theme }) => theme.colors.white};
   height: 100%;
   width: 640px;
   padding: 0 10px;
+`;
+
+const WarningDiv = styled.div`
+  color: ${({ theme }) => theme.colors.red};
+  margin-bottom: 15px;
 `;
 
 const PhoneNumInput = styled.input.attrs({
@@ -263,6 +270,9 @@ const Detail = styled.div`
 function SignUp(): JSX.Element {
   const [studentNum, setStudentNum] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [isPassword, setIsPassword] = useState(false);
+  const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
   const [major, setMajor] = useState('');
   const [phoneNum, setPhoneNum] = useState('');
   const [code, setCode] = useState('');
@@ -280,7 +290,7 @@ function SignUp(): JSX.Element {
   const handleSignUp = useCallback(() => {
     // TODO: validation
     console.log(studentNum, password, major, phoneNum);
-  }, [studentNum, password, major, phoneNum]);
+  }, [studentNum, password, passwordConfirm, major, phoneNum]);
 
   const handleVerifyStudent = useCallback(
     (e: any) => {
@@ -320,6 +330,9 @@ function SignUp(): JSX.Element {
     if (
       studentNum &&
       password &&
+      passwordConfirm &&
+      isPassword &&
+      isPasswordConfirm &&
       major &&
       phoneNum &&
       isVerifiedStudentNum &&
@@ -329,7 +342,17 @@ function SignUp(): JSX.Element {
     } else {
       setIsSignUpActive(false);
     }
-  }, [studentNum, password, major, phoneNum, isVerifiedStudentNum, isVerified]);
+  }, [
+    studentNum,
+    password,
+    passwordConfirm,
+    isPassword,
+    isPasswordConfirm,
+    major,
+    phoneNum,
+    isVerifiedStudentNum,
+    isVerified,
+  ]);
 
   useEffect(() => {
     if (phoneNum.length === 10) {
@@ -349,6 +372,30 @@ function SignUp(): JSX.Element {
       setIsVerifiedActive(false);
     }
   }, [studentNum]);
+
+  // 비밀번호 유효성 검사
+  useEffect(() => {
+    const passwordRegex =
+      /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8}$/;
+
+    
+
+    if (password === '' || passwordRegex.test(password)) {
+      setIsPassword(true);
+    } else {
+      setIsPassword(false);
+    }
+  }, [password]);
+
+  // 비밀번호 같은지 검사
+  useEffect(() => {
+    if (passwordConfirm === '' || password === passwordConfirm) {
+      setIsPasswordConfirm(true);
+    } else {
+      setIsPasswordConfirm(false);
+    }
+  }, [password, passwordConfirm]);
+
 
   if (!isVerifiedStudentNum) {
     return (
@@ -398,6 +445,21 @@ function SignUp(): JSX.Element {
             onChange={(e) => setPassword(e.currentTarget.value)}
           />
         </InputContainer>
+        {!isPassword ? (
+          <WarningDiv>
+            비밀번호 형식: 숫자, 영문자, 특수문자 조합으로 8자리 이상
+          </WarningDiv>
+        ) : null}
+        <InputContainer>
+          <PasswordInput
+            placeholder="비밀번호 재입력"
+            value={passwordConfirm}
+            onChange={(e) => setPasswordConfirm(e.currentTarget.value)}
+          />
+        </InputContainer>
+        {!isPasswordConfirm ? (
+          <WarningDiv>비밀번호가 일치하지 않습니다.</WarningDiv>
+        ) : null}
         <InputContainer>
           <Select name="major" value={major} onChange={hadleSelectMajor}>
             <option value="" disabled selected>
