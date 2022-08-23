@@ -8,8 +8,8 @@ interface propTypes {
 
 interface AgreeType {
   [key: string]: boolean;
-  personalInfo: boolean;
-  ruleInfo: boolean;
+  firstInfo: boolean;
+  secondInfo: boolean;
 }
 
 const Container = styled.div`
@@ -48,7 +48,7 @@ const SubTitle = styled.div`
 
 const Detail = styled.textarea`
   width: 700px;
-  height: 75px;
+  height: 100px;
   resize: none;
   padding: 10px;
   :focus {
@@ -141,6 +141,7 @@ const CheckBoxContainer = styled.div`
 const Label = styled.div`
   display: flex;
   flex-direction: row;
+  margin-top: 10px;
 `;
 
 const InputCheckbox = styled.input.attrs({
@@ -162,6 +163,11 @@ const DetailText = styled.text`
   margin-left: auto;
   text-decoration: underline;
   font-size: ${({ theme }) => theme.fonts.size.base};
+`;
+
+const Highlight = styled.text`
+  margin: 10px;
+  font-size: ${({ theme }) => theme.fonts.size.md};
 `;
 
 function Modal({
@@ -187,24 +193,15 @@ function Modal({
     2. 수집하는 개인정보 항목
     ID, 성명, 비밀번호, 주소, 휴대폰 번호, 이메일, 14세 미만 가입자의 경우 법정대리인 정보`,
     },
-    {
-      id: 2,
-      isChecked: false,
-      title: '청원게시판 운영 원칙 동의',
-      content: `1. 계정당 청원은 하루에 1개로 제한
-
-2. 한 번 작성된 청원은 수정 및 삭제 불가능`,
-    },
   ];
 
   const [firstDetail, setFirstDetail] = useState<boolean>(false);
-  const [secondDetail, setSecondDetail] = useState<boolean>(false);
 
-  const [{ personalInfo, ruleInfo }, setAgree] = useState<AgreeType>({
-    personalInfo: false,
-    ruleInfo: false,
+  const [{ firstInfo, secondInfo }, setAgree] = useState<AgreeType>({
+    firstInfo: false,
+    secondInfo: false,
   });
-  const checkedAllInfo = personalInfo && ruleInfo;
+  const checkedAllInfo = firstInfo && secondInfo;
 
   const handleCheck = (e: { target: HTMLInputElement }) => {
     const { id, checked } = e.target;
@@ -213,12 +210,12 @@ function Modal({
       setAgree(
         checked
           ? {
-              personalInfo: true,
-              ruleInfo: true,
+              firstInfo: true,
+              secondInfo: true,
             }
           : {
-              personalInfo: false,
-              ruleInfo: false,
+              firstInfo: false,
+              secondInfo: false,
             },
       );
     } else {
@@ -236,21 +233,34 @@ function Modal({
         청원 게시글을 올리기 전에 약관을 반드시 읽고, 약관에 동의해주세요!
       </SubTitle>
       <CheckBoxContainer>
+        <Highlight>
+          ❗️ 유의사항 : 계정당 청원은 하루 1개로 제한되고, 한 번 작성된 청원은
+          수정 및 삭제 불가능합니다.
+        </Highlight>
         <Label>
           <InputCheckbox
             id="all"
             type="checkbox"
-            checked={personalInfo && ruleInfo}
+            checked={firstInfo && secondInfo && secondInfo}
             onChange={handleCheck}
           />
           <AgreeTitle>전체 동의합니다.</AgreeTitle>
         </Label>
+        <Label>
+          <InputCheckbox
+            id="firstInfo"
+            type="checkbox"
+            checked={firstInfo}
+            onChange={handleCheck}
+          />
+          <AgreeTitle>위 유의사항에 동의합니다. (필수)</AgreeTitle>
+        </Label>
 
         <Label>
           <InputCheckbox
-            id="personalInfo"
+            id="secondInfo"
             type="checkbox"
-            checked={personalInfo}
+            checked={secondInfo}
             onChange={handleCheck}
           />
           <AgreeTitle>개인정보 수집 및 이용에 동의합니다. (필수)</AgreeTitle>
@@ -259,20 +269,6 @@ function Modal({
           </DetailText>
         </Label>
         {firstDetail && <Detail>{items[0].content}</Detail>}
-
-        <Label>
-          <InputCheckbox
-            id="ruleInfo"
-            type="checkbox"
-            checked={ruleInfo}
-            onChange={handleCheck}
-          />
-          <AgreeTitle>청원게시판 운영 원칙에 동의합니다. (필수)</AgreeTitle>
-          <DetailText onClick={() => setSecondDetail(!secondDetail)}>
-            보기
-          </DetailText>
-        </Label>
-        {secondDetail && <Detail>{items[1].content}</Detail>}
       </CheckBoxContainer>
       {/* <Detail readOnly placeholder={placeholder} /> */}
       <Buttons>
