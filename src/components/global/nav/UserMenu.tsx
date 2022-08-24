@@ -1,6 +1,8 @@
-import { useLogin } from 'hooks/UseLogin';
+import { LoginStateAtom } from 'atoms/LoginState';
 import { Link, useLocation } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { useLogOut } from 'hooks/UseLogout';
 
 const Container = styled.div`
   display: grid;
@@ -43,8 +45,18 @@ const LogOut = styled.div`
 `;
 
 function UserMenu(): JSX.Element {
-  const { isLoggedIn, logOut } = useLogin();
+  const { logOut } = useLogOut();
   const location = useLocation();
+  const [{ isLoggedIn }, setLoginState] = useRecoilState(LoginStateAtom);
+
+  const handleLogout = () => {
+    logOut();
+    setLoginState({
+      isLoggedIn: false,
+      admin: false,
+    });
+  };
+
   return (
     <Container>
       <InnerContainer>
@@ -54,7 +66,7 @@ function UserMenu(): JSX.Element {
         </Links>
 
         {isLoggedIn ? (
-          <LogOut onClick={logOut}>로그아웃</LogOut>
+          <LogOut onClick={handleLogout}>로그아웃</LogOut>
         ) : (
           location.pathname !== '/login' && (
             <LoginLink to="/login">로그인</LoginLink>

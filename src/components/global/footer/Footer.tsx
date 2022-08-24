@@ -74,6 +74,9 @@ function Footer(): JSX.Element {
             <Span>
               <Link to="/who-made-this">만든사람들</Link>
             </Span>
+            <Span>
+              <Link to="/admin">관리자 페이지</Link>
+            </Span>
           </Policy>
         </InnerContainer>
       </Container>

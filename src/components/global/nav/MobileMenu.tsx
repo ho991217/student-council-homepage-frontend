@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { lock, unlock, clearBodyLocks } from 'tua-body-scroll-lock';
 import styled from 'styled-components';
-import { useLogin } from 'hooks/UseLogin';
+import { useLogOut } from 'hooks/UseLogout';
+import { useRecoilState } from 'recoil';
+import { LoginStateAtom } from 'atoms/LoginState';
 import { NavItems } from './NavItems';
 
 const Container = styled.div<{ opened: boolean }>`
@@ -169,8 +171,9 @@ const SubPath = styled.div<{ pathCount: number; opened: boolean }>`
 
 function MobileMenu(): JSX.Element {
   const [opened, setOpened] = useState<boolean>(false);
-  const { isLoggedIn, logOut } = useLogin();
   const navRef = useRef(null);
+  const { logOut } = useLogOut();
+  const [{ isLoggedIn }] = useRecoilState(LoginStateAtom);
   const [subpathOpened, setSubpathOpened] = useState<boolean[]>(
     Array.from({ length: NavItems.length }, () => false),
   );
