@@ -1,4 +1,8 @@
 import styled from 'styled-components';
+import { useState, useEffect } from 'react';
+import { NewsProps } from 'components/home/tiles/TileProps';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -15,10 +19,28 @@ const P = styled.p`
 
 // TODO: detail 내용 동적으로 바꾸기
 function News(): JSX.Element {
+  const [news, setNews] = useState<NewsProps[]>([]);
+
+  useEffect(() => {
+    axios
+      .get('/api/main')
+      .then(function (response) {
+        const result = response.data.data;
+        setNews(result.recentNews);
+      })
+      .catch(function (error) {
+        // 에러 핸들링
+        console.log(error);
+      });
+  }, []);
+
   return (
     <Wrapper>
-      <P>이벤트</P>
-      <P>축제 이벤트</P>
+      {news.map((news) => (
+        <P key={news.id}>
+          <Link to={`/news?id=${news.id}`}>{news.title}</Link>
+        </P>
+      ))}
     </Wrapper>
   );
 }
