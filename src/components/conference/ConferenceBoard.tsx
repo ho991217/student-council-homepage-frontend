@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { ConferenceProps } from './ConferenceProps';
@@ -88,12 +87,6 @@ function ConferenceBoard({
   totalBoards,
   currentPage,
 }: BoardProps): JSX.Element {
-  const [board, setBoard] = useState<ConferenceProps[]>([]);
-
-  useEffect(() => {
-    setBoard(posts);
-  }, [posts]);
-
   return (
     <Container>
       <Wrapper>
@@ -112,22 +105,17 @@ function ConferenceBoard({
             </Row>
           </BoardHead>
 
-          {board.map((post) => (
+          {posts.map((post) => (
             <Row key={post.id}>
               <div>{post.round}차</div>
               <div>
-                {post.conferenceDate.substring(0, 4)}년{' '}
-                {post.conferenceDate.substring(5, 7)}월{' '}
-                {post.conferenceDate.substring(8, 10)}일
+                {post.date.substring(0, 4)}년 {post.date.substring(5, 7)}월{' '}
+                {post.date.substring(8, 10)}일
               </div>
-              <div>{post.createdAt}</div>
+              <div>{post.createDate}</div>
               <div>{post.title}</div>
               <div>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={post.fileUrl}
-                >
+                <a target="_blank" rel="noopener noreferrer" href={post.files}>
                   <Svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 64 64"
