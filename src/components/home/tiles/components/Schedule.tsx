@@ -101,7 +101,6 @@ interface DetailProps {
   end: string;
 }
 
-// TODO: detail 내용 동적으로 바꾸기
 function Schedule(): JSX.Element {
   const [curYear, setCurYear] = useState(new Date().getFullYear());
   const [curMonth, setCurMonth] = useState(new Date().getMonth());
