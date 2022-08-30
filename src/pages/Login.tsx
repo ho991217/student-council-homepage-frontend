@@ -270,7 +270,7 @@ function Login(): JSX.Element {
   const [isValidId, setIsValidId] = useState<boolean>(false);
   const [saveId, setSaveId] = useState<boolean>(false);
   const [loginState, setLoginState] = useRecoilState(LoginStateAtom);
-  const [cookies, setCookie] = useCookies(['X-AUTH-TOKEN']);
+  const [cookies, setCookie] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const navigate = useNavigate();
 
   const validateDankookEmail = (email: string) => {
@@ -284,7 +284,7 @@ function Login(): JSX.Element {
 
     const config = {
       method: 'post',
-      url: 'http://133.186.132.198:8080/api/users/login',
+      url: '/api/users/login',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -293,9 +293,13 @@ function Login(): JSX.Element {
 
     axios(config)
       .then((response) => {
-        setLoginState(true);
-        const { accessToken } = response.data.data;
+        const { accessToken, admin } = response.data.data;
         setCookie('X-AUTH-TOKEN', accessToken);
+        setCookie('isAdmin', admin);
+        setLoginState({
+          isLoggedIn: true,
+          admin,
+        });
         navigate('/');
       })
       .catch(function (error) {

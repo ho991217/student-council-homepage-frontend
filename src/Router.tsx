@@ -1,6 +1,7 @@
+import { useEffect } from 'react';
+import { useCookies } from 'react-cookie';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-
-import { useLogin } from 'hooks/UseLogin';
+import { useRecoilState } from 'recoil';
 
 import Home from 'pages/Home';
 import Greeting from 'pages/council-info/Greeting';
@@ -17,6 +18,7 @@ import Pledge from 'pages/council/Pledge';
 import Editor from 'pages/communication/Editor';
 import ConferenceEditor from 'pages/ConferenceEditor';
 import News from 'pages/council/News';
+import Admin from 'pages/Admin';
 
 import NotFound from 'pages/NotFound';
 import DetailNews from 'components/news/detail/Detail';
@@ -27,9 +29,18 @@ import Footer from 'components/global/footer/Footer';
 import Makers from 'components/global/footer/sub-routes/Makers';
 import Term from 'components/global/footer/sub-routes/Term';
 import PrivacyPolicy from 'components/global/footer/sub-routes/PrivacyPolicy';
+import { LoginStateAtom } from 'atoms/LoginState';
 
 function Router() {
-  const { isLoggedIn } = useLogin();
+  const [{ isLoggedIn, admin }, setLoginState] = useRecoilState(LoginStateAtom);
+  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
+  useEffect(() => {
+    setLoginState({
+      isLoggedIn: !!cookies['X-AUTH-TOKEN'],
+      admin: Boolean(cookies.isAdmin),
+    });
+  }, []);
+
   return (
     <BrowserRouter>
       <Gnb />
@@ -70,7 +81,10 @@ function Router() {
             </>
           }
         />
-        <Route path="/rules" element={<Rules />} />
+        <Route
+          path="/rules"
+          element={isLoggedIn ? <Rules /> : <Navigate to="/login" />}
+        />
         <Route
           path="/rule"
           element={
@@ -83,7 +97,7 @@ function Router() {
                 <DetailRules />
               </>
             ) : (
-              <Navigate to="/" />
+              <Navigate to="/login" />
             )
           }
         />
@@ -96,7 +110,7 @@ function Router() {
                 <Conference />
               </>
             ) : (
-              <Navigate to="/" />
+              <Navigate to="/login" />
             )
           }
         />
@@ -122,7 +136,7 @@ function Router() {
                 <Editor />
               </>
             ) : (
-              <Navigate to="/" />
+              <Navigate to="/login" />
             )
           }
         />
@@ -140,7 +154,7 @@ function Router() {
                   <PetitionBoard />
                 </>
               ) : (
-                <Navigate to="/" />
+                <Navigate to="/login" />
               )
             }
           />
@@ -156,7 +170,7 @@ function Router() {
                   <Post />
                 </>
               ) : (
-                <Navigate to="/" />
+                <Navigate to="/login" />
               )
             }
           />
@@ -173,6 +187,10 @@ function Router() {
         <Route path="/who-made-this" element={<Makers />} />
         <Route path="/term" element={<Term />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route
+          path="/admin"
+          element={admin ? <Admin /> : <Navigate to="/" />}
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

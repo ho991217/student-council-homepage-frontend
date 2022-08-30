@@ -1,6 +1,14 @@
 import { atom } from 'recoil';
 
-export const LoginStateAtom = atom<boolean>({
+interface LoginStateProps {
+  isLoggedIn: boolean;
+  admin: boolean;
+}
+
+export const LoginStateAtom = atom<LoginStateProps>({
   key: 'loginStateAtom',
-  default: false,
+  default: {
+    isLoggedIn: false,
+    admin: false,
+  },
 });

@@ -9,7 +9,7 @@ import { theme } from 'styles/Theme';
 import Router from './Router';
 
 function App() {
-  // 모바일 브라우저 전체화면 resize 대응
+  /**  모바일 브라우저 전체화면 resize 대응 */
   const setVh = () => {
     document.documentElement.style.setProperty(
       '--vh',
