@@ -35,7 +35,7 @@ function Rules() {
         // 에러 핸들링
         console.log(error);
       });
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     setPage(Number(searchParams.get('page')) || 1);

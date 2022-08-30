@@ -15,6 +15,7 @@ import Login from 'pages/Login';
 import SignUp from 'pages/SignUp';
 import Pledge from 'pages/council/Pledge';
 import Editor from 'pages/communication/Editor';
+import ConferenceEditor from 'pages/ConferenceEditor';
 import News from 'pages/council/News';
 
 import NotFound from 'pages/NotFound';
@@ -93,6 +94,19 @@ function Router() {
               <>
                 <GlobalBanner title="회의록" detail="회의록 입니다." />
                 <Conference />
+              </>
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          path="/conference/editor"
+          element={
+            isLoggedIn ? (
+              <>
+                <GlobalBanner title="회의록작성" detail="회의록작성 입니다." />
+                <ConferenceEditor />
               </>
             ) : (
               <Navigate to="/" />

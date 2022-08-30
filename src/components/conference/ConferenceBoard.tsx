@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 import { ConferenceProps } from './ConferenceProps';
 
@@ -76,6 +77,21 @@ const PointText = styled.div`
   margin: 0 5px;
 `;
 
+const Button = styled.button`
+  all: unset;
+  text-align: center;
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  width: 75px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  float: right;
+  margin-top: 12px;
+`;
+
 interface BoardProps {
   posts: ConferenceProps[];
   totalBoards: number;
@@ -128,6 +144,9 @@ function ConferenceBoard({
               </div>
             </Row>
           ))}
+          <Link to="/conference/editor">
+            <Button type="button">작성</Button>
+          </Link>
         </BoardsContainer>
       </Wrapper>
     </Container>
