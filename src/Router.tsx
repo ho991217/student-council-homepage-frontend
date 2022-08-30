@@ -80,7 +80,10 @@ function Router() {
             </>
           }
         />
-        <Route path="/rules" element={<Rules />} />
+        <Route
+          path="/rules"
+          element={isLoggedIn ? <Rules /> : <Navigate to="/login" />}
+        />
         <Route
           path="/rule"
           element={
@@ -93,7 +96,7 @@ function Router() {
                 <DetailRules />
               </>
             ) : (
-              <Navigate to="/" />
+              <Navigate to="/login" />
             )
           }
         />
@@ -106,7 +109,7 @@ function Router() {
                 <Conference />
               </>
             ) : (
-              <Navigate to="/" />
+              <Navigate to="/login" />
             )
           }
         />
@@ -119,7 +122,7 @@ function Router() {
                 <Editor />
               </>
             ) : (
-              <Navigate to="/" />
+              <Navigate to="/login" />
             )
           }
         />
@@ -137,7 +140,7 @@ function Router() {
                   <PetitionBoard />
                 </>
               ) : (
-                <Navigate to="/" />
+                <Navigate to="/login" />
               )
             }
           />
@@ -153,7 +156,7 @@ function Router() {
                   <Post />
                 </>
               ) : (
-                <Navigate to="/" />
+                <Navigate to="/login" />
               )
             }
           />
