@@ -1,6 +1,7 @@
 import { LoginStateAtom } from 'atoms/LoginState';
 import axios from 'axios';
 import GlobalBanner from 'components/global/banner/GlobalBanner';
+import CopyrightTerm from 'components/global/CopyrightTerm';
 import { Desktop } from 'hooks/MediaQueries';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
@@ -388,12 +389,7 @@ function Login(): JSX.Element {
             </Extras>
           </ExtrasContainer>
         </InnerContainer>
-        <Detail>
-          <span>
-            경기도 용인시 수지구 죽전동 1491 단국대학교 혜당관 406호 총학생회실
-          </span>
-          <span>COPYRIGHT(C)2022 DANKOOK UNIVERSITY ALL RIGHTS RESERVERD</span>
-        </Detail>
+        <CopyrightTerm />
       </Wrapper>
     </>
   );

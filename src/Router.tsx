@@ -58,6 +58,15 @@ function Router() {
             </>
           }
         />
+        <Route
+          path="/sign-up"
+          element={
+            <>
+              <GlobalBanner title="회원가입" detail="회원가입 입니다." />
+              <SignUp />
+            </>
+          }
+        />
         <Route path="/greeting" element={<Greeting />} />
         <Route path="/organization" element={<Organization />} />
         <Route path="/location" element={<Location />} />
