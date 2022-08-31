@@ -18,6 +18,7 @@ const P = styled.p`
 `;
 
 const Span = styled.span`
+  margin-right: 5px;
   color: ${({ theme }) => theme.colors.gray900};
   font-size: ${({ theme }) => theme.fonts.size.md};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
@@ -32,7 +33,7 @@ function Petition(): JSX.Element {
       .get('/api/main')
       .then(function (response) {
         const result = response.data.data;
-        setPetition(result.popularPetitions);
+        setPetition(result.popularPetitions.slice(0, 4));
       })
       .catch(function (error) {
         // 에러 핸들링
@@ -42,14 +43,11 @@ function Petition(): JSX.Element {
 
   return (
     <Wrapper>
-      {/* <P>
-        <Span>[D-3] </Span>학교 오르막에 에스컬레이터를 설치해주세요.
-      </P>
-      <P>
-        <Span>[D-12] </Span>코로나를 없애주세요.
-      </P> */}
       {petition.map((petition) => (
         <P key={petition.id}>
+          <Span>
+            [D{petition.d_day > 0 ? `+${petition.d_day}` : petition.d_day}]
+          </Span>
           <Link to={`/board-petition/board?id=${petition.id}`}>
             {petition.title}
           </Link>

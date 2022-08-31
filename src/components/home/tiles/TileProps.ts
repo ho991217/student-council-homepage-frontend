@@ -13,6 +13,7 @@ export interface NewsProps {
 export interface PetitionProps {
   id: string;
   title: string;
+  d_day: number;
 }
 
 export interface ConferenceProps {

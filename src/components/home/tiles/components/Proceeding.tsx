@@ -26,7 +26,7 @@ function Proceeding(): JSX.Element {
       .get('/api/main')
       .then(function (response) {
         const result = response.data.data;
-        setConference(result.recentConferences);
+        setConference(result.recentConferences.slice(0, 4));
       })
       .catch(function (error) {
         // 에러 핸들링

@@ -26,7 +26,7 @@ function News(): JSX.Element {
       .get('/api/main')
       .then(function (response) {
         const result = response.data.data;
-        setNews(result.recentNews);
+        setNews(result.recentNews.slice(0, 4));
       })
       .catch(function (error) {
         // 에러 핸들링
