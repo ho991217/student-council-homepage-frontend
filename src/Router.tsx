@@ -36,7 +36,7 @@ function Router() {
   useEffect(() => {
     setLoginState({
       isLoggedIn: !!cookies['X-AUTH-TOKEN'],
-      admin: Boolean(cookies.isAdmin),
+      admin: cookies.isAdmin === 'true',
     });
   }, []);
 
