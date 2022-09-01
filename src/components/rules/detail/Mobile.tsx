@@ -1,10 +1,12 @@
 import styled from 'styled-components';
+import axios from 'axios';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useCookies } from 'react-cookie';
 import { FiDownload } from 'react-icons/fi';
 import { IoIosFolder } from 'react-icons/io';
 
-import { DetailProps } from '../RuleProps';
+import { RuleProps, DetailProps } from '../RuleProps';
 
 const Wrapper = styled.div`
   max-width: 1280px;
@@ -94,19 +96,50 @@ const Info = styled.div``;
 
 function Detail() {
   const [searchParams] = useSearchParams();
+  const [board, setBoard] = useState<RuleProps[]>([]);
   const [detail, setDetail] = useState<DetailProps>();
-  const [nextList, setNextList] = useState<DetailProps[]>();
+  const [nextList, setNextList] = useState<RuleProps[]>();
+  const [cookies] = useCookies(['X-AUTH-TOKEN']);
 
-  // useEffect(() => {
-  //   const detailId = Number(searchParams.get('id'));
-  //   setDetail(dummyDetails.filter((detail) => detail.id === detailId)[0]);
+  useEffect(() => {
+    axios
+      .get('/api/rule')
+      .then(function (response) {
+        const result = response.data;
+        setBoard(result.content);
+      })
+      .catch(function (error) {
+        // 에러 핸들링
+        console.log(error);
+      });
+  }, []);
 
-  //   if (detailId === 1) {
-  //     setNextList(dummyDetails.slice(detailId - 1, detailId + 2));
-  //   } else {
-  //     setNextList(dummyDetails.slice(detailId - 2, detailId + 1));
-  //   }
-  // }, [searchParams]);
+  useEffect(() => {
+    const detailId = Number(searchParams.get('id'));
+
+    if (detailId === 1) {
+      setNextList(board.slice(detailId - 1, detailId + 2));
+    } else {
+      setNextList(board.slice(detailId - 2, detailId + 1));
+    }
+  }, [searchParams, board]);
+
+  useEffect(() => {
+    axios
+      .get(`/api/rule/${searchParams.get('id')}`, {
+        headers: {
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        },
+      })
+      .then(function (response) {
+        const result = response.data.data;
+        setDetail(result);
+      })
+      .catch(function (error) {
+        // 에러 핸들링
+        console.log(error);
+      });
+  }, []);
 
   return (
     <Wrapper>
