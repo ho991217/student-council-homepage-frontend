@@ -1,4 +1,8 @@
 import styled from 'styled-components';
+import { useState, useEffect } from 'react';
+import { ConferenceProps } from 'components/home/tiles/TileProps';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -15,10 +19,28 @@ const P = styled.p`
 
 // TODO: detail 내용 동적으로 바꾸기
 function Proceeding(): JSX.Element {
+  const [conference, setConference] = useState<ConferenceProps[]>([]);
+
+  useEffect(() => {
+    axios
+      .get('/api/main')
+      .then(function (response) {
+        const result = response.data.data;
+        setConference(result.recentConferences.slice(0, 4));
+      })
+      .catch(function (error) {
+        // 에러 핸들링
+        console.log(error);
+      });
+  }, []);
+
   return (
     <Wrapper>
-      <P>[중앙운영위원회 n차 2022.00.00]</P>
-      <P>[총학생운영위원회 n차 2022.00.00]</P>
+      {conference.map((conference) => (
+        <P key={conference.id}>
+          <Link to="/conference">{conference.title}</Link>
+        </P>
+      ))}
     </Wrapper>
   );
 }

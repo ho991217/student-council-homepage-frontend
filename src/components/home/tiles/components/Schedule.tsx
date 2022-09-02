@@ -71,7 +71,7 @@ const DateContainer = styled.div`
   }
 `;
 
-const P = styled.p`
+const P = styled.div`
   font-weight: ${({ theme }) => theme.fonts.weight.regular};
   color: ${({ theme }) => theme.colors.gray900};
   display: flex;
@@ -101,7 +101,6 @@ interface DetailProps {
   end: string;
 }
 
-// TODO: detail 내용 동적으로 바꾸기
 function Schedule(): JSX.Element {
   const [curYear, setCurYear] = useState(new Date().getFullYear());
   const [curMonth, setCurMonth] = useState(new Date().getMonth());
@@ -121,7 +120,7 @@ function Schedule(): JSX.Element {
 
     const config = {
       method: 'get',
-      url: `${API_URL}/api/schedule?from=${dateString}01&to=${dateString}${new Date(
+      url: `http://133.186.132.198:8080/api/schedule?from=${dateString}01&to=${dateString}${new Date(
         curYear,
         curMonth + 1,
         0,

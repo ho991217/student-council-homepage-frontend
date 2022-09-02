@@ -30,7 +30,9 @@ const BoardHead = styled.div`
   border-collapse: collapse;
   font-weight: ${({ theme }) => theme.fonts.weight.bold};
   border-bottom: 2.5px solid ${({ theme }) => theme.colors.gray100};
-  :nth-child(1) { height: 30px; }
+  :nth-child(1) {
+    height: 30px;
+  }
 `;
 
 const Row = styled.div`
@@ -46,18 +48,22 @@ const Row = styled.div`
     place-items: center;
     border-bottom: 0.5px solid ${({ theme }) => theme.colors.gray100};
   }
-  :nth-child(1) { border-bottom: none; }
+  :nth-child(1) {
+    border-bottom: none;
+  }
 `;
 
 const Title = styled.div`
   border-right: 1px solid ${({ theme }) => theme.colors.gray100};
   height: 30px;
-  :nth-child(2) { 
+  :nth-child(2) {
     display: flex;
     justify-content: left;
-    padding-left: 25px; 
+    padding-left: 25px;
   }
-  :last-child { border-right: none; }
+  :last-child {
+    border-right: none;
+  }
 `;
 
 const Content = styled.div`
@@ -66,7 +72,9 @@ const Content = styled.div`
     justify-content: left;
     padding-left: 15px;
   }
-  :last-child { color: ${({ theme }) => theme.colors.gray400}; }
+  :last-child {
+    color: ${({ theme }) => theme.colors.gray400};
+  }
 `;
 
 interface BoardProps {
@@ -95,11 +103,9 @@ function RulesBoard({ posts }: BoardProps): JSX.Element {
             <Row key={post.id}>
               <Content>{post.id}</Content>
               <Content>
-                <Link to={`/rule?id=${post.id}`}>
-                  {post.title}
-                </Link>
+                <Link to={`/rule?id=${post.id}`}>{post.title}</Link>
               </Content>
-              <Content>{post.departmentName}</Content>
+              <Content>{post.userName}</Content>
             </Row>
           ))}
         </BoardsContainer>

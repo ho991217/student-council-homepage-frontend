@@ -1,5 +1,8 @@
+import { LoginStateAtom } from 'atoms/LoginState';
 import { Link, useLocation } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { useLogOut } from 'hooks/UseLogout';
 
 const Container = styled.div`
   display: grid;
@@ -36,8 +39,24 @@ const LoginLink = styled(Link)`
   margin: 0px 20px;
 `;
 
+const LogOut = styled.div`
+  margin: 0px 20px;
+  cursor: pointer;
+`;
+
 function UserMenu(): JSX.Element {
+  const { logOut } = useLogOut();
   const location = useLocation();
+  const [{ isLoggedIn }, setLoginState] = useRecoilState(LoginStateAtom);
+
+  const handleLogout = () => {
+    logOut();
+    setLoginState({
+      isLoggedIn: false,
+      admin: false,
+    });
+  };
+
   return (
     <Container>
       <InnerContainer>
@@ -46,9 +65,12 @@ function UserMenu(): JSX.Element {
           <a href="https://portal.dankook.ac.kr/web/portal">Portal</a>
         </Links>
 
-        {/* TODO: 로그인 페이지 만들어지면 경로 수정 */}
-        {location.pathname !== '/login' && (
-          <LoginLink to="/login">로그인</LoginLink>
+        {isLoggedIn ? (
+          <LogOut onClick={handleLogout}>로그아웃</LogOut>
+        ) : (
+          location.pathname !== '/login' && (
+            <LoginLink to="/login">로그인</LoginLink>
+          )
         )}
       </InnerContainer>
     </Container>

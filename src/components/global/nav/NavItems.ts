@@ -62,9 +62,14 @@ export const NavItems: NavigationProps[] = [
         id: 1,
       },
       {
+        title: '건의게시판',
+        path: '/board-suggestion/boards?page=1&filter=전체',
+        id: 2,
+      },
+      {
         title: '문의게시판',
         path: '/board-inquiry',
-        id: 2,
+        id: 3,
       },
     ],
   },

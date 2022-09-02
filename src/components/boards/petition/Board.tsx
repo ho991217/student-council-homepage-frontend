@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
 import styled from 'styled-components';
+
 import { PostProps } from './PostProps';
 
 const Container = styled.div`
@@ -15,13 +18,13 @@ const Wrapper = styled.div`
   width: 100%;
 
   ${({ theme }) => theme.media.desktop} {
-    padding: 30px 50px;
+    padding: 30px 50px 10px 50px;
   }
   ${({ theme }) => theme.media.tablet} {
-    padding: 30px 50px;
+    padding: 30px 50px 10px 50px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 30px 10px;
+    padding: 30px 20px 20px 10px;
   }
   display: flex;
   flex-direction: column;
@@ -33,26 +36,11 @@ const BoardsContainer = styled.div`
   width: 100%;
 `;
 
-const SideWrapper = styled.div`
-  display: flex;
-  margin-bottom: 10px;
-`;
-
 const PageInfo = styled.div`
   width: 100%;
   display: flex;
   align-items: flex-end;
-`;
-
-const Button = styled.button`
-  all: unset;
-  text-align: center;
-  font-size: ${({ theme }) => theme.fonts.size.md};
-  background-color: ${({ theme }) => theme.colors.gray200};
-  width: 75px;
-  height: 40px;
-  border: none;
-  cursor: pointer;
+  margin-bottom: 10px;
 `;
 
 const BoardHead = styled.div`
@@ -96,6 +84,21 @@ const PointText = styled.div`
   margin: 0 5px;
 `;
 
+const Button = styled.button`
+  all: unset;
+  text-align: center;
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  width: 75px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  float: right;
+  margin-top: 12px;
+`;
+
 interface BoardProps {
   posts: PostProps[];
   totalBoards: number;
@@ -105,6 +108,7 @@ interface BoardProps {
 // TODO: 로그인 했는지 안했는지 체크
 function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<PostProps[]>([]);
+  const [cookies] = useCookies(['X-AUTH-TOKEN']);
 
   useEffect(() => {
     setBoard(posts);
@@ -114,15 +118,10 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
     <Container>
       <Wrapper>
         <BoardsContainer>
-          <SideWrapper>
-            <PageInfo>
-              Total <PointText>{totalBoards}건,</PointText> {currentPage}/
-              {Math.ceil(totalBoards / 6)}
-            </PageInfo>
-            <Link to="/editor">
-              <Button type="button">작성</Button>
-            </Link>
-          </SideWrapper>
+          <PageInfo>
+            Total <PointText>{totalBoards}건,</PointText> {currentPage}/
+            {Math.ceil(totalBoards / 6)}
+          </PageInfo>
           <BoardHead>
             <Row>
               <div>번호</div>
@@ -166,6 +165,9 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
               </div>
             </Row>
           ))}
+          <Link to="/board-petition/editor">
+            <Button type="button">작성</Button>
+          </Link>
         </BoardsContainer>
       </Wrapper>
     </Container>

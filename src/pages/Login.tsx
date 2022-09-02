@@ -1,7 +1,12 @@
+import { LoginStateAtom } from 'atoms/LoginState';
+import axios from 'axios';
 import GlobalBanner from 'components/global/banner/GlobalBanner';
+import CopyrightTerm from 'components/global/CopyrightTerm';
 import { Desktop } from 'hooks/MediaQueries';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import { Link, useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -164,23 +169,23 @@ const LoginButton = styled.input.attrs({ type: 'submit' })`
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
-const Detail = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 15px 0;
-  font-size: ${({ theme }) => theme.fonts.size.xs};
-  font-weight: ${({ theme }) => theme.fonts.weight.regular};
+// const Detail = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+//   margin: 15px 0;
+//   font-size: ${({ theme }) => theme.fonts.size.xs};
+//   font-weight: ${({ theme }) => theme.fonts.weight.regular};
 
-  span:first-child {
-    margin-bottom: 5px;
-    color: ${({ theme }) => theme.colors.gray400};
-  }
-  span:last-child {
-    color: ${({ theme }) => theme.colors.gray200};
-  }
-`;
+//   span:first-child {
+//     margin-bottom: 5px;
+//     color: ${({ theme }) => theme.colors.gray400};
+//   }
+//   span:last-child {
+//     color: ${({ theme }) => theme.colors.gray200};
+//   }
+// `;
 
 const ExtrasContainer = styled.div`
   display: flex;
@@ -189,7 +194,7 @@ const ExtrasContainer = styled.div`
   width: 350px;
   ${({ theme }) => theme.media.mobile} {
     width: 320px;
-}
+  }
   padding: 0 35px 0 0;
   margin-top: 15px;
 `;
@@ -265,6 +270,9 @@ function Login(): JSX.Element {
   const [idMessage, setIdMessage] = useState<string>('');
   const [isValidId, setIsValidId] = useState<boolean>(false);
   const [saveId, setSaveId] = useState<boolean>(false);
+  const [, setLoginState] = useRecoilState(LoginStateAtom);
+  const [, setCookie] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
+  const navigate = useNavigate();
 
   const validateDankookEmail = (email: string) => {
     const regex = /^[0-9]{8}$/;
@@ -273,6 +281,32 @@ function Login(): JSX.Element {
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const data = JSON.stringify({ classId: id, password });
+
+    const config = {
+      method: 'post',
+      url: '/api/users/login',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data,
+    };
+
+    axios(config)
+      .then((response) => {
+        const { accessToken, admin } = response.data.data;
+        setCookie('X-AUTH-TOKEN', accessToken);
+        setCookie('isAdmin', admin);
+        setLoginState({
+          isLoggedIn: true,
+          admin,
+        });
+        navigate('/');
+      })
+      .catch((error) => {
+        // TODO:에러메시지
+        alert(error);
+      });
   };
 
   const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -284,7 +318,6 @@ function Login(): JSX.Element {
       setIsValidId(false);
       setIdMessage('학번을 입력해주세요.');
     }
-
     setId(currentInput);
   };
 
@@ -357,12 +390,7 @@ function Login(): JSX.Element {
             </Extras>
           </ExtrasContainer>
         </InnerContainer>
-        <Detail>
-          <span>
-            경기도 용인시 수지구 죽전동 1491 단국대학교 혜당관 406호 총학생회실
-          </span>
-          <span>COPYRIGHT(C)2022 DANKOOK UNIVERSITY ALL RIGHTS RESERVERD</span>
-        </Detail>
+        <CopyrightTerm />
       </Wrapper>
     </>
   );

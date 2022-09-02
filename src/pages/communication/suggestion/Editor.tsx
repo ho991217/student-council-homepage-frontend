@@ -1,20 +1,20 @@
 import styled from "styled-components";
-import Content from "components/boards/editor/Contents";
+import Editor from "components/boards/suggestion/editor/Editor";
 
 
 const Container = styled.div`
-  margin: 50px 0;
+  margin: 40px 0;
   ${({ theme }) => theme.media.mobile} { 
     margin: 0;
   }
 `;
 
-function Editor() {
+function SuggestionEditor() {
   return (
     <Container>
-      <Content />
+      <Editor />
     </Container>
   );
 }
 
-export default Editor;
+export default SuggestionEditor;

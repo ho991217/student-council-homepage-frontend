@@ -22,7 +22,6 @@ export const theme: DefaultTheme = {
     gray900: '#19191A',
     red: '#B35141',
     blue: '#0022F5',
-    darkblue: '#204A80',
   },
   fonts: {
     weight: {
