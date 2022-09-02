@@ -22,6 +22,20 @@ function Home() {
     getCarouselImages().then(({ data }) => setImages(data));
   }, []);
 
+  // const getImages = async () => {
+  //   axios.get('https://picsum.photos/1920/530').then((res) => {
+  //     setImages((prev) => [
+  //       ...prev,
+  //       {
+  //         url: res.request.responseURL,
+  //         id: res.headers['picsum-id'],
+  //         title: '제목',
+  //         alt: 'picsum image',
+  //       },
+  //     ]);
+  //   });
+  // };
+
   return (
     <Wrapper>
       <Carousel images={images} />

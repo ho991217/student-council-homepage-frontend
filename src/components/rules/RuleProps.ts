@@ -1,17 +1,17 @@
 export interface RuleProps {
   id: number;
   title: string;
-  departmentName: string;
-  views: number;
-  createdAt: string;
-  file: string;
+  userName: string;
+  postHits: number;
+  createDate: string;
+  fileList: string;
 }
 
 export interface DetailProps {
   id: number;
   title: string;
-  createdAt: string;
-  fileName: string;
-  fileCapacity: string;
-  fileUrl: string;
+  text: string;
+  createDate: string;
+  fileList: string;
+  postHits: number;
 }

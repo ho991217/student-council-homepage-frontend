@@ -1,12 +1,12 @@
 import styled from 'styled-components';
+import axios from 'axios';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { FiDownload } from 'react-icons/fi'
+import { useCookies } from 'react-cookie';
+import { FiDownload } from 'react-icons/fi';
 import { IoIosFolder } from 'react-icons/io';
 
-import { DetailProps } from '../RuleProps';
-import { dummyDetails } from '../api/DummyDetails';
-
+import { RuleProps, DetailProps } from '../RuleProps';
 
 const Wrapper = styled.div`
   max-width: 1280px;
@@ -30,7 +30,7 @@ const Head = styled.div`
     display: flex;
     place-content: center;
     place-items: center;
-    :nth-child(2) { 
+    :nth-child(2) {
       justify-content: left;
     }
   }
@@ -51,7 +51,7 @@ const Content = styled.div`
 `;
 
 const FolderIcon = styled.div`
-text-align: right;
+  text-align: right;
 `;
 
 const Data = styled.div`
@@ -121,26 +121,57 @@ const Svg = styled.svg`
 
 function Detail() {
   const [searchParams] = useSearchParams();
+  const [board, setBoard] = useState<RuleProps[]>([]);
   const [detail, setDetail] = useState<DetailProps>();
-  const [nextList, setNextList] = useState<DetailProps[]>();
+  const [nextList, setNextList] = useState<RuleProps[]>();
+  const [cookies] = useCookies(['X-AUTH-TOKEN']);
+
+  useEffect(() => {
+    axios
+      .get('/api/rule')
+      .then(function (response) {
+        const result = response.data;
+        setBoard(result.content);
+      })
+      .catch(function (error) {
+        // 에러 핸들링
+        console.log(error);
+      });
+  }, []);
 
   useEffect(() => {
     const detailId = Number(searchParams.get('id'));
-    setDetail(dummyDetails.filter((detail) => detail.id === detailId)[0]);
 
-    if(detailId === 1) {
-      setNextList(dummyDetails.slice(detailId-1, detailId + 2));
+    if (detailId === 1) {
+      setNextList(board.slice(detailId - 1, detailId + 2));
     } else {
-      setNextList(dummyDetails.slice(detailId-2, detailId + 1));
+      setNextList(board.slice(detailId - 2, detailId + 1));
     }
-  }, [searchParams]);
+  }, [searchParams, board]);
+
+  useEffect(() => {
+    axios
+      .get(`/api/rule/${searchParams.get('id')}`, {
+        headers: {
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        },
+      })
+      .then(function (response) {
+        const result = response.data.data;
+        setDetail(result);
+      })
+      .catch(function (error) {
+        // 에러 핸들링
+        console.log(error);
+      });
+  }, []);
 
   return (
     <Wrapper>
       <Head>
         <div>{detail?.id}</div>
         <div>{detail?.title}</div>
-        <div>{detail?.createdAt}</div>
+        <div>{detail?.createDate}</div>
       </Head>
       <Content>
         <FolderIcon>
@@ -169,21 +200,16 @@ function Detail() {
           <Row key={post.id}>
             <Info>{post?.id}</Info>
             <Info>
-              <Link to={`/rule?id=${post.id}`}>
-                {post?.title}
-              </Link>
+              <Link to={`/rule?id=${post.id}`}>{post?.title}</Link>
             </Info>
-            <Info>{post?.createdAt}</Info>
+            <Info>{post?.createDate}</Info>
             <Info>
-              <a 
-                target="_blank"
-                rel="noopener noreferrer"
-                href={post.fileUrl}>
-                <Svg 
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 64 64"
-                    height="64"
-                    width="64"
+              <a target="_blank" rel="noopener noreferrer" href={post.fileList}>
+                <Svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 64 64"
+                  height="64"
+                  width="64"
                 >
                   <path d="M45.414 36.586a2 2 0 0 0-2.828 0L41 38.172l-3.811-3.811A20.908 20.908 0 0 0 42 21C42 9.42 32.579 0 21 0S0 9.42 0 21s9.421 21 21 21c5.071 0 9.728-1.808 13.361-4.811L38.172 41l-1.586 1.586a2 2 0 0 0 0 2.828l18 18c.391.391.902.586 1.414.586s1.023-.195 1.414-.586l6-6a2 2 0 0 0 0-2.828l-18-18zM4 21c0-9.374 7.626-17 17-17s17 7.626 17 17-7.626 17-17 17S4 30.374 4 21zm52 38.171L40.828 44 44 40.829 59.172 56 56 59.171z" />
                 </Svg>
@@ -193,7 +219,7 @@ function Detail() {
         ))}
       </NextList>
     </Wrapper>
-  )
+  );
 }
 
 export default Detail;

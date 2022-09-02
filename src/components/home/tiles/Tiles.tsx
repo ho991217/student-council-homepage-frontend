@@ -78,7 +78,12 @@ function Tiles(): JSX.Element {
       </BigTile>
       <SmallTileContainer>
         <SmallTile>
-          <Tile title="총학소식" linkTitle="더보기" to="/" detail="news" />
+          <Tile
+            title="총학소식"
+            linkTitle="더보기"
+            to="/council-news"
+            detail="news"
+          />
         </SmallTile>
         <SmallTile>
           <Tile
