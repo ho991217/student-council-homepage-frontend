@@ -19,6 +19,7 @@ import PetitionEditor from 'pages/communication/petition/Editor';
 import News from 'pages/council/News';
 import Admin from 'pages/Admin';
 import SuggestionBoard from 'pages/communication/suggestion/SuggestionBoard';
+import SuggestionPost from 'components/boards/suggestion/post/Post';
 
 import NotFound from 'pages/NotFound';
 import NewsPost from 'components/news/post/Post';
@@ -170,6 +171,18 @@ function Router() {
               <>
                 <GlobalBanner title="건의게시판" detail="건의게시판 입니다." />
                 <SuggestionBoard />
+              </>
+            }
+          />
+          <Route
+            path="board"
+            element={
+              <>
+                <GlobalBanner
+                  title="건의게시판"
+                  detail="건의게시판 입니다."
+                />
+                <SuggestionPost />
               </>
             }
           />
