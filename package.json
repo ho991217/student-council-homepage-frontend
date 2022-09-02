@@ -13,6 +13,7 @@
     "@types/react-modal": "^3.13.1",
     "@types/react-responsive": "^8.0.5",
     "axios": "^0.27.2",
+    "dotenv-cli": "^6.0.0",
     "react": "^17.0.2",
     "react-cookie": "^4.1.1",
     "react-datepicker": "^4.8.0",
@@ -31,8 +32,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-ssl": "HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem react-scripts start",
-    "build": "react-scripts build",
+    "build": "dotenv -e .env.production react-scripts build",
+    "build:development": "dotenv -e .env.development react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

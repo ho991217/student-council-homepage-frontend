@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
+// TODO: 서버에서 받아올 것 
 const tags = [
   '전체',
   '학교생활',

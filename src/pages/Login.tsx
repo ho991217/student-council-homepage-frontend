@@ -169,23 +169,23 @@ const LoginButton = styled.input.attrs({ type: 'submit' })`
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
-const Detail = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 15px 0;
-  font-size: ${({ theme }) => theme.fonts.size.xs};
-  font-weight: ${({ theme }) => theme.fonts.weight.regular};
+// const Detail = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+//   margin: 15px 0;
+//   font-size: ${({ theme }) => theme.fonts.size.xs};
+//   font-weight: ${({ theme }) => theme.fonts.weight.regular};
 
-  span:first-child {
-    margin-bottom: 5px;
-    color: ${({ theme }) => theme.colors.gray400};
-  }
-  span:last-child {
-    color: ${({ theme }) => theme.colors.gray200};
-  }
-`;
+//   span:first-child {
+//     margin-bottom: 5px;
+//     color: ${({ theme }) => theme.colors.gray400};
+//   }
+//   span:last-child {
+//     color: ${({ theme }) => theme.colors.gray200};
+//   }
+// `;
 
 const ExtrasContainer = styled.div`
   display: flex;
@@ -270,8 +270,8 @@ function Login(): JSX.Element {
   const [idMessage, setIdMessage] = useState<string>('');
   const [isValidId, setIsValidId] = useState<boolean>(false);
   const [saveId, setSaveId] = useState<boolean>(false);
-  const [loginState, setLoginState] = useRecoilState(LoginStateAtom);
-  const [cookies, setCookie] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
+  const [, setLoginState] = useRecoilState(LoginStateAtom);
+  const [, setCookie] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const navigate = useNavigate();
 
   const validateDankookEmail = (email: string) => {
@@ -303,8 +303,9 @@ function Login(): JSX.Element {
         });
         navigate('/');
       })
-      .catch(function (error) {
-        console.error(error);
+      .catch((error) => {
+        // TODO:에러메시지
+        alert(error);
       });
   };
 
