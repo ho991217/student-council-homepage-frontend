@@ -14,7 +14,7 @@ import InquiryBoard from 'pages/communication/InquiryBoard';
 import Login from 'pages/Login';
 import SignUp from 'pages/SignUp';
 import Pledge from 'pages/council/Pledge';
-import Editor from 'pages/communication/Editor';
+// import Editor from 'pages/communication/Editor';
 import ConferenceEditor from 'pages/ConferenceEditor';
 import PetitionBoard from 'pages/communication/petition/PetitionBoard';
 import PetitionPost from 'components/boards/petition/post/Post';
@@ -148,7 +148,7 @@ function Router() {
             isLoggedIn ? (
               <>
                 <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
-                <Editor />
+                {/* <Editor /> */}
               </>
             ) : (
               <Navigate to="/login" />
