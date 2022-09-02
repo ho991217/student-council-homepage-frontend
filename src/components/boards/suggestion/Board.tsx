@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import styled from 'styled-components';
+import { MdKeyboardArrowDown } from 'react-icons/md';
+import { BiSearchAlt2 } from 'react-icons/bi';
+import { FiEye } from 'react-icons/fi';
 
 import { PostProps } from './PostProps';
 
@@ -16,7 +19,6 @@ const Container = styled.div`
 const Wrapper = styled.div`
   max-width: 1290px;
   width: 100%;
-
   ${({ theme }) => theme.media.desktop} {
     padding: 30px 50px 10px 50px;
   }
@@ -36,11 +38,53 @@ const BoardsContainer = styled.div`
   width: 100%;
 `;
 
-const PageInfo = styled.div`
-  width: 100%;
+const TopBar = styled.div`
   display: flex;
-  align-items: flex-end;
-  margin-bottom: 10px;
+  justify-content: space-between;
+  margin-bottom: 12px;
+`;
+
+const Items = styled.div`
+  display: flex;
+`;
+
+const Select = styled.select`
+  font-size: ${({ theme }) => theme.fonts.size.sm};
+  background-color: ${({ theme }) => theme.colors.gray040};
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
+  width: 90px;
+  height: 30px;
+  padding-left: 8px;
+  color: black;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+`;
+
+const Icon = styled.div`
+  margin-left: -18px;
+  margin-right: 10px;
+  align-self: center;
+  width: 12px;
+  height: 15px;
+  ${({ theme }) => theme.media.mobile} {
+    height: 12px;
+  }
+  cursor: pointer;
+`;
+
+const Input = styled.input`
+  font-size: ${({ theme }) => theme.fonts.size.sm};
+  width: 250px;
+  ::placeholder {
+    padding-left: 5px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    width: 150px;
+    height: 30px;
+  }
+  border-radius: 5px;
 `;
 
 const BoardHead = styled.div`
@@ -67,10 +111,13 @@ const Row = styled.div`
   }
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   text-align: center;
-
   div:last-child {
     width: 60px;
   }
+`;
+
+const ViewIcon = styled.span`
+  margin-right: 3px;
 `;
 
 const Svg = styled.svg`
@@ -82,6 +129,17 @@ const Svg = styled.svg`
 const PointText = styled.div`
   color: ${({ theme }) => theme.colors.accent};
   margin: 0 5px;
+`;
+
+const BottomBar = styled.div`
+  display: flex;
+`;
+
+const PageInfo = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 25px;
 `;
 
 const Button = styled.button`
@@ -108,7 +166,8 @@ interface BoardProps {
 // TODO: 로그인 했는지 안했는지 체크
 function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<PostProps[]>([]);
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
+  const [category, setCategory] = useState<string>('');
+  const [searchWord, setSearchWord] = useState<string>('');
 
   useEffect(() => {
     setBoard(posts);
@@ -118,17 +177,44 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
     <Container>
       <Wrapper>
         <BoardsContainer>
-          <PageInfo>
-            Total <PointText>{totalBoards}건,</PointText> {currentPage}/
-            {Math.ceil(totalBoards / 6)}
-          </PageInfo>
+          <TopBar>
+            <Items>
+              <Select
+                name="category"
+                id="category"
+                value={category}
+                defaultValue=""
+                onChange={(e) => setCategory(e.currentTarget.value)}
+              >
+                <option value="" disabled>
+                  카테고리
+                </option>
+                <option value="progressing">진행중</option>
+                <option value="complete">답변완료</option>
+              </Select>
+              <Icon>
+                <MdKeyboardArrowDown />
+              </Icon>
+            </Items>
+            <Items>
+              <Input
+                type="text"
+                value={searchWord}
+                placeholder="검색어를 입력해 주세요."
+                onChange={(e) => setSearchWord(e.currentTarget.value)}
+              />
+              <Icon>
+                <BiSearchAlt2 />
+              </Icon>
+            </Items>
+          </TopBar>
           <BoardHead>
             <Row>
               <div>번호</div>
               <div>머릿말</div>
               <div>제목</div>
-              <div>추천수</div>
-              <div>동의수</div>
+              <div>조회</div>
+              <div>댓글</div>
             </Row>
           </BoardHead>
 
@@ -137,19 +223,14 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
               <div>{post.id}</div>
               <div>{post.status}</div>
               <div>
-                <Link to={`/board-petition/board?id=${post.id}`}>
+                <Link to={`/board-suggestion/board?id=${post.id}`}>
                   {post.title}
                 </Link>
               </div>
               <div>
-                <Svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 48 48"
-                  height="48"
-                  width="48"
-                >
-                  <path d="M35.8 42H13.6V16.4L27.5 2L29.45 3.55Q29.75 3.8 29.9 4.25Q30.05 4.7 30.05 5.35V5.85L27.8 16.4H42.75Q43.95 16.4 44.85 17.3Q45.75 18.2 45.75 19.4V23.5Q45.75 23.85 45.825 24.225Q45.9 24.6 45.75 24.95L39.45 39.45Q39 40.5 37.975 41.25Q36.95 42 35.8 42ZM16.6 39H36.45Q36.45 39 36.45 39Q36.45 39 36.45 39L42.75 24.05V19.4Q42.75 19.4 42.75 19.4Q42.75 19.4 42.75 19.4H24.1L26.75 6.95L16.6 17.65ZM16.6 17.65V19.4Q16.6 19.4 16.6 19.4Q16.6 19.4 16.6 19.4V24.05V39Q16.6 39 16.6 39Q16.6 39 16.6 39ZM13.6 16.4V19.4H6.95V39H13.6V42H3.95V16.4Z" />
-                </Svg>
+                <ViewIcon>
+                  <FiEye />
+                </ViewIcon>
                 {post.likes}
               </div>
               <div>
@@ -165,9 +246,15 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
               </div>
             </Row>
           ))}
-          <Link to="/editor">
-            <Button type="button">작성</Button>
-          </Link>
+          <BottomBar>
+            <PageInfo>
+              Total <PointText>{totalBoards}건,</PointText> {currentPage}/
+              {Math.ceil(totalBoards / 6)}
+            </PageInfo>
+            <Link to="/board-suggestion/editor">
+              <Button type="button">작성</Button>
+            </Link>
+          </BottomBar>
         </BoardsContainer>
       </Wrapper>
     </Container>

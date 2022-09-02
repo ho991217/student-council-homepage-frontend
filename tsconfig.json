@@ -18,5 +18,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "global", "@types"]
+  "include": ["src", "global", "@types", "src/pages/communication/petition/.tsx"]
 }
