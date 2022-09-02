@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Content from "components/boards/editor/Contents";
+import Content from "components/boards/petition/editor/Contents";
 
 
 const Container = styled.div`

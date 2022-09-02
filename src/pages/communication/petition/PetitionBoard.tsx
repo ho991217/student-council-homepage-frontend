@@ -1,9 +1,9 @@
-import { dummyPost } from 'components/boards/api/DummyPost';
-import Board from 'components/boards/Board';
-import FilterControl from 'components/boards/FilterControl';
-import PageControl from 'components/boards/PageControl';
+import { dummyPost } from 'components/boards/petition/api/DummyPost';
+import Board from 'components/boards/petition/Board';
+import FilterControl from 'components/boards/petition/FilterControl';
+import PageControl from 'components/boards/petition/PageControl';
 
-import { PostProps } from 'components/boards/PostProps';
+import { PostProps } from 'components/boards/petition/PostProps';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';

@@ -87,13 +87,6 @@ interface BoardProps {
 function TopBar({ totalBoards, currentPage }: BoardProps): JSX.Element {
   const [searchWord, setSearchWord] = useState<string>('');
 
-  const onSearchWordHandler = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setSearchWord(value);
-  }
-
   return (
     <Container>
       <Wrapper>
@@ -126,7 +119,7 @@ function TopBar({ totalBoards, currentPage }: BoardProps): JSX.Element {
             type="text" 
             value={searchWord}
             placeholder="검색어를 입력해 주세요." 
-            onChange={onSearchWordHandler}
+            onChange={(e) => setSearchWord(e.currentTarget.value)}
           />
           <Button type="button">검색</Button>
         </Search>

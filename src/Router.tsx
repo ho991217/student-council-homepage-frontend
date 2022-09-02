@@ -8,21 +8,22 @@ import Greeting from 'pages/council-info/Greeting';
 import Organization from 'pages/council-info/Organization';
 import Location from 'pages/council-info/Location';
 import Rules from 'pages/Rules';
-import DetailRules from 'components/rules/detail/Detail';
+import RulesPost from 'components/rules/post/Post';
 import Conference from 'pages/Conference';
-import PetitionBoard from 'pages/communication/PetitionBoard';
+import PetitionBoard from 'pages/communication/petition/PetitionBoard';
 import InquiryBoard from 'pages/communication/InquiryBoard';
 import Login from 'pages/Login';
 import SignUp from 'pages/SignUp';
 import Pledge from 'pages/council/Pledge';
-import Editor from 'pages/communication/Editor';
+import PetitionEditor from 'pages/communication/petition/Editor';
 import News from 'pages/council/News';
 import Admin from 'pages/Admin';
+import SuggestionBoard from 'pages/communication/suggestion/SuggestionBoard';
 
 import NotFound from 'pages/NotFound';
-import DetailNews from 'components/news/detail/Detail';
+import NewsPost from 'components/news/post/Post';
 import GlobalBanner from 'components/global/banner/GlobalBanner';
-import Post from 'components/boards/post/Post';
+import PetitionPost from 'components/boards/petition/post/Post';
 import Gnb from 'components/global/nav/Gnb';
 import Footer from 'components/global/footer/Footer';
 import Makers from 'components/global/footer/sub-routes/Makers';
@@ -76,7 +77,7 @@ function Router() {
           element={
             <>
               <GlobalBanner title="총학소식" detail="총학소식 입니다." />
-              <DetailNews />
+              <NewsPost />
             </>
           }
         />
@@ -93,7 +94,7 @@ function Router() {
                   title="회칙 및 세칙"
                   detail="회칙 및 세칙 입니다."
                 />
-                <DetailRules />
+                <RulesPost />
               </>
             ) : (
               <Navigate to="/login" />
@@ -114,12 +115,12 @@ function Router() {
           }
         />
         <Route
-          path="/editor"
+          path="/petition/editor"
           element={
             isLoggedIn ? (
               <>
                 <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
-                <Editor />
+                <PetitionEditor />
               </>
             ) : (
               <Navigate to="/login" />
@@ -153,11 +154,23 @@ function Router() {
                     title="청원게시판"
                     detail="청원게시판 입니다."
                   />
-                  <Post />
+                  <PetitionPost />
                 </>
               ) : (
                 <Navigate to="/login" />
               )
+            }
+          />
+        </Route>
+        <Route path="/board-suggestion">
+          <Route path="/board-suggestion" element={<NotFound />} />
+          <Route
+            path="boards"
+            element={
+              <>
+                <GlobalBanner title="건의게시판" detail="건의게시판 입니다." />
+                <SuggestionBoard />
+              </>
             }
           />
         </Route>
