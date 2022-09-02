@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import { majorList } from 'components/user/Major';
@@ -14,7 +15,7 @@ import CheckPasswordSecurity from './CheckPasswordSecurity';
 const InnerContainer = styled.div`
   max-width: 1400px;
   width: 100%;
-  height: 620px;
+  /* height: 620px; */
   ${({ theme }) => theme.media.mobile} {
     height: 350px;
     background-color: ${({ theme }) => theme.colors.white};
@@ -34,6 +35,14 @@ const InnerContainer = styled.div`
     margin-bottom: 15px;
     color: ${({ theme }) => theme.colors.gray400};
   }
+`;
+
+const NameInput = styled.input.attrs({ type: 'text', required: true })`
+  all: unset;
+  background-color: ${({ theme }) => theme.colors.white};
+  height: 100%;
+  width: 640px;
+  padding: 0 10px;
 `;
 
 const PasswordInput = styled.input.attrs({
@@ -77,7 +86,7 @@ const CodeButton = styled.input.attrs({ type: 'submit' })`
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 5px;
+  border-radius: 7px;
   cursor: pointer;
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.fonts.size.base};
@@ -95,7 +104,7 @@ const SendButton = styled.input.attrs({ type: 'submit' })<{ active: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 5px;
+  border-radius: 7px;
   cursor: ${({ active }) => (active ? 'pointer' : 'default')};
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.fonts.size.base};
@@ -106,23 +115,22 @@ const SignUpButton = styled.button<{ active: boolean }>`
   all: unset;
   width: 450px;
   height: 50px;
-  margin-top: 40px;
-  background-color: ${(props) =>
-    props.value === 'active'
+  margin: 20px 0;
+  background-color: ${({ active }) =>
+    active
       ? ({ theme }) => theme.colors.secondary
-      : ({ theme }) => theme.colors.primary};
+      : ({ theme }) => theme.colors.gray300};
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 5px;
+  border-radius: 9999px;
   cursor: ${({ active }) => (active ? 'pointer' : 'default')};
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.fonts.size.base};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
   ${({ theme }) => theme.media.mobile} {
     width: 70%;
-    height: 40px;
-    margin-top: 20px;
+    margin: 5px 0;
   }
 `;
 
@@ -144,9 +152,51 @@ const Select = styled.select`
   justify-content: center;
 `;
 
-const PasswordSecurityLevel = styled.meter`
+const PasswordSecurityLevel = styled.div<{ level: number }>`
   width: 500px;
-  height: 30px;
+  height: 20px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  background-color: ${({ theme }) => theme.colors.white};
+  display: grid;
+  overflow: hidden;
+  ${({ theme }) => theme.media.mobile} {
+    width: 70%;
+    height: 40px;
+    margin-top: 20px;
+  }
+`;
+
+const SecurityBlock = styled.div<{ level: number }>`
+  background-color: ${({ level }) => {
+    if (level < 2) return 'red';
+    if (level < 4) return 'orange';
+    return 'green';
+  }};
+  width: ${({ level }) => {
+    switch (level) {
+      case 0:
+        return '0%';
+      case 1:
+        return '20%';
+      case 2:
+        return '40%';
+      case 3:
+        return '60%';
+      case 4:
+        return '80%';
+      case 5:
+        return '100%';
+      default:
+        return '0%';
+    }
+  }};
+  border-left: 0.3px solid white;
+  transition: all 0.2s ease-in-out;
+`;
+
+const Message = styled.span`
+  color: ${({ theme }) => theme.colors.red};
 `;
 
 function InputStudentInfos({
@@ -154,13 +204,15 @@ function InputStudentInfos({
   token,
 }: {
   studentId: string | null;
-  token: string | null;
+  token: string;
 }): JSX.Element {
   const [signUpForm, setSignUpForm] = useState({
+    studentId,
     password: '',
     major: '',
     phoneNum: '',
-    isVerifiedStudentNum: false,
+    name: '',
+    token,
   });
 
   const [phoneCodeState, setPhoneCodeState] = useState({
@@ -168,15 +220,19 @@ function InputStudentInfos({
     success: false,
     token: '',
     code: '',
+    errMsg: '',
     verified: false,
   });
 
   const [passwordState, setPasswordState] = useState({
     securityLevel: 0,
+    checkPassword: '',
+    errMsg: '',
     verified: false,
   });
 
   const codeInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   const handlePasswordChange = ({ currentTarget }: any) => {
     const password = currentTarget.value;
@@ -189,23 +245,49 @@ function InputStudentInfos({
       securityLevel: CheckPasswordSecurity(password),
     }));
   };
-
-  const handleSignUp = useCallback(() => {
-    // TODO: validation
-    console.log(signUpForm);
-  }, [signUpForm]);
+  /** 최종 회원가입을 처리하는 함수 */
+  const handleSignUp = async () => {
+    const data = JSON.stringify({
+      classId: signUpForm.studentId,
+      password: signUpForm.password,
+      major: signUpForm.major,
+      name: signUpForm.name,
+      register: 'IN',
+      phone: signUpForm.phoneNum,
+    });
+    try {
+      const res = await axios({
+        method: 'post',
+        url: '/api/users',
+        headers: {
+          'Content-Type': 'application/json',
+          'EMAIL-VALIDATION-TOKEN': token,
+        },
+        data,
+      });
+      if (res.data.successful) {
+        navigate('/sign-up/success');
+      } else {
+        alert('something`s not right!');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   /** 인증문자를 보내는 함수 */
   const handlePhoneCodeSend = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setPhoneCodeState((prev) => ({ ...prev, sent: true }));
+    let phoneNumber = signUpForm.phoneNum;
+    if (phoneNumber.includes('-')) {
+      phoneNumber = phoneNumber.replaceAll('-', '');
+      setSignUpForm((prev) => ({ ...prev, phoneNum: phoneNumber }));
+    }
     try {
       const { data } = await axios({
         method: 'get',
-        url: `/api/auth/sms-code?phone=${signUpForm.phoneNum}`,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        url: `/api/auth/sms-code?phone=${phoneNumber}`,
       });
       if (data.token) {
         setPhoneCodeState((prev) => ({
@@ -240,10 +322,28 @@ function InputStudentInfos({
       });
       if (res.data.successful) {
         // 인증 성공
+        setPhoneCodeState((prev) => ({ ...prev, verified: true }));
       }
     } catch (e) {
       //
     }
+  };
+  /** 비밀번호 확인하는 함수 */
+  const handleCheckPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.currentTarget;
+    setPasswordState((prev) => ({ ...prev, checkPassword: value }));
+    if (value === signUpForm.password && CheckPasswordSecurity(value) > 0) {
+      setPasswordState((prev) => ({ ...prev, verified: true }));
+    }
+  };
+
+  /** 가입이 가능한 지 확인하는 함수 */
+  const isRegisterable = (): boolean => {
+    return (
+      phoneCodeState.verified &&
+      passwordState.verified &&
+      signUpForm.name.length > 0
+    );
   };
 
   return (
@@ -256,19 +356,40 @@ function InputStudentInfos({
           <div>{studentId}@dankook.ac.kr</div>
         </InputContainer>
         <InputContainer>
+          <NameInput
+            placeholder="이름 입력"
+            value={signUpForm.name}
+            onChange={({ currentTarget }) =>
+              setSignUpForm((prev) => ({ ...prev, name: currentTarget.value }))
+            }
+          />
+        </InputContainer>
+        <InputContainer>
           <PasswordInput
             placeholder="비밀번호 입력"
             value={signUpForm.password}
             onChange={handlePasswordChange}
           />
         </InputContainer>
-        <PasswordSecurityLevel
-          max={5}
-          min={0}
-          value={passwordState.securityLevel}
-          defaultValue={0}
-          optimum={5}
-        />
+        {signUpForm.password && (
+          <PasswordSecurityLevel level={passwordState.securityLevel}>
+            <SecurityBlock level={passwordState.securityLevel} />
+          </PasswordSecurityLevel>
+        )}
+
+        <InputContainer>
+          <PasswordInput
+            placeholder="비밀번호 확인"
+            value={passwordState.checkPassword}
+            onChange={handleCheckPassword}
+          />
+        </InputContainer>
+        {passwordState.checkPassword !== '' &&
+          (passwordState.checkPassword === signUpForm.password ? (
+            <Message>비밀번호가 일치합니다.</Message>
+          ) : (
+            <Message>비밀번호가 일치하지 않습니다.</Message>
+          ))}
         <InputContainer>
           <Select
             name="major"
@@ -292,6 +413,7 @@ function InputStudentInfos({
             placeholder="휴대폰 번호 입력"
             maxLength={13}
             minLength={13}
+            disabled={phoneCodeState.verified}
             value={signUpForm.phoneNum.replace(
               /(\d{3})(\d{4})(\d{4})/,
               '$1-$2-$3',
@@ -303,17 +425,16 @@ function InputStudentInfos({
               }))
             }
           />
-          <SendButton
-            active={signUpForm.phoneNum.length >= 10}
-            value="인증번호 발송"
-            disabled={signUpForm.phoneNum.length < 10}
-          />
+          {!phoneCodeState.verified && (
+            <SendButton
+              active={signUpForm.phoneNum.length >= 10}
+              value="인증번호 발송"
+              disabled={signUpForm.phoneNum.length < 10}
+            />
+          )}
         </InputContainer>
-        <span>
-          명확히 표기하지않을 시, 향후 이벤트 당첨시 불이익이 있을 수 있습니다.
-        </span>
 
-        {phoneCodeState.sent && (
+        {phoneCodeState.sent && !phoneCodeState.verified && (
           <InputContainer onSubmit={submitPhoneCode}>
             <CodeInput
               ref={codeInputRef}
@@ -331,12 +452,15 @@ function InputStudentInfos({
         )}
         {phoneCodeState.verified && <span>휴대폰 인증이 완료되었습니다.</span>}
         <SignUpButton
-          active={false} // TODO:모두 완료 됐을 때
-          disabled={Object.values(signUpForm).some((el) => !el)}
+          active={isRegisterable()} // TODO:모두 완료 됐을 때
+          disabled={!isRegisterable()}
           onClick={handleSignUp}
         >
           가입하기
         </SignUpButton>
+        <span>
+          명확히 표기하지않을 시, 향후 이벤트 당첨시 불이익이 있을 수 있습니다.
+        </span>
       </InnerContainer>
       <CopyrightTerm />
     </Wrapper>

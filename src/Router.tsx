@@ -29,6 +29,7 @@ import Makers from 'components/global/footer/sub-routes/Makers';
 import Term from 'components/global/footer/sub-routes/Term';
 import PrivacyPolicy from 'components/global/footer/sub-routes/PrivacyPolicy';
 import { LoginStateAtom } from 'atoms/LoginState';
+import Success from 'components/sign-up/Succes';
 
 function Router() {
   const [{ isLoggedIn, admin }, setLoginState] = useRecoilState(LoginStateAtom);
@@ -67,6 +68,7 @@ function Router() {
             </>
           }
         />
+        <Route path="/sign-up/success" element={<Success />} />
         <Route path="/greeting" element={<Greeting />} />
         <Route path="/organization" element={<Organization />} />
         <Route path="/location" element={<Location />} />
