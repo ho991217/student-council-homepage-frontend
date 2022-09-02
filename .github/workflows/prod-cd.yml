@@ -25,6 +25,12 @@ jobs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v3.4.1
 
+
+    - name: create .env.production
+      run: |
+        touch ./.env.production
+        echo "${{ secrets.ENV_PRODUCTION}}" > ./.env.production
+
     - name: build
       run: |
         yarn add react-scripts
