@@ -11,7 +11,7 @@ const Container = styled.div`
 const Wrapper = styled.div`
   max-width: 1280px;
   width: 100%;
-  margin: 60px 0px;
+  margin: 40px 0;
   ${({ theme }) => theme.media.desktop} {
     padding: 30px 50px;
   }
@@ -67,10 +67,6 @@ const Text = styled.div`
   margin-bottom: 100px;
 `;
 
-const HashTags = styled.div`
-  display: flex;
-`;
-
 const HashTag = styled.div`
   max-width: 150px;
   height: 22px;
@@ -80,15 +76,20 @@ const HashTag = styled.div`
   margin-right: 25px;
   background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.white};
-  padding: 5px 40px;
   font-size: ${({ theme }) => theme.fonts.size.xs};
   border-radius: 12px;
+  ${({ theme }) => theme.media.mobile} {
+    max-width: 100px;
+  }
 `;
 
 const CommentWrapper = styled.div`
   max-width: 1280px;
   width: 100%;
   margin-top: 80px;
+  ${({ theme }) => theme.media.mobile} {
+    margin-top: 60px;
+  }
 `;
 
 const CommentLists = styled.ul`
@@ -198,9 +199,7 @@ function Post() {
         <Hr bold />
         <Contents>
           <Text>건의합니다.</Text>
-          <HashTags>
-            <HashTag>#학교생활</HashTag>
-          </HashTags>
+          <HashTag>#COVID 19</HashTag>
         </Contents>
         <Hr bold />
         <CommentWrapper>

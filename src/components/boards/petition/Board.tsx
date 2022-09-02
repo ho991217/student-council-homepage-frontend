@@ -165,7 +165,7 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
               </div>
             </Row>
           ))}
-          <Link to="/petition/editor">
+          <Link to="/board-petition/editor">
             <Button type="button">작성</Button>
           </Link>
         </BoardsContainer>

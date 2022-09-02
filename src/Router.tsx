@@ -10,21 +10,22 @@ import Location from 'pages/council-info/Location';
 import Rules from 'pages/Rules';
 import RulesPost from 'components/rules/post/Post';
 import Conference from 'pages/Conference';
-import PetitionBoard from 'pages/communication/petition/PetitionBoard';
 import InquiryBoard from 'pages/communication/InquiryBoard';
 import Login from 'pages/Login';
 import SignUp from 'pages/SignUp';
 import Pledge from 'pages/council/Pledge';
+import PetitionBoard from 'pages/communication/petition/PetitionBoard';
+import PetitionPost from 'components/boards/petition/post/Post';
 import PetitionEditor from 'pages/communication/petition/Editor';
 import News from 'pages/council/News';
 import Admin from 'pages/Admin';
 import SuggestionBoard from 'pages/communication/suggestion/SuggestionBoard';
 import SuggestionPost from 'components/boards/suggestion/post/Post';
+import SuggestionEditor from 'pages/communication/suggestion/Editor';
 
 import NotFound from 'pages/NotFound';
 import NewsPost from 'components/news/post/Post';
 import GlobalBanner from 'components/global/banner/GlobalBanner';
-import PetitionPost from 'components/boards/petition/post/Post';
 import Gnb from 'components/global/nav/Gnb';
 import Footer from 'components/global/footer/Footer';
 import Makers from 'components/global/footer/sub-routes/Makers';
@@ -115,19 +116,6 @@ function Router() {
             )
           }
         />
-        <Route
-          path="/petition/editor"
-          element={
-            isLoggedIn ? (
-              <>
-                <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
-                <PetitionEditor />
-              </>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
         <Route path="/board-petition">
           <Route path="/board-petition" element={<NotFound />} />
           <Route
@@ -162,28 +150,71 @@ function Router() {
               )
             }
           />
+          <Route
+            path="editor"
+            element={
+              isLoggedIn ? (
+                <>
+                  <GlobalBanner
+                    title="청원게시판"
+                    detail="청원게시판 입니다."
+                  />
+                  <PetitionEditor />
+                </>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
         </Route>
         <Route path="/board-suggestion">
           <Route path="/board-suggestion" element={<NotFound />} />
           <Route
             path="boards"
             element={
-              <>
-                <GlobalBanner title="건의게시판" detail="건의게시판 입니다." />
-                <SuggestionBoard />
-              </>
+              isLoggedIn ? (
+                <>
+                  <GlobalBanner
+                    title="건의게시판"
+                    detail="건의게시판 입니다."
+                  />
+                  <SuggestionBoard />
+                </>
+              ) : (
+                <Navigate to="/login" />
+              )
             }
           />
           <Route
             path="board"
             element={
-              <>
-                <GlobalBanner
-                  title="건의게시판"
-                  detail="건의게시판 입니다."
-                />
-                <SuggestionPost />
-              </>
+              isLoggedIn ? (
+                <>
+                  <GlobalBanner
+                    title="건의게시판"
+                    detail="건의게시판 입니다."
+                  />
+                  <SuggestionPost />
+                </>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route
+            path="editor"
+            element={
+              isLoggedIn ? (
+                <>
+                  <GlobalBanner
+                    title="건의게시판"
+                    detail="건의게시판 입니다."
+                  />
+                  <SuggestionEditor />
+                </>
+              ) : (
+                <Navigate to="/login" />
+              )
             }
           />
         </Route>

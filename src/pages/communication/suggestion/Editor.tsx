@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Content from "components/boards/petition/editor/Editor";
+import Editor from "components/boards/suggestion/editor/Editor";
 
 
 const Container = styled.div`
@@ -9,12 +9,12 @@ const Container = styled.div`
   }
 `;
 
-function Editor() {
+function SuggestionEditor() {
   return (
     <Container>
-      <Content />
+      <Editor />
     </Container>
   );
 }
 
-export default Editor;
+export default SuggestionEditor;

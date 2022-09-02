@@ -98,13 +98,13 @@ const Content = css`
   }
 `;
 
-const TitleInput = styled.input.attrs({ type: 'text', required: true })`
+const TitleInput = styled.input`
   ${Content}
   width: 100%;
   height: 40px;
 `;
 
-const Textarea = styled.textarea.attrs({ required: true })`
+const Textarea = styled.textarea`
   ${Content}
   width: 100%;
   height: 450px;
@@ -133,7 +133,7 @@ const Button = styled.button`
   border-radius: 5px;
 `;
 
-function Contents(): JSX.Element {
+function Editor(): JSX.Element {
   const [category, setCategory] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -277,4 +277,4 @@ function Contents(): JSX.Element {
   );
 }
 
-export default Contents;
+export default Editor;

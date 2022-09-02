@@ -5,7 +5,7 @@ import { useCookies } from 'react-cookie';
 import styled from 'styled-components';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { BiSearchAlt2 } from 'react-icons/bi';
-import { FiEye } from 'react-icons/fi'
+import { FiEye } from 'react-icons/fi';
 
 import { PostProps } from './PostProps';
 
@@ -116,6 +116,10 @@ const Row = styled.div`
   }
 `;
 
+const ViewIcon = styled.span`
+  margin-right: 3px;
+`;
+
 const Svg = styled.svg`
   width: 16px;
   height: 16px;
@@ -183,7 +187,7 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
                 onChange={(e) => setCategory(e.currentTarget.value)}
               >
                 <option value="" disabled>
-                  카테코리
+                  카테고리
                 </option>
                 <option value="progressing">진행중</option>
                 <option value="complete">답변완료</option>
@@ -224,7 +228,9 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
                 </Link>
               </div>
               <div>
-                <Svg><FiEye /></Svg>
+                <ViewIcon>
+                  <FiEye />
+                </ViewIcon>
                 {post.likes}
               </div>
               <div>
@@ -245,7 +251,7 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
               Total <PointText>{totalBoards}건,</PointText> {currentPage}/
               {Math.ceil(totalBoards / 6)}
             </PageInfo>
-            <Link to="/suggestion/editor">
+            <Link to="/board-suggestion/editor">
               <Button type="button">작성</Button>
             </Link>
           </BottomBar>
