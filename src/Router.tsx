@@ -15,7 +15,8 @@ import Login from 'pages/Login';
 import SignUp from 'pages/SignUp';
 import Pledge from 'pages/council/Pledge';
 // import Editor from 'pages/communication/Editor';
-import ConferenceEditor from 'pages/ConferenceEditor';
+import ConferenceEditor from 'components/conference/ConferenceEditor';
+import RuleEditor from 'components/rules/RuleEditor';
 import PetitionBoard from 'pages/communication/petition/PetitionBoard';
 import PetitionPost from 'components/boards/petition/post/Post';
 import PetitionEditor from 'pages/communication/petition/Editor';
@@ -113,6 +114,19 @@ function Router() {
               </>
             ) : (
               <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/rule/editor"
+          element={
+            isLoggedIn ? (
+              <>
+                <GlobalBanner title="회칙작성" detail="회칙작성 입니다." />
+                <RuleEditor />
+              </>
+            ) : (
+              <Navigate to="/" />
             )
           }
         />

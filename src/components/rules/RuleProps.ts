@@ -4,7 +4,7 @@ export interface RuleProps {
   userName: string;
   postHits: number;
   createDate: string;
-  fileList: string;
+  fileList: FileProps[];
 }
 
 export interface DetailProps {
@@ -12,6 +12,11 @@ export interface DetailProps {
   title: string;
   text: string;
   createDate: string;
-  fileList: string;
+  fileList: FileProps[];
   postHits: number;
+}
+
+export interface FileProps {
+  originName: string;
+  url: string;
 }
