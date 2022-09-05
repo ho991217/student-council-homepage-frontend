@@ -46,7 +46,7 @@ function Router() {
       admin: cookies.isAdmin === 'true',
     });
   }, []);
-
+  if (isLoggedIn === undefined) return <div>로딩중...</div>;
   return (
     <BrowserRouter>
       <Gnb />
