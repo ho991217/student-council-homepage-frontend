@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useCookies } from 'react-cookie';
 
 import { RuleProps } from './RuleProps';
 
@@ -69,12 +70,29 @@ const Svg = styled.svg`
   height: 16px;
 `;
 
+const Button = styled.button`
+  all: unset;
+  text-align: center;
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  width: 75px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  float: right;
+  margin-top: 12px;
+`;
+
 interface BoardProps {
   posts: RuleProps[];
 }
 
 function RulesBoard({ posts }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<RuleProps[]>([]);
+  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
+  const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
 
   useEffect(() => {
     setBoard(posts);
@@ -107,7 +125,7 @@ function RulesBoard({ posts }: BoardProps): JSX.Element {
                 <a
                   target="_blank"
                   rel="noopener noreferrer"
-                  href={post.fileList}
+                  href={post?.fileList[0]?.url}
                 >
                   <Svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -121,6 +139,11 @@ function RulesBoard({ posts }: BoardProps): JSX.Element {
               </Content>
             </Row>
           ))}
+          {isAdmin && (
+            <Link to="/rule/editor">
+              <Button type="button">작성</Button>
+            </Link>
+          )}
         </BoardsContainer>
       </Wrapper>
     </Container>

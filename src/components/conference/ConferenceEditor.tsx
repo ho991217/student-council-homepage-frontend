@@ -126,7 +126,6 @@ function ConferenceEditor() {
       return;
     }
     const formData = new FormData();
-    console.log(e.target.files[0]);
     formData.append('files', e.target.files[0]);
     formData.append('round', round);
     formData.append('date', date.toISOString().split('T')[0]);
