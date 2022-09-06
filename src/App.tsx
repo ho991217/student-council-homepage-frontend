@@ -18,7 +18,6 @@ function App() {
   };
 
   useEffect(() => {
-    console.log(process.env.REACT_APP_API_URL);
     window.addEventListener('resize', setVh);
     setVh();
     return () => {
