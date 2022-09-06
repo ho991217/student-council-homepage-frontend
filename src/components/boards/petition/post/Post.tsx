@@ -28,6 +28,7 @@ const Wrapper = styled.div`
     padding: 30px 20px;
   }
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
@@ -201,7 +202,7 @@ function Post() {
   const [post, setPost] = useState<PostProps>();
   const [postId, setPostId] = useState<number>(0);
   const [comment, setComment] = useState<string>('동의합니다.');
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
+  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -241,16 +242,51 @@ function Post() {
     }
   };
 
+  const handleBlind = async () => {
+    try {
+      await axios({
+        method: 'post',
+        url: `/api/petition/blind/${postId}`,
+        headers: {
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios({
+        method: 'delete',
+        url: `/api/petition/${postId}`,
+        headers: {
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     const postId = Number(searchParams.get('id'));
     setPostId(postId);
     getCurrentPost(postId);
+    console.log(post);
   }, []);
 
   return (
     <Container>
       {post && (
         <Wrapper>
+          {cookies.isAdmin === 'true' && (
+            <div>
+              <input type="button" value="블라인드" onClick={handleBlind} />
+              <input type="button" value="삭제" onClick={handleDelete} />
+            </div>
+          )}
           <Hashtag>#{post?.category}</Hashtag>
           <HSeparator bold />
           <Header>[ {post?.status} ]</Header>
