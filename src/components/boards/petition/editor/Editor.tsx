@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import ReactModal from 'react-modal';
 import { Desktop, Tablet, Mobile } from 'hooks/MediaQueries';
 import Modal from './Modal';
+import { getCategories } from '../functions/GetCategories';
 
 const customStylesDesktop = {
   content: {
@@ -134,6 +135,7 @@ const Button = styled.button`
 `;
 
 function Editor(): JSX.Element {
+  const [categoryList, setCategoryList] = useState<[]>();
   const [category, setCategory] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -177,9 +179,35 @@ function Editor(): JSX.Element {
     setIsOpen(false);
   };
 
-  const onSubmitHandler = () => {
-    // TODO: 백으로 데이터 전송
+  const onSubmitHandler = async () => {
+    const data = JSON.stringify({
+      category,
+      title,
+      text: content,
+    });
+
+    const res = await axios({
+      method: 'post',
+      url: '/api/petition',
+      headers: {
+        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        'Content-Type': 'application/json',
+      },
+      data,
+    });
+
+    if (res.data.data.successful) {
+      // 등록 성공 (해당 게시글로 이동)
+    } else {
+      // 등록 실패
+    }
   };
+
+  useEffect(() => {
+    getCategories(cookies['X-AUTH-TOKEN']).then((res) => {
+      setCategoryList(res);
+    });
+  }, []);
 
   return (
     <Container>
@@ -197,15 +225,13 @@ function Editor(): JSX.Element {
               <option value="" disabled>
                 카테고리를 선택해주세요.
               </option>
-              <option value="school-life">학교생활</option>
-              <option value="school-facilities">교내시설</option>
-              <option value="covid-19">코로나19</option>
-              <option value="scholarship">장학금</option>
-              <option value="lesson">수업</option>
-              <option value="etc">기타</option>
+              {categoryList?.map((category) => (
+                <option key={categoryList.indexOf(category)} value={category}>
+                  {category}
+                </option>
+              ))}
             </Select>
           </Label>
-
           <Label htmlFor="title">
             청원 제목
             <TitleInput

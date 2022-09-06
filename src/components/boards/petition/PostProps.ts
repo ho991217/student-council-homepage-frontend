@@ -1,13 +1,10 @@
 export interface PostProps {
   id: number;
-  status: string;
+  petitionStatus: string;
   title: string;
-  likes: number;
-  tag: string;
-  commentList: Comment[];
-  createdAt: string;
-  dueDate: string;
-  contents: JSX.Element;
+  commentCount: number;
+  blind: boolean;
+  postHits: number;
 }
 
 export interface Comment {

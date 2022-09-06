@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { PostProps } from '../PostProps';
-import { dummyPost } from '../api/DummyPost';
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
 
 const Container = styled.div`
   width: 100%;
@@ -182,57 +182,110 @@ const CommentText = styled.div`
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
+interface PostProps {
+  adminComment?: string;
+  blind: boolean;
+  category: string;
+  commentCount: number;
+  comments: [];
+  createDate: string;
+  deleteDate: string;
+  postHits: number;
+  status: string;
+  text: string;
+  title: string;
+}
+
 function Post() {
   const [searchParams] = useSearchParams();
   const [post, setPost] = useState<PostProps>();
-
+  const [postId, setPostId] = useState<number>(0);
   const [comment, setComment] = useState<string>('동의합니다.');
+  const [cookies] = useCookies(['X-AUTH-TOKEN']);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const text = JSON.stringify({
+      text: comment,
+    });
+
+    const { data } = await axios({
+      method: 'post',
+      url: `api/petition/comment/${postId}`,
+      headers: {
+        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        'Content-Type': 'application/json',
+      },
+      data: text,
+    });
+    if (data.successful) {
+      // 성공
+    } else {
+      // 실패
+    }
+  };
+
+  const getCurrentPost = async (postid: number) => {
+    try {
+      const { data } = await axios({
+        method: 'get',
+        url: `/api/petition/${postid}`,
+        headers: {
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        },
+      });
+      setPost(data.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
     const postId = Number(searchParams.get('id'));
-    setPost(dummyPost.filter((post) => post.id === postId)[0]);
+    setPostId(postId);
+    getCurrentPost(postId);
   }, []);
 
   return (
     <Container>
-      <Wrapper>
-        <Hashtag>#{post?.tag}</Hashtag>
-        <HSeparator bold />
-        <Header>[ {post?.status} ]</Header>
-        <Title>{post?.title}</Title>
-        <Etc>
-          <div>등록일 : {post?.createdAt}</div>
-          <div>청원 마감 : {post?.dueDate}</div>
-        </Etc>
-        <HSeparator />
-        <Contents>{post?.contents}</Contents>
-        <CommentSection>
-          <CommentForm onSubmit={handleSubmit}>
-            <CommentInput
-              placeholder="동의 내용을 입력해 주세요."
-              value={comment}
-              onChange={(e) => setComment(e.currentTarget.value)}
-            />
-            <CommentSubmit value="전송" />
-          </CommentForm>
-          <CommentLists>
-            {post?.commentList.map((comment) => (
-              <Comment key={comment.id}>
-                <CommentInfo>
-                  <CommentAuthor>{comment.writer}</CommentAuthor>
-                  <VSeparator />
-                  <CommentDate>{comment.createdAt}</CommentDate>
-                </CommentInfo>
-                <CommentText>{comment.contents}</CommentText>
-              </Comment>
-            ))}
-          </CommentLists>
-        </CommentSection>
-      </Wrapper>
+      {post && (
+        <Wrapper>
+          <Hashtag>#{post?.category}</Hashtag>
+          <HSeparator bold />
+          <Header>[ {post?.status} ]</Header>
+          <Title>{post?.title}</Title>
+          <Etc>
+            <div>등록일 : {post?.createDate}</div>
+            <div>청원 마감 : {post?.deleteDate}</div>
+          </Etc>
+          <HSeparator />
+          <Contents>{post?.text}</Contents>
+          <CommentSection>
+            <CommentForm onSubmit={handleSubmit}>
+              <CommentInput
+                placeholder="동의 내용을 입력해 주세요."
+                value={comment}
+                onChange={(e) => setComment(e.currentTarget.value)}
+              />
+              <CommentSubmit value="전송" />
+            </CommentForm>
+            {/* <CommentLists>
+              {post?.commentCount > 0 &&
+                post?.comments.map((comment) => (
+                  <Comment key={comment.id}>
+                    <CommentInfo>
+                      <CommentAuthor>{comment.writer}</CommentAuthor>
+                      <VSeparator />
+                      <CommentDate>{comment.createdAt}</CommentDate>
+                    </CommentInfo>
+                    <CommentText>{comment.contents}</CommentText>
+                  </Comment>
+                ))}
+            </CommentLists> */}
+          </CommentSection>
+        </Wrapper>
+      )}
     </Container>
   );
 }
