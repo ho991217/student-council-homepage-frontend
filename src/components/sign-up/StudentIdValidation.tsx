@@ -1,8 +1,9 @@
+import React, { useState } from 'react';
 import axios from 'axios';
 import CopyrightTerm from 'components/global/CopyrightTerm';
-import React, { useEffect, useState } from 'react';
 import { PropagateLoader } from 'react-spinners';
 import styled from 'styled-components';
+import Modal from 'components/global/Modal';
 import {
   Header,
   HeaderPoint,
@@ -18,31 +19,6 @@ const StudentNumInput = styled.input`
   height: 100%;
   width: 540px;
   padding: 0 10px;
-`;
-
-const EmailModalContainer = styled.div`
-  position: absolute;
-  z-index: 99;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(3px);
-`;
-
-const Modal = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: ${({ theme }) => theme.colors.gray020};
-  width: 750px;
-  height: 400px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.1);
 `;
 
 const Text = styled.span`
@@ -108,26 +84,24 @@ function StudentIdValidation(): JSX.Element {
   return (
     <>
       {emailState.sent && (
-        <EmailModalContainer>
-          <Modal>
-            {emailState.success ? (
-              <>
-                <Text>학교 계정 이메일을 확인하세요!</Text>
-                <LinktoGmail href="https://mail.google.com/mail">
-                  G-MAIL 바로가기
-                </LinktoGmail>
-              </>
-            ) : (
-              <>
-                <Text>이메일 보내는 중...</Text>
-                <PropagateLoader
-                  style={{ transform: 'translateX(-5px)' }}
-                  color="#9753DC"
-                />
-              </>
-            )}
-          </Modal>
-        </EmailModalContainer>
+        <Modal>
+          {emailState.success ? (
+            <>
+              <Text>학교 계정 이메일을 확인하세요!</Text>
+              <LinktoGmail href="https://mail.google.com/mail">
+                G-MAIL 바로가기
+              </LinktoGmail>
+            </>
+          ) : (
+            <>
+              <Text>이메일 보내는 중...</Text>
+              <PropagateLoader
+                style={{ transform: 'translateX(-5px)' }}
+                color="#9753DC"
+              />
+            </>
+          )}
+        </Modal>
       )}
       <Wrapper>
         <Header>

@@ -1,3 +1,4 @@
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -8,9 +9,12 @@ import {
   InputContainer,
   Wrapper,
 } from 'components/sign-up/SignUpComponents';
-import React, { useCallback, useRef, useState } from 'react';
+
 import CopyrightTerm from 'components/global/CopyrightTerm';
 import CheckPasswordSecurity from './CheckPasswordSecurity';
+import { sendSMSCode } from './functions/SendSMSCode';
+import { RemoveHyphen } from './functions/RemoveHyphen';
+import { validateSMSCode } from './functions/ValidateSMSCode';
 
 const InnerContainer = styled.div`
   max-width: 1400px;
@@ -240,9 +244,11 @@ function InputStudentInfos({
       ...prev,
       password,
     }));
+    const securityLevel = CheckPasswordSecurity(password);
+    passwordMsg(securityLevel);
     setPasswordState((prev) => ({
       ...prev,
-      securityLevel: CheckPasswordSecurity(password),
+      securityLevel,
     }));
   };
   /** 최종 회원가입을 처리하는 함수 */
@@ -279,62 +285,89 @@ function InputStudentInfos({
   const handlePhoneCodeSend = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setPhoneCodeState((prev) => ({ ...prev, sent: true }));
-    let phoneNumber = signUpForm.phoneNum;
-    if (phoneNumber.includes('-')) {
-      phoneNumber = phoneNumber.replaceAll('-', '');
-      setSignUpForm((prev) => ({ ...prev, phoneNum: phoneNumber }));
-    }
-    try {
-      const { data } = await axios({
-        method: 'get',
-        url: `/api/auth/sms-code?phone=${phoneNumber}`,
-      });
-      if (data.token) {
-        setPhoneCodeState((prev) => ({
-          ...prev,
-          success: true,
-          token: data.token,
-        }));
-        if (codeInputRef.current !== null) {
-          codeInputRef.current.focus();
-        }
+
+    const phoneNum = RemoveHyphen(signUpForm.phoneNum);
+
+    setSignUpForm((prev) => ({
+      ...prev,
+      phoneNum,
+    }));
+
+    const smstoken = await sendSMSCode(phoneNum);
+
+    if (smstoken) {
+      setPhoneCodeState((prev) => ({
+        ...prev,
+        success: true,
+        token: smstoken,
+      }));
+      if (codeInputRef.current) {
+        codeInputRef.current.focus();
       }
-    } catch (e) {
-      console.log(e);
     }
   };
 
   /** 인증코드를 입력해 핸드폰 번호를 인증받는 함수 */
   const submitPhoneCode = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = JSON.stringify({
-      token: phoneCodeState.token,
-      code: phoneCodeState.code,
-    });
-    try {
-      const res = await axios({
-        method: 'post',
-        url: '/api/auth/sms-code',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data,
-      });
-      if (res.data.successful) {
-        // 인증 성공
-        setPhoneCodeState((prev) => ({ ...prev, verified: true }));
-      }
-    } catch (e) {
-      //
+
+    const res = await validateSMSCode(
+      phoneCodeState.token,
+      phoneCodeState.code,
+    );
+
+    if (res.successful) {
+      // 인증 성공
+      setPhoneCodeState((prev) => ({ ...prev, verified: true, errMsg: '' }));
+    } else {
+      // 인증 실패
+      setPhoneCodeState((prev) => ({
+        ...prev,
+        errMsg: '올바르지 않은 코드입니다.',
+        sent: false,
+        code: '',
+        token: '',
+      }));
     }
   };
+
   /** 비밀번호 확인하는 함수 */
   const handleCheckPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget;
     setPasswordState((prev) => ({ ...prev, checkPassword: value }));
+
     if (value === signUpForm.password && CheckPasswordSecurity(value) > 0) {
       setPasswordState((prev) => ({ ...prev, verified: true }));
     }
+  };
+
+  /** 비밀번호 메시지를 설정 해 주는 함수 */
+  const passwordMsg = (level: number) => {
+    let errMsg = '';
+    switch (level) {
+      case 0:
+        errMsg = '사용할 수 없는 비밀번호입니다.';
+        break;
+      case 1:
+        errMsg = '아주 약한 비밀번호입니다.';
+        break;
+      case 2:
+        errMsg = '약한 비밀번호입니다.';
+        break;
+      case 3:
+        errMsg = '적절한 비밀번호입니다.';
+        break;
+      case 4:
+        errMsg = '강력한 비밀번호입니다.';
+        break;
+      case 5:
+        errMsg = '아주 강력한 비밀번호입니다.';
+        break;
+      default:
+        errMsg = '';
+        break;
+    }
+    setPasswordState((prev) => ({ ...prev, errMsg }));
   };
 
   /** 가입이 가능한 지 확인하는 함수 */
@@ -371,11 +404,15 @@ function InputStudentInfos({
             onChange={handlePasswordChange}
           />
         </InputContainer>
-        {signUpForm.password && (
-          <PasswordSecurityLevel level={passwordState.securityLevel}>
-            <SecurityBlock level={passwordState.securityLevel} />
-          </PasswordSecurityLevel>
-        )}
+        {passwordState.checkPassword !== signUpForm.password &&
+          signUpForm.password && (
+            <>
+              <Message>{passwordState.errMsg}</Message>
+              <PasswordSecurityLevel level={passwordState.securityLevel}>
+                <SecurityBlock level={passwordState.securityLevel} />
+              </PasswordSecurityLevel>
+            </>
+          )}
 
         <InputContainer>
           <PasswordInput
@@ -427,9 +464,9 @@ function InputStudentInfos({
           />
           {!phoneCodeState.verified && (
             <SendButton
-              active={signUpForm.phoneNum.length >= 10}
-              value="인증번호 발송"
-              disabled={signUpForm.phoneNum.length < 10}
+              active={signUpForm.phoneNum.length >= 10 && !phoneCodeState.sent}
+              value={phoneCodeState.errMsg ? '재전송' : '인증번호 발송'}
+              disabled={signUpForm.phoneNum.length < 10 || phoneCodeState.sent}
             />
           )}
         </InputContainer>
@@ -450,7 +487,12 @@ function InputStudentInfos({
             <CodeButton value="확인" />
           </InputContainer>
         )}
+
         {phoneCodeState.verified && <span>휴대폰 인증이 완료되었습니다.</span>}
+        {phoneCodeState.errMsg && (
+          <Message>코드가 틀렸습니다. 다시 해주세요.</Message>
+        )}
+
         <SignUpButton
           active={isRegisterable()} // TODO:모두 완료 됐을 때
           disabled={!isRegisterable()}
