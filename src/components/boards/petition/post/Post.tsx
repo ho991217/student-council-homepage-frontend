@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import ReactModal from 'react-modal';
 
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
+
+const TARGET_AGREEMENT = 1;
 
 const Container = styled.div`
   width: 100%;
@@ -71,9 +74,12 @@ const Etc = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 500px;
+  max-width: 750px;
   width: 100%;
   margin-bottom: 15px;
+  * {
+    color: ${({ theme }) => theme.colors.gray500};
+  }
 `;
 
 const Contents = styled.div`
@@ -105,6 +111,51 @@ const CommentForm = styled.form`
   justify-content: center;
 `;
 
+const AnswerInput = styled.textarea`
+  all: unset;
+  flex-grow: 1;
+  height: 100%;
+  background-color: ${({ theme }) => theme.colors.gray100};
+  margin-right: 10px;
+  border-radius: 5px;
+  padding: 20px;
+  box-sizing: border-box;
+  color: ${({ theme }) => theme.colors.gray600};
+`;
+
+const AnswerSubmit = styled.input.attrs({ type: 'submit' })`
+  all: unset;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  width: 160px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
+  cursor: pointer;
+`;
+
+const AnswerForm = styled.form`
+  width: 100%;
+
+  ${({ theme }) => theme.media.desktop} {
+    height: 200px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    height: 200px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    height: 120px;
+  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 50px;
+`;
+
 const CommentInput = styled.textarea`
   all: unset;
   flex-grow: 1;
@@ -129,6 +180,7 @@ const CommentSubmit = styled.input.attrs({ type: 'submit' })`
   border-radius: 5px;
   font-size: ${({ theme }) => theme.fonts.size.base};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
+  cursor: pointer;
 `;
 
 const CommentLists = styled.ul`
@@ -183,12 +235,114 @@ const CommentText = styled.div`
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
+const AdminPanel = styled.div`
+  margin: 7px 0 15px 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  input {
+    all: unset;
+    padding: 15px 25px;
+    border-radius: 15px;
+    background-color: ${({ theme }) => theme.colors.red};
+    color: ${({ theme }) => theme.colors.gray020};
+    margin: 0 5px;
+    cursor: pointer;
+  }
+`;
+
+const modalStyle = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backdropFilter: 'blur(1px)',
+  },
+  content: {
+    width: '30%',
+    height: '200px',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%,-50%)',
+    border: 'none',
+    boxShadow: '0px 4px 5px 2px rgba(0, 0, 0, 0.05)',
+    borderRadius: '15px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+};
+
+const DenyButton = styled.input.attrs({ type: 'button' })`
+  height: 100%;
+  width: 5rem;
+  background-color: white;
+  border-radius: 15px 0 0 15px;
+  border: none;
+  font-size: ${({ theme }) => theme.fonts.size.lg};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
+  transition: all 0.1s ease-in-out;
+  cursor: pointer;
+  :hover {
+    width: 12rem;
+    border-radius: 15px;
+    background-color: ${({ theme }) => theme.colors.red};
+    color: ${({ theme }) => theme.colors.white};
+  }
+`;
+
+const ConfirmButton = styled.input.attrs({ type: 'button' })`
+  height: 100%;
+  width: 100px;
+  background-color: white;
+  border-radius: 0 15px 15px 0;
+  border: none;
+  font-size: ${({ theme }) => theme.fonts.size.lg};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
+  transition: all 0.1s ease-in-out;
+  cursor: pointer;
+  :hover {
+    width: 12rem;
+    border-radius: 15px;
+    background-color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.white};
+  }
+`;
+
+const Meter = styled.meter`
+  ::-webkit-meter-bar {
+    background: #fff;
+    outline: none;
+    border: none;
+    border-radius: 2.5px;
+  }
+  margin-top: 10px;
+  padding: 0 25px;
+  height: 35px;
+  width: 100%;
+  ::-webkit-meter-optimum-value {
+    background-image: ${({ theme }) =>
+      `linear-gradient(to right,${theme.colors.secondary}  0% , ${theme.colors.primary} 100% )`};
+  }
+  span {
+    animation: move 2s linear infinite;
+    overflow: hidden;
+  }
+  @keyframes move {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 50px 50px;
+    }
+  }
+`;
+
 interface PostProps {
   adminComment?: string;
   blind: boolean;
   category: string;
   commentCount: number;
-  comments: [];
+  comments: [{ createDate: string; text: string; major: string }];
   createDate: string;
   deleteDate: string;
   postHits: number;
@@ -202,28 +356,72 @@ function Post() {
   const [post, setPost] = useState<PostProps>();
   const [postId, setPostId] = useState<number>(0);
   const [comment, setComment] = useState<string>('동의합니다.');
+  const [answer, setAnswer] = useState<string>();
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
+  const navigate = useNavigate();
+  const [modalState, setModalState] = useState({
+    content: <div />,
+    open: false,
+  });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const text = JSON.stringify({
-      text: comment,
+    setModalState({
+      open: true,
+      content: (
+        <>
+          <DenyButton value="취소" onClick={handleCloseModal} />
+          <div>등록 하시겠습니까?</div>
+          <ConfirmButton value="확인" onClick={handleCloseModal} />
+        </>
+      ),
     });
+  };
 
-    const { data } = await axios({
+  const handleAnswerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const res = await axios({
       method: 'post',
-      url: `api/petition/comment/${postId}`,
+      url: `/api/petition/comment/admin/${postId}`,
       headers: {
         'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         'Content-Type': 'application/json',
       },
-      data: text,
+      data: JSON.stringify({ text: answer }),
     });
-    if (data.successful) {
-      // 성공
-    } else {
-      // 실패
+
+    console.log(res);
+  };
+
+  const sendComment = async () => {
+    const text = JSON.stringify({
+      text: comment,
+    });
+    try {
+      const { data } = await axios({
+        method: 'post',
+        url: `api/petition/comment/${postId}`,
+        headers: {
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+          'Content-Type': 'application/json',
+        },
+        data: text,
+      });
+      if (data.successful) {
+        getCurrentPost(postId);
+        console.log(data.successful);
+      }
+    } catch (err) {
+      const error = err as any;
+      setModalState({
+        content: (
+          <div style={{ width: '100%', display: 'grid', placeItems: 'center' }}>
+            {error.response.data.message}
+          </div>
+        ),
+        open: true,
+      });
     }
   };
 
@@ -237,8 +435,8 @@ function Post() {
         },
       });
       setPost(data.data);
-    } catch (err) {
-      console.log(err);
+    } catch {
+      navigate(-1);
     }
   };
 
@@ -251,8 +449,9 @@ function Post() {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
       });
+      getCurrentPost(postId);
     } catch (err) {
-      console.log(err);
+      // 오류
     }
   };
 
@@ -265,61 +464,109 @@ function Post() {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
       });
+      getCurrentPost(postId);
     } catch (err) {
-      console.log(err);
+      // 오류
     }
+  };
+
+  const handleCloseModal = (e: React.MouseEvent<HTMLInputElement>) => {
+    if ((e.target as HTMLInputElement).value === '확인') {
+      sendComment();
+    }
+    setModalState((prev) => ({ ...prev, open: false }));
   };
 
   useEffect(() => {
     const postId = Number(searchParams.get('id'));
     setPostId(postId);
     getCurrentPost(postId);
-    console.log(post);
   }, []);
 
   return (
     <Container>
+      <ReactModal
+        isOpen={modalState.open}
+        contentLabel="Example Modal"
+        style={modalStyle}
+        ariaHideApp={false}
+        shouldCloseOnOverlayClick
+      >
+        {modalState.content}
+      </ReactModal>
       {post && (
         <Wrapper>
           {cookies.isAdmin === 'true' && (
-            <div>
+            <AdminPanel>
               <input type="button" value="블라인드" onClick={handleBlind} />
               <input type="button" value="삭제" onClick={handleDelete} />
-            </div>
+            </AdminPanel>
           )}
-          <Hashtag>#{post?.category}</Hashtag>
-          <HSeparator bold />
-          <Header>[ {post?.status} ]</Header>
-          <Title>{post?.title}</Title>
-          <Etc>
-            <div>등록일 : {post?.createDate}</div>
-            <div>청원 마감 : {post?.deleteDate}</div>
-          </Etc>
-          <HSeparator />
-          <Contents>{post?.text}</Contents>
-          <CommentSection>
-            <CommentForm onSubmit={handleSubmit}>
-              <CommentInput
-                placeholder="동의 내용을 입력해 주세요."
-                value={comment}
-                onChange={(e) => setComment(e.currentTarget.value)}
+          {post?.blind ? (
+            <div>블라인드 된 게시글</div>
+          ) : (
+            <>
+              <Hashtag>#{post?.category}</Hashtag>
+              <HSeparator bold />
+              <Header>[ {post?.status} ]</Header>
+              <Title>{post?.title}</Title>
+              <Etc>
+                <div>등록일 : {post?.createDate}</div>
+                <div>
+                  청원 동의 인원 : {post?.commentCount} / {TARGET_AGREEMENT}
+                </div>
+                <div>청원 마감 : {post?.deleteDate}</div>
+              </Etc>
+              <Meter
+                min={0}
+                max={100}
+                value={(post.commentCount / TARGET_AGREEMENT) * 100}
               />
-              <CommentSubmit value="전송" />
-            </CommentForm>
-            {/* <CommentLists>
-              {post?.commentCount > 0 &&
-                post?.comments.map((comment) => (
-                  <Comment key={comment.id}>
-                    <CommentInfo>
-                      <CommentAuthor>{comment.writer}</CommentAuthor>
-                      <VSeparator />
-                      <CommentDate>{comment.createdAt}</CommentDate>
-                    </CommentInfo>
-                    <CommentText>{comment.contents}</CommentText>
-                  </Comment>
-                ))}
-            </CommentLists> */}
-          </CommentSection>
+              <HSeparator />
+              <Contents>{post?.text}</Contents>
+              {post.commentCount >= TARGET_AGREEMENT &&
+                cookies.isAdmin === 'true' && (
+                  <>
+                    <HSeparator />
+                    <AnswerForm onSubmit={handleAnswerSubmit}>
+                      <AnswerInput
+                        placeholder="답변 내용을 입력해주세요"
+                        value={answer}
+                        onChange={(e) => setAnswer(e.currentTarget.value)}
+                      />
+                      <AnswerSubmit value="전송" />
+                    </AnswerForm>
+                  </>
+                )}
+              <CommentSection>
+                <CommentForm onSubmit={handleSubmit}>
+                  <CommentInput
+                    placeholder="동의 내용을 입력해 주세요."
+                    disabled={post.status === '기간종료'}
+                    value={comment}
+                    onChange={(e) => setComment(e.currentTarget.value)}
+                  />
+                  <CommentSubmit
+                    disabled={post.status === '기간종료'}
+                    value="전송"
+                  />
+                </CommentForm>
+                <CommentLists>
+                  {post?.comments.length > 0 &&
+                    post?.comments.map((comment) => (
+                      <Comment key={post.comments.indexOf(comment)}>
+                        <CommentInfo>
+                          <CommentAuthor>{comment.major}</CommentAuthor>
+                          <VSeparator />
+                          <CommentDate>{comment.createDate}</CommentDate>
+                        </CommentInfo>
+                        <CommentText>{comment.text}</CommentText>
+                      </Comment>
+                    ))}
+                </CommentLists>
+              </CommentSection>
+            </>
+          )}
         </Wrapper>
       )}
     </Container>

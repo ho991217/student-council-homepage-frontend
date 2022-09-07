@@ -3,7 +3,7 @@ import axios from 'axios';
 import CopyrightTerm from 'components/global/CopyrightTerm';
 import { PropagateLoader } from 'react-spinners';
 import styled from 'styled-components';
-import Modal from 'components/global/Modal';
+import Modal from 'components/sign-up/Modal';
 import {
   Header,
   HeaderPoint,

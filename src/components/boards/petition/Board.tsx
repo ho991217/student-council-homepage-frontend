@@ -57,6 +57,12 @@ const Row = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr 8fr 2fr;
   place-items: center;
+  transition: all 0.2s ease-in-out;
+  :not(:first-child) {
+    :hover {
+      background-color: rgba(0, 0, 0, 0.07);
+    }
+  }
   ${({ theme }) => theme.media.desktop} {
     padding: 0px 50px;
   }
