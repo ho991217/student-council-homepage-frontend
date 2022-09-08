@@ -1,4 +1,5 @@
 import Block from 'components/global/Block';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -8,10 +9,58 @@ const Container = styled.div`
   justify-content: center;
 `;
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 10rem 0;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Title = styled.h1`
+  color: ${({ theme }) => theme.colors.gray800};
+  font-size: ${({ theme }) => theme.fonts.size.x4xl};
+  font-weight: ${({ theme }) => theme.fonts.weight.black};
+  margin-bottom: 2rem;
+`;
+
+const SubTitle = styled.h2`
+  color: ${({ theme }) => theme.colors.gray500};
+  font-size: ${({ theme }) => theme.fonts.size.lg};
+  font-weight: ${({ theme }) => theme.fonts.weight.regular};
+  margin-bottom: 4rem;
+`;
+
+const GoHomeButton = styled(Link)`
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.fonts.size.lg};
+  font-weight: ${({ theme }) => theme.fonts.weight.regular};
+  padding: 0.7rem 2rem;
+  border-radius: 9999px;
+  margin-bottom: 5rem;
+  text-align: center;
+`;
+
 function Success() {
   return (
     <Container>
-      <Block title="회원가입" contents={<div>성공</div>} />
+      <Block
+        title=""
+        contents={
+          <Wrapper>
+            <Title>회원가입 성공!</Title>
+            <SubTitle>
+              회원가입에 성공했습니다. <br /> 로그인 화면으로 돌아가서 로그인
+              하세요.
+            </SubTitle>
+            <GoHomeButton to="/login">
+              로그인 화면으로 <br />
+              돌아가기
+            </GoHomeButton>
+          </Wrapper>
+        }
+      />
     </Container>
   );
 }

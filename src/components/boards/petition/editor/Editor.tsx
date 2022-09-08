@@ -197,12 +197,12 @@ function Editor(): JSX.Element {
         },
         data,
       });
-      console.log(res.data.data.id);
       navigate(`/board-petition/board?id=${res.data.data.id}`);
     } catch (e) {
+      const err = e as any;
       // TODO:등록 실패
       // 하루 여러개 등의 이유
-      console.log(e);
+      console.log(err.response);
     }
   };
 

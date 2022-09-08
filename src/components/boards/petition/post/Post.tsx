@@ -337,6 +337,29 @@ const Meter = styled.meter`
   }
 `;
 
+const AnswerContainer = styled.div`
+  background-color: ${({ theme }) => theme.colors.white};
+  border-radius: 15px;
+  margin: 20px 0;
+  width: 100%;
+  padding: 40px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const AnserTitlePoint = styled.strong`
+  color: ${({ theme }) => theme.colors.secondary};
+`;
+
+const AnswerTitle = styled.div`
+  font-size: ${({ theme }) => theme.fonts.size.xxl};
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
+  color: ${({ theme }) => theme.colors.gray800};
+  margin-bottom: 15px;
+`;
+
 interface PostProps {
   adminComment?: string;
   blind: boolean;
@@ -523,8 +546,19 @@ function Post() {
                 value={(post.commentCount / TARGET_AGREEMENT) * 100}
               />
               <HSeparator />
+              {post.adminComment && (
+                <AnswerContainer>
+                  <AnswerTitle>
+                    총학생회 <AnserTitlePoint>답변</AnserTitlePoint>
+                  </AnswerTitle>
+                  <div>{post.adminComment}</div>
+                </AnswerContainer>
+              )}
+              <HSeparator />
+
               <Contents>{post?.text}</Contents>
               {post.commentCount >= TARGET_AGREEMENT &&
+                !post.adminComment &&
                 cookies.isAdmin === 'true' && (
                   <>
                     <HSeparator />
