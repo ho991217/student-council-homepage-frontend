@@ -89,7 +89,7 @@ function Tiles(): JSX.Element {
           <Tile
             title="실시간 인기청원"
             linkTitle="더보기"
-            to="/board-petition/boards?page=1&filter=전체"
+            to="/board-petition/boards?page=1"
             detail="petition"
           />
         </SmallTile>

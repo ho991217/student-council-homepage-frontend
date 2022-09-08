@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -141,6 +142,7 @@ function Editor(): JSX.Element {
   const [content, setContent] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
+  const navigate = useNavigate();
 
   const onCategoryHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const {
@@ -185,21 +187,22 @@ function Editor(): JSX.Element {
       title,
       text: content,
     });
-
-    const res = await axios({
-      method: 'post',
-      url: '/api/petition',
-      headers: {
-        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-        'Content-Type': 'application/json',
-      },
-      data,
-    });
-
-    if (res.data.data.successful) {
-      // 등록 성공 (해당 게시글로 이동)
-    } else {
-      // 등록 실패
+    try {
+      const res = await axios({
+        method: 'post',
+        url: '/api/petition',
+        headers: {
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+          'Content-Type': 'application/json',
+        },
+        data,
+      });
+      console.log(res.data.data.id);
+      navigate(`/board-petition/board?id=${res.data.data.id}`);
+    } catch (e) {
+      // TODO:등록 실패
+      // 하루 여러개 등의 이유
+      console.log(e);
     }
   };
 
