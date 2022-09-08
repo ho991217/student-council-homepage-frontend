@@ -8,9 +8,5 @@ export const getCategories = async (token: string) => {
       'X-AUTH-TOKEN': token,
     },
   });
-  //   if (data.successful) {
   return data.data;
-  //   } else {
-  // 실패했을 때
-  //   }
 };
