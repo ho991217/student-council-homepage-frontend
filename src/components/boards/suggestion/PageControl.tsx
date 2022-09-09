@@ -46,6 +46,7 @@ function PageControl({
   const generateParams = (page: number) => {
     const qstring = qs.parse(params[0].toString());
     const { filter } = qstring;
+    
     if (!filter) {
       return `/board-suggestion/boards?page=${page}`;
     }

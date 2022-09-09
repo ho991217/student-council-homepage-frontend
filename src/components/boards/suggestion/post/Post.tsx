@@ -1,4 +1,8 @@
 import styled from 'styled-components';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { KeyboardEvent, useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
+import axios from 'axios';
 
 const Container = styled.div`
   width: 100%;
@@ -32,11 +36,27 @@ const Hr = styled.div<{ bold?: boolean }>`
   margin: 10px 0px;
 `;
 
+const DeleteBtn = styled.button`
+  background-color: ${({ theme }) => theme.colors.red};
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.fonts.size.lg};
+  cursor: pointer;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 5px;
+  padding: 12px 15px;
+`;
+
 const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Date = styled.div`
   color: ${({ theme }) => theme.colors.gray500};
-  font-size: ${({ theme }) => theme.fonts.size.md};
+  font-size: ${({ theme }) => theme.fonts.size.base};
   font-weight: ${({ theme }) => theme.fonts.weight.bold};
-  padding: 0 0 20px 5px;
+  padding: 0 0 12px 5px;
 `;
 
 const Infos = styled.div`
@@ -127,7 +147,13 @@ const VSeparator = styled.div`
   margin: 0px 10px;
 `;
 
-const CommentAuthor = styled.div`
+const Admin = styled.div`
+  color: ${({ theme }) => theme.colors.red};
+  font-size: ${({ theme }) => theme.fonts.size.sm};
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
+`;
+
+const User = styled.div`
   margin-right: 10px;
   font-size: ${({ theme }) => theme.fonts.size.sm};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
@@ -187,52 +213,139 @@ const CommentSubmit = styled.input.attrs({ type: 'submit' })`
   cursor: pointer;
 `;
 
+interface PostProps {
+  id: number;
+  answer: string;
+  category: string;
+  commentList: [{ name: string; time: string; text: string }];
+  createDate: string;
+  fileList: [];
+  postHits: number;
+  status: string;
+  text: string;
+  title: string;
+}
+
 function Post() {
+  const [post, setPost] = useState<PostProps>();
+  const [comment, setComment] = useState<string>('');
+  const [searchParams] = useSearchParams();
+  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
+  const navigate = useNavigate();
+  const postId = searchParams.get('id');
+
+  useEffect(() => {
+    axios({
+      url: `/api/suggestion/${postId}`,
+      method: 'get',
+      headers: {
+        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+      },
+    })
+      .then((res) => {
+        setPost(res.data.data);
+      })
+      .catch((err) => {
+        // 에러 처리
+        console.log(err)
+      });
+  }, []);
+
+  const onClickDeleteBtn = () => {
+    axios({
+      url: `/api/suggestion/${postId}`,
+      method: 'delete',
+      headers: {
+        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+      },
+    })
+      .then((res) => {
+        if (res.data.successful) {
+          navigate('/board-suggestion/boards');
+        }
+      })
+      .catch((err) => {
+        // 에러 처리
+        console.log(err)
+      });
+  };
+
+  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    axios({
+      url:
+        cookies.isAdmin === 'true'
+          ? `/api/suggestion/comment/admin/${postId}`
+          : `/api/suggestion/comment/${postId}`,
+      method: 'post',
+      headers: {
+        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        'Content-Type': 'application/json',
+      },
+      data: { text: comment },
+    })
+      .then((res) => {
+        if (res.data.successful) window.location.reload();
+      })
+      .catch((err) => {
+        // 에러 처리
+        console.log(err)
+      });
+  };
+
   return (
     <Container>
       <Wrapper>
-        <Header>2022.08.05(금)</Header>
+        {cookies.isAdmin === 'true' && (
+          <DeleteBtn type="button" onClick={onClickDeleteBtn}>
+            삭제하기
+          </DeleteBtn>
+        )}
+        <Header>
+          <Date>{post?.createDate}</Date>
+        </Header>
         <Infos>
-          <Title>건의 게시판 테스트 입니다.</Title>
-          <State>[답변 완료]</State>
+          <Title>{post?.title}</Title>
+          <State>[ {post?.status} ]</State>
         </Infos>
         <Hr bold />
         <Contents>
-          <Text>건의합니다.</Text>
-          <HashTag>#COVID 19</HashTag>
+          <Text>{post?.text}</Text>
+          <HashTag>#{post?.category}</HashTag>
         </Contents>
         <Hr bold />
         <CommentWrapper>
-          댓글 2
+          댓글 {post?.commentList.length}
           <Hr />
           <CommentLists>
-            <Comment>
-              <CommentInfo>
-                <CommentAuthor>총학생회</CommentAuthor>
-                <VSeparator />
-                <CommentDate>2022.08.06 19:21</CommentDate>
-              </CommentInfo>
-              <CommentText>테스트 댓글입니다.</CommentText>
-            </Comment>
-            <Comment>
-              <CommentInfo>
-                <CommentAuthor>총학생회</CommentAuthor>
-                <VSeparator />
-                <CommentDate>2022.08.06 19:21</CommentDate>
-              </CommentInfo>
-              <CommentText>테스트 댓글입니다.</CommentText>
-            </Comment>
-            <Comment>
-              <CommentInfo>
-                <CommentAuthor>총학생회</CommentAuthor>
-                <VSeparator />
-                <CommentDate>2022.08.06 19:21</CommentDate>
-              </CommentInfo>
-              <CommentText>테스트 댓글입니다.</CommentText>
-            </Comment>
+            {post?.answer &&
+              <Comment>
+                <CommentInfo>
+                  <Admin>총학생회</Admin>
+                </CommentInfo>
+                <CommentText>{post?.answer}</CommentText>
+              </Comment>
+            }
+            {post?.commentList.map((comment, idx) => (
+              <Comment key={post.commentList.indexOf(comment)}>
+                <CommentInfo>
+                  <User>익명{idx + 1}</User>
+                  <VSeparator />
+                  <CommentDate>
+                    {comment.time.slice(0, 10)} {comment.time.slice(11, 16)}
+                  </CommentDate>
+                </CommentInfo>
+                <CommentText>{comment.text}</CommentText>
+              </Comment>
+            ))}
           </CommentLists>
-          <CommentForm>
-            <CommentInput placeholder="댓글을 입력해주세요." />
+          <CommentForm onSubmit={onSubmitHandler}>
+            <CommentInput
+              placeholder="댓글을 입력해주세요."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
             <CommentSubmit value="입력" />
           </CommentForm>
         </CommentWrapper>

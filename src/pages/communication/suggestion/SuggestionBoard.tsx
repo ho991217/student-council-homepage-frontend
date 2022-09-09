@@ -36,10 +36,6 @@ function PetitionBoard(): JSX.Element {
     let { status } = qs.parse(searchParams.toString());
     const { query } = qs.parse(searchParams.toString());
 
-    console.log('filter', filter);
-    console.log('status', status);
-    console.log('search', query);
-
     if (!page) page = '1';
     if (status === '전체') status ='';
     
@@ -50,6 +46,7 @@ function PetitionBoard(): JSX.Element {
         .concat(status ? `&status=${status}` : '')
         .concat(query ? `&query=${query}` : ''),
     });
+    
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);
     setPagingInfo(data);
