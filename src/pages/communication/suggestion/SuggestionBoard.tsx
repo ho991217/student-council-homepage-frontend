@@ -1,7 +1,10 @@
-import { dummyPost } from 'components/boards/suggestion/api/DummyPost';
+import axios from 'axios';
 import Board from 'components/boards/suggestion/Board';
 import FilterControl from 'components/boards/suggestion/FilterControl';
-import PageControl from 'components/boards/suggestion/PageControl';
+import PageControl, {
+  PagingProps,
+} from 'components/boards/suggestion/PageControl';
+import qs from 'qs';
 
 import { PostProps } from 'components/boards/suggestion/PostProps';
 import { useState, useEffect } from 'react';
@@ -12,43 +15,58 @@ const Container = styled.div`
   background-color: ${(props) => props.theme.colors.white};
 `;
 
-function SuggestionBoard(): JSX.Element {
+function PetitionBoard(): JSX.Element {
   const [board, setBoard] = useState<PostProps[]>([]);
-  const [boardsCount, setBoardsCount] = useState<number>(dummyPost.length);
-  const [curFilter, setCurFilter] = useState<string>('전체');
+  const [boardsCount, setBoardsCount] = useState<number>(0);
+  const [pagingInfo, setPagingInfo] = useState<PagingProps>({
+    first: true,
+    hasNext: false,
+    last: true,
+    page: 1,
+    size: 6,
+    totalElements: 0,
+    totalPages: 1,
+  });
   const [page, setPage] = useState(1);
   const [searchParams] = useSearchParams();
 
+  const getPosts = async () => {
+    let { page } = qs.parse(searchParams.toString());
+    const { filter } = qs.parse(searchParams.toString());
+    let { status } = qs.parse(searchParams.toString());
+    const { query } = qs.parse(searchParams.toString());
+
+    console.log('filter', filter);
+    console.log('status', status);
+    console.log('search', query);
+
+    if (!page) page = '1';
+    if (status === '전체') status ='';
+    
+    const { data } = await axios({
+      method: 'get',
+      url: `/api/suggestion?page=${Number(page) - 1}&size=6`
+        .concat(filter ? `&category=${filter}` : '')
+        .concat(status ? `&status=${status}` : '')
+        .concat(query ? `&query=${query}` : ''),
+    });
+    setBoardsCount(data.totalElements);
+    setBoard([...data.content]);
+    setPagingInfo(data);
+  };
+
   useEffect(() => {
     setPage(Number(searchParams.get('page')) || 1);
-    setCurFilter(searchParams.get('filter') || '전체');
-  }, [dummyPost, searchParams]);
-
-  useEffect(() => {
-    const filteredBoard: PostProps[] = dummyPost.filter(
-      (post) => post.tag === curFilter,
-    );
-
-    if (curFilter === '전체') {
-      setBoard(dummyPost.slice((page - 1) * 6, page * 6));
-      setBoardsCount(dummyPost.length);
-    } else {
-      setBoard(filteredBoard.slice((page - 1) * 6, page * 6));
-      setBoardsCount(filteredBoard.length);
-    }
-  }, [dummyPost, page, curFilter]);
+    getPosts();
+  }, [searchParams, boardsCount]);
 
   return (
     <Container>
-      <FilterControl currentTag={curFilter} />
-      <Board posts={board} totalBoards={boardsCount} currentPage={page} />
-      <PageControl
-        postCount={boardsCount}
-        filter={curFilter}
-        currentPage={page}
-      />
+      <FilterControl />
+      <Board posts={board} pagingInfo={pagingInfo} currentPage={page} />
+      <PageControl pagingInfo={pagingInfo} currentPage={page} />
     </Container>
   );
 }
 
-export default SuggestionBoard;
+export default PetitionBoard;

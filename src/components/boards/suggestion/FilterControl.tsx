@@ -1,15 +1,9 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-
-const tags = [
-  '전체',
-  '학교생활',
-  '교내시설',
-  '코로나19',
-  '장학금',
-  '수업',
-  '기타',
-];
+import qs, { ParsedQs } from 'qs';
+import { useCookies } from 'react-cookie';
+import { Link, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getCategories } from './functions/GetCategories';
 
 const Container = styled.div`
   ${({ theme }) => theme.media.mobile} {
@@ -56,14 +50,43 @@ const Hashtag = styled(Link)<{ cur: boolean }>`
   font-size: ${({ theme }) => theme.fonts.size.base};
 `;
 
-function FilterControl({ currentTag }: { currentTag: string }): JSX.Element {
+function FilterControl() {
+  const [categoryList, setCategoryList] = useState<[]>();
+  const [searchParams] = useSearchParams();
+  const [cookies] = useCookies(['X-AUTH-TOKEN']);
+
+  const generateParams = (tag: string) => {
+    let { page } = qs.parse(searchParams.toString());
+    let { status } = qs.parse(searchParams.toString());
+    let { search } = qs.parse(searchParams.toString());
+
+    if (!page) page = '1';
+    if (!status) status = '';
+    if (!search) search = '';
+
+    if (tag === '전체') {
+      return `/board-suggestion/boards?page=${page}&status=${status}&query=${search}`;
+    }
+    return `/board-suggestion/boards?page=${page}&filter=${tag}&status=${status}&query=${search}`;
+  };
+
+  useEffect(() => {
+    getCategories(cookies['X-AUTH-TOKEN']).then((res) => setCategoryList(res));
+  }, []);
+
   return (
     <Container>
-      {tags.map((tag) => (
+      <Hashtag
+        cur={!qs.parse(searchParams.toString())?.filter}
+        to={generateParams('전체')}
+      >
+        #전체
+      </Hashtag>
+      {categoryList?.map((tag) => (
         <Hashtag
           key={tag}
-          cur={tag === currentTag}
-          to={`/board-petition/boards?filter=${tag}`}
+          cur={tag === qs.parse(searchParams.toString())?.filter}
+          to={generateParams(tag)}
         >
           #{tag}
         </Hashtag>
