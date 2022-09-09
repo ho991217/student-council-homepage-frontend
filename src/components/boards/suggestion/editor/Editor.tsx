@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import axios from 'axios';
 import styled, { css } from 'styled-components';
 
-const TAG_LIST = [
-  '#학교생활',
-  '#교내시설',
-  '#코로나19',
-  '#장학금',
-  '#수업',
-  '#기타',
-];
+import { getCategories } from '../functions/GetCategories';
 
 const Container = styled.div`
   width: 100%;
@@ -152,12 +148,49 @@ const Button = styled.button`
 function Editor(): JSX.Element {
   const [title, setTitle] = useState<string>('');
   const [text, setText] = useState<string>('');
-  const [tag, setTag] = useState<string>('');
+  const [category, setCategory] = useState<string>('');
+  const [categoryList, setCategoryList] = useState<[]>();
+  const [cookies] = useCookies(['X-AUTH-TOKEN']);
+  const navigate = useNavigate();
+
+  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('text', text);
+    formData.append('category', category);
+
+    axios({
+      url: '/api/suggestion',
+      method: 'post',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+      },
+      data: formData,
+    })
+      .then((res) => {
+        if (res.data.successful) {
+          navigate('/board-suggestion/boards?page=1');
+        }
+      })
+      .catch((err) => 
+        // 에러 처리
+        console.log(err)
+      );
+  };
+
+  useEffect(() => {
+    getCategories(cookies['X-AUTH-TOKEN']).then((res) => {
+      setCategoryList(res);
+    });
+  }, []);
 
   return (
     <Container>
       <Wrapper>
-        <Form>
+        <Form onSubmit={onSubmitHandler}>
           <Label>
             제목
             <TitleInput
@@ -178,18 +211,18 @@ function Editor(): JSX.Element {
           <TagList>
             태그
             <Tags>
-              {TAG_LIST.map((item, idx) => {
+              {categoryList?.map((item, idx) => {
                 return (
-                  <TagLabel key={item} check={tag === TAG_LIST[idx]}>
+                  <TagLabel
+                    key={categoryList.indexOf(item)}
+                    check={category === categoryList[idx]}
+                  >
                     {item}
                     <Tag
                       type="radio"
-                      name="hashtag"
+                      name="category"
                       value={item}
-                      onChange={(e) => {
-                        setTag(e.currentTarget.value);
-                      }}
-                      required
+                      onChange={(e) => setCategory(e.currentTarget.value)}
                     />
                   </TagLabel>
                 );
