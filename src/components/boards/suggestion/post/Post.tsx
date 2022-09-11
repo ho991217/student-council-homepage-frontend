@@ -23,7 +23,7 @@ const Wrapper = styled.div`
     padding: 30px 50px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 30px 20px;
+    padding: 10px 20px;
   }
   background-color: ${({ theme }) => theme.colors.white};
 `;
@@ -33,7 +33,7 @@ const Hr = styled.div<{ bold?: boolean }>`
   height: ${({ bold }) => (bold ? '2px' : '1px')};
   background-color: ${({ bold, theme }) =>
     bold ? theme.colors.gray600 : theme.colors.gray200};
-  margin: 10px 0px;
+  margin: ${({ bold }) => (bold ? '5px 0px' : '10px 0px')};
 `;
 
 const DeleteBtn = styled.button`
@@ -80,26 +80,28 @@ const Contents = styled.div`
   max-width: 1100px;
   width: 100%;
   padding: 40px 20px;
+  ${({ theme }) => theme.media.mobile} {
+    padding: 25px 15px;
+  }
 `;
 
 const Text = styled.div`
   font-size: ${({ theme }) => theme.fonts.size.md};
-  margin-bottom: 100px;
+  margin-bottom: 60px;
 `;
 
 const HashTag = styled.div`
-  max-width: 150px;
+  max-width: 130px;
   height: 22px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 25px;
   background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.fonts.size.xs};
   border-radius: 12px;
   ${({ theme }) => theme.media.mobile} {
-    max-width: 100px;
+    max-width: 90px;
   }
 `;
 
@@ -173,13 +175,13 @@ const CommentText = styled.div`
 const CommentForm = styled.form`
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    height: 100px;
+    height: 150px;
   }
   ${({ theme }) => theme.media.tablet} {
-    height: 100px;
+    height: 150px;
   }
   ${({ theme }) => theme.media.mobile} {
-    height: 80px;
+    height: 100px;
   }
   display: flex;
   align-items: center;
@@ -203,6 +205,9 @@ const CommentSubmit = styled.input.attrs({ type: 'submit' })`
   background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.white};
   width: 160px;
+  ${({ theme }) => theme.media.mobile} {
+    width: 80px;
+  }
   height: 100%;
   display: flex;
   align-items: center;

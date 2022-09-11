@@ -26,7 +26,7 @@ const Wrapper = styled.div`
     padding: 30px 50px 10px 50px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 30px 20px 20px 10px;
+    padding: 30px 10px 20px 10px;
   }
   display: flex;
   flex-direction: column;
@@ -98,16 +98,18 @@ const Row = styled.div`
   width: 100%;
   height: 70px;
   display: grid;
-  grid-template-columns: 1fr 2fr 8fr 2fr 1fr;
   place-items: center;
   ${({ theme }) => theme.media.desktop} {
     padding: 0px 50px;
+    grid-template-columns: 1fr 2fr 8fr 2fr 1fr;
   }
   ${({ theme }) => theme.media.tablet} {
     padding: 0px 50px;
+    grid-template-columns: 1fr 2fr 8fr 2fr 1fr;
   }
   ${({ theme }) => theme.media.mobile} {
     padding: 0px 10px;
+    grid-template-columns: 1.2fr 3fr 8fr 2fr 1fr;
   }
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   text-align: center;
