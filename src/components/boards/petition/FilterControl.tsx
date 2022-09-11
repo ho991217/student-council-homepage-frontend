@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import qs, { ParsedQs } from 'qs';
+import qs from 'qs';
 import { useCookies } from 'react-cookie';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -56,12 +56,10 @@ function FilterControl() {
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
 
   const generateParams = (tag: string) => {
-    let { page } = qs.parse(params.toString());
-    if (!page) page = '1';
     if (tag === '전체') {
-      return `/board-petition/boards?page=${page}`;
+      return `/board-petition/boards?page=1`;
     }
-    return `/board-petition/boards?page=${page}&filter=${tag}`;
+    return `/board-petition/boards?page=1&filter=${tag}`;
   };
 
   useEffect(() => {

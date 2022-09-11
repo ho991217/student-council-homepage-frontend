@@ -31,12 +31,12 @@ function PetitionBoard(): JSX.Element {
   const [searchParams] = useSearchParams();
 
   const getPosts = async () => {
-    let { page } = qs.parse(searchParams.toString());
-    const { filter } = qs.parse(searchParams.toString());
+    const { page } = qs.parse(searchParams.toString());
+    let { filter } = qs.parse(searchParams.toString());
     let { status } = qs.parse(searchParams.toString());
     const { query } = qs.parse(searchParams.toString());
 
-    if (!page) page = '1';
+    if (filter === '전체') filter ='';
     if (status === '전체') status ='';
     
     const { data } = await axios({

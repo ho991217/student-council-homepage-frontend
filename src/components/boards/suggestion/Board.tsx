@@ -177,45 +177,29 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
   const onSelectHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setStatus(e.currentTarget.value);
 
-    let { page } = qs.parse(searchParams.toString());
     let { filter } = qs.parse(searchParams.toString());
     let { query } = qs.parse(searchParams.toString());
 
-    if (!page) page = '1';
     if (!filter) filter = '';
     if (!query) query = '';
 
-    if(filter === '전체') {
-      navigate(
-        `/board-suggestion/boards?page=${page}&status=${e.currentTarget.value}&query=${query}`,
-      );
-    } else {
-      navigate(
-      `/board-suggestion/boards?page=${page}&filter=${filter}&status=${e.currentTarget.value}&query=${query}`,
-      );
-    }
+    navigate(
+      `/board-suggestion/boards?page=1&filter=${filter}&status=${e.currentTarget.value}&query=${query}`,
+    );
   }
 
   const onInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchWord(e.currentTarget.value);
     
-    let { page } = qs.parse(searchParams.toString());
     let { filter } = qs.parse(searchParams.toString());
     let { status } = qs.parse(searchParams.toString());
 
-    if (!page) page = '1';
     if (!filter) filter = '';
     if (!status) status = '';
 
-    if(filter === '전체') {
-      navigate(
-        `/board-suggestion/boards?page=${page}&status=${status}&query=${e.currentTarget.value}`,
-      );
-    } else {
-      navigate(
-      `/board-suggestion/boards?page=${page}&filter=${filter}&status=${status}&query=${e.currentTarget.value}`,
-      );
-    }
+    navigate(
+      `/board-suggestion/boards?page=1&filter=${filter}&status=${status}&query=${e.currentTarget.value}`,
+    );
   }
 
   return (
