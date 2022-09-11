@@ -339,6 +339,16 @@ function Post() {
         <CommentWrapper>
           댓글 {post?.commentList.length}
           <Hr />
+          {(cookies.isAdmin === 'true' && !post?.answer && !isEdit) && (
+            <CommentForm onSubmit={onCommentHandler}>
+              <CommentInput
+                placeholder="답변을 입력해주세요."
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+              <CommentSubmit value="입력" />
+            </CommentForm>
+          )}
           {isEdit && (
             <CommentForm onSubmit={onCommentHandler}>
               <CommentInput
@@ -380,16 +390,6 @@ function Post() {
               </Comment>
             ))}
           </CommentLists>
-          {(cookies.isAdmin === 'true' && !post?.answer && !isEdit) && (
-            <CommentForm onSubmit={onCommentHandler}>
-              <CommentInput
-                placeholder="답변을 입력해주세요."
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              />
-              <CommentSubmit value="입력" />
-            </CommentForm>
-          )}
           {cookies.isAdmin === 'false' && (
             <CommentForm onSubmit={onCommentHandler}>
               <CommentInput
