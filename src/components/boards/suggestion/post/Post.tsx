@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { KeyboardEvent, useEffect, useState } from 'react';
+import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 
@@ -161,6 +161,21 @@ const User = styled.div`
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
+const EditButtons = styled.div`
+  display: flex;
+`;
+
+const Button = styled.button`
+  background-color: ${({ theme }) => theme.colors.red};
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.fonts.size.xs};
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin: 10px 10px 0 0;
+`;
+
 const CommentDate = styled.div`
   color: ${({ theme }) => theme.colors.gray500};
   font-size: ${({ theme }) => theme.fonts.size.xs};
@@ -234,6 +249,9 @@ interface PostProps {
 function Post() {
   const [post, setPost] = useState<PostProps>();
   const [comment, setComment] = useState<string>('');
+  const [answer, setAnswer] = useState<string>();
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+
   const [searchParams] = useSearchParams();
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const navigate = useNavigate();
@@ -248,11 +266,12 @@ function Post() {
       },
     })
       .then((res) => {
-        setPost(res.data.data);
+        const result = res.data.data;
+        setPost(result);
+        setAnswer(result.answer);
       })
       .catch((err) => {
         // 에러 처리
-        console.log(err)
       });
   }, []);
 
@@ -265,17 +284,14 @@ function Post() {
       },
     })
       .then((res) => {
-        if (res.data.successful) {
-          navigate('/board-suggestion/boards');
-        }
+        if (res.data.successful) navigate('/board-suggestion/boards');
       })
       .catch((err) => {
         // 에러 처리
-        console.log(err)
       });
   };
 
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const onCommentHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     axios({
@@ -288,14 +304,13 @@ function Post() {
         'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         'Content-Type': 'application/json',
       },
-      data: { text: comment },
+      data: isEdit === true ? { text: answer } : { text: comment },
     })
       .then((res) => {
         if (res.data.successful) window.location.reload();
       })
       .catch((err) => {
         // 에러 처리
-        console.log(err)
       });
   };
 
@@ -323,15 +338,34 @@ function Post() {
         <CommentWrapper>
           댓글 {post?.commentList.length}
           <Hr />
+          {isEdit && (
+            <CommentForm onSubmit={onCommentHandler}>
+              <CommentInput
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+              />
+              <CommentSubmit value="수정" />
+            </CommentForm>
+          )}
           <CommentLists>
-            {post?.answer &&
+            {post?.answer && (
               <Comment>
                 <CommentInfo>
                   <Admin>총학생회</Admin>
                 </CommentInfo>
                 <CommentText>{post?.answer}</CommentText>
+                {cookies.isAdmin === 'true' && (
+                  <EditButtons>
+                    <Button type="button" onClick={() => setIsEdit(true)}>
+                      수정하기
+                    </Button>
+                    <Button type="button" onClick={() => setIsEdit(false)}>
+                      취소
+                    </Button>
+                  </EditButtons>
+                )}
               </Comment>
-            }
+            )}
             {post?.commentList.map((comment, idx) => (
               <Comment key={post.commentList.indexOf(comment)}>
                 <CommentInfo>
@@ -345,14 +379,26 @@ function Post() {
               </Comment>
             ))}
           </CommentLists>
-          <CommentForm onSubmit={onSubmitHandler}>
-            <CommentInput
-              placeholder="댓글을 입력해주세요."
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
-            <CommentSubmit value="입력" />
-          </CommentForm>
+          {(cookies.isAdmin === 'true' && !post?.answer && !isEdit) && (
+            <CommentForm onSubmit={onCommentHandler}>
+              <CommentInput
+                placeholder="답변을 입력해주세요."
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+              <CommentSubmit value="입력" />
+            </CommentForm>
+          )}
+          {cookies.isAdmin === 'false' && (
+            <CommentForm onSubmit={onCommentHandler}>
+              <CommentInput
+                placeholder="댓글을 입력해주세요."
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+              <CommentSubmit value="입력" />
+            </CommentForm>
+          )}
         </CommentWrapper>
       </Wrapper>
     </Container>
