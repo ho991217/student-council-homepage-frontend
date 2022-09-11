@@ -44,13 +44,18 @@ function PageControl({
   const params = useSearchParams();
 
   const generateParams = (page: number) => {
-    const qstring = qs.parse(params[0].toString());
-    const { filter } = qstring;
-    
-    if (!filter) {
+    let { filter } = qs.parse(params.toString());
+    let { status } = qs.parse(params.toString());
+    let { search } = qs.parse(params.toString());
+
+    if (!filter) filter = '';
+    if (!status) status = '';
+    if (!search) search = '';
+
+    if (filter === '' && status === '' && search === '') {
       return `/board-suggestion/boards?page=${page}`;
-    }
-    return `/board-suggestion/boards?page=${page}&filter=${filter}`;
+    } 
+    return `/board-suggestion/boards?page=${page}&filter=${filter}&status=${status}&query=${search}`;
   };
 
   useEffect(() => {

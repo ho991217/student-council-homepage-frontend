@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import qs, { ParsedQs } from 'qs';
+import qs from 'qs';
 import { useCookies } from 'react-cookie';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -56,18 +56,16 @@ function FilterControl() {
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
 
   const generateParams = (tag: string) => {
-    let { page } = qs.parse(searchParams.toString());
     let { status } = qs.parse(searchParams.toString());
     let { search } = qs.parse(searchParams.toString());
 
-    if (!page) page = '1';
     if (!status) status = '';
     if (!search) search = '';
 
-    if (tag === '전체') {
-      return `/board-suggestion/boards?page=${page}&status=${status}&query=${search}`;
+    if (tag === '전체' && status === '' && search === '') {
+      return `/board-suggestion/boards?page=1`;
     }
-    return `/board-suggestion/boards?page=${page}&filter=${tag}&status=${status}&query=${search}`;
+    return `/board-suggestion/boards?page=1&filter=${tag}&status=${status}&query=${search}`;
   };
 
   useEffect(() => {
@@ -77,7 +75,7 @@ function FilterControl() {
   return (
     <Container>
       <Hashtag
-        cur={!qs.parse(searchParams.toString())?.filter}
+        cur={!qs.parse(searchParams.toString())?.filter || qs.parse(searchParams.toString())?.filter === '전체'}
         to={generateParams('전체')}
       >
         #전체
