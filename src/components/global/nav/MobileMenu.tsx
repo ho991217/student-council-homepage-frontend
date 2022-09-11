@@ -173,10 +173,18 @@ function MobileMenu(): JSX.Element {
   const [opened, setOpened] = useState<boolean>(false);
   const navRef = useRef(null);
   const { logOut } = useLogOut();
-  const [{ isLoggedIn }] = useRecoilState(LoginStateAtom);
+  const [{ isLoggedIn }, setLoginState] = useRecoilState(LoginStateAtom);
   const [subpathOpened, setSubpathOpened] = useState<boolean[]>(
     Array.from({ length: NavItems.length }, () => false),
   );
+
+  const handleLogout = () => {
+    logOut();
+    setLoginState({
+      isLoggedIn: false,
+      admin: false,
+    });
+  };
 
   // ios 스크롤락에 대한 부분
   useEffect(() => {
@@ -224,7 +232,7 @@ function MobileMenu(): JSX.Element {
             Portal
           </a>
           {isLoggedIn ? (
-            <LogOut onClick={logOut}>로그아웃</LogOut>
+            <LogOut onClick={handleLogout}>로그아웃</LogOut>
           ) : (
             <Link to="/login" onClick={() => setOpened(false)}>
               로그인
