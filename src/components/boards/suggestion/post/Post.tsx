@@ -77,7 +77,6 @@ const State = styled.div`
 `;
 
 const Contents = styled.div`
-  max-width: 1100px;
   width: 100%;
   padding: 40px 20px;
   ${({ theme }) => theme.media.mobile} {
@@ -88,6 +87,8 @@ const Contents = styled.div`
 const Text = styled.div`
   font-size: ${({ theme }) => theme.fonts.size.md};
   margin-bottom: 60px;
+  white-space: pre-wrap;
+  line-height: ${({ theme }) => theme.fonts.size.xl};
 `;
 
 const HashTag = styled.div`
