@@ -41,12 +41,12 @@ function PageControl({
   pagingInfo: PagingProps;
 }) {
   const [pageCount, setPageCount] = useState(0);
-  const [params] = useSearchParams();
+  const params = useSearchParams();
 
   const generateParams = (page: number) => {
-    let { filter } = qs.parse(params.toString());
-    let { status } = qs.parse(params.toString());
-    let { query } = qs.parse(params.toString());
+    let { filter } = qs.parse(params[0].toString());
+    let { status } = qs.parse(params[0].toString());
+    let { query } = qs.parse(params[0].toString());
 
     if (!filter) filter = '';
     if (!status) status = '';

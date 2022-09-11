@@ -63,14 +63,14 @@ const Button = styled.button`
 function TopBar() {
   const [status, setStatus] = useState<string>('');
   const [searchWord, setSearchWord] = useState<string>('');
-  const [searchParams] = useSearchParams();
+  const params = useSearchParams();
   const navigate = useNavigate();
 
   const onSelectHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setStatus(e.currentTarget.value);
 
-    let { filter } = qs.parse(searchParams.toString());
-    let { query } = qs.parse(searchParams.toString());
+    let { filter } = qs.parse(params[0].toString());
+    let { query } = qs.parse(params[0].toString());
 
     if (!filter) filter = '';
     if (!query) query = '';
@@ -92,8 +92,8 @@ function TopBar() {
   };
 
   const onSearchButtonHandler = () => {
-    let { filter } = qs.parse(searchParams.toString());
-    let { status } = qs.parse(searchParams.toString());
+    let { filter } = qs.parse(params[0].toString());
+    let { status } = qs.parse(params[0].toString());
 
     if (!filter) filter = '';
     if (!status) status = '';

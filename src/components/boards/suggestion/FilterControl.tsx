@@ -52,17 +52,17 @@ const Hashtag = styled(Link)<{ cur: boolean }>`
 
 function FilterControl() {
   const [categoryList, setCategoryList] = useState<[]>();
-  const [searchParams] = useSearchParams();
+  const params = useSearchParams();
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
 
   const generateParams = (tag: string) => {
-    let { status } = qs.parse(searchParams.toString());
-    let { query } = qs.parse(searchParams.toString());
+    let { status } = qs.parse(params[0].toString());
+    let { query } = qs.parse(params[0].toString());
 
     if (!status) status = '';
     if (!query) query = '';
 
-    if (tag === '' && status === '' && query === '') {
+    if (tag === '전체' && status === '' && query === '') {
       return `/board-suggestion/boards?page=1`;
     } 
     return `/board-suggestion/boards?page=1&filter=${tag}&status=${status}&query=${query}`;
@@ -75,7 +75,7 @@ function FilterControl() {
   return (
     <Container>
       <Hashtag
-        cur={!qs.parse(searchParams.toString())?.filter || qs.parse(searchParams.toString())?.filter === '전체'}
+        cur={!qs.parse(params.toString())?.filter || qs.parse(params.toString())?.filter === '전체'}
         to={generateParams('전체')}
       >
         #전체
@@ -83,7 +83,7 @@ function FilterControl() {
       {categoryList?.map((tag) => (
         <Hashtag
           key={tag}
-          cur={tag === qs.parse(searchParams.toString())?.filter}
+          cur={tag === qs.parse(params.toString())?.filter}
           to={generateParams(tag)}
         >
           #{tag}
