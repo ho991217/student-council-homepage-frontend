@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { useCookies } from 'react-cookie';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
+import qs from 'qs';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { BiSearchAlt2 } from 'react-icons/bi';
 import { FiEye } from 'react-icons/fi';
 
 import { PostProps } from './PostProps';
+import { PagingProps } from './PageControl';
 
 const Container = styled.div`
   width: 100%;
@@ -159,19 +159,64 @@ const Button = styled.button`
 
 interface BoardProps {
   posts: PostProps[];
-  totalBoards: number;
+  pagingInfo: PagingProps;
   currentPage: number;
 }
 
-// TODO: 로그인 했는지 안했는지 체크
-function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
+function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<PostProps[]>([]);
-  const [category, setCategory] = useState<string>('');
+  const [status, setStatus] = useState<string>('');
   const [searchWord, setSearchWord] = useState<string>('');
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setBoard(posts);
   }, [posts]);
+
+  const onSelectHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatus(e.currentTarget.value);
+
+    let { page } = qs.parse(searchParams.toString());
+    let { filter } = qs.parse(searchParams.toString());
+    let { query } = qs.parse(searchParams.toString());
+
+    if (!page) page = '1';
+    if (!filter) filter = '';
+    if (!query) query = '';
+
+    if(filter === '전체') {
+      navigate(
+        `/board-suggestion/boards?page=${page}&status=${e.currentTarget.value}&query=${query}`,
+      );
+    } else {
+      navigate(
+      `/board-suggestion/boards?page=${page}&filter=${filter}&status=${e.currentTarget.value}&query=${query}`,
+      );
+    }
+  }
+
+  const onInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchWord(e.currentTarget.value);
+    
+    let { page } = qs.parse(searchParams.toString());
+    let { filter } = qs.parse(searchParams.toString());
+    let { status } = qs.parse(searchParams.toString());
+
+    if (!page) page = '1';
+    if (!filter) filter = '';
+    if (!status) status = '';
+
+    if(filter === '전체') {
+      navigate(
+        `/board-suggestion/boards?page=${page}&status=${status}&query=${e.currentTarget.value}`,
+      );
+    } else {
+      navigate(
+      `/board-suggestion/boards?page=${page}&filter=${filter}&status=${status}&query=${e.currentTarget.value}`,
+      );
+    }
+  }
 
   return (
     <Container>
@@ -182,15 +227,13 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
               <Select
                 name="category"
                 id="category"
-                value={category}
+                value={status}
                 defaultValue=""
-                onChange={(e) => setCategory(e.currentTarget.value)}
+                onChange={onSelectHandler}
               >
-                <option value="" disabled>
-                  카테고리
-                </option>
-                <option value="progressing">진행중</option>
-                <option value="complete">답변완료</option>
+                <option value="전체">전체</option>
+                <option value="진행중">진행중</option>
+                <option value="답변완료">답변완료</option>
               </Select>
               <Icon>
                 <MdKeyboardArrowDown />
@@ -201,7 +244,7 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
                 type="text"
                 value={searchWord}
                 placeholder="검색어를 입력해 주세요."
-                onChange={(e) => setSearchWord(e.currentTarget.value)}
+                onChange={onInputHandler}
               />
               <Icon>
                 <BiSearchAlt2 />
@@ -231,7 +274,7 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
                 <ViewIcon>
                   <FiEye />
                 </ViewIcon>
-                {post.likes}
+                {post.postHits}
               </div>
               <div>
                 <Svg
@@ -242,14 +285,15 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
                 >
                   <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
                 </Svg>
-                {post.commentList.length}
+                {post.commentCount}
               </div>
             </Row>
           ))}
           <BottomBar>
             <PageInfo>
-              Total <PointText>{totalBoards}건,</PointText> {currentPage}/
-              {Math.ceil(totalBoards / 6)}
+              Total <PointText>{pagingInfo.totalElements}건,</PointText>
+              {currentPage}/
+              {Math.ceil(pagingInfo.totalElements / pagingInfo.size)}
             </PageInfo>
             <Link to="/board-suggestion/editor">
               <Button type="button">작성</Button>
