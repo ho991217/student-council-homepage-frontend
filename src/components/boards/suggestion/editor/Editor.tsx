@@ -74,7 +74,7 @@ const TagList = styled.div`
   font-weight: ${({ theme }) => theme.fonts.weight.bold};
   font-size: ${({ theme }) => theme.fonts.size.md};
   user-select: none;
-  margin-bottom: 60px;
+  margin-bottom: 30px;
 `;
 
 const Tags = styled.div`
@@ -120,7 +120,7 @@ const TagLabel = styled.label<{ check: boolean }>`
   color: ${({ check, theme }) => check && theme.colors.white};
 `;
 
-const Tag = styled.input.attrs({ required: true })`
+const Tag = styled.input`
   appearance: none;
 `;
 
@@ -152,33 +152,36 @@ function Editor(): JSX.Element {
   const [categoryList, setCategoryList] = useState<[]>();
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
-
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('text', text);
-    formData.append('category', category);
+    if(window.confirm('게시글 작성을 완료하시겠습니까?')) {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('text', text);
+      if (category === '') {
+        formData.append('category', '기타');
+      } else {
+        formData.append('category', category);
+      }
 
-    axios({
-      url: '/api/suggestion',
-      method: 'post',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-      },
-      data: formData,
-    })
-      .then((res) => {
-        if (res.data.successful) {
-          navigate('/board-suggestion/boards?page=1');
-        }
+      axios({
+        url: '/api/suggestion',
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        },
+        data: formData,
       })
-      .catch((err) => 
-        // 에러 처리
-        console.log(err)
-      );
+        .then((res) => {
+          if (res.data.successful) navigate('/board-suggestion/boards?page=1');
+        })
+        .catch((err) =>
+          // 에러 처리
+          console.log(err)
+        );
+      }
   };
 
   useEffect(() => {
@@ -191,23 +194,6 @@ function Editor(): JSX.Element {
     <Container>
       <Wrapper>
         <Form onSubmit={onSubmitHandler}>
-          <Label>
-            제목
-            <TitleInput
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.currentTarget.value)}
-              placeholder="제목을 입력해주세요."
-            />
-          </Label>
-          <Label>
-            내용
-            <Textarea
-              value={text}
-              onChange={(e) => setText(e.currentTarget.value)}
-              placeholder="건의 내용을 입력해주세요."
-            />
-          </Label>
           <TagList>
             태그
             <Tags>
@@ -229,6 +215,23 @@ function Editor(): JSX.Element {
               })}
             </Tags>
           </TagList>
+          <Label>
+            제목
+            <TitleInput
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.currentTarget.value)}
+              placeholder="제목을 입력해주세요."
+            />
+          </Label>
+          <Label>
+            내용
+            <Textarea
+              value={text}
+              onChange={(e) => setText(e.currentTarget.value)}
+              placeholder="건의 내용을 입력해주세요."
+            />
+          </Label>
           <ButtonDiv>
             <Button type="submit">작성완료</Button>
           </ButtonDiv>
