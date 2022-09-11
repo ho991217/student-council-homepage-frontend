@@ -41,21 +41,21 @@ function PageControl({
   pagingInfo: PagingProps;
 }) {
   const [pageCount, setPageCount] = useState(0);
-  const params = useSearchParams();
+  const [params] = useSearchParams();
 
   const generateParams = (page: number) => {
     let { filter } = qs.parse(params.toString());
     let { status } = qs.parse(params.toString());
-    let { search } = qs.parse(params.toString());
+    let { query } = qs.parse(params.toString());
 
     if (!filter) filter = '';
     if (!status) status = '';
-    if (!search) search = '';
+    if (!query) query = '';
 
-    if (filter === '' && status === '' && search === '') {
+    if (filter === '' && status === '' && query === '') {
       return `/board-suggestion/boards?page=${page}`;
-    } 
-    return `/board-suggestion/boards?page=${page}&filter=${filter}&status=${status}&query=${search}`;
+    }
+    return `/board-suggestion/boards?page=${page}&filter=${filter}&status=${status}&query=${query}`;
   };
 
   useEffect(() => {

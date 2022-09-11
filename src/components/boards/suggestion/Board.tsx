@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 import styled from 'styled-components';
-import qs from 'qs';
-import { MdKeyboardArrowDown } from 'react-icons/md';
-import { BiSearchAlt2 } from 'react-icons/bi';
 import { FiEye } from 'react-icons/fi';
+
+import TopBar from './top-bar/TopBar';
+import MobileTopBar from './top-bar/MobileTopBar';
 
 import { PostProps } from './PostProps';
 import { PagingProps } from './PageControl';
@@ -38,55 +39,6 @@ const BoardsContainer = styled.div`
   width: 100%;
 `;
 
-const TopBar = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-`;
-
-const Items = styled.div`
-  display: flex;
-`;
-
-const Select = styled.select`
-  font-size: ${({ theme }) => theme.fonts.size.sm};
-  background-color: ${({ theme }) => theme.colors.gray040};
-  border: 1px solid ${({ theme }) => theme.colors.gray200};
-  width: 90px;
-  height: 30px;
-  padding-left: 8px;
-  color: black;
-  cursor: pointer;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-`;
-
-const Icon = styled.div`
-  margin-left: -18px;
-  margin-right: 10px;
-  align-self: center;
-  width: 12px;
-  height: 15px;
-  ${({ theme }) => theme.media.mobile} {
-    height: 12px;
-  }
-  cursor: pointer;
-`;
-
-const Input = styled.input`
-  font-size: ${({ theme }) => theme.fonts.size.sm};
-  width: 250px;
-  ::placeholder {
-    padding-left: 5px;
-  }
-  ${({ theme }) => theme.media.mobile} {
-    width: 150px;
-    height: 30px;
-  }
-  border-radius: 5px;
-`;
-
 const BoardHead = styled.div`
   width: 100%;
   height: 70px;
@@ -115,6 +67,13 @@ const Row = styled.div`
   text-align: center;
   div:last-child {
     width: 60px;
+  }
+`;
+
+const LinkDiv = styled.div`
+  width: 100%;
+  a {
+    display: block;
   }
 `;
 
@@ -167,76 +126,24 @@ interface BoardProps {
 
 function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<PostProps[]>([]);
-  const [status, setStatus] = useState<string>('');
-  const [searchWord, setSearchWord] = useState<string>('');
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     setBoard(posts);
   }, [posts]);
 
-  const onSelectHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatus(e.currentTarget.value);
-
-    let { filter } = qs.parse(searchParams.toString());
-    let { query } = qs.parse(searchParams.toString());
-
-    if (!filter) filter = '';
-    if (!query) query = '';
-
-    navigate(
-      `/board-suggestion/boards?page=1&filter=${filter}&status=${e.currentTarget.value}&query=${query}`,
-    );
-  }
-
-  const onInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchWord(e.currentTarget.value);
-    
-    let { filter } = qs.parse(searchParams.toString());
-    let { status } = qs.parse(searchParams.toString());
-
-    if (!filter) filter = '';
-    if (!status) status = '';
-
-    navigate(
-      `/board-suggestion/boards?page=1&filter=${filter}&status=${status}&query=${e.currentTarget.value}`,
-    );
-  }
-
   return (
     <Container>
       <Wrapper>
         <BoardsContainer>
-          <TopBar>
-            <Items>
-              <Select
-                name="category"
-                id="category"
-                value={status}
-                defaultValue=""
-                onChange={onSelectHandler}
-              >
-                <option value="전체">전체</option>
-                <option value="진행중">진행중</option>
-                <option value="답변완료">답변완료</option>
-              </Select>
-              <Icon>
-                <MdKeyboardArrowDown />
-              </Icon>
-            </Items>
-            <Items>
-              <Input
-                type="text"
-                value={searchWord}
-                placeholder="검색어를 입력해 주세요."
-                onChange={onInputHandler}
-              />
-              <Icon>
-                <BiSearchAlt2 />
-              </Icon>
-            </Items>
-          </TopBar>
+          <Desktop>
+            <TopBar />
+          </Desktop>
+          <Tablet>
+            <TopBar />
+          </Tablet>
+          <Mobile>
+            <MobileTopBar />
+          </Mobile>
           <BoardHead>
             <Row>
               <div>번호</div>
@@ -246,16 +153,15 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               <div>댓글</div>
             </Row>
           </BoardHead>
-
           {board.map((post) => (
             <Row key={post.id}>
               <div>{post.id}</div>
               <div>{post.status}</div>
-              <div>
+              <LinkDiv>
                 <Link to={`/board-suggestion/board?id=${post.id}`}>
                   {post.title}
                 </Link>
-              </div>
+              </LinkDiv>
               <div>
                 <ViewIcon>
                   <FiEye />

@@ -277,19 +277,21 @@ function Post() {
   }, []);
 
   const onClickDeleteBtn = () => {
-    axios({
-      url: `/api/suggestion/${postId}`,
-      method: 'delete',
-      headers: {
-        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-      },
-    })
-      .then((res) => {
-        if (res.data.successful) navigate('/board-suggestion/boards');
+    if(window.confirm('해당 글을 삭제하시겠습니까?')) {
+      axios({
+        url: `/api/suggestion/${postId}`,
+        method: 'delete',
+        headers: {
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        },
       })
-      .catch((err) => {
-        // 에러 처리
-      });
+        .then((res) => {
+          if (res.data.successful) navigate('/board-suggestion/boards');
+        })
+        .catch((err) => {
+          // 에러 처리
+        });
+    }
   };
 
   const onCommentHandler = (e: React.FormEvent<HTMLFormElement>) => {
@@ -377,10 +379,10 @@ function Post() {
                 )}
               </Comment>
             )}
-            {post?.commentList.map((comment, idx) => (
+            {post?.commentList.map((comment) => (
               <Comment key={post.commentList.indexOf(comment)}>
                 <CommentInfo>
-                  <User>익명{idx + 1}</User>
+                  <User>익명</User>
                   <VSeparator />
                   <CommentDate>
                     {comment.time.slice(0, 10)} {comment.time.slice(11, 16)}

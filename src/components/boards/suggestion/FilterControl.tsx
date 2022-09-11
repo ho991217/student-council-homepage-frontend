@@ -57,15 +57,15 @@ function FilterControl() {
 
   const generateParams = (tag: string) => {
     let { status } = qs.parse(searchParams.toString());
-    let { search } = qs.parse(searchParams.toString());
+    let { query } = qs.parse(searchParams.toString());
 
     if (!status) status = '';
-    if (!search) search = '';
+    if (!query) query = '';
 
-    if (tag === '전체' && status === '' && search === '') {
+    if (tag === '' && status === '' && query === '') {
       return `/board-suggestion/boards?page=1`;
-    }
-    return `/board-suggestion/boards?page=1&filter=${tag}&status=${status}&query=${search}`;
+    } 
+    return `/board-suggestion/boards?page=1&filter=${tag}&status=${status}&query=${query}`;
   };
 
   useEffect(() => {

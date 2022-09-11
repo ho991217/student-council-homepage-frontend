@@ -41,7 +41,7 @@ function PetitionBoard(): JSX.Element {
     
     const { data } = await axios({
       method: 'get',
-      url: `/api/suggestion?page=${Number(page) - 1}&size=6`
+      url: `/api/suggestion?page=${Number(page) - 1}&size=6&sort=id,desc`
         .concat(filter ? `&category=${filter}` : '')
         .concat(status ? `&status=${status}` : '')
         .concat(query ? `&query=${query}` : ''),
