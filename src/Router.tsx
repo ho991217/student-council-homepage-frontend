@@ -249,8 +249,8 @@ function Router() {
               isLoggedIn ? (
                 <>
                   <GlobalBanner
-                    title="건의게시판"
-                    detail="건의게시판 입니다."
+                    title="자유게시판"
+                    detail="자유게시판 입니다."
                   />
                   <SuggestionBoard />
                 </>

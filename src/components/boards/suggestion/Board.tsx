@@ -147,7 +147,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
           <BoardHead>
             <Row>
               <div>번호</div>
-              <div>머릿말</div>
+              <div>분류</div>
               <div>제목</div>
               <div>조회</div>
               <div>댓글</div>
