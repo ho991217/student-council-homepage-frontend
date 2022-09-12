@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { KeyboardEvent, useEffect, useState } from 'react';
+import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 
@@ -23,7 +23,7 @@ const Wrapper = styled.div`
     padding: 30px 50px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 30px 20px;
+    padding: 10px 20px;
   }
   background-color: ${({ theme }) => theme.colors.white};
 `;
@@ -33,7 +33,7 @@ const Hr = styled.div<{ bold?: boolean }>`
   height: ${({ bold }) => (bold ? '2px' : '1px')};
   background-color: ${({ bold, theme }) =>
     bold ? theme.colors.gray600 : theme.colors.gray200};
-  margin: 10px 0px;
+  margin: ${({ bold }) => (bold ? '5px 0px' : '10px 0px')};
 `;
 
 const DeleteBtn = styled.button`
@@ -77,29 +77,32 @@ const State = styled.div`
 `;
 
 const Contents = styled.div`
-  max-width: 1100px;
   width: 100%;
   padding: 40px 20px;
+  ${({ theme }) => theme.media.mobile} {
+    padding: 25px 15px;
+  }
 `;
 
 const Text = styled.div`
   font-size: ${({ theme }) => theme.fonts.size.md};
-  margin-bottom: 100px;
+  margin-bottom: 60px;
+  white-space: pre-wrap;
+  line-height: ${({ theme }) => theme.fonts.size.xl};
 `;
 
 const HashTag = styled.div`
-  max-width: 150px;
+  max-width: 130px;
   height: 22px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 25px;
   background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.fonts.size.xs};
   border-radius: 12px;
   ${({ theme }) => theme.media.mobile} {
-    max-width: 100px;
+    max-width: 90px;
   }
 `;
 
@@ -159,6 +162,21 @@ const User = styled.div`
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
+const EditButtons = styled.div`
+  display: flex;
+`;
+
+const Button = styled.button`
+  background-color: ${({ theme }) => theme.colors.red};
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.fonts.size.xs};
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin: 10px 10px 0 0;
+`;
+
 const CommentDate = styled.div`
   color: ${({ theme }) => theme.colors.gray500};
   font-size: ${({ theme }) => theme.fonts.size.xs};
@@ -173,13 +191,13 @@ const CommentText = styled.div`
 const CommentForm = styled.form`
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    height: 100px;
+    height: 150px;
   }
   ${({ theme }) => theme.media.tablet} {
-    height: 100px;
+    height: 150px;
   }
   ${({ theme }) => theme.media.mobile} {
-    height: 80px;
+    height: 100px;
   }
   display: flex;
   align-items: center;
@@ -203,6 +221,9 @@ const CommentSubmit = styled.input.attrs({ type: 'submit' })`
   background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.white};
   width: 160px;
+  ${({ theme }) => theme.media.mobile} {
+    width: 80px;
+  }
   height: 100%;
   display: flex;
   align-items: center;
@@ -229,6 +250,9 @@ interface PostProps {
 function Post() {
   const [post, setPost] = useState<PostProps>();
   const [comment, setComment] = useState<string>('');
+  const [answer, setAnswer] = useState<string>();
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+
   const [searchParams] = useSearchParams();
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const navigate = useNavigate();
@@ -243,34 +267,34 @@ function Post() {
       },
     })
       .then((res) => {
-        setPost(res.data.data);
+        const result = res.data.data;
+        setPost(result);
+        setAnswer(result.answer);
       })
       .catch((err) => {
         // 에러 처리
-        console.log(err)
       });
   }, []);
 
   const onClickDeleteBtn = () => {
-    axios({
-      url: `/api/suggestion/${postId}`,
-      method: 'delete',
-      headers: {
-        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-      },
-    })
-      .then((res) => {
-        if (res.data.successful) {
-          navigate('/board-suggestion/boards');
-        }
+    if(window.confirm('해당 글을 삭제하시겠습니까?')) {
+      axios({
+        url: `/api/suggestion/${postId}`,
+        method: 'delete',
+        headers: {
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        },
       })
-      .catch((err) => {
-        // 에러 처리
-        console.log(err)
-      });
+        .then((res) => {
+          if (res.data.successful) navigate('/board-suggestion/boards');
+        })
+        .catch((err) => {
+          // 에러 처리
+        });
+    }
   };
 
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const onCommentHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     axios({
@@ -283,14 +307,13 @@ function Post() {
         'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         'Content-Type': 'application/json',
       },
-      data: { text: comment },
+      data: isEdit === true ? { text: answer } : { text: comment },
     })
       .then((res) => {
         if (res.data.successful) window.location.reload();
       })
       .catch((err) => {
         // 에러 처리
-        console.log(err)
       });
   };
 
@@ -318,19 +341,48 @@ function Post() {
         <CommentWrapper>
           댓글 {post?.commentList.length}
           <Hr />
+          {(cookies.isAdmin === 'true' && !post?.answer && !isEdit) && (
+            <CommentForm onSubmit={onCommentHandler}>
+              <CommentInput
+                placeholder="답변을 입력해주세요."
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+              <CommentSubmit value="입력" />
+            </CommentForm>
+          )}
+          {isEdit && (
+            <CommentForm onSubmit={onCommentHandler}>
+              <CommentInput
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+              />
+              <CommentSubmit value="수정" />
+            </CommentForm>
+          )}
           <CommentLists>
-            {post?.answer &&
+            {post?.answer && (
               <Comment>
                 <CommentInfo>
                   <Admin>총학생회</Admin>
                 </CommentInfo>
                 <CommentText>{post?.answer}</CommentText>
+                {cookies.isAdmin === 'true' && (
+                  <EditButtons>
+                    <Button type="button" onClick={() => setIsEdit(true)}>
+                      수정하기
+                    </Button>
+                    <Button type="button" onClick={() => setIsEdit(false)}>
+                      취소
+                    </Button>
+                  </EditButtons>
+                )}
               </Comment>
-            }
-            {post?.commentList.map((comment, idx) => (
+            )}
+            {post?.commentList.map((comment) => (
               <Comment key={post.commentList.indexOf(comment)}>
                 <CommentInfo>
-                  <User>익명{idx + 1}</User>
+                  <User>익명</User>
                   <VSeparator />
                   <CommentDate>
                     {comment.time.slice(0, 10)} {comment.time.slice(11, 16)}
@@ -340,14 +392,16 @@ function Post() {
               </Comment>
             ))}
           </CommentLists>
-          <CommentForm onSubmit={onSubmitHandler}>
-            <CommentInput
-              placeholder="댓글을 입력해주세요."
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
-            <CommentSubmit value="입력" />
-          </CommentForm>
+          {cookies.isAdmin === 'false' && (
+            <CommentForm onSubmit={onCommentHandler}>
+              <CommentInput
+                placeholder="댓글을 입력해주세요."
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+              <CommentSubmit value="입력" />
+            </CommentForm>
+          )}
         </CommentWrapper>
       </Wrapper>
     </Container>
