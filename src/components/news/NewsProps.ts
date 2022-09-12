@@ -1,16 +1,22 @@
 export interface NewsProps {
   id: number;
   title: string;
-  createdAt: string;
-  file: string;
+  userName: string;
+  postHits: number;
+  createDate: string;
+  fileList: FileProps[];
 }
 
 export interface DetailProps {
   id: number;
   title: string;
-  createdAt: string;
-  content: string;
-  fileName: string;
-  fileCapacity: string;
-  fileUrl: string;
+  text: string;
+  createDate: string;
+  files: FileProps[];
+  postHits: number;
+}
+
+export interface FileProps {
+  originName: string;
+  url: string;
 }

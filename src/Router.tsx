@@ -13,10 +13,12 @@ import Conference from 'pages/Conference';
 import InquiryBoard from 'pages/communication/InquiryBoard';
 import Login from 'pages/Login';
 import SignUp from 'pages/SignUp';
+import Password from 'pages/Password';
 import Pledge from 'pages/council/Pledge';
 // import Editor from 'pages/communication/Editor';
 import ConferenceEditor from 'components/conference/ConferenceEditor';
 import RuleEditor from 'components/rules/RuleEditor';
+import NewsEditor from 'components/news/NewsEditor';
 import PetitionBoard from 'pages/communication/petition/PetitionBoard';
 import PetitionPost from 'components/boards/petition/post/Post';
 import PetitionEditor from 'pages/communication/petition/Editor';
@@ -66,11 +68,14 @@ function Router() {
           }
         />
         <Route
-          path="/sign-up"
+          path="/login/find-password"
           element={
             <>
-              <GlobalBanner title="회원가입" detail="회원가입 입니다." />
-              <SignUp />
+              <GlobalBanner
+                title="비밀번호찾기"
+                detail="비밀번호찾기 입니다."
+              />
+              <Password />
             </>
           }
         />
@@ -95,6 +100,22 @@ function Router() {
               <GlobalBanner title="총학소식" detail="총학소식 입니다." />
               <NewsPost />
             </>
+          }
+        />
+        <Route
+          path="/news/editor"
+          element={
+            isLoggedIn ? (
+              <>
+                <GlobalBanner
+                  title="총학소식 작성"
+                  detail="총학소식 작성 입니다."
+                />
+                <NewsEditor />
+              </>
+            ) : (
+              <Navigate to="/" />
+            )
           }
         />
         <Route
