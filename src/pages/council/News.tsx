@@ -3,6 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 import styled from 'styled-components';
 import axios from 'axios';
+import { PagingProps } from 'components/boards/petition/PageControl';
+import qs from 'qs';
 
 import { NewsProps } from 'components/news/NewsProps';
 
@@ -165,6 +167,15 @@ function News() {
   const [page, setPage] = useState(1);
   const [searchParams] = useSearchParams();
   const [searchWord, setSearchWord] = useState<string>('');
+  const [pagingInfo, setPagingInfo] = useState<PagingProps>({
+    first: true,
+    hasNext: false,
+    last: true,
+    page: 1,
+    size: 6,
+    totalElements: 0,
+    totalPages: 1,
+  });
 
   const onSearchWordHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const {
@@ -175,11 +186,12 @@ function News() {
 
   const onSearchButtonHandler = async () => {
     await axios
-      .get(`/api/news?query=${searchWord}`)
+      .get(`/api/news?sort=createDate,desc&query=${searchWord}`)
       .then(function (response) {
         const result = response.data;
         setBoard(result.content.slice((page - 1) * 6, page * 6));
         setBoardsCount(result.totalElements);
+        setPagingInfo(result);
       })
       .catch(function (error) {
         // 에러 핸들링
@@ -193,23 +205,26 @@ function News() {
     }
   };
 
-  useEffect(() => {
-    axios
-      .get('/api/news?sort=createDate,desc')
-      .then(function (response) {
-        const result = response.data;
-        setBoard(result.content.slice((page - 1) * 6, page * 6));
-        setBoardsCount(result.totalElements);
-      })
-      .catch(function (error) {
-        // 에러 핸들링
-        console.log(error);
-      });
-  }, [page]);
+  const getPosts = async () => {
+    let { page } = qs.parse(searchParams.toString());
+
+    if (!page) page = '1';
+    const { data } = await axios({
+      method: 'get',
+      url: `/api/news?page=${Number(page) - 1}&size=6&sort=createDate,desc`,
+    });
+    setBoardsCount(data.totalElements);
+    setBoard([...data.content]);
+    setPagingInfo(data);
+  };
 
   useEffect(() => {
     setPage(Number(searchParams.get('page')) || 1);
-  }, [searchParams]);
+
+    if (searchWord === '') {
+      getPosts();
+    }
+  }, [searchParams, boardsCount]);
 
   return (
     <Container>
@@ -364,16 +379,20 @@ function News() {
       </Mobile>
 
       <Desktop>
-        <NewsBoard posts={board} />
+        <NewsBoard posts={board} pagingInfo={pagingInfo} currentPage={page} />
       </Desktop>
       <Tablet>
-        <NewsBoard posts={board} />
+        <NewsBoard posts={board} pagingInfo={pagingInfo} currentPage={page} />
       </Tablet>
       <Mobile>
-        <MobileNewsBoard posts={board} />
+        <MobileNewsBoard
+          posts={board}
+          pagingInfo={pagingInfo}
+          currentPage={page}
+        />
       </Mobile>
 
-      <PageControl postCount={boardsCount} currentPage={page} />
+      <PageControl pagingInfo={pagingInfo} currentPage={page} />
     </Container>
   );
 }

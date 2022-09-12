@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useCookies } from 'react-cookie';
 
 import { RuleProps } from './RuleProps';
+import { PagingProps } from './PageControl';
 
 const Container = styled.div`
   width: 100%;
@@ -45,7 +46,6 @@ const Row = styled.div`
     display: flex;
     place-content: center;
     place-items: center;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   }
 `;
 
@@ -58,10 +58,12 @@ const Title = styled.div`
 
 const Content = styled.div`
   :nth-child(2) {
-    display: flex;
-    justify-content: left;
-    padding-left: 25px;
-    cursor: pointer;
+    width: 100%;
+    margin: 30px auto;
+    display: block;
+    a {
+      display: block;
+    }
   }
 `;
 
@@ -87,9 +89,15 @@ const Button = styled.button`
 
 interface BoardProps {
   posts: RuleProps[];
+  pagingInfo: PagingProps;
+  currentPage: number;
 }
 
-function RulesBoard({ posts }: BoardProps): JSX.Element {
+function RulesBoard({
+  posts,
+  pagingInfo,
+  currentPage,
+}: BoardProps): JSX.Element {
   const [board, setBoard] = useState<RuleProps[]>([]);
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
@@ -112,9 +120,11 @@ function RulesBoard({ posts }: BoardProps): JSX.Element {
               <Title>첨부파일</Title>
             </Row>
           </BoardHead>
-          {board.map((post) => (
+          {board.map((post, index) => (
             <Row key={post.id}>
-              <Content>{post.id}</Content>
+              <Content>
+                {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+              </Content>
               <Content>
                 <Link to={`/rule?id=${post.id}`}>{post.title}</Link>
               </Content>

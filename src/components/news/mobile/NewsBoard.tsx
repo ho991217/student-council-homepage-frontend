@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useCookies } from 'react-cookie';
 
 import { NewsProps } from '../NewsProps';
+import { PagingProps } from '../PageControl';
 
 const Container = styled.div`
   width: 100%;
@@ -47,7 +48,6 @@ const Row = styled.div`
     display: flex;
     place-content: center;
     place-items: center;
-    border-bottom: 0.5px solid ${({ theme }) => theme.colors.gray100};
   }
   :nth-child(1) {
     border-bottom: none;
@@ -57,11 +57,6 @@ const Row = styled.div`
 const Title = styled.div`
   border-right: 1px solid ${({ theme }) => theme.colors.gray100};
   height: 30px;
-  :nth-child(2) {
-    display: flex;
-    justify-content: left;
-    padding-left: 25px;
-  }
   :last-child {
     border-right: none;
   }
@@ -69,9 +64,12 @@ const Title = styled.div`
 
 const Content = styled.div`
   :nth-child(2) {
-    display: flex;
-    justify-content: left;
-    padding-left: 15px;
+    width: 100%;
+    margin: 30px auto;
+    display: block;
+    a {
+      display: block;
+    }
   }
   :last-child {
     color: ${({ theme }) => theme.colors.gray400};
@@ -95,9 +93,15 @@ const Button = styled.button`
 
 interface BoardProps {
   posts: NewsProps[];
+  pagingInfo: PagingProps;
+  currentPage: number;
 }
 
-function NewsBoard({ posts }: BoardProps): JSX.Element {
+function NewsBoard({
+  posts,
+  pagingInfo,
+  currentPage,
+}: BoardProps): JSX.Element {
   const [board, setBoard] = useState<NewsProps[]>([]);
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
@@ -117,9 +121,11 @@ function NewsBoard({ posts }: BoardProps): JSX.Element {
               <Title>등록일</Title>
             </Row>
           </BoardHead>
-          {board.map((post) => (
+          {board.map((post, index) => (
             <Row key={post.id}>
-              <Content>{post.id}</Content>
+              <Content>
+                {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+              </Content>
               <Content>
                 <Link to={`/news?id=${post.id}`}>{post.title}</Link>
               </Content>

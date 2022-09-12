@@ -3,6 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 import styled from 'styled-components';
 import axios from 'axios';
+import { PagingProps } from 'components/boards/petition/PageControl';
+import qs from 'qs';
 
 import { RuleProps } from 'components/rules/RuleProps';
 
@@ -161,17 +163,21 @@ const MobileInput = styled.input`
   }
 `;
 
-interface BoardProps {
-  totalBoards: number;
-  currentPage: number;
-}
-
 function Rules() {
   const [board, setBoard] = useState<RuleProps[]>([]);
   const [boardsCount, setBoardsCount] = useState<number>(0);
   const [page, setPage] = useState(1);
   const [searchParams] = useSearchParams();
   const [searchWord, setSearchWord] = useState<string>('');
+  const [pagingInfo, setPagingInfo] = useState<PagingProps>({
+    first: true,
+    hasNext: false,
+    last: true,
+    page: 1,
+    size: 6,
+    totalElements: 0,
+    totalPages: 1,
+  });
 
   const onSearchWordHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const {
@@ -187,6 +193,7 @@ function Rules() {
         const result = response.data;
         setBoard(result.content.slice((page - 1) * 6, page * 6));
         setBoardsCount(result.totalElements);
+        setPagingInfo(result);
       })
       .catch(function (error) {
         // 에러 핸들링
@@ -200,23 +207,26 @@ function Rules() {
     }
   };
 
-  useEffect(() => {
-    axios
-      .get('/api/rule?sort=createDate,desc')
-      .then(function (response) {
-        const result = response.data;
-        setBoard(result.content.slice((page - 1) * 6, page * 6));
-        setBoardsCount(result.totalElements);
-      })
-      .catch(function (error) {
-        // 에러 핸들링
-        console.log(error);
-      });
-  }, [page]);
+  const getPosts = async () => {
+    let { page } = qs.parse(searchParams.toString());
+
+    if (!page) page = '1';
+    const { data } = await axios({
+      method: 'get',
+      url: `/api/rule?page=${Number(page) - 1}&size=6&sort=createDate,desc`,
+    });
+    setBoardsCount(data.totalElements);
+    setBoard([...data.content]);
+    setPagingInfo(data);
+  };
 
   useEffect(() => {
     setPage(Number(searchParams.get('page')) || 1);
-  }, [searchParams]);
+
+    if (searchWord === '') {
+      getPosts();
+    }
+  }, [searchParams, boardsCount]);
 
   return (
     <Container>
@@ -380,16 +390,20 @@ function Rules() {
       </Mobile>
 
       <Desktop>
-        <RulesBoard posts={board} />
+        <RulesBoard posts={board} pagingInfo={pagingInfo} currentPage={page} />
       </Desktop>
       <Tablet>
-        <RulesBoard posts={board} />
+        <RulesBoard posts={board} pagingInfo={pagingInfo} currentPage={page} />
       </Tablet>
       <Mobile>
-        <MobileRulesBoard posts={board} />
+        <MobileRulesBoard
+          posts={board}
+          pagingInfo={pagingInfo}
+          currentPage={page}
+        />
       </Mobile>
 
-      <PageControl postCount={boardsCount} currentPage={page} />
+      <PageControl pagingInfo={pagingInfo} currentPage={page} />
     </Container>
   );
 }

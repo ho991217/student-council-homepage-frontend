@@ -169,6 +169,7 @@ function Detail() {
       });
   };
 
+  // 다음글 리스트 노출 추후에 수정
   return (
     <Wrapper>
       <Head isAdmin={isAdmin}>
@@ -215,7 +216,7 @@ function Detail() {
           </a>
         </DownloadIcon>
       </Content>
-      <NextList>
+      {/* <NextList>
         {nextList?.map((post) => (
           <Row key={post.id}>
             <Id>{post?.id}</Id>
@@ -227,7 +228,7 @@ function Detail() {
             </Infos>
           </Row>
         ))}
-      </NextList>
+      </NextList> */}
     </Wrapper>
   );
 }
