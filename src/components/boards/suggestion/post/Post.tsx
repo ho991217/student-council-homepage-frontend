@@ -47,10 +47,7 @@ const DeleteBtn = styled.button`
   padding: 12px 15px;
 `;
 
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
+const Header = styled.div``;
 
 const Date = styled.div`
   color: ${({ theme }) => theme.colors.gray500};
@@ -59,21 +56,11 @@ const Date = styled.div`
   padding: 0 0 12px 5px;
 `;
 
-const Infos = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 5px 15px 5px;
-  font-weight: ${({ theme }) => theme.fonts.weight.bold};
-`;
-
 const Title = styled.h1`
+  width: 100%;
+  padding: 0 5px 15px 5px;
   font-size: ${({ theme }) => theme.fonts.size.lg};
-`;
-
-const State = styled.div`
-  color: ${({ theme }) => theme.colors.accent};
-  height: 100%;
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
 `;
 
 const Contents = styled.div`
@@ -327,11 +314,8 @@ function Post() {
         )}
         <Header>
           <Date>{post?.createDate}</Date>
-        </Header>
-        <Infos>
           <Title>{post?.title}</Title>
-          <State>[ {post?.status} ]</State>
-        </Infos>
+        </Header>
         <Hr bold />
         <Contents>
           <Text>{post?.text}</Text>

@@ -229,7 +229,7 @@ function Editor(): JSX.Element {
             <Textarea
               value={text}
               onChange={(e) => setText(e.currentTarget.value)}
-              placeholder="건의 내용을 입력해주세요."
+              placeholder="내용을 입력해주세요."
             />
           </Label>
           <ButtonDiv>
