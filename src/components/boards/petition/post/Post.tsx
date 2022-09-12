@@ -513,6 +513,9 @@ function Post() {
         contentLabel="Example Modal"
         style={modalStyle}
         ariaHideApp={false}
+        onRequestClose={() =>
+          setModalState((prev) => ({ ...prev, open: false }))
+        }
         shouldCloseOnOverlayClick
       >
         {modalState.content}

@@ -135,10 +135,10 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
             </Row>
           </BoardHead>
 
-          {board.map((post) => (
+          {board.map((post, index) => (
             <Link key={post.id} to={`/board-petition/board?id=${post.id}`}>
               <Row>
-                <div>{post.id}</div>
+                <div>{index + 1 + (pagingInfo.page - 1) * pagingInfo.size}</div>
                 <div>{post.petitionStatus}</div>
                 <div>{post.title}</div>
                 <div>

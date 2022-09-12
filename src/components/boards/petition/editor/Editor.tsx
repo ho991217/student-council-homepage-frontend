@@ -135,6 +135,15 @@ const Button = styled.button`
   border-radius: 5px;
 `;
 
+interface ErrorProps {
+  response: {
+    data: {
+      message: '1일 1회만 청원 등록이 가능합니다.';
+      successful: boolean;
+    };
+  };
+}
+
 function Editor(): JSX.Element {
   const [categoryList, setCategoryList] = useState<[]>();
   const [category, setCategory] = useState<string>('');
@@ -199,10 +208,13 @@ function Editor(): JSX.Element {
       });
       navigate(`/board-petition/board?id=${res.data.data.id}`);
     } catch (e) {
-      const err = e as any;
+      const err = e as ErrorProps;
       // TODO:등록 실패
       // 하루 여러개 등의 이유
-      console.log(err.response);
+      if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
+        navigate(-1);
+        alert(err.response.data.message);
+      }
     }
   };
 
