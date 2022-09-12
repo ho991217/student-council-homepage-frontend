@@ -1,12 +1,12 @@
 import axios from 'axios';
-import Board from 'components/boards/suggestion/Board';
-import FilterControl from 'components/boards/suggestion/FilterControl';
+import Board from 'components/boards/free/Board';
+import FilterControl from 'components/boards/free/FilterControl';
 import PageControl, {
   PagingProps,
-} from 'components/boards/suggestion/PageControl';
+} from 'components/boards/free/PageControl';
 import qs from 'qs';
 
-import { PostProps } from 'components/boards/suggestion/PostProps';
+import { PostProps } from 'components/boards/free/PostProps';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -15,7 +15,7 @@ const Container = styled.div`
   background-color: ${(props) => props.theme.colors.white};
 `;
 
-function PetitionBoard(): JSX.Element {
+function FreeBoard(): JSX.Element {
   const [board, setBoard] = useState<PostProps[]>([]);
   const [boardsCount, setBoardsCount] = useState<number>(0);
   const [pagingInfo, setPagingInfo] = useState<PagingProps>({
@@ -66,4 +66,4 @@ function PetitionBoard(): JSX.Element {
   );
 }
 
-export default PetitionBoard;
+export default FreeBoard;

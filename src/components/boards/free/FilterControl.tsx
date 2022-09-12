@@ -63,9 +63,9 @@ function FilterControl() {
     if (!query) query = '';
 
     if (tag === '전체' && status === '' && query === '') {
-      return `/board-suggestion/boards?page=1`;
+      return `/board-free/boards?page=1`;
     } 
-    return `/board-suggestion/boards?page=1&filter=${tag}&status=${status}&query=${query}`;
+    return `/board-free/boards?page=1&filter=${tag}&status=${status}&query=${query}`;
   };
 
   useEffect(() => {

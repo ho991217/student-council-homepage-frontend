@@ -24,9 +24,10 @@ import PetitionPost from 'components/boards/petition/post/Post';
 import PetitionEditor from 'pages/communication/petition/Editor';
 import News from 'pages/council/News';
 import Admin from 'pages/Admin';
-import SuggestionBoard from 'pages/communication/suggestion/SuggestionBoard';
-import SuggestionPost from 'components/boards/suggestion/post/Post';
-import SuggestionEditor from 'pages/communication/suggestion/Editor';
+import FreeBoard from 'pages/communication/free/FreeBoard';
+import FreePost from 'components/boards/free/post/Post';
+import FreeEditor from 'pages/communication/free/Editor';
+import UpdateEditor from 'components/boards/free/post/Update';
 
 import NotFound from 'pages/NotFound';
 import NewsPost from 'components/news/post/Post';
@@ -241,18 +242,18 @@ function Router() {
             }
           />
         </Route>
-        <Route path="/board-suggestion">
-          <Route path="/board-suggestion" element={<NotFound />} />
+        <Route path="/board-free">
+          <Route path="/board-free" element={<NotFound />} />
           <Route
             path="boards"
             element={
               isLoggedIn ? (
                 <>
                   <GlobalBanner
-                    title="건의게시판"
-                    detail="건의게시판 입니다."
+                    title="자유게시판"
+                    detail="자유게시판 입니다."
                   />
-                  <SuggestionBoard />
+                  <FreeBoard />
                 </>
               ) : (
                 <Navigate to="/login" />
@@ -265,10 +266,10 @@ function Router() {
               isLoggedIn ? (
                 <>
                   <GlobalBanner
-                    title="건의게시판"
-                    detail="건의게시판 입니다."
+                    title="자유게시판"
+                    detail="자유게시판 입니다."
                   />
-                  <SuggestionPost />
+                  <FreePost />
                 </>
               ) : (
                 <Navigate to="/login" />
@@ -281,10 +282,26 @@ function Router() {
               isLoggedIn ? (
                 <>
                   <GlobalBanner
-                    title="건의게시판"
-                    detail="건의게시판 입니다."
+                    title="자유게시판"
+                    detail="자유게시판 입니다."
                   />
-                  <SuggestionEditor />
+                  <FreeEditor />
+                </>
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route
+            path="update-editor"
+            element={
+              isLoggedIn ? (
+                <>
+                  <GlobalBanner
+                    title="자유게시판"
+                    detail="자유게시판 입니다."
+                  />
+                  <UpdateEditor />
                 </>
               ) : (
                 <Navigate to="/login" />

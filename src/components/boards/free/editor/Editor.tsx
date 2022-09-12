@@ -53,13 +53,13 @@ const Content = css`
   }
 `;
 
-const TitleInput = styled.input.attrs({ type: 'text', required: true })`
+const TitleInput = styled.input.attrs({ type: 'text', required: true, maxLength: 50 })`
   ${Content}
   width: 100%;
   height: 40px;
 `;
 
-const Textarea = styled.textarea.attrs({ required: true })`
+const Textarea = styled.textarea.attrs({ required: true, maxLength: 10000 })`
   ${Content}
   width: 100%;
   height: 600px;
@@ -175,7 +175,7 @@ function Editor(): JSX.Element {
         data: formData,
       })
         .then((res) => {
-          if (res.data.successful) navigate('/board-suggestion/boards?page=1');
+          if (res.data.successful) navigate('/board-free/boards?page=1');
         })
         .catch((err) =>
           // 에러 처리
@@ -229,7 +229,7 @@ function Editor(): JSX.Element {
             <Textarea
               value={text}
               onChange={(e) => setText(e.currentTarget.value)}
-              placeholder="건의 내용을 입력해주세요."
+              placeholder="내용을 입력해주세요."
             />
           </Label>
           <ButtonDiv>

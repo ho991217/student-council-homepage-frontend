@@ -47,15 +47,15 @@ function PageControl({
     let { filter } = qs.parse(params[0].toString());
     let { status } = qs.parse(params[0].toString());
     let { query } = qs.parse(params[0].toString());
-
+    
     if (!filter) filter = '';
     if (!status) status = '';
     if (!query) query = '';
 
     if (filter === '' && status === '' && query === '') {
-      return `/board-suggestion/boards?page=${page}`;
+      return `/board-free/boards?page=${page}`;
     }
-    return `/board-suggestion/boards?page=${page}&filter=${filter}&status=${status}&query=${query}`;
+    return `/board-free/boards?page=${page}&filter=${filter}&status=${status}&query=${query}`;
   };
 
   useEffect(() => {

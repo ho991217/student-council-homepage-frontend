@@ -2,11 +2,12 @@ import { KeyboardEvent, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import qs from 'qs';
-import { MdKeyboardArrowDown } from 'react-icons/md';
 
 const Wrapper = styled.div`
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  align-divs: center;
+  justify-content: center;
   margin-bottom: 12px;
 `;
 
@@ -16,36 +17,42 @@ const Items = styled.div`
 
 const Select = styled.select`
   font-size: ${({ theme }) => theme.fonts.size.sm};
-  background-color: ${({ theme }) => theme.colors.gray040};
-  border: 1px solid ${({ theme }) => theme.colors.gray200};
   width: 90px;
   height: 30px;
   padding-left: 8px;
   color: black;
   cursor: pointer;
+  background-color: ${({ theme }) => theme.colors.white};
+  border: 1px solid ${({ theme }) => theme.colors.gray400};
+  border-right: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+  :focus {
+    outline: none;
+  }
 `;
 
-const Icon = styled.div`
-  margin-left: -18px;
-  margin-right: 10px;
+const ArrowSvg = styled.svg`
+  margin-left: -28px;
   align-self: center;
-  width: 12px;
-  height: 15px;
-  ${({ theme }) => theme.media.mobile} {
-    height: 12px;
-  }
-  cursor: pointer;
+  width: 10px;
+  height: 10px;
 `;
 
 const Input = styled.input`
-  width: 250px;
+  width: 200px;
   height: 30px;
   margin-right: 5px;
   ::placeholder {
     padding-left: 5px;
+  }
+  border: 1px solid ${({ theme }) => theme.colors.gray400};
+  border-left: none;
+  -webkit-appearance: none;
+  -webkit-border-radius: 0;
+  :focus {
+    outline: none;
   }
 `;
 
@@ -60,7 +67,7 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-function TopBar() {
+function MobileTopBar() {
   const [status, setStatus] = useState<string>('');
   const [searchWord, setSearchWord] = useState<string>('');
   const params = useSearchParams();
@@ -74,15 +81,11 @@ function TopBar() {
 
     if (!filter) filter = '';
     if (!query) query = '';
-    if (query === '') {
-      navigate(
-        `/board-suggestion/boards?page=1&filter=${filter}&status=${e.currentTarget.value}`,
-      );
-    }
+
     navigate(
-      `/board-suggestion/boards?page=1&filter=${filter}&status=${e.currentTarget.value}&query=${query}`,
+      `/board-free/boards?page=1&filter=${filter}&status=${e.currentTarget.value}&query=${query}`,
     );
-  };
+  }
 
   const onSearchWordHandler = (e: React.FormEvent<HTMLInputElement>) => {
     const {
@@ -99,7 +102,7 @@ function TopBar() {
     if (!status) status = '';
 
     navigate(
-      `/board-suggestion/boards?page=1&filter=${filter}&status=${status}&query=${searchWord}`,
+      `/board-free/boards?page=1&filter=${filter}&status=${status}&query=${searchWord}`,
     );
   };
 
@@ -123,9 +126,18 @@ function TopBar() {
           <option value="진행중">진행중</option>
           <option value="답변완료">답변완료</option>
         </Select>
-        <Icon>
-          <MdKeyboardArrowDown />
-        </Icon>
+        <ArrowSvg
+          width="7"
+          height="4"
+          viewBox="0 0 7 4"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M3.33366 4L0.446906 0.249999L6.22041 0.25L3.33366 4Z"
+            fill="#C4C4C4"
+          />
+        </ArrowSvg>
       </Items>
       <Items>
         <Input
@@ -140,7 +152,7 @@ function TopBar() {
         </Button>
       </Items>
     </Wrapper>
-  );
+  )
 }
 
-export default TopBar;
+export default MobileTopBar

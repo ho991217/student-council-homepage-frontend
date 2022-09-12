@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Editor from "components/boards/suggestion/editor/Editor";
+import Editor from "components/boards/free/editor/Editor";
 
 
 const Container = styled.div`

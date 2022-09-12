@@ -147,7 +147,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
           <BoardHead>
             <Row>
               <div>번호</div>
-              <div>머릿말</div>
+              <div>분류</div>
               <div>제목</div>
               <div>조회</div>
               <div>댓글</div>
@@ -156,9 +156,9 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
           {board.map((post) => (
             <Row key={post.id}>
               <div>{post.id}</div>
-              <div>{post.status}</div>
+              <div>{post.category}</div>
               <LinkDiv>
-                <Link to={`/board-suggestion/board?id=${post.id}`}>
+                <Link to={`/board-free/board?id=${post.id}`}>
                   {post.title}
                 </Link>
               </LinkDiv>
@@ -187,7 +187,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               {currentPage}/
               {Math.ceil(pagingInfo.totalElements / pagingInfo.size)}
             </PageInfo>
-            <Link to="/board-suggestion/editor">
+            <Link to="/board-free/editor">
               <Button type="button">작성</Button>
             </Link>
           </BottomBar>
