@@ -104,6 +104,8 @@ function Makers(): JSX.Element {
               name="박찬진"
               info="소프트웨어학과 19학번"
               pjrole="Project Manager"
+              ghid="developerChans"
+              instaid="__chans__99"
               img={<ChanJinPics />}
               teamleader
             />
@@ -124,6 +126,8 @@ function Makers(): JSX.Element {
               name="조연주"
               info="소프트웨어학과 19학번"
               pjrole="Frontend Development"
+              ghid="wormjoo"
+              instaid="worm._.zoo"
               img={<YeonJuPics />}
             />
             <Card
