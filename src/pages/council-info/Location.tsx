@@ -48,7 +48,7 @@ function Location() {
       content: '(16890) 경기도 용인시 수지구 죽전동 1491',
       key: 2,
     },
-    { title: '전화', content: '몰?루', key: 3 },
+    { title: '전화', content: '031)8005-2680~1', key: 3 },
     { title: '이메일', content: '54thplay@naver.com', key: 4 },
     { title: '페이스북', content: '@dkuplay54', key: 5 },
     { title: '인스타그램', content: '@dkuplay', key: 6 },
