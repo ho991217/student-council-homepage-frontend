@@ -14,8 +14,18 @@ const Arrow = styled.svg``;
 
 const Indexes = styled.ol`
   display: flex;
-  align-items: center;
-  justify-content: center;
+  box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.1) inset;
+  ${({ theme }) => theme.media.desktop} {
+    max-width: 400px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    max-width: 200px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    max-width: 200px;
+  }
+  overflow-x: scroll;
+  padding: 15px 0;
 `;
 
 const Index = styled.li<{ cur: boolean }>`

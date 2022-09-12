@@ -411,17 +411,21 @@ function Post() {
 
   const handleAnswerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await axios({
-      method: 'post',
-      url: `/api/petition/comment/admin/${postId}`,
-      headers: {
-        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-        'Content-Type': 'application/json',
-      },
-      data: JSON.stringify({ text: answer }),
-    });
 
-    console.log(res);
+    try {
+      await axios({
+        method: 'post',
+        url: `/api/petition/comment/admin/${postId}`,
+        headers: {
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+          'Content-Type': 'application/json',
+        },
+        data: JSON.stringify({ text: answer }),
+      });
+      getCurrentPost(postId);
+    } catch (e) {
+      // 에러처리
+    }
   };
 
   const sendComment = async () => {
