@@ -181,7 +181,7 @@ function Detail() {
       .then(function (response) {
         const result = response.data;
         console.log(result.message);
-        window.location.replace('/conference');
+        window.location.replace('/rules');
       })
       .catch(function (error) {
         // 에러 핸들링
