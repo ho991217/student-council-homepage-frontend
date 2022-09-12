@@ -38,6 +38,7 @@ import Term from 'components/global/footer/sub-routes/Term';
 import PrivacyPolicy from 'components/global/footer/sub-routes/PrivacyPolicy';
 import { LoginStateAtom } from 'atoms/LoginState';
 import Success from 'components/sign-up/Succes';
+import PasswordSuccess from 'components/password/Succes';
 
 function Router() {
   const [{ isLoggedIn, admin }, setLoginState] = useRecoilState(LoginStateAtom);
@@ -68,7 +69,7 @@ function Router() {
           }
         />
         <Route
-          path="/login/find-password"
+          path="/password"
           element={
             <>
               <GlobalBanner
@@ -80,6 +81,7 @@ function Router() {
           }
         />
         <Route path="/sign-up/success" element={<Success />} />
+        <Route path="/password/success" element={<PasswordSuccess />} />
         <Route path="/greeting" element={<Greeting />} />
         <Route path="/organization" element={<Organization />} />
         <Route path="/location" element={<Location />} />

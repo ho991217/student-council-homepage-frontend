@@ -114,8 +114,12 @@ function StudentIdValidation({ type }: { type: string }): JSX.Element {
         success: data.successful,
       }));
     } catch (error) {
+      console.log(error);
       const e = error as any;
-      if (e.response.data.message === '이미 존재하는 회원입니다.') {
+      if (
+        e.response.data.message === '이미 존재하는 회원입니다.' ||
+        e.response.data.message === '회원가입을 진행해주세요'
+      ) {
         setEmailState((prev) => ({ ...prev, errMsg: e.response.data.message }));
       }
     }
@@ -145,7 +149,7 @@ function StudentIdValidation({ type }: { type: string }): JSX.Element {
             )
           ) : (
             <>
-              <div>이미 존재하는 회원입니다.</div>
+              <div>{emailState.errMsg}</div>
               <CloseButton
                 type="button"
                 value="닫기"

@@ -446,7 +446,9 @@ function Login(): JSX.Element {
             <Extras>
               <SignUpButton to="/sign-up">회원가입</SignUpButton>
               <Vseparator />
-              <FindPasswordButton to="/">비밀번호 찾기</FindPasswordButton>
+              <FindPasswordButton to="/password">
+                비밀번호 찾기
+              </FindPasswordButton>
             </Extras>
           </ExtrasContainer>
         </InnerContainer>
