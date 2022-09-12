@@ -55,6 +55,6 @@ jobs:
         script: |
           docker pull ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${GITHUB_SHA::7}
           docker tag ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${GITHUB_SHA::7} dku_council_front
-          docker stop dku_council_front
-          docker run -d --rm --name dku_council_front -p 80:80 dku_council_front
+          docker-compose down
+          docker-compose up -d
         
