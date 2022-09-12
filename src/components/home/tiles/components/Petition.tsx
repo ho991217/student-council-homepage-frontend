@@ -12,15 +12,15 @@ const Wrapper = styled.div`
 
 const P = styled.p`
   color: ${({ theme }) => theme.colors.gray900};
-  font-size: ${({ theme }) => theme.fonts.size.md};
-  font-weight: ${({ theme }) => theme.fonts.weight.regular};
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
   margin-bottom: 7px;
 `;
 
 const Span = styled.span`
   margin-right: 5px;
   color: ${({ theme }) => theme.colors.gray900};
-  font-size: ${({ theme }) => theme.fonts.size.md};
+  font-size: ${({ theme }) => theme.fonts.size.base};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
