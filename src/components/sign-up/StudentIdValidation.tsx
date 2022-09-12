@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import CopyrightTerm from 'components/global/CopyrightTerm';
 import { PropagateLoader } from 'react-spinners';
 import styled from 'styled-components';
@@ -37,6 +38,15 @@ const LinktoGmail = styled.a`
   }
 `;
 
+const CloseButton = styled.input.attrs({ type: 'button' })`
+  all: unset;
+  padding: 15px 30px;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  border-radius: 9999px;
+  margin-top: 1rem;
+`;
+
 function StudentIdValidation(): JSX.Element {
   const [studentNum, setStudentNum] = useState('');
   const [emailState, setEmailState] = useState({
@@ -44,6 +54,7 @@ function StudentIdValidation(): JSX.Element {
     success: false,
     errMsg: '',
   });
+  const navigate = useNavigate();
 
   const validateStudentNum = (studentNum: string) => {
     const regex = /[0-9]/;
@@ -64,43 +75,59 @@ function StudentIdValidation(): JSX.Element {
       ...prev,
       sent: true,
     }));
+    try {
+      const { data } = await axios({
+        method: 'post',
+        url: '/api/email',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: JSON.stringify({ classId: studentNum }),
+      });
 
-    const { data } = await axios({
-      method: 'post',
-      url: '/api/email',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: JSON.stringify({ classId: studentNum }),
-    });
+      setEmailState((prev) => ({
+        ...prev,
 
-    setEmailState((prev) => ({
-      ...prev,
-
-      success: data.successful,
-    }));
+        success: data.successful,
+      }));
+    } catch (error) {
+      const e = error as any;
+      if (e.response.data.message === '이미 존재하는 회원입니다.') {
+        setEmailState((prev) => ({ ...prev, errMsg: e.response.data.message }));
+      }
+    }
   };
 
   return (
     <>
       {emailState.sent && (
         <Modal>
-          {emailState.success ? (
-            <>
-              <Text>학교 계정 이메일을 확인하세요!</Text>
-              <LinktoGmail href="https://mail.google.com/mail">
-                G-MAIL 바로가기
-              </LinktoGmail>
-            </>
+          {/* eslint-disable-next-line no-nested-ternary */}
+          {emailState.errMsg.length <= 0 ? (
+            emailState.success ? (
+              <>
+                <Text>학교 계정 이메일을 확인하세요!</Text>
+                <LinktoGmail href="https://mail.google.com/mail">
+                  G-MAIL 바로가기
+                </LinktoGmail>
+              </>
+            ) : (
+              <>
+                <Text>이메일 보내는 중...</Text>
+                <PropagateLoader
+                  style={{ transform: 'translateX(-5px)' }}
+                  color="#9753DC"
+                />
+              </>
+            )
           ) : (
-            <>
-              <Text>이메일 보내는 중...</Text>
-              <PropagateLoader
-                style={{ transform: 'translateX(-5px)' }}
-                color="#9753DC"
-              />
-            </>
+            <div>이미 존재하는 회원입니다.</div>
           )}
+          <CloseButton
+            type="button"
+            value="닫기"
+            onClick={() => navigate(-1)}
+          />
         </Modal>
       )}
       <Wrapper>
