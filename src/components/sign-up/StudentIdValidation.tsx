@@ -103,7 +103,7 @@ function StudentIdValidation(): JSX.Element {
       {emailState.sent && (
         <Modal>
           {/* eslint-disable-next-line no-nested-ternary */}
-          {emailState.errMsg.length < 0 ? (
+          {emailState.errMsg.length < 1 ? (
             emailState.success ? (
               <>
                 <Text>학교 계정 이메일 스펨메일함을 확인하세요!</Text>
@@ -121,13 +121,15 @@ function StudentIdValidation(): JSX.Element {
               </>
             )
           ) : (
-            <div>이미 존재하는 회원입니다.</div>
+            <>
+              <div>이미 존재하는 회원입니다.</div>
+              <CloseButton
+                type="button"
+                value="닫기"
+                onClick={() => navigate(-1)}
+              />
+            </>
           )}
-          <CloseButton
-            type="button"
-            value="닫기"
-            onClick={() => navigate(-1)}
-          />
         </Modal>
       )}
       <Wrapper>

@@ -104,6 +104,15 @@ const Button = styled.button`
   margin-top: 12px;
 `;
 
+const PostTitle = styled.div`
+  ${({ theme }) => theme.media.mobile} {
+    max-width: 100px;
+  }
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
 interface BoardProps {
   posts: PostProps[];
   pagingInfo: PagingProps;
@@ -140,7 +149,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               <Row>
                 <div>{index + 1 + (pagingInfo.page - 1) * pagingInfo.size}</div>
                 <div>{post.petitionStatus}</div>
-                <div>{post.title}</div>
+                <PostTitle>{post.title}</PostTitle>
                 <div>
                   <Svg
                     xmlns="http://www.w3.org/2000/svg"

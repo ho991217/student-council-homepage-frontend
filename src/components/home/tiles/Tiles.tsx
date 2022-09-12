@@ -65,6 +65,11 @@ const SmallTile = styled.div`
   width: 100%;
   height: 178px;
   background-color: ${({ theme }) => theme.colors.white};
+  ${({ theme }) => theme.media.desktop} {
+  }
+  ${({ theme }) => theme.media.tablet} {
+    height: 100%;
+  }
   ${({ theme }) => theme.media.mobile} {
     margin-bottom: 20px;
   }

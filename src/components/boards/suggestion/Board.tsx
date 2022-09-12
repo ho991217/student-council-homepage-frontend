@@ -153,10 +153,10 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               <div>댓글</div>
             </Row>
           </BoardHead>
-          {board.map((post) => (
+          {board.map((post, index) => (
             <Row key={post.id}>
-              <div>{post.id}</div>
-              <div>{post.status}</div>
+              <div>{index + 1 + (pagingInfo.page - 1) * pagingInfo.size}</div>
+              <div>{post.category}</div>
               <LinkDiv>
                 <Link to={`/board-suggestion/board?id=${post.id}`}>
                   {post.title}

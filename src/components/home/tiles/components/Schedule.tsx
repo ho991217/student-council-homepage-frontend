@@ -41,7 +41,7 @@ const MonthDisplay = styled.div`
   }
 
   ${({ theme }) => theme.media.mobile} {
-    font-size: ${({ theme }) => theme.fonts.size.xxl};
+    font-size: ${({ theme }) => theme.fonts.size.xl};
     font-weight: ${({ theme }) => theme.fonts.weight.bold};
   }
   cursor: pointer;

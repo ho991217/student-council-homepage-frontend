@@ -45,9 +45,7 @@ function Petition(): JSX.Element {
     <Wrapper>
       {petition.map((petition) => (
         <P key={petition.id}>
-          <Span>
-            [D{petition.d_day > 0 ? `+${petition.d_day}` : petition.d_day}]
-          </Span>
+          <Span>[{petition.petitionStatus}]</Span>
           <Link to={`/board-petition/board?id=${petition.id}`}>
             {petition.title}
           </Link>

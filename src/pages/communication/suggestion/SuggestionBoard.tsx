@@ -36,9 +36,9 @@ function PetitionBoard(): JSX.Element {
     let { status } = qs.parse(searchParams.toString());
     const { query } = qs.parse(searchParams.toString());
 
-    if (filter === '전체') filter ='';
-    if (status === '전체') status ='';
-    
+    if (filter === '전체') filter = '';
+    if (status === '전체') status = '';
+
     const { data } = await axios({
       method: 'get',
       url: `/api/suggestion?page=${Number(page) - 1}&size=6&sort=id,desc`
@@ -46,7 +46,7 @@ function PetitionBoard(): JSX.Element {
         .concat(status ? `&status=${status}` : '')
         .concat(query ? `&query=${query}` : ''),
     });
-    
+
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);
     setPagingInfo(data);

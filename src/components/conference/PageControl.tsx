@@ -30,8 +30,7 @@ function PageControl({
   currentPage: number;
 }) {
   const [pageCount, setPageCount] = useState(0);
-  const url = (page: number) =>
-    `/conference?page=${page}`;
+  const url = (page: number) => `/conference?page=${page}`;
 
   useEffect(() => {
     setPageCount(Math.ceil(postCount / 6));
@@ -52,9 +51,14 @@ function PageControl({
         </Link>
       )}
       <Indexes>
-        {Array.from({ length: pageCount }, (_, i) => (
-          <Index cur={i + 1 === currentPage} key={i}>
-            <Link to={url(i + 1)}>{i + 1}</Link>
+        {Array.from({ length: 10 }, (_, i) => (
+          <Index
+            cur={i + 1 + Math.floor(currentPage / 10) === currentPage}
+            key={i}
+          >
+            <Link to={url(i + 1 + Math.floor(currentPage / 10))}>
+              {i + 1 + Math.floor(currentPage / 10)}
+            </Link>
           </Index>
         ))}
       </Indexes>

@@ -265,8 +265,8 @@ function Router() {
               isLoggedIn ? (
                 <>
                   <GlobalBanner
-                    title="건의게시판"
-                    detail="건의게시판 입니다."
+                    title="자유게시판"
+                    detail="자유게시판 입니다."
                   />
                   <SuggestionPost />
                 </>
@@ -281,8 +281,8 @@ function Router() {
               isLoggedIn ? (
                 <>
                   <GlobalBanner
-                    title="건의게시판"
-                    detail="건의게시판 입니다."
+                    title="자유게시판"
+                    detail="자유게시판 입니다."
                   />
                   <SuggestionEditor />
                 </>
@@ -296,7 +296,7 @@ function Router() {
           path="/board-inquiry"
           element={
             <>
-              <GlobalBanner title="문의게시판" detail="문의게시판 입니다." />
+              <GlobalBanner title="소통 창구" detail="소통 창구 입니다." />
               <InquiryBoard />
             </>
           }

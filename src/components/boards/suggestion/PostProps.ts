@@ -5,4 +5,5 @@ export interface PostProps {
   status: string;
   title: string;
   userName: string;
+  category: string;
 }
