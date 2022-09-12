@@ -61,8 +61,12 @@ function UserMenu(): JSX.Element {
     <Container>
       <InnerContainer>
         <Links>
-          <a href="https://www.dankook.ac.kr/web/kor">단국대학교</a>
-          <a href="https://portal.dankook.ac.kr/web/portal">Portal</a>
+          <a target="_blank " href="https://www.dankook.ac.kr/web/kor">
+            단국대학교
+          </a>
+          <a target="_blank " href="https://portal.dankook.ac.kr/web/portal">
+            Portal
+          </a>
         </Links>
 
         {isLoggedIn ? (

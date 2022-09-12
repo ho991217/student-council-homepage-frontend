@@ -92,7 +92,7 @@ interface BoardProps {
 function NewsBoard({ posts }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<NewsProps[]>([]);
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
+  const [isAdmin] = useState<boolean>(cookies.isAdmin === 'true');
 
   useEffect(() => {
     setBoard(posts);

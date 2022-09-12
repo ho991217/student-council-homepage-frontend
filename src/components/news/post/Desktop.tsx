@@ -131,7 +131,7 @@ function Detail() {
   const [detail, setDetail] = useState<DetailProps>();
   const [nextList, setNextList] = useState<NewsProps[]>();
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
+  const [isAdmin] = useState<boolean>(cookies.isAdmin === 'true');
 
   useEffect(() => {
     axios
