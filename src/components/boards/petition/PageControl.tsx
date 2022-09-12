@@ -71,14 +71,9 @@ function PageControl({
         </Link>
       )}
       <Indexes>
-        {Array.from({ length: 10 }, (_, i) => (
-          <Index
-            cur={i + 1 + Math.floor(currentPage / 10) === currentPage}
-            key={i}
-          >
-            <Link to={generateParams(i + 1 + Math.floor(currentPage / 10))}>
-              {i + 1 + Math.floor(currentPage / 10)}
-            </Link>
+        {Array.from({ length: pageCount }, (_, i) => (
+          <Index cur={i + 1 === currentPage} key={i}>
+            <Link to={generateParams(i + 1)}>{i + 1}</Link>
           </Index>
         ))}
       </Indexes>
