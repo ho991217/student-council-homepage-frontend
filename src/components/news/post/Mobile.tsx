@@ -145,11 +145,7 @@ function Detail() {
 
   useEffect(() => {
     axios
-      .get(`/api/news/${searchParams.get('id')}`, {
-        headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-        },
-      })
+      .get(`/api/news/${searchParams.get('id')}`)
       .then(function (response) {
         const result = response.data.data;
         setDetail(result);
