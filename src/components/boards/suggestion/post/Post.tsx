@@ -363,6 +363,8 @@ function Post() {
       });
   };
 
+  console.log('post', post)
+
   const currentComment = (item: any) => {
     setIsEditComment(true);
     setEditComment(item.text);
@@ -427,6 +429,7 @@ function Post() {
                 {comment.status === '삭제' && <CommentText>작성자에 의해 삭제된 댓글입니다.</CommentText>}
                 {comment.status === '정지' && <CommentText>정책을 위반한 댓글입니다.</CommentText>}
                 {comment.status === '등록' && <CommentText>{comment.text}</CommentText>}
+                {comment.status === '수정' && <CommentText>{comment.text}</CommentText>}
               </Comment>
             ))}
           </CommentLists>

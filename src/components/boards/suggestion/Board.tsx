@@ -159,7 +159,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               <div>{post.category}</div>
               <LinkDiv>
                 {post.status === '정지' ? (
-                  <Link to="/board-suggestion/boards?page=1">
+                  <Link to="/board-suggestion/boards?page=1" style={{ cursor: 'default' }}>
                     관리자가 삭제한 게시물 입니다.
                   </Link>
                 ) : (
