@@ -22,6 +22,26 @@ const StudentNumInput = styled.input`
   padding: 0 10px;
 `;
 
+const GmailInformation = styled.div`
+  display: flex;
+  width: 540px;
+  margin-bottom: 10px;
+  padding: 0 10px;
+  justify-content: space-between;
+  ${({ theme }) => theme.media.mobile} {
+    width: 100%;
+    font-size: ${({ theme }) => theme.fonts.size.xs};
+    margin-bottom: 5px;
+  }
+  div {
+    display: inline-block;
+    color: ${({ theme }) => theme.colors.gray400};
+    :last-child {
+      border-bottom: 1px solid ${({ theme }) => theme.colors.gray400};
+    }
+  }
+`;
+
 const Text = styled.span`
   font-size: ${({ theme }) => theme.fonts.size.xl};
   font-weight: ${({ theme }) => theme.fonts.weight.bold};
@@ -47,13 +67,16 @@ const CloseButton = styled.input.attrs({ type: 'button' })`
   margin-top: 1rem;
 `;
 
-function StudentIdValidation(): JSX.Element {
+function StudentIdValidation({ type }: { type: string }): JSX.Element {
   const [studentNum, setStudentNum] = useState('');
   const [emailState, setEmailState] = useState({
     sent: false,
     success: false,
     errMsg: '',
   });
+  const [url, setUrl] = useState<string>(
+    type === '회원가입' ? '/api/email' : '/api/email/password',
+  );
   const navigate = useNavigate();
 
   const validateStudentNum = (studentNum: string) => {
@@ -78,7 +101,7 @@ function StudentIdValidation(): JSX.Element {
     try {
       const { data } = await axios({
         method: 'post',
-        url: '/api/email',
+        url: `${url}`,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -134,9 +157,22 @@ function StudentIdValidation(): JSX.Element {
       )}
       <Wrapper>
         <Header>
-          단국대학교 총학생회 <HeaderPoint>회원가입</HeaderPoint>
+          단국대학교 총학생회 <HeaderPoint>{type}</HeaderPoint>
         </Header>
         <InnerContainerByStudentNum>
+          {type === '회원가입' && (
+            <GmailInformation>
+              <div>단국대학교 Gmail 계정을 통해 회원가입을 진행합니다.</div>
+              <div>
+                <a
+                  target="_blank "
+                  href="https://sites.google.com/dankook.ac.kr/help"
+                >
+                  Gmail 사용 안내
+                </a>
+              </div>
+            </GmailInformation>
+          )}
           <InputContainer onSubmit={sendVerificationEmail}>
             <StudentNumInput
               required
@@ -149,6 +185,9 @@ function StudentIdValidation(): JSX.Element {
             />
             <VerifyStduentButton type="submit" value="인증" />
           </InputContainer>
+          {type === '비밀번호 찾기' && (
+            <span>비밀번호를 찾고자 하는 학번(ID)을 입력해 주세요.</span>
+          )}
         </InnerContainerByStudentNum>
         <CopyrightTerm />
       </Wrapper>
