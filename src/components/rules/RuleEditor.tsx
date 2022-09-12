@@ -99,6 +99,7 @@ function RuleEditor() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [form, setForm] = useState<FormData>();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
 
@@ -128,29 +129,44 @@ function RuleEditor() {
     setForm(formData);
   };
 
+  const checkValid = () => {
+    if (title === '') {
+      alert('제목을 입력해주세요');
+    } else if (content === '') {
+      alert('내용을 입력해주세요');
+    } else if (form === undefined) {
+      alert('파일을 첨부해주세요');
+    } else {
+      setIsOpen(true);
+    }
+  };
+
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    checkValid();
 
-    const config = {
-      method: 'post',
-      url: '/api/rule',
-      data: form,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-      },
-    };
+    if (isOpen) {
+      const config = {
+        method: 'post',
+        url: '/api/rule',
+        data: form,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        },
+      };
 
-    axios(config)
-      .then(function (response) {
-        console.log(response.data);
-        console.log('success');
-        navigate('/rules');
-      })
-      .catch(function (error) {
-        // 에러 핸들링
-        console.log(error);
-      });
+      axios(config)
+        .then(function (response) {
+          console.log(response.data);
+          console.log('success');
+          navigate('/rules');
+        })
+        .catch(function (error) {
+          // 에러 핸들링
+          console.log(error);
+        });
+    }
   };
 
   return (
