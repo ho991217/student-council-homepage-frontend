@@ -36,15 +36,15 @@ const Hr = styled.div<{ bold?: boolean }>`
   margin: ${({ bold }) => (bold ? '5px 0px' : '10px 0px')};
 `;
 
-const DeleteBtn = styled.button`
+const Button = styled.button.attrs({ type: 'button' })`
   background-color: ${({ theme }) => theme.colors.red};
   color: ${({ theme }) => theme.colors.white};
-  font-size: ${({ theme }) => theme.fonts.size.lg};
+  font-size: ${({ theme }) => theme.fonts.size.xs};
   cursor: pointer;
-  margin-bottom: 15px;
+  margin: 0 5px 10px 0;
   border: none;
   border-radius: 5px;
-  padding: 12px 15px;
+  padding: 5px 10px;
 `;
 
 const Header = styled.div``;
@@ -137,13 +137,7 @@ const VSeparator = styled.div`
   margin: 0px 10px;
 `;
 
-const Admin = styled.div`
-  color: ${({ theme }) => theme.colors.red};
-  font-size: ${({ theme }) => theme.fonts.size.sm};
-  font-weight: ${({ theme }) => theme.fonts.weight.bold};
-`;
-
-const User = styled.div`
+const CommentAuthor = styled.div`
   margin-right: 10px;
   font-size: ${({ theme }) => theme.fonts.size.sm};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
@@ -153,7 +147,7 @@ const EditButtons = styled.div`
   display: flex;
 `;
 
-const Button = styled.button`
+const Buttons = styled.button`
   background-color: ${({ theme }) => theme.colors.red};
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.fonts.size.xs};
@@ -191,7 +185,7 @@ const CommentForm = styled.form`
   justify-content: center;
 `;
 
-const CommentInput = styled.textarea`
+const CommentInput = styled.textarea.attrs({ required: true, maxLength: 500 })`
   all: unset;
   flex-grow: 1;
   height: 100%;
@@ -225,20 +219,23 @@ interface PostProps {
   id: number;
   answer: string;
   category: string;
-  commentList: [{ name: string; time: string; text: string }];
+  commentList: [
+    { name: string; time: string; text: string; mine: boolean; id: number; status: string; },
+  ];
   createDate: string;
   fileList: [];
   postHits: number;
-  status: string;
   text: string;
   title: string;
+  mine: boolean;
 }
 
 function Post() {
   const [post, setPost] = useState<PostProps>();
   const [comment, setComment] = useState<string>('');
-  const [answer, setAnswer] = useState<string>();
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [editComment, setEditComment] = useState<string>('');
+  const [isEditComment, setIsEditComment] = useState<boolean>(false);
+  const [commentId, setCommentId] = useState<number>();
 
   const [searchParams] = useSearchParams();
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
@@ -256,45 +253,55 @@ function Post() {
       .then((res) => {
         const result = res.data.data;
         setPost(result);
-        setAnswer(result.answer);
       })
       .catch((err) => {
         // 에러 처리
       });
   }, []);
 
-  const onClickDeleteBtn = () => {
-    if(window.confirm('해당 글을 삭제하시겠습니까?')) {
-      axios({
-        url: `/api/suggestion/${postId}`,
-        method: 'delete',
-        headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-        },
+  const onAdminDeletePost = () => {
+    axios({
+      url: `/api/suggestion/admin/${postId}`,
+      method: 'delete',
+      headers: {
+        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+      },
+    })
+      .then((res) => {
+        if (res.data.successful) navigate('/board-suggestion/boards');
       })
-        .then((res) => {
-          if (res.data.successful) navigate('/board-suggestion/boards');
-        })
-        .catch((err) => {
-          // 에러 처리
-        });
-    }
+      .catch((err) => {
+        // 에러 처리
+      });
+  };
+
+  const onUserDeletePost = () => {
+    axios({
+      url: `/api/suggestion/${postId}`,
+      method: 'delete',
+      headers: {
+        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+      },
+    })
+      .then((res) => {
+        if (res.data.successful) navigate('/board-suggestion/boards');
+      })
+      .catch((err) => {
+        // 에러 처리
+      });
   };
 
   const onCommentHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     axios({
-      url:
-        cookies.isAdmin === 'true'
-          ? `/api/suggestion/comment/admin/${postId}`
-          : `/api/suggestion/comment/${postId}`,
+      url: `/api/suggestion/comment/${postId}`,
       method: 'post',
       headers: {
         'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         'Content-Type': 'application/json',
       },
-      data: isEdit === true ? { text: answer } : { text: comment },
+      data: { text: comment },
     })
       .then((res) => {
         if (res.data.successful) window.location.reload();
@@ -304,13 +311,72 @@ function Post() {
       });
   };
 
+  const onAdminDeleteComment = (item: any) => {
+    axios({
+      url: `/api/suggestion/comment/admin/${item}`,
+      method: 'delete',
+      headers: {
+        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+      },
+    })
+      .then((res) => {
+        if (res.data.successful) window.location.reload();
+      })
+      .catch((err) => {
+        // 에러 처리
+      });
+  };
+
+  const onUserDeleteComment = (item: any) => {
+    axios({
+      url: `/api/suggestion/comment/${item}`,
+      method: 'delete',
+      headers: {
+        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+      },
+    })
+      .then((res) => {
+        if (res.data.successful) window.location.reload();
+      })
+      .catch((err) => {
+        // 에러 처리
+      });
+  };
+
+  const onEditCommentHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    axios({
+      url: `/api/suggestion/comment/${commentId}`,
+      method: 'PATCH',
+      headers: {
+        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        'Content-Type': 'application/json',
+      },
+      data: { text: editComment },
+    })
+      .then((res) => {
+        if (res.data.successful) window.location.reload();
+      })
+      .catch((err) => {
+        // 에러 처리
+      });
+  };
+
+  const currentComment = (item: any) => {
+    setIsEditComment(true);
+    setEditComment(item.text);
+    setCommentId(item.id);
+  };
+
   return (
     <Container>
       <Wrapper>
         {cookies.isAdmin === 'true' && (
-          <DeleteBtn type="button" onClick={onClickDeleteBtn}>
-            삭제하기
-          </DeleteBtn>
+          <Button onClick={onAdminDeletePost}>삭제</Button>
+        )}
+        {cookies.isAdmin === 'false' && post?.mine && (
+          <Button onClick={onUserDeletePost}>삭제</Button>
         )}
         <Header>
           <Date>{post?.createDate}</Date>
@@ -325,58 +391,46 @@ function Post() {
         <CommentWrapper>
           댓글 {post?.commentList.length}
           <Hr />
-          {(cookies.isAdmin === 'true' && !post?.answer && !isEdit) && (
-            <CommentForm onSubmit={onCommentHandler}>
-              <CommentInput
-                placeholder="답변을 입력해주세요."
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              />
-              <CommentSubmit value="입력" />
-            </CommentForm>
-          )}
-          {isEdit && (
-            <CommentForm onSubmit={onCommentHandler}>
-              <CommentInput
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-              />
-              <CommentSubmit value="수정" />
-            </CommentForm>
-          )}
           <CommentLists>
-            {post?.answer && (
-              <Comment>
-                <CommentInfo>
-                  <Admin>총학생회</Admin>
-                </CommentInfo>
-                <CommentText>{post?.answer}</CommentText>
-                {cookies.isAdmin === 'true' && (
-                  <EditButtons>
-                    <Button type="button" onClick={() => setIsEdit(true)}>
-                      수정하기
-                    </Button>
-                    <Button type="button" onClick={() => setIsEdit(false)}>
-                      취소
-                    </Button>
-                  </EditButtons>
-                )}
-              </Comment>
-            )}
             {post?.commentList.map((comment) => (
               <Comment key={post.commentList.indexOf(comment)}>
+                {cookies.isAdmin === 'true' && <Button onClick={() => onAdminDeleteComment(comment.id)}>삭제</Button>}
+                {cookies.isAdmin === 'false' && comment?.mine && (
+                  <EditButtons>
+                    {isEditComment ? (
+                      <Button
+                        onClick={() => {
+                          setIsEditComment(false);
+                        }}
+                      >
+                        취소
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => {
+                          currentComment(comment);
+                        }}
+                      >
+                        수정
+                      </Button>
+                    )}
+                    <Button onClick={() => onUserDeleteComment(comment.id)}>삭제</Button>
+                  </EditButtons>
+                )}
                 <CommentInfo>
-                  <User>익명</User>
+                  <CommentAuthor>익명</CommentAuthor>
                   <VSeparator />
                   <CommentDate>
                     {comment.time.slice(0, 10)} {comment.time.slice(11, 16)}
                   </CommentDate>
                 </CommentInfo>
-                <CommentText>{comment.text}</CommentText>
+                {comment.status === '삭제' && <CommentText>작성자에 의해 삭제된 댓글입니다.</CommentText>}
+                {comment.status === '정지' && <CommentText>정책을 위반한 댓글입니다.</CommentText>}
+                {comment.status === '등록' && <CommentText>{comment.text}</CommentText>}
               </Comment>
             ))}
           </CommentLists>
-          {cookies.isAdmin === 'false' && (
+          {cookies.isAdmin === 'false' && !isEditComment && (
             <CommentForm onSubmit={onCommentHandler}>
               <CommentInput
                 placeholder="댓글을 입력해주세요."
@@ -384,6 +438,15 @@ function Post() {
                 onChange={(e) => setComment(e.target.value)}
               />
               <CommentSubmit value="입력" />
+            </CommentForm>
+          )}
+          {cookies.isAdmin === 'false' && isEditComment && (
+            <CommentForm onSubmit={onEditCommentHandler}>
+              <CommentInput
+                value={editComment}
+                onChange={(e) => setEditComment(e.target.value)}
+              />
+              <CommentSubmit value="수정" />
             </CommentForm>
           )}
         </CommentWrapper>

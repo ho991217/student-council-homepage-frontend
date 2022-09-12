@@ -158,9 +158,15 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               <div>{index + 1 + (pagingInfo.page - 1) * pagingInfo.size}</div>
               <div>{post.category}</div>
               <LinkDiv>
-                <Link to={`/board-suggestion/board?id=${post.id}`}>
-                  {post.title}
-                </Link>
+                {post.status === '정지' ? (
+                  <Link to="/board-suggestion/boards?page=1">
+                    관리자가 삭제한 게시물 입니다.
+                  </Link>
+                ) : (
+                  <Link to={`/board-suggestion/board?id=${post.id}`}>
+                    {post.title}
+                  </Link>
+                )}
               </LinkDiv>
               <div>
                 <ViewIcon>
