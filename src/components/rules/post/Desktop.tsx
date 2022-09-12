@@ -37,6 +37,10 @@ const Head = styled.div`
   }
 `;
 
+const ContentWrapper = styled.div`
+  padding: 40px 35px;
+`;
+
 const Content = styled.div`
   max-width: 1100px;
   width: 100%;
@@ -217,26 +221,29 @@ function Detail() {
           </div>
         )}
       </Head>
-      <Content>{detail?.text}</Content>
-      {detail?.fileList[0] && (
-        <File>
-          <FolderIcon>
-            <IoIosFolder size="35" />
-          </FolderIcon>
-          <Data>
-            <Name>{detail?.fileList[0].originName}</Name>
-          </Data>
-          <DownloadIcon>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href={detail?.fileList[0].url}
-            >
-              <FiDownload size="15" color="76787A" />
-            </a>
-          </DownloadIcon>
-        </File>
-      )}
+      <ContentWrapper>
+        <Content>{detail?.text}</Content>
+        {detail?.fileList[0] && (
+          <File>
+            <FolderIcon>
+              <IoIosFolder size="35" />
+            </FolderIcon>
+            <Data>
+              <Name>{detail?.fileList[0].originName}</Name>
+            </Data>
+            <DownloadIcon>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href={detail?.fileList[0].url}
+              >
+                <FiDownload size="15" color="76787A" />
+              </a>
+            </DownloadIcon>
+          </File>
+        )}
+      </ContentWrapper>
+
       <NextList>
         <ListHead>
           <Row>
