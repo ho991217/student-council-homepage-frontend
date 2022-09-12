@@ -464,6 +464,7 @@ function Post() {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
       });
+      console.log(data.data);
       setPost(data.data);
     } catch {
       navigate(-1);
