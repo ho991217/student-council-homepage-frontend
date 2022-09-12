@@ -360,6 +360,13 @@ const AnswerTitle = styled.div`
   margin-bottom: 15px;
 `;
 
+const TextLength = styled.span`
+  font-size: ${({ theme }) => theme.fonts.size.sm};
+  font-weight: ${({ theme }) => theme.fonts.weight.regular};
+  color: ${({ theme }) => theme.colors.gray400};
+  margin: 5px 0;
+`;
+
 interface PostProps {
   adminComment?: string;
   blind: boolean;
@@ -578,9 +585,11 @@ function Post() {
               <CommentSection>
                 <CommentForm onSubmit={handleSubmit}>
                   <CommentInput
+                    maxLength={50}
                     placeholder="동의 내용을 입력해 주세요."
                     disabled={post.status === '기간종료'}
                     value={comment}
+                    required
                     onChange={(e) => setComment(e.currentTarget.value)}
                   />
                   <CommentSubmit
@@ -588,6 +597,7 @@ function Post() {
                     value="전송"
                   />
                 </CommentForm>
+                <TextLength>{comment.length} / 50</TextLength>
                 <CommentLists>
                   {post?.comments.length > 0 &&
                     post?.comments.map((comment) => (
