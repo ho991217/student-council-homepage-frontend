@@ -103,11 +103,11 @@ function StudentIdValidation(): JSX.Element {
       {emailState.sent && (
         <Modal>
           {/* eslint-disable-next-line no-nested-ternary */}
-          {emailState.errMsg.length <= 0 ? (
+          {emailState.errMsg.length < 0 ? (
             emailState.success ? (
               <>
-                <Text>학교 계정 이메일을 확인하세요!</Text>
-                <LinktoGmail href="https://mail.google.com/mail">
+                <Text>학교 계정 이메일 스펨메일함을 확인하세요!</Text>
+                <LinktoGmail href="https://mail.google.com/mail/u/1/?ogbl#spam">
                   G-MAIL 바로가기
                 </LinktoGmail>
               </>
