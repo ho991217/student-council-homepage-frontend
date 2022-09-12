@@ -193,10 +193,11 @@ function Detail() {
       });
   };
 
+  // 게시글 인덱스, 다음글 리스트 노출 추후에 수정
   return (
     <Wrapper>
       <Head isAdmin={isAdmin}>
-        <div>{detail?.id}</div>
+        <div>제목</div>
         <div>{detail?.title}</div>
         <div>{detail?.createDate}</div>
         {isAdmin && detail && (
@@ -244,7 +245,7 @@ function Detail() {
         )}
       </ContentWrapper>
 
-      <NextList>
+      {/* <NextList>
         <ListHead>
           <Row>
             <Title>번호</Title>
@@ -278,7 +279,7 @@ function Detail() {
             </Info>
           </Row>
         ))}
-      </NextList>
+      </NextList> */}
     </Wrapper>
   );
 }

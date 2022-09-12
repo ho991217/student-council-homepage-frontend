@@ -46,7 +46,6 @@ const Row = styled.div`
     display: flex;
     place-content: center;
     place-items: center;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   }
 `;
 
@@ -59,10 +58,12 @@ const Title = styled.div`
 
 const Content = styled.div`
   :nth-child(2) {
-    display: flex;
-    justify-content: left;
-    padding-left: 25px;
-    cursor: pointer;
+    width: 100%;
+    margin: 30px auto;
+    display: block;
+    a {
+      display: block;
+    }
   }
 `;
 

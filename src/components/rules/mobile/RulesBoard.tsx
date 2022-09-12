@@ -48,7 +48,6 @@ const Row = styled.div`
     display: flex;
     place-content: center;
     place-items: center;
-    border-bottom: 0.5px solid ${({ theme }) => theme.colors.gray100};
   }
   :nth-child(1) {
     border-bottom: none;
@@ -58,11 +57,6 @@ const Row = styled.div`
 const Title = styled.div`
   border-right: 1px solid ${({ theme }) => theme.colors.gray100};
   height: 30px;
-  :nth-child(2) {
-    display: flex;
-    justify-content: left;
-    padding-left: 25px;
-  }
   :last-child {
     border-right: none;
   }
@@ -70,9 +64,12 @@ const Title = styled.div`
 
 const Content = styled.div`
   :nth-child(2) {
-    display: flex;
-    justify-content: left;
-    padding-left: 15px;
+    width: 100%;
+    margin: 30px auto;
+    display: block;
+    a {
+      display: block;
+    }
   }
   :last-child {
     color: ${({ theme }) => theme.colors.gray400};

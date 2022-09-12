@@ -174,7 +174,6 @@ function Detail() {
   }, []);
 
   const handleDelete = (id: number) => {
-    console.log(id);
     axios
       .delete(`/api/news/${id}`, {
         headers: {
@@ -192,12 +191,13 @@ function Detail() {
       });
   };
 
+  // 게시글 인덱스, 다음글 리스트 노출 추후에 수정
   return (
     <Wrapper>
       <Head isAdmin={isAdmin}>
-        <div>{detail?.id}</div>
+        <div>제목</div>
         <div>{detail?.title}</div>
-        <div>{detail?.createDate}</div>
+        <div>{detail?.createDate.slice(0, 10)}</div>
         {isAdmin && detail && (
           <div>
             <Svg
@@ -242,7 +242,7 @@ function Detail() {
           </Download>
         )}
       </ContentWrapper>
-      <NextList>
+      {/* <NextList>
         <ListHead>
           <Row>
             <Title>번호</Title>
@@ -276,7 +276,7 @@ function Detail() {
             </Info>
           </Row>
         ))}
-      </NextList>
+      </NextList> */}
     </Wrapper>
   );
 }

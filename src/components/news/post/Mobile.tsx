@@ -23,10 +23,10 @@ const Head = styled.div`
   width: 100%;
   height: 60px;
   background-color: ${({ theme }) => theme.colors.gray020};
-  display: flex;
+  display: grid;
   grid-template-columns: ${({ isAdmin }: { isAdmin: boolean }) =>
     isAdmin ? '1fr 0.1fr' : '1fr'};
-  flex-direction: column;
+  flex-direction: row;
   padding: 5px 15px;
 `;
 
@@ -178,12 +178,13 @@ function Detail() {
       });
   };
 
+  // 다음글 리스트 노출 추후에 수정
   return (
     <Wrapper>
       <Head isAdmin={isAdmin}>
         <HeadContent>
           <div>{detail?.title}</div>
-          <div>{detail?.createDate}</div>
+          <div>{detail?.createDate.slice(0, 10)}</div>
         </HeadContent>
         {isAdmin && detail && (
           <div>
@@ -229,7 +230,7 @@ function Detail() {
           </Download>
         ) : null}
       </ContentWrapper>
-      <NextList>
+      {/* <NextList>
         {nextList?.map((post) => (
           <Row key={post.id}>
             <Id>{post?.id}</Id>
@@ -241,7 +242,7 @@ function Detail() {
             </Infos>
           </Row>
         ))}
-      </NextList>
+      </NextList> */}
     </Wrapper>
   );
 }
