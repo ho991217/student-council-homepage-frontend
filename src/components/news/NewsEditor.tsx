@@ -95,7 +95,7 @@ const Button = styled.input.attrs({ type: 'submit' })`
   border-radius: 5px;
 `;
 
-function RuleEditor() {
+function NewsEditor() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [form, setForm] = useState<FormData>();
@@ -148,7 +148,7 @@ function RuleEditor() {
     if (isOpen) {
       const config = {
         method: 'post',
-        url: '/api/rule',
+        url: '/api/news',
         data: form,
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -160,7 +160,7 @@ function RuleEditor() {
         .then(function (response) {
           console.log(response.data);
           console.log('success');
-          navigate('/rules');
+          navigate('/council-news');
         })
         .catch(function (error) {
           // 에러 핸들링
@@ -175,17 +175,17 @@ function RuleEditor() {
         <Wrapper>
           <Form onSubmit={onSubmitHandler}>
             <Label htmlFor="title">
-              회칙명
+              소식명
               <TitleInput
                 type="text"
                 id="title"
                 value={title}
                 onChange={onTitleHandler}
-                placeholder="회칙명을 입력해주세요."
+                placeholder="소식명을 입력해주세요."
               />
             </Label>
             <Label htmlFor="content">
-              회칙 내용
+              소식 내용
               <Textarea
                 id="content"
                 value={content}
@@ -210,4 +210,4 @@ function RuleEditor() {
   );
 }
 
-export default RuleEditor;
+export default NewsEditor;

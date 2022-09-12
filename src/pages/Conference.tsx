@@ -20,7 +20,7 @@ function Conference(): JSX.Element {
 
   useEffect(() => {
     axios
-      .get('/api/conference')
+      .get('/api/conference?sort=createDate,desc')
       .then(function (response) {
         const result = response.data;
         setBoard(result.content.slice((page - 1) * 6, page * 6));
