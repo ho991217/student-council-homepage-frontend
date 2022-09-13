@@ -60,8 +60,8 @@ const Row = styled.div`
     grid-template-columns: 1fr 2fr 8fr 2fr 1fr;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 0px 10px;
-    grid-template-columns: 1.2fr 3fr 8fr 2fr 1fr;
+    padding: 0px 5px;
+    grid-template-columns: 1.2fr 8fr 1.5fr;
   }
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   text-align: center;
@@ -136,57 +136,157 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
       <Wrapper>
         <BoardsContainer>
           <Desktop>
-            <TopBar />
+            <>
+              <TopBar />
+              <BoardHead>
+                <Row>
+                  <div>번호</div>
+                  <div>분류</div>
+                  <div>제목</div>
+                  <div>조회</div>
+                  <div>댓글</div>
+                </Row>
+              </BoardHead>
+              {board.map((post, index) => (
+                <Row key={post.id}>
+                  <div>
+                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                  </div>
+                  <div>{post.category}</div>
+                  <LinkDiv>
+                    {post.status === '정지' ? (
+                      <Link
+                        to="/board-suggestion/boards?page=1"
+                        style={{ cursor: 'default' }}
+                      >
+                        관리자에 의해 삭제된
+                        게시물입니다.ㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㄴㄴ
+                      </Link>
+                    ) : (
+                      <Link to={`/board-suggestion/board?id=${post.id}`}>
+                        {post.title}
+                      </Link>
+                    )}
+                  </LinkDiv>
+                  <div>
+                    <ViewIcon>
+                      <FiEye />
+                    </ViewIcon>
+                    {post.postHits}
+                  </div>
+                  <div>
+                    <Svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 48 48"
+                      height="48"
+                      width="48"
+                    >
+                      <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
+                    </Svg>
+                    {post.commentCount}
+                  </div>
+                </Row>
+              ))}
+            </>
           </Desktop>
           <Tablet>
-            <TopBar />
+            <>
+              <TopBar />
+              <BoardHead>
+                <Row>
+                  <div>번호</div>
+                  <div>분류</div>
+                  <div>제목</div>
+                  <div>조회</div>
+                  <div>댓글</div>
+                </Row>
+              </BoardHead>
+              {board.map((post, index) => (
+                <Row key={post.id}>
+                  <div>
+                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                  </div>
+                  <div>{post.category}</div>
+                  <LinkDiv>
+                    {post.status === '정지' ? (
+                      <Link
+                        to="/board-suggestion/boards?page=1"
+                        style={{ cursor: 'default' }}
+                      >
+                        관리자에 의해 삭제된
+                        게시물입니다.ㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㄴㄴ
+                      </Link>
+                    ) : (
+                      <Link to={`/board-suggestion/board?id=${post.id}`}>
+                        {post.title}
+                      </Link>
+                    )}
+                  </LinkDiv>
+                  <div>
+                    <ViewIcon>
+                      <FiEye />
+                    </ViewIcon>
+                    {post.postHits}
+                  </div>
+                  <div>
+                    <Svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 48 48"
+                      height="48"
+                      width="48"
+                    >
+                      <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
+                    </Svg>
+                    {post.commentCount}
+                  </div>
+                </Row>
+              ))}
+            </>
           </Tablet>
           <Mobile>
-            <MobileTopBar />
+            <>
+              <MobileTopBar />
+              <BoardHead>
+                <Row>
+                  <div>번호</div>
+                  <div>제목</div>
+                  <div>댓글</div>
+                </Row>
+              </BoardHead>
+              {board.map((post, index) => (
+                <Row key={post.id}>
+                  <div>
+                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                  </div>
+                  <LinkDiv>
+                    {post.status === '정지' ? (
+                      <Link
+                        to="/board-suggestion/boards?page=1"
+                        style={{ cursor: 'default' }}
+                      >
+                        관리자에 의해 삭제된 게시물입니다.
+                      </Link>
+                    ) : (
+                      <Link to={`/board-suggestion/board?id=${post.id}`}>
+                        {post.title}
+                      </Link>
+                    )}
+                  </LinkDiv>
+                  <div>
+                    <Svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 48 48"
+                      height="48"
+                      width="48"
+                    >
+                      <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
+                    </Svg>
+                    {post.commentCount}
+                  </div>
+                </Row>
+              ))}
+            </>
           </Mobile>
-          <BoardHead>
-            <Row>
-              <div>번호</div>
-              <div>분류</div>
-              <div>제목</div>
-              <div>조회</div>
-              <div>댓글</div>
-            </Row>
-          </BoardHead>
-          {board.map((post, index) => (
-            <Row key={post.id}>
-              <div>{index + 1 + (pagingInfo.page - 1) * pagingInfo.size}</div>
-              <div>{post.category}</div>
-              <LinkDiv>
-                {post.status === '정지' ? (
-                  <Link to="/board-suggestion/boards?page=1" style={{ cursor: 'default' }}>
-                    관리자가 삭제한 게시물 입니다.
-                  </Link>
-                ) : (
-                  <Link to={`/board-suggestion/board?id=${post.id}`}>
-                    {post.title}
-                  </Link>
-                )}
-              </LinkDiv>
-              <div>
-                <ViewIcon>
-                  <FiEye />
-                </ViewIcon>
-                {post.postHits}
-              </div>
-              <div>
-                <Svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 48 48"
-                  height="48"
-                  width="48"
-                >
-                  <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
-                </Svg>
-                {post.commentCount}
-              </div>
-            </Row>
-          ))}
           <BottomBar>
             <PageInfo>
               Total <PointText>{pagingInfo.totalElements}건,</PointText>

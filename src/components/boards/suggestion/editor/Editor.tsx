@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Desktop, Mobile, Tablet} from 'hooks/MediaQueries';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import styled, { css } from 'styled-components';
@@ -56,7 +57,7 @@ const Content = css`
 const TitleInput = styled.input.attrs({
   type: 'text',
   required: true,
-  maxLength: 50,
+  maxLength: 30,
 })`
   ${Content}
   width: 100%;

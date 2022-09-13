@@ -302,6 +302,8 @@ function Post() {
     setCommentId(item.id);
   };
 
+  console.log(post)
+
   return (
     <Container>
       <Wrapper>
@@ -353,7 +355,7 @@ function Post() {
                   </CommentDate>
                 </CommentInfo>
                 {comment.status === '삭제' && (
-                  <CommentText>작성자에 의해 삭제된 댓글입니다.</CommentText>
+                  <CommentText>댓글 작성자에 의해 삭제되었습니다.</CommentText>
                 )}
                 {comment.status === '정지' && (
                   <CommentText>정책을 위반한 댓글입니다.</CommentText>
