@@ -1,16 +1,9 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-
-// TODO: 서버에서 받아올 것 
-const tags = [
-  '전체',
-  '학교생활',
-  '교내시설',
-  '코로나19',
-  '장학금',
-  '수업',
-  '기타',
-];
+import qs from 'qs';
+import { useCookies } from 'react-cookie';
+import { Link, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getCategories } from './functions/GetCategories';
 
 const Container = styled.div`
   ${({ theme }) => theme.media.mobile} {
@@ -57,14 +50,35 @@ const Hashtag = styled(Link)<{ cur: boolean }>`
   font-size: ${({ theme }) => theme.fonts.size.base};
 `;
 
-function FilterControl({ currentTag }: { currentTag: string }): JSX.Element {
+function FilterControl() {
+  const [categoryList, setCategoryList] = useState<[]>();
+  const [params] = useSearchParams();
+  const [cookies] = useCookies(['X-AUTH-TOKEN']);
+
+  const generateParams = (tag: string) => {
+    if (tag === '전체') {
+      return `/board-petition/boards?page=1`;
+    }
+    return `/board-petition/boards?page=1&filter=${tag}`;
+  };
+
+  useEffect(() => {
+    getCategories(cookies['X-AUTH-TOKEN']).then((res) => setCategoryList(res));
+  }, []);
+
   return (
     <Container>
-      {tags.map((tag) => (
+      <Hashtag
+        cur={!qs.parse(params.toString())?.filter}
+        to={generateParams('전체')}
+      >
+        #전체
+      </Hashtag>
+      {categoryList?.map((tag) => (
         <Hashtag
           key={tag}
-          cur={tag === currentTag}
-          to={`/board-petition/boards?filter=${tag}`}
+          cur={tag === qs.parse(params.toString())?.filter}
+          to={generateParams(tag)}
         >
           #{tag}
         </Hashtag>

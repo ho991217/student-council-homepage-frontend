@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { useCookies } from 'react-cookie';
+import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 import styled from 'styled-components';
-import { MdKeyboardArrowDown } from 'react-icons/md';
-import { BiSearchAlt2 } from 'react-icons/bi';
 import { FiEye } from 'react-icons/fi';
 
+import TopBar from './top-bar/TopBar';
+import MobileTopBar from './top-bar/MobileTopBar';
+
 import { PostProps } from './PostProps';
+import { PagingProps } from './PageControl';
 
 const Container = styled.div`
   width: 100%;
@@ -26,7 +27,7 @@ const Wrapper = styled.div`
     padding: 30px 50px 10px 50px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 30px 20px 20px 10px;
+    padding: 30px 10px 20px 10px;
   }
   display: flex;
   flex-direction: column;
@@ -36,55 +37,6 @@ const Wrapper = styled.div`
 
 const BoardsContainer = styled.div`
   width: 100%;
-`;
-
-const TopBar = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-`;
-
-const Items = styled.div`
-  display: flex;
-`;
-
-const Select = styled.select`
-  font-size: ${({ theme }) => theme.fonts.size.sm};
-  background-color: ${({ theme }) => theme.colors.gray040};
-  border: 1px solid ${({ theme }) => theme.colors.gray200};
-  width: 90px;
-  height: 30px;
-  padding-left: 8px;
-  color: black;
-  cursor: pointer;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-`;
-
-const Icon = styled.div`
-  margin-left: -18px;
-  margin-right: 10px;
-  align-self: center;
-  width: 12px;
-  height: 15px;
-  ${({ theme }) => theme.media.mobile} {
-    height: 12px;
-  }
-  cursor: pointer;
-`;
-
-const Input = styled.input`
-  font-size: ${({ theme }) => theme.fonts.size.sm};
-  width: 250px;
-  ::placeholder {
-    padding-left: 5px;
-  }
-  ${({ theme }) => theme.media.mobile} {
-    width: 150px;
-    height: 30px;
-  }
-  border-radius: 5px;
 `;
 
 const BoardHead = styled.div`
@@ -98,21 +50,30 @@ const Row = styled.div`
   width: 100%;
   height: 70px;
   display: grid;
-  grid-template-columns: 1fr 2fr 8fr 2fr 1fr;
   place-items: center;
   ${({ theme }) => theme.media.desktop} {
     padding: 0px 50px;
+    grid-template-columns: 1fr 2fr 8fr 2fr 1fr;
   }
   ${({ theme }) => theme.media.tablet} {
     padding: 0px 50px;
+    grid-template-columns: 1fr 2fr 8fr 2fr 1fr;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 0px 10px;
+    padding: 0px 5px;
+    grid-template-columns: 1.2fr 8fr 1.5fr;
   }
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   text-align: center;
   div:last-child {
     width: 60px;
+  }
+`;
+
+const LinkDiv = styled.div`
+  width: 100%;
+  a {
+    display: block;
   }
 `;
 
@@ -159,15 +120,12 @@ const Button = styled.button`
 
 interface BoardProps {
   posts: PostProps[];
-  totalBoards: number;
+  pagingInfo: PagingProps;
   currentPage: number;
 }
 
-// TODO: 로그인 했는지 안했는지 체크
-function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
+function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<PostProps[]>([]);
-  const [category, setCategory] = useState<string>('');
-  const [searchWord, setSearchWord] = useState<string>('');
 
   useEffect(() => {
     setBoard(posts);
@@ -177,79 +135,162 @@ function Board({ posts, totalBoards, currentPage }: BoardProps): JSX.Element {
     <Container>
       <Wrapper>
         <BoardsContainer>
-          <TopBar>
-            <Items>
-              <Select
-                name="category"
-                id="category"
-                value={category}
-                defaultValue=""
-                onChange={(e) => setCategory(e.currentTarget.value)}
-              >
-                <option value="" disabled>
-                  카테고리
-                </option>
-                <option value="progressing">진행중</option>
-                <option value="complete">답변완료</option>
-              </Select>
-              <Icon>
-                <MdKeyboardArrowDown />
-              </Icon>
-            </Items>
-            <Items>
-              <Input
-                type="text"
-                value={searchWord}
-                placeholder="검색어를 입력해 주세요."
-                onChange={(e) => setSearchWord(e.currentTarget.value)}
-              />
-              <Icon>
-                <BiSearchAlt2 />
-              </Icon>
-            </Items>
-          </TopBar>
-          <BoardHead>
-            <Row>
-              <div>번호</div>
-              <div>머릿말</div>
-              <div>제목</div>
-              <div>조회</div>
-              <div>댓글</div>
-            </Row>
-          </BoardHead>
-
-          {board.map((post) => (
-            <Row key={post.id}>
-              <div>{post.id}</div>
-              <div>{post.status}</div>
-              <div>
-                <Link to={`/board-suggestion/board?id=${post.id}`}>
-                  {post.title}
-                </Link>
-              </div>
-              <div>
-                <ViewIcon>
-                  <FiEye />
-                </ViewIcon>
-                {post.likes}
-              </div>
-              <div>
-                <Svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 48 48"
-                  height="48"
-                  width="48"
-                >
-                  <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
-                </Svg>
-                {post.commentList.length}
-              </div>
-            </Row>
-          ))}
+          <Desktop>
+            <>
+              <TopBar />
+              <BoardHead>
+                <Row>
+                  <div>번호</div>
+                  <div>분류</div>
+                  <div>제목</div>
+                  <div>조회</div>
+                  <div>댓글</div>
+                </Row>
+              </BoardHead>
+              {board.map((post, index) => (
+                <Row key={post.id}>
+                  <div>
+                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                  </div>
+                  <div>{post.category}</div>
+                  <LinkDiv>
+                    {post.status === '정지' ? (
+                      <Link
+                        to="/board-suggestion/boards?page=1"
+                        style={{ cursor: 'default' }}
+                      >
+                        관리자에 의해 삭제된 게시물입니다.
+                      </Link>
+                    ) : (
+                      <Link to={`/board-suggestion/board?id=${post.id}`}>
+                        {post.title}
+                      </Link>
+                    )}
+                  </LinkDiv>
+                  <div>
+                    <ViewIcon>
+                      <FiEye />
+                    </ViewIcon>
+                    {post.postHits}
+                  </div>
+                  <div>
+                    <Svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 48 48"
+                      height="48"
+                      width="48"
+                    >
+                      <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
+                    </Svg>
+                    {post.commentCount}
+                  </div>
+                </Row>
+              ))}
+            </>
+          </Desktop>
+          <Tablet>
+            <>
+              <TopBar />
+              <BoardHead>
+                <Row>
+                  <div>번호</div>
+                  <div>분류</div>
+                  <div>제목</div>
+                  <div>조회</div>
+                  <div>댓글</div>
+                </Row>
+              </BoardHead>
+              {board.map((post, index) => (
+                <Row key={post.id}>
+                  <div>
+                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                  </div>
+                  <div>{post.category}</div>
+                  <LinkDiv>
+                    {post.status === '정지' ? (
+                      <Link
+                        to="/board-suggestion/boards?page=1"
+                        style={{ cursor: 'default' }}
+                      >
+                        관리자에 의해 삭제된
+                        게시물입니다.ㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㄴㄴ
+                      </Link>
+                    ) : (
+                      <Link to={`/board-suggestion/board?id=${post.id}`}>
+                        {post.title}
+                      </Link>
+                    )}
+                  </LinkDiv>
+                  <div>
+                    <ViewIcon>
+                      <FiEye />
+                    </ViewIcon>
+                    {post.postHits}
+                  </div>
+                  <div>
+                    <Svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 48 48"
+                      height="48"
+                      width="48"
+                    >
+                      <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
+                    </Svg>
+                    {post.commentCount}
+                  </div>
+                </Row>
+              ))}
+            </>
+          </Tablet>
+          <Mobile>
+            <>
+              <MobileTopBar />
+              <BoardHead>
+                <Row>
+                  <div>번호</div>
+                  <div>제목</div>
+                  <div>댓글</div>
+                </Row>
+              </BoardHead>
+              {board.map((post, index) => (
+                <Row key={post.id}>
+                  <div>
+                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                  </div>
+                  <LinkDiv>
+                    {post.status === '정지' ? (
+                      <Link
+                        to="/board-suggestion/boards?page=1"
+                        style={{ cursor: 'default' }}
+                      >
+                        관리자에 의해 삭제된 게시물입니다.
+                      </Link>
+                    ) : (
+                      <Link to={`/board-suggestion/board?id=${post.id}`}>
+                        {post.title}
+                      </Link>
+                    )}
+                  </LinkDiv>
+                  <div>
+                    <Svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 48 48"
+                      height="48"
+                      width="48"
+                    >
+                      <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
+                    </Svg>
+                    {post.commentCount}
+                  </div>
+                </Row>
+              ))}
+            </>
+          </Mobile>
           <BottomBar>
             <PageInfo>
-              Total <PointText>{totalBoards}건,</PointText> {currentPage}/
-              {Math.ceil(totalBoards / 6)}
+              Total <PointText>{pagingInfo.totalElements}건,</PointText>
+              {currentPage}/
+              {Math.ceil(pagingInfo.totalElements / pagingInfo.size)}
             </PageInfo>
             <Link to="/board-suggestion/editor">
               <Button type="button">작성</Button>

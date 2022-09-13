@@ -30,8 +30,7 @@ function PageControl({
   currentPage: number;
 }) {
   const [pageCount, setPageCount] = useState(0);
-  const url = (page: number) =>
-    `/conference?page=${page}`;
+  const url = (page: number) => `/conference?page=${page}`;
 
   useEffect(() => {
     setPageCount(Math.ceil(postCount / 6));

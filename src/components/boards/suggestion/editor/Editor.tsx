@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Desktop, Mobile, Tablet} from 'hooks/MediaQueries';
+import { useCookies } from 'react-cookie';
+import axios from 'axios';
 import styled, { css } from 'styled-components';
 
-const TAG_LIST = [
-  '#학교생활',
-  '#교내시설',
-  '#코로나19',
-  '#장학금',
-  '#수업',
-  '#기타',
-];
+import { getCategories } from '../functions/GetCategories';
 
 const Container = styled.div`
   width: 100%;
@@ -57,13 +54,17 @@ const Content = css`
   }
 `;
 
-const TitleInput = styled.input.attrs({ type: 'text', required: true })`
+const TitleInput = styled.input.attrs({
+  type: 'text',
+  required: true,
+  maxLength: 30,
+})`
   ${Content}
   width: 100%;
   height: 40px;
 `;
 
-const Textarea = styled.textarea.attrs({ required: true })`
+const Textarea = styled.textarea.attrs({ required: true, maxLength: 20000 })`
   ${Content}
   width: 100%;
   height: 600px;
@@ -78,7 +79,7 @@ const TagList = styled.div`
   font-weight: ${({ theme }) => theme.fonts.weight.bold};
   font-size: ${({ theme }) => theme.fonts.size.md};
   user-select: none;
-  margin-bottom: 60px;
+  margin-bottom: 30px;
 `;
 
 const Tags = styled.div`
@@ -124,7 +125,7 @@ const TagLabel = styled.label<{ check: boolean }>`
   color: ${({ check, theme }) => check && theme.colors.white};
 `;
 
-const Tag = styled.input.attrs({ required: true })`
+const Tag = styled.input`
   appearance: none;
 `;
 
@@ -152,12 +153,80 @@ const Button = styled.button`
 function Editor(): JSX.Element {
   const [title, setTitle] = useState<string>('');
   const [text, setText] = useState<string>('');
-  const [tag, setTag] = useState<string>('');
+  const [category, setCategory] = useState<string>('');
+  const [categoryList, setCategoryList] = useState<[]>();
+  const [cookies] = useCookies(['X-AUTH-TOKEN']);
+
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (window.confirm('게시글 작성을 완료하시겠습니까?')) {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('text', text);
+      if (category === '') {
+        formData.append('category', '기타');
+      } else {
+        formData.append('category', category);
+      }
+
+      axios({
+        url: '/api/suggestion',
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        },
+        data: formData,
+      })
+        .then((res) => {
+          if (res.data.successful) navigate('/board-suggestion/boards?page=1');
+        })
+        .catch((err) =>
+          // 에러 처리
+          console.log(err),
+        );
+    }
+  };
+
+  useEffect(() => {
+    getCategories(cookies['X-AUTH-TOKEN']).then((res) => {
+      setCategoryList(res);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <Container>
       <Wrapper>
-        <Form>
+        <Form onSubmit={onSubmitHandler}>
+          <TagList>
+            태그
+            <Tags>
+              {categoryList?.map((item, idx) => {
+                return (
+                  <TagLabel
+                    key={categoryList.indexOf(item)}
+                    check={category === categoryList[idx]}
+                  >
+                    {item}
+                    <Tag
+                      type="radio"
+                      name="category"
+                      value={item}
+                      onChange={(e) => setCategory(e.currentTarget.value)}
+                    />
+                  </TagLabel>
+                );
+              })}
+            </Tags>
+          </TagList>
           <Label>
             제목
             <TitleInput
@@ -172,30 +241,9 @@ function Editor(): JSX.Element {
             <Textarea
               value={text}
               onChange={(e) => setText(e.currentTarget.value)}
-              placeholder="건의 내용을 입력해주세요."
+              placeholder="내용을 입력해주세요."
             />
           </Label>
-          <TagList>
-            태그
-            <Tags>
-              {TAG_LIST.map((item, idx) => {
-                return (
-                  <TagLabel key={item} check={tag === TAG_LIST[idx]}>
-                    {item}
-                    <Tag
-                      type="radio"
-                      name="hashtag"
-                      value={item}
-                      onChange={(e) => {
-                        setTag(e.currentTarget.value);
-                      }}
-                      required
-                    />
-                  </TagLabel>
-                );
-              })}
-            </Tags>
-          </TagList>
           <ButtonDiv>
             <Button type="submit">작성완료</Button>
           </ButtonDiv>

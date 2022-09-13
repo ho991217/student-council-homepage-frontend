@@ -13,9 +13,12 @@ import Conference from 'pages/Conference';
 import InquiryBoard from 'pages/communication/InquiryBoard';
 import Login from 'pages/Login';
 import SignUp from 'pages/SignUp';
+import Password from 'pages/Password';
 import Pledge from 'pages/council/Pledge';
 // import Editor from 'pages/communication/Editor';
-import ConferenceEditor from 'pages/ConferenceEditor';
+import ConferenceEditor from 'components/conference/ConferenceEditor';
+import RuleEditor from 'components/rules/RuleEditor';
+import NewsEditor from 'components/news/NewsEditor';
 import PetitionBoard from 'pages/communication/petition/PetitionBoard';
 import PetitionPost from 'components/boards/petition/post/Post';
 import PetitionEditor from 'pages/communication/petition/Editor';
@@ -35,6 +38,7 @@ import Term from 'components/global/footer/sub-routes/Term';
 import PrivacyPolicy from 'components/global/footer/sub-routes/PrivacyPolicy';
 import { LoginStateAtom } from 'atoms/LoginState';
 import Success from 'components/sign-up/Succes';
+import PasswordSuccess from 'components/password/Succes';
 
 function Router() {
   const [{ isLoggedIn, admin }, setLoginState] = useRecoilState(LoginStateAtom);
@@ -45,7 +49,7 @@ function Router() {
       admin: cookies.isAdmin === 'true',
     });
   }, []);
-
+  if (isLoggedIn === undefined) return <div>로딩중...</div>;
   return (
     <BrowserRouter>
       <Gnb />
@@ -65,15 +69,19 @@ function Router() {
           }
         />
         <Route
-          path="/sign-up"
+          path="/password"
           element={
             <>
-              <GlobalBanner title="회원가입" detail="회원가입 입니다." />
-              <SignUp />
+              <GlobalBanner
+                title="비밀번호찾기"
+                detail="비밀번호찾기 입니다."
+              />
+              <Password />
             </>
           }
         />
         <Route path="/sign-up/success" element={<Success />} />
+        <Route path="/password/success" element={<PasswordSuccess />} />
         <Route path="/greeting" element={<Greeting />} />
         <Route path="/organization" element={<Organization />} />
         <Route path="/location" element={<Location />} />
@@ -97,6 +105,22 @@ function Router() {
           }
         />
         <Route
+          path="/news/editor"
+          element={
+            isLoggedIn ? (
+              <>
+                <GlobalBanner
+                  title="총학소식 작성"
+                  detail="총학소식 작성 입니다."
+                />
+                <NewsEditor />
+              </>
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
           path="/rules"
           element={isLoggedIn ? <Rules /> : <Navigate to="/login" />}
         />
@@ -113,6 +137,19 @@ function Router() {
               </>
             ) : (
               <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/rule/editor"
+          element={
+            isLoggedIn ? (
+              <>
+                <GlobalBanner title="회칙작성" detail="회칙작성 입니다." />
+                <RuleEditor />
+              </>
+            ) : (
+              <Navigate to="/" />
             )
           }
         />
@@ -214,8 +251,8 @@ function Router() {
               isLoggedIn ? (
                 <>
                   <GlobalBanner
-                    title="건의게시판"
-                    detail="건의게시판 입니다."
+                    title="자유게시판"
+                    detail="자유게시판 입니다."
                   />
                   <SuggestionBoard />
                 </>
@@ -230,8 +267,8 @@ function Router() {
               isLoggedIn ? (
                 <>
                   <GlobalBanner
-                    title="건의게시판"
-                    detail="건의게시판 입니다."
+                    title="자유게시판"
+                    detail="자유게시판 입니다."
                   />
                   <SuggestionPost />
                 </>
@@ -246,8 +283,8 @@ function Router() {
               isLoggedIn ? (
                 <>
                   <GlobalBanner
-                    title="건의게시판"
-                    detail="건의게시판 입니다."
+                    title="자유게시판"
+                    detail="자유게시판 입니다."
                   />
                   <SuggestionEditor />
                 </>
@@ -261,7 +298,7 @@ function Router() {
           path="/board-inquiry"
           element={
             <>
-              <GlobalBanner title="문의게시판" detail="문의게시판 입니다." />
+              <GlobalBanner title="소통 창구" detail="소통 창구 입니다." />
               <InquiryBoard />
             </>
           }

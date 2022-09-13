@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useCookies } from 'react-cookie';
 
 import { RuleProps } from './RuleProps';
+import { PagingProps } from './PageControl';
 
 const Container = styled.div`
   width: 100%;
@@ -44,7 +46,6 @@ const Row = styled.div`
     display: flex;
     place-content: center;
     place-items: center;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   }
 `;
 
@@ -57,10 +58,12 @@ const Title = styled.div`
 
 const Content = styled.div`
   :nth-child(2) {
-    display: flex;
-    justify-content: left;
-    padding-left: 25px;
-    cursor: pointer;
+    width: 100%;
+    margin: 30px auto;
+    display: block;
+    a {
+      display: block;
+    }
   }
 `;
 
@@ -69,12 +72,35 @@ const Svg = styled.svg`
   height: 16px;
 `;
 
+const Button = styled.button`
+  all: unset;
+  text-align: center;
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  width: 75px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  float: right;
+  margin-top: 12px;
+`;
+
 interface BoardProps {
   posts: RuleProps[];
+  pagingInfo: PagingProps;
+  currentPage: number;
 }
 
-function RulesBoard({ posts }: BoardProps): JSX.Element {
+function RulesBoard({
+  posts,
+  pagingInfo,
+  currentPage,
+}: BoardProps): JSX.Element {
   const [board, setBoard] = useState<RuleProps[]>([]);
+  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
+  const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
 
   useEffect(() => {
     setBoard(posts);
@@ -94,9 +120,11 @@ function RulesBoard({ posts }: BoardProps): JSX.Element {
               <Title>첨부파일</Title>
             </Row>
           </BoardHead>
-          {board.map((post) => (
+          {board.map((post, index) => (
             <Row key={post.id}>
-              <Content>{post.id}</Content>
+              <Content>
+                {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+              </Content>
               <Content>
                 <Link to={`/rule?id=${post.id}`}>{post.title}</Link>
               </Content>
@@ -107,7 +135,7 @@ function RulesBoard({ posts }: BoardProps): JSX.Element {
                 <a
                   target="_blank"
                   rel="noopener noreferrer"
-                  href={post.fileList}
+                  href={post?.fileList[0]?.url}
                 >
                   <Svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -121,6 +149,11 @@ function RulesBoard({ posts }: BoardProps): JSX.Element {
               </Content>
             </Row>
           ))}
+          {isAdmin && (
+            <Link to="/rule/editor">
+              <Button type="button">작성</Button>
+            </Link>
+          )}
         </BoardsContainer>
       </Wrapper>
     </Container>

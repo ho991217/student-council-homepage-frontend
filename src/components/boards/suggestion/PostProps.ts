@@ -1,18 +1,8 @@
 export interface PostProps {
+  commentCount: number;
   id: number;
-  status: string;
+  postHits: number;
   title: string;
-  likes: number;
-  tag: string;
-  commentList: Comment[];
-  createdAt: string;
-  dueDate: string;
-  contents: JSX.Element;
-}
-
-export interface Comment {
-  id: number;
-  writer: string;
-  contents: string;
-  createdAt: string;
+  category: string;
+  status: string;
 }

@@ -5,6 +5,7 @@ import CopyrightTerm from 'components/global/CopyrightTerm';
 import { Desktop } from 'hooks/MediaQueries';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import ReactModal from 'react-modal';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
@@ -169,24 +170,6 @@ const LoginButton = styled.input.attrs({ type: 'submit' })`
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
-// const Detail = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   justify-content: center;
-//   margin: 15px 0;
-//   font-size: ${({ theme }) => theme.fonts.size.xs};
-//   font-weight: ${({ theme }) => theme.fonts.weight.regular};
-
-//   span:first-child {
-//     margin-bottom: 5px;
-//     color: ${({ theme }) => theme.colors.gray400};
-//   }
-//   span:last-child {
-//     color: ${({ theme }) => theme.colors.gray200};
-//   }
-// `;
-
 const ExtrasContainer = styled.div`
   display: flex;
   align-items: center;
@@ -264,6 +247,59 @@ const SaveIdToggle = styled.div<{ saveId: boolean }>`
   transition: background-color 0.2s ease-in-out, left 0.2s ease-in-out; ;
 `;
 
+const ModalContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ModalMessage = styled.span`
+  font-size: ${({ theme }) => theme.fonts.size.lg};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
+  margin-bottom: 1rem;
+`;
+
+const ModalClose = styled.input.attrs({ type: 'button' })`
+  all: unset;
+  background-color: ${({ theme }) => theme.colors.primary};
+  cursor: pointer;
+  border-radius: 9999px;
+  padding: 10px 15px;
+  color: ${({ theme }) => theme.colors.gray020};
+`;
+
+const modalStyle = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backdropFilter: 'blur(1px)',
+  },
+  content: {
+    width: '30%',
+    height: '200px',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%,-50%)',
+    border: 'none',
+    boxShadow: '0px 4px 5px 2px rgba(0, 0, 0, 0.05)',
+    borderRadius: '15px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+};
+
+interface LoginErrorProps {
+  response: {
+    data: {
+      message: string;
+      successful: boolean;
+    };
+  };
+}
+
 function Login(): JSX.Element {
   const [id, setId] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -273,6 +309,10 @@ function Login(): JSX.Element {
   const [, setLoginState] = useRecoilState(LoginStateAtom);
   const [, setCookie] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const navigate = useNavigate();
+  const [loginErrorState, setLoginErrorState] = useState({
+    error: false,
+    message: '',
+  });
 
   const validateDankookEmail = (email: string) => {
     const regex = /^[0-9]{8}$/;
@@ -303,9 +343,20 @@ function Login(): JSX.Element {
         });
         navigate('/');
       })
-      .catch((error) => {
-        // TODO:에러메시지
-        alert(error);
+      .catch(({ response }: LoginErrorProps) => {
+        let message = '';
+
+        if (response.data.message === 'classId not found;') {
+          message = '가입되지 않은 학번입니다.';
+        } else if (response.data.message === 'Wrong pwd') {
+          message = '올바르지 않은 비밀번호 입니다.';
+        } else {
+          message = 'UNKNOWN ERROR';
+        }
+        setLoginErrorState({
+          error: true,
+          message,
+        });
       });
   };
 
@@ -342,6 +393,15 @@ function Login(): JSX.Element {
   return (
     <>
       <GlobalBanner title="로그인" detail="로그인 화면입니다." />
+      <ReactModal style={modalStyle} isOpen={loginErrorState.error}>
+        <ModalContainer>
+          <ModalMessage>{loginErrorState.message}</ModalMessage>
+          <ModalClose
+            value="닫기"
+            onClick={() => setLoginErrorState({ error: false, message: '' })}
+          />
+        </ModalContainer>
+      </ReactModal>
       <Wrapper>
         <Header>
           단국대학생 <HeaderPoint>로그인</HeaderPoint>
@@ -386,7 +446,9 @@ function Login(): JSX.Element {
             <Extras>
               <SignUpButton to="/sign-up">회원가입</SignUpButton>
               <Vseparator />
-              <FindPasswordButton to="/">비밀번호 찾기</FindPasswordButton>
+              <FindPasswordButton to="/password">
+                비밀번호 찾기
+              </FindPasswordButton>
             </Extras>
           </ExtrasContainer>
         </InnerContainer>

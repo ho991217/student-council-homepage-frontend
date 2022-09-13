@@ -65,6 +65,11 @@ const SmallTile = styled.div`
   width: 100%;
   height: 178px;
   background-color: ${({ theme }) => theme.colors.white};
+  ${({ theme }) => theme.media.desktop} {
+  }
+  ${({ theme }) => theme.media.tablet} {
+    height: 100%;
+  }
   ${({ theme }) => theme.media.mobile} {
     margin-bottom: 20px;
   }
@@ -89,7 +94,7 @@ function Tiles(): JSX.Element {
           <Tile
             title="실시간 인기청원"
             linkTitle="더보기"
-            to="/board-petition/boards?page=1&filter=전체"
+            to="/board-petition/boards?page=1"
             detail="petition"
           />
         </SmallTile>

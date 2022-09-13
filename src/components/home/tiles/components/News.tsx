@@ -13,7 +13,7 @@ const Wrapper = styled.div`
 const P = styled.p`
   color: ${({ theme }) => theme.colors.gray900};
   margin-bottom: 7px;
-  font-size: ${({ theme }) => theme.fonts.size.md};
+  font-size: ${({ theme }) => theme.fonts.size.base};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 

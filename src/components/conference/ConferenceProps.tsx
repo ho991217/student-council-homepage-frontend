@@ -4,6 +4,11 @@ export interface ConferenceProps {
   title: string;
   date: string;
   createDate: string;
-  files: string;
+  files: FileProps[];
   postHits: number;
+}
+
+export interface FileProps {
+  originName: string;
+  url: string;
 }

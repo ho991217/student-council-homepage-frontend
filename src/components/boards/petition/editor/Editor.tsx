@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import ReactModal from 'react-modal';
 import { Desktop, Tablet, Mobile } from 'hooks/MediaQueries';
 import Modal from './Modal';
+import { getCategories } from '../functions/GetCategories';
 
 const customStylesDesktop = {
   content: {
@@ -133,12 +135,23 @@ const Button = styled.button`
   border-radius: 5px;
 `;
 
+interface ErrorProps {
+  response: {
+    data: {
+      message: '1일 1회만 청원 등록이 가능합니다.';
+      successful: boolean;
+    };
+  };
+}
+
 function Editor(): JSX.Element {
+  const [categoryList, setCategoryList] = useState<[]>();
   const [category, setCategory] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
+  const navigate = useNavigate();
 
   const onCategoryHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const {
@@ -177,9 +190,39 @@ function Editor(): JSX.Element {
     setIsOpen(false);
   };
 
-  const onSubmitHandler = () => {
-    // TODO: 백으로 데이터 전송
+  const onSubmitHandler = async () => {
+    const data = JSON.stringify({
+      category,
+      title,
+      text: content,
+    });
+    try {
+      const res = await axios({
+        method: 'post',
+        url: '/api/petition',
+        headers: {
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+          'Content-Type': 'application/json',
+        },
+        data,
+      });
+      navigate(`/board-petition/board?id=${res.data.data.id}`);
+    } catch (e) {
+      const err = e as ErrorProps;
+      // TODO:등록 실패
+      // 하루 여러개 등의 이유
+      if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
+        navigate(-1);
+        alert(err.response.data.message);
+      }
+    }
   };
+
+  useEffect(() => {
+    getCategories(cookies['X-AUTH-TOKEN']).then((res) => {
+      setCategoryList(res);
+    });
+  }, []);
 
   return (
     <Container>
@@ -197,15 +240,13 @@ function Editor(): JSX.Element {
               <option value="" disabled>
                 카테고리를 선택해주세요.
               </option>
-              <option value="school-life">학교생활</option>
-              <option value="school-facilities">교내시설</option>
-              <option value="covid-19">코로나19</option>
-              <option value="scholarship">장학금</option>
-              <option value="lesson">수업</option>
-              <option value="etc">기타</option>
+              {categoryList?.map((category) => (
+                <option key={categoryList.indexOf(category)} value={category}>
+                  {category}
+                </option>
+              ))}
             </Select>
           </Label>
-
           <Label htmlFor="title">
             청원 제목
             <TitleInput

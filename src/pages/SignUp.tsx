@@ -19,7 +19,7 @@ function SignUp() {
       token={emailVerificationToken}
     />
   ) : (
-    <StudentIdValidation />
+    <StudentIdValidation type="회원가입" />
   );
 }
 

@@ -22,19 +22,29 @@ const Index = styled.li<{ cur: boolean }>`
   font-weight: ${(props) => (props.cur ? '500' : '300')};
 `;
 
+export interface PagingProps {
+  first: boolean;
+  hasNext: boolean;
+  last: boolean;
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
 function PageControl({
-  postCount,
   currentPage,
+  pagingInfo,
 }: {
-  postCount: number;
   currentPage: number;
+  pagingInfo: PagingProps;
 }) {
   const [pageCount, setPageCount] = useState(0);
   const url = (page: number) => `/council-news?page=${page}`;
 
   useEffect(() => {
-    setPageCount(Math.ceil(postCount / 6));
-  }, [postCount]);
+    setPageCount(Math.ceil(pagingInfo.totalElements / pagingInfo.size));
+  }, [pagingInfo.totalElements]);
 
   return (
     <Container>

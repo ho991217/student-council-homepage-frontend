@@ -41,7 +41,7 @@ const MonthDisplay = styled.div`
   }
 
   ${({ theme }) => theme.media.mobile} {
-    font-size: ${({ theme }) => theme.fonts.size.xxl};
+    font-size: ${({ theme }) => theme.fonts.size.xl};
     font-weight: ${({ theme }) => theme.fonts.weight.bold};
   }
   cursor: pointer;
@@ -120,7 +120,7 @@ function Schedule(): JSX.Element {
 
     const config = {
       method: 'get',
-      url: `http://133.186.132.198:8080/api/schedule?from=${dateString}01&to=${dateString}${new Date(
+      url: `/api/schedule?from=${dateString}01&to=${dateString}${new Date(
         curYear,
         curMonth + 1,
         0,
@@ -131,7 +131,7 @@ function Schedule(): JSX.Element {
     axios(config)
       .then((response) => setCurMonthDetails(response.data.data))
       .catch((error) => {
-        // alert(error);
+        // TODO:에러 처리
       });
   };
 

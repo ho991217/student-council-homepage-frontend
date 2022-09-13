@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useCookies } from 'react-cookie';
 
 import { RuleProps } from '../RuleProps';
+import { PagingProps } from '../PageControl';
 
 const Container = styled.div`
   width: 100%;
@@ -46,7 +48,6 @@ const Row = styled.div`
     display: flex;
     place-content: center;
     place-items: center;
-    border-bottom: 0.5px solid ${({ theme }) => theme.colors.gray100};
   }
   :nth-child(1) {
     border-bottom: none;
@@ -56,11 +57,6 @@ const Row = styled.div`
 const Title = styled.div`
   border-right: 1px solid ${({ theme }) => theme.colors.gray100};
   height: 30px;
-  :nth-child(2) {
-    display: flex;
-    justify-content: left;
-    padding-left: 25px;
-  }
   :last-child {
     border-right: none;
   }
@@ -68,21 +64,47 @@ const Title = styled.div`
 
 const Content = styled.div`
   :nth-child(2) {
-    display: flex;
-    justify-content: left;
-    padding-left: 15px;
+    width: 100%;
+    margin: 30px auto;
+    display: block;
+    a {
+      display: block;
+    }
   }
   :last-child {
     color: ${({ theme }) => theme.colors.gray400};
   }
 `;
 
+const Button = styled.button`
+  all: unset;
+  text-align: center;
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  width: 65px;
+  height: 30px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  float: right;
+  margin-top: 12px;
+`;
+
 interface BoardProps {
   posts: RuleProps[];
+  pagingInfo: PagingProps;
+  currentPage: number;
 }
 
-function RulesBoard({ posts }: BoardProps): JSX.Element {
+function RulesBoard({
+  posts,
+  pagingInfo,
+  currentPage,
+}: BoardProps): JSX.Element {
   const [board, setBoard] = useState<RuleProps[]>([]);
+  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
+  const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
 
   useEffect(() => {
     setBoard(posts);
@@ -99,15 +121,22 @@ function RulesBoard({ posts }: BoardProps): JSX.Element {
               <Title>부서명</Title>
             </Row>
           </BoardHead>
-          {board.map((post) => (
+          {board.map((post, index) => (
             <Row key={post.id}>
-              <Content>{post.id}</Content>
+              <Content>
+                {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+              </Content>
               <Content>
                 <Link to={`/rule?id=${post.id}`}>{post.title}</Link>
               </Content>
               <Content>{post.userName}</Content>
             </Row>
           ))}
+          {isAdmin && (
+            <Link to="/rule/editor">
+              <Button type="button">작성</Button>
+            </Link>
+          )}
         </BoardsContainer>
       </Wrapper>
     </Container>

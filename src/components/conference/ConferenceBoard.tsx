@@ -119,8 +119,6 @@ function ConferenceBoard({
         },
       })
       .then(function (response) {
-        const result = response.data;
-        console.log(result.message);
         window.location.replace('/conference');
       })
       .catch(function (error) {
@@ -158,7 +156,11 @@ function ConferenceBoard({
               <div>{post.createDate}</div>
               <div>{post.title}</div>
               <div>
-                <a target="_blank" rel="noopener noreferrer" href={post.files}>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={post.files[0].url}
+                >
                   <Svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 64 64"
