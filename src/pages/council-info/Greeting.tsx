@@ -1,10 +1,8 @@
-import axios from 'axios';
 import Block from 'components/global/Block';
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 // TODO: 이미지 스토리지 서버에 올라가면 변경하기
-import samplePhoto from 'static/images/samples/sample-image-1.png';
+import samplePhoto from 'static/images/samples/council-image.jpg';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -17,24 +15,18 @@ const Img = styled.img`
   width: 100%;
 `;
 
-function Greeting(): JSX.Element {
-  const [url, setUrl] = useState('');
-  // const getImages = async () => {
-  //   axios.get('https://picsum.photos/1200/620').then((res) => {
-  //     setUrl(res.request.responseURL);
-  //   });
-  // };
+const P = styled.p`
+  margin-bottom: 20px;
+`;
 
-  // useEffect(() => {
-  //   getImages();
-  // }, []);
+function Greeting(): JSX.Element {
   return (
     <Wrapper>
       <Block
         title="인사말"
         contents={
           <div>
-            <p style={{ lineHeight: 1.4 }}>
+            <P style={{ lineHeight: 1.4 }}>
               안녕하십니까
               <br />
               단국대학교 죽전캠퍼스 학우 여러분, 54대 PLAY! 총학생회입니다:)
@@ -48,7 +40,7 @@ function Greeting(): JSX.Element {
               <br />
               <br />
               감사합니다.
-            </p>
+            </P>
             <Img src={samplePhoto} alt="" width={1000} />
           </div>
         }
