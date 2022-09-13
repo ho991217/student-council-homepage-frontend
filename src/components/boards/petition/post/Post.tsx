@@ -7,7 +7,7 @@ import ReactModal from 'react-modal';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
-const TARGET_AGREEMENT = 100;
+const TARGET_AGREEMENT = 150;
 
 const Container = styled.div`
   width: 100%;
