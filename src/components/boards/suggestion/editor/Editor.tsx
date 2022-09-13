@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import styled, { css } from 'styled-components';
@@ -53,7 +53,11 @@ const Content = css`
   }
 `;
 
-const TitleInput = styled.input.attrs({ type: 'text', required: true, maxLength: 50 })`
+const TitleInput = styled.input.attrs({
+  type: 'text',
+  required: true,
+  maxLength: 50,
+})`
   ${Content}
   width: 100%;
   height: 40px;
@@ -151,11 +155,14 @@ function Editor(): JSX.Element {
   const [category, setCategory] = useState<string>('');
   const [categoryList, setCategoryList] = useState<[]>();
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
-  const navigate = useNavigate();
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
 
-    if(window.confirm('게시글 작성을 완료하시겠습니까?')) {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (window.confirm('게시글 작성을 완료하시겠습니까?')) {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('text', text);
@@ -179,9 +186,9 @@ function Editor(): JSX.Element {
         })
         .catch((err) =>
           // 에러 처리
-          console.log(err)
+          console.log(err),
         );
-      }
+    }
   };
 
   useEffect(() => {
@@ -189,6 +196,10 @@ function Editor(): JSX.Element {
       setCategoryList(res);
     });
   }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <Container>
