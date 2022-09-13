@@ -33,17 +33,14 @@ function PetitionBoard(): JSX.Element {
   const getPosts = async () => {
     const { page } = qs.parse(searchParams.toString());
     let { filter } = qs.parse(searchParams.toString());
-    let { status } = qs.parse(searchParams.toString());
     const { query } = qs.parse(searchParams.toString());
 
     if (filter === '전체') filter = '';
-    if (status === '전체') status = '';
 
     const { data } = await axios({
       method: 'get',
       url: `/api/suggestion?page=${Number(page) - 1}&size=6&sort=id,desc`
         .concat(filter ? `&category=${filter}` : '')
-        .concat(status ? `&status=${status}` : '')
         .concat(query ? `&query=${query}` : ''),
     });
 
