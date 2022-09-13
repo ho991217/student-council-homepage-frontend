@@ -56,16 +56,10 @@ function FilterControl() {
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
 
   const generateParams = (tag: string) => {
-    let { status } = qs.parse(params[0].toString());
-    let { query } = qs.parse(params[0].toString());
-
-    if (!status) status = '';
-    if (!query) query = '';
-
-    if (tag === '전체' && status === '' && query === '') {
+    if (tag === '전체') {
       return `/board-suggestion/boards?page=1`;
     } 
-    return `/board-suggestion/boards?page=1&filter=${tag}&status=${status}&query=${query}`;
+    return `/board-suggestion/boards?page=1&filter=${tag}&query=`;
   };
 
   useEffect(() => {
