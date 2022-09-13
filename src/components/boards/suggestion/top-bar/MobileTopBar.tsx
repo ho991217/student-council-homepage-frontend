@@ -48,11 +48,11 @@ function MobileTopBar() {
     setSearchWord(value);
   };
 
-  const onSearchButtonHandler = () => {
+  const onSearchBtnHandler = () => {
     let { filter } = qs.parse(params[0].toString());
-
     if (!filter) filter = '';
 
+    setSearchWord('');
     navigate(
       `/board-suggestion/boards?page=1&filter=${filter}&query=${searchWord}`,
     );
@@ -60,7 +60,7 @@ function MobileTopBar() {
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      onSearchButtonHandler();
+      onSearchBtnHandler();
     }
   };
 
@@ -73,11 +73,11 @@ function MobileTopBar() {
         onChange={onSearchWordHandler}
         onKeyPress={handleKeyPress}
       />
-      <Button type="button" onClick={onSearchButtonHandler}>
+      <Button type="button" onClick={onSearchBtnHandler}>
         검색
       </Button>
     </Wrapper>
-  )
+  );
 }
 
 export default MobileTopBar
