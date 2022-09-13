@@ -177,8 +177,6 @@ function Detail() {
         },
       })
       .then(function (response) {
-        const result = response.data;
-        console.log(result.message);
         window.location.replace('/council-news');
       })
       .catch(function (error) {

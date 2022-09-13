@@ -159,7 +159,7 @@ function InputNewPassword({
       userId: studentId,
       newPW: password,
     });
-    console.log(data);
+
     try {
       const res = await axios({
         method: 'patch',
@@ -170,7 +170,6 @@ function InputNewPassword({
         },
         data,
       });
-      console.log(res.data);
       if (res.data.successful) {
         navigate('/password/success');
       } else {
@@ -181,7 +180,6 @@ function InputNewPassword({
     }
   };
 
-  /** 비밀번호 확인하는 함수 */
   const handleCheckPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget;
     setPasswordState((prev) => ({ ...prev, checkPassword: value }));
@@ -191,7 +189,6 @@ function InputNewPassword({
     }
   };
 
-  /** 비밀번호 메시지를 설정 해 주는 함수 */
   const passwordMsg = (level: number) => {
     let errMsg = '';
     switch (level) {
@@ -220,7 +217,6 @@ function InputNewPassword({
     setPasswordState((prev) => ({ ...prev, errMsg }));
   };
 
-  /** 가입이 가능한 지 확인하는 함수 */
   const isRegisterable = (): boolean => {
     return passwordState.verified;
   };

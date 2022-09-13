@@ -164,8 +164,6 @@ function Detail() {
         },
       })
       .then(function (response) {
-        const result = response.data;
-        console.log(result.message);
         window.location.replace('/conference');
       })
       .catch(function (error) {
