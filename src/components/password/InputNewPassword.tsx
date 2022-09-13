@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { KeyboardEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -48,7 +48,7 @@ const PasswordInput = styled.input.attrs({
   padding: 0 10px;
 `;
 
-const SignUpButton = styled.button<{ active: boolean }>`
+const ChangeButton = styled.button<{ active: boolean }>`
   all: unset;
   width: 450px;
   height: 50px;
@@ -134,6 +134,14 @@ function InputNewPassword({
   });
   const navigate = useNavigate();
 
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      if (isRegisterable()) {
+        onSubmitChange();
+      }
+    }
+  };
+
   const handlePasswordChange = ({ currentTarget }: any) => {
     const password = currentTarget.value;
     setPassword(password);
@@ -146,13 +154,12 @@ function InputNewPassword({
     }));
   };
 
-  /** 최종 회원가입을 처리하는 함수 */
-  const handleSignUp = async () => {
+  const onSubmitChange = async () => {
     const data = JSON.stringify({
       userId: studentId,
       newPW: password,
     });
-    console.log(data);
+
     try {
       const res = await axios({
         method: 'patch',
@@ -163,7 +170,6 @@ function InputNewPassword({
         },
         data,
       });
-      console.log(res.data);
       if (res.data.successful) {
         navigate('/password/success');
       } else {
@@ -174,7 +180,6 @@ function InputNewPassword({
     }
   };
 
-  /** 비밀번호 확인하는 함수 */
   const handleCheckPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget;
     setPasswordState((prev) => ({ ...prev, checkPassword: value }));
@@ -184,7 +189,6 @@ function InputNewPassword({
     }
   };
 
-  /** 비밀번호 메시지를 설정 해 주는 함수 */
   const passwordMsg = (level: number) => {
     let errMsg = '';
     switch (level) {
@@ -213,7 +217,6 @@ function InputNewPassword({
     setPasswordState((prev) => ({ ...prev, errMsg }));
   };
 
-  /** 가입이 가능한 지 확인하는 함수 */
   const isRegisterable = (): boolean => {
     return passwordState.verified;
   };
@@ -224,7 +227,11 @@ function InputNewPassword({
         단국대학교 총학생회 <HeaderPoint>비밀번호 변경</HeaderPoint>
       </Header>
       <InnerContainer>
-        <InputContainer>
+        <InputContainer
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+        >
           <PasswordInput
             placeholder="새로운 비밀번호 입력"
             value={password}
@@ -240,11 +247,16 @@ function InputNewPassword({
           </>
         )}
 
-        <InputContainer>
+        <InputContainer
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+        >
           <PasswordInput
             placeholder="새로운 비밀번호 확인"
             value={passwordState.checkPassword}
             onChange={handleCheckPassword}
+            onKeyDown={handleKeyPress}
           />
         </InputContainer>
         {passwordState.checkPassword !== '' &&
@@ -253,13 +265,13 @@ function InputNewPassword({
           ) : (
             <Message>비밀번호가 일치하지 않습니다.</Message>
           ))}
-        <SignUpButton
+        <ChangeButton
           active={isRegisterable()}
           disabled={!isRegisterable()}
-          onClick={handleSignUp}
+          onClick={onSubmitChange}
         >
           변경하기
-        </SignUpButton>
+        </ChangeButton>
       </InnerContainer>
       <CopyrightTerm />
     </Wrapper>

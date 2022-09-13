@@ -183,8 +183,6 @@ function Detail() {
         },
       })
       .then(function (response) {
-        const result = response.data;
-        console.log(result.message);
         window.location.replace('/rules');
       })
       .catch(function (error) {

@@ -6,7 +6,12 @@ interface ModalProps {
 }
 
 const Container = styled.div`
-  position: absolute;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 99;
   width: 100%;
   height: 100%;
