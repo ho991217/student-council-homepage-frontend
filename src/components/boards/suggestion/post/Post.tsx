@@ -38,6 +38,10 @@ const Hr = styled.div<{ bold?: boolean }>`
   margin: ${({ bold }) => (bold ? '5px 0px' : '10px 0px')};
 `;
 
+const EditButtons = styled.div`
+  display: flex;
+`;
+
 const Button = styled.button.attrs({ type: 'button' })`
   background-color: ${({ theme }) => theme.colors.red};
   color: ${({ theme }) => theme.colors.white};
@@ -143,21 +147,6 @@ const CommentAuthor = styled.div`
   margin-right: 10px;
   font-size: ${({ theme }) => theme.fonts.size.sm};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
-`;
-
-const EditButtons = styled.div`
-  display: flex;
-`;
-
-const Buttons = styled.button`
-  background-color: ${({ theme }) => theme.colors.red};
-  color: ${({ theme }) => theme.colors.white};
-  font-size: ${({ theme }) => theme.fonts.size.xs};
-  cursor: pointer;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  margin: 10px 10px 0 0;
 `;
 
 const CommentDate = styled.div`

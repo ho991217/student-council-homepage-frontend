@@ -53,13 +53,13 @@ const Content = css`
   }
 `;
 
-const TitleInput = styled.input.attrs({ type: 'text', required: true })`
+const TitleInput = styled.input.attrs({ type: 'text', required: true, maxLength: 50 })`
   ${Content}
   width: 100%;
   height: 40px;
 `;
 
-const Textarea = styled.textarea.attrs({ required: true })`
+const Textarea = styled.textarea.attrs({ required: true, maxLength: 20000 })`
   ${Content}
   width: 100%;
   height: 600px;
