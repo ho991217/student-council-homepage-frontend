@@ -302,8 +302,6 @@ function Post() {
     setCommentId(item.id);
   };
 
-  console.log(post)
-
   return (
     <Container>
       <Wrapper>
