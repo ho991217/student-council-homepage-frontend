@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import Modal from 'components/sign-up/Modal';
+import { PropagateLoader } from 'react-spinners';
 
 const Container = styled.div`
   margin: 40px 0;
@@ -99,12 +101,21 @@ const MyDatePicker = styled(DatePicker)`
   margin-top: 10px;
 `;
 
+const Text = styled.span`
+  font-size: ${({ theme }) => theme.fonts.size.xl};
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
+  margin-bottom: 20px;
+`;
+
 function ConferenceEditor() {
   const [round, setRound] = useState<string>('');
   const [date, settDate] = useState<Date>(new Date());
   const [title, setTitle] = useState<string>('');
   const [form, setForm] = useState<FormData>();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [postState, setPostState] = useState({
+    sent: false,
+    success: false,
+  });
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
 
@@ -134,7 +145,9 @@ function ConferenceEditor() {
     setForm(formData);
   };
 
-  const checkValid = () => {
+  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     if (title === '') {
       alert('제목을 입력해주세요');
     } else if (round === '') {
@@ -144,15 +157,10 @@ function ConferenceEditor() {
     } else if (form === undefined) {
       alert('파일을 첨부해주세요');
     } else {
-      setIsOpen(true);
-    }
-  };
-
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    checkValid();
-
-    if (isOpen) {
+      setPostState((prev) => ({
+        ...prev,
+        sent: true,
+      }));
       const config = {
         method: 'post',
         url: '/api/conference',
@@ -165,9 +173,11 @@ function ConferenceEditor() {
 
       axios(config)
         .then(function (response) {
-          console.log(response.data);
-          console.log('success');
-          navigate('/conference');
+          setPostState((prev) => ({
+            ...prev,
+            success: response.data.successful,
+          }));
+          navigate('/council-news');
         })
         .catch(function (error) {
           // 에러 핸들링
@@ -177,53 +187,66 @@ function ConferenceEditor() {
   };
 
   return (
-    <Container>
-      <InnerContainer>
-        <Wrapper>
-          <Form onSubmit={onSubmitHandler}>
-            <Label htmlFor="round">
-              회차
-              <TitleInput
-                type="text"
-                id="round"
-                value={round}
-                onChange={onRoundHandler}
-                placeholder="회차를 입력해주세요."
-              />
-            </Label>
-            <Label htmlFor="date">
-              개최일자
-              <MyDatePicker
-                selected={date}
-                dateFormat="yyyy-MM-dd" // 날짜 형식
-                onChange={(selectDate: Date) => settDate(selectDate)}
-              />
-            </Label>
-            <Label htmlFor="title">
-              회의록명
-              <TitleInput
-                type="text"
-                id="title"
-                value={title}
-                onChange={onTitleHandler}
-                placeholder="회의록명을 입력해주세요."
-              />
-            </Label>
-            <Label htmlFor="file">
-              첨부파일
-              <input
-                type="file"
-                onChange={handleChange}
-                style={{ marginTop: 10 }}
-              />
-            </Label>
-            <ButtonDiv>
-              <Button value="작성완료" />
-            </ButtonDiv>
-          </Form>
-        </Wrapper>
-      </InnerContainer>
-    </Container>
+    <>
+      {postState.sent && !postState.success && (
+        <Modal>
+          <>
+            <Text>작성 중...</Text>
+            <PropagateLoader
+              style={{ transform: 'translateX(-5px)' }}
+              color="#9753DC"
+            />
+          </>
+        </Modal>
+      )}
+      <Container>
+        <InnerContainer>
+          <Wrapper>
+            <Form onSubmit={onSubmitHandler}>
+              <Label htmlFor="round">
+                회차
+                <TitleInput
+                  type="text"
+                  id="round"
+                  value={round}
+                  onChange={onRoundHandler}
+                  placeholder="회차를 입력해주세요."
+                />
+              </Label>
+              <Label htmlFor="date">
+                개최일자
+                <MyDatePicker
+                  selected={date}
+                  dateFormat="yyyy-MM-dd" // 날짜 형식
+                  onChange={(selectDate: Date) => settDate(selectDate)}
+                />
+              </Label>
+              <Label htmlFor="title">
+                회의록명
+                <TitleInput
+                  type="text"
+                  id="title"
+                  value={title}
+                  onChange={onTitleHandler}
+                  placeholder="회의록명을 입력해주세요."
+                />
+              </Label>
+              <Label htmlFor="file">
+                첨부파일
+                <input
+                  type="file"
+                  onChange={handleChange}
+                  style={{ marginTop: 10 }}
+                />
+              </Label>
+              <ButtonDiv>
+                <Button value="작성완료" />
+              </ButtonDiv>
+            </Form>
+          </Wrapper>
+        </InnerContainer>
+      </Container>
+    </>
   );
 }
 

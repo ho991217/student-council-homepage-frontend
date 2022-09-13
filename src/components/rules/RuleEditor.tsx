@@ -3,7 +3,8 @@ import styled, { css } from 'styled-components';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import 'react-datepicker/dist/react-datepicker.css';
+import Modal from 'components/sign-up/Modal';
+import { PropagateLoader } from 'react-spinners';
 
 const Container = styled.div`
   margin: 40px 0;
@@ -95,11 +96,20 @@ const Button = styled.input.attrs({ type: 'submit' })`
   border-radius: 5px;
 `;
 
+const Text = styled.span`
+  font-size: ${({ theme }) => theme.fonts.size.xl};
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
+  margin-bottom: 20px;
+`;
+
 function RuleEditor() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [form, setForm] = useState<FormData>();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [postState, setPostState] = useState({
+    sent: false,
+    success: false,
+  });
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
 
@@ -122,14 +132,14 @@ function RuleEditor() {
       return;
     }
     const formData = new FormData();
-    console.log(e.target.files[0]);
     formData.append('files', e.target.files[0]);
     formData.append('text', content);
     formData.append('title', title);
     setForm(formData);
   };
 
-  const checkValid = () => {
+  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (title === '') {
       alert('제목을 입력해주세요');
     } else if (content === '') {
@@ -137,15 +147,11 @@ function RuleEditor() {
     } else if (form === undefined) {
       alert('파일을 첨부해주세요');
     } else {
-      setIsOpen(true);
-    }
-  };
+      setPostState((prev) => ({
+        ...prev,
+        sent: true,
+      }));
 
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    checkValid();
-
-    if (isOpen) {
       const config = {
         method: 'post',
         url: '/api/rule',
@@ -158,8 +164,10 @@ function RuleEditor() {
 
       axios(config)
         .then(function (response) {
-          console.log(response.data);
-          console.log('success');
+          setPostState((prev) => ({
+            ...prev,
+            success: response.data.successful,
+          }));
           navigate('/rules');
         })
         .catch(function (error) {
@@ -170,43 +178,56 @@ function RuleEditor() {
   };
 
   return (
-    <Container>
-      <InnerContainer>
-        <Wrapper>
-          <Form onSubmit={onSubmitHandler}>
-            <Label htmlFor="title">
-              회칙명
-              <TitleInput
-                type="text"
-                id="title"
-                value={title}
-                onChange={onTitleHandler}
-                placeholder="회칙명을 입력해주세요."
-              />
-            </Label>
-            <Label htmlFor="content">
-              회칙 내용
-              <Textarea
-                id="content"
-                value={content}
-                onChange={onContentHandler}
-              />
-            </Label>
-            <Label htmlFor="file">
-              첨부파일
-              <input
-                type="file"
-                onChange={handleChange}
-                style={{ marginTop: 10 }}
-              />
-            </Label>
-            <ButtonDiv>
-              <Button value="작성완료" />
-            </ButtonDiv>
-          </Form>
-        </Wrapper>
-      </InnerContainer>
-    </Container>
+    <>
+      {postState.sent && !postState.success && (
+        <Modal>
+          <>
+            <Text>작성 중...</Text>
+            <PropagateLoader
+              style={{ transform: 'translateX(-5px)' }}
+              color="#9753DC"
+            />
+          </>
+        </Modal>
+      )}
+      <Container>
+        <InnerContainer>
+          <Wrapper>
+            <Form onSubmit={onSubmitHandler}>
+              <Label htmlFor="title">
+                회칙명
+                <TitleInput
+                  type="text"
+                  id="title"
+                  value={title}
+                  onChange={onTitleHandler}
+                  placeholder="회칙명을 입력해주세요."
+                />
+              </Label>
+              <Label htmlFor="content">
+                회칙 내용
+                <Textarea
+                  id="content"
+                  value={content}
+                  onChange={onContentHandler}
+                />
+              </Label>
+              <Label htmlFor="file">
+                첨부파일
+                <input
+                  type="file"
+                  onChange={handleChange}
+                  style={{ marginTop: 10 }}
+                />
+              </Label>
+              <ButtonDiv>
+                <Button value="작성완료" />
+              </ButtonDiv>
+            </Form>
+          </Wrapper>
+        </InnerContainer>
+      </Container>
+    </>
   );
 }
 
