@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 
+import { PostProps } from './PostProps'
+
 const Container = styled.div`
   width: 100%;
   display: flex;
@@ -214,28 +216,6 @@ const CommentSubmit = styled.input.attrs({ type: 'submit' })`
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
   cursor: pointer;
 `;
-
-interface PostProps {
-  id: number;
-  answer: string;
-  category: string;
-  commentList: [
-    {
-      name: string;
-      time: string;
-      text: string;
-      mine: boolean;
-      id: number;
-      status: string;
-    },
-  ];
-  createDate: string;
-  fileList: [];
-  postHits: number;
-  text: string;
-  title: string;
-  mine: boolean;
-}
 
 function Post() {
   const [post, setPost] = useState<PostProps>();
