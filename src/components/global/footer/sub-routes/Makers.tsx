@@ -5,7 +5,7 @@ import seungYongImg from 'static/images/makers-profile-pics/seung-yong.png';
 import hoYeonImg from 'static/images/makers-profile-pics/ho-yeon.png';
 import yeJiImg from 'static/images/makers-profile-pics/ye-ji.png';
 import chanJinImg from 'static/images/makers-profile-pics/chan-jin.png';
-import yeonJuImg from 'static/images/makers-profile-pics/yeon-ju.png';
+import yeonJooImg from 'static/images/makers-profile-pics/yeon-joo.png';
 import leeHyeon from 'static/images/makers-profile-pics/lee-hyeon.png';
 import seungHwan from 'static/images/makers-profile-pics/seung-hwan.png';
 import yuJin from 'static/images/makers-profile-pics/yu-jin.png';
@@ -55,7 +55,7 @@ const ChanJinPics = styled.img.attrs({ src: chanJinImg })`
   pointer-events: none;
 `;
 
-const YeonJuPics = styled.img.attrs({ src: yeonJuImg })`
+const YeonJuPics = styled.img.attrs({ src: yeonJooImg })`
   position: absolute;
   width: 400px;
   transform: scale(0.5);
@@ -145,6 +145,7 @@ function Makers(): JSX.Element {
               info="소프트웨어학과 17학번"
               pjrole="Backend Development Team Leader"
               ghid="SeungYongChoi"
+              instaid="win0__c"
               img={<SeungYongPics />}
               teamleader
             />
