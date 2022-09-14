@@ -134,13 +134,14 @@ function NewsEditor() {
     if (!e.target.files) {
       return;
     }
+    console.log(e.target.files);
     const formData = new FormData();
     const form = new FormData();
-    formData.append('files', e.target.files[0]);
+    Array.from(e.target.files).forEach((f) => formData.append('files', f));
     formData.append('text', content);
     formData.append('title', title);
     form.append('imageFile', e.target.files[0]);
-    // form.append('redirectUrl', location.pathname);
+    // // form.append('redirectUrl', location.pathname);
     setForm(formData);
     setCarouselForm(form);
   };
@@ -244,6 +245,7 @@ function NewsEditor() {
                 </form>
                 <input
                   type="file"
+                  multiple
                   onChange={handleChange}
                   style={{ marginTop: 10 }}
                 />
