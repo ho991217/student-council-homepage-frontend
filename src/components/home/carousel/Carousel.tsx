@@ -46,7 +46,6 @@ const ControlsWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 10;
 `;
 
 const DotNavContainer = styled.div`
@@ -94,6 +93,17 @@ function Carousel({ images }: { images: Array<ImageProps> }): JSX.Element {
     <Wrapper>
       {images.length > 0 && (
         <>
+          {images.map((obj: ImageProps, index: number) => (
+            <Slide
+              key={obj.id}
+              url={obj.url}
+              index={index}
+              cur={currentSlide}
+              size={images.length}
+              alt={obj.alt}
+              redirectUrl={obj.redirectUrl}
+            />
+          ))}
           {images.length > 1 && (
             <ControlsWrapper>
               <Chevron onClick={prevSlide} direction="left" />
@@ -113,17 +123,6 @@ function Carousel({ images }: { images: Array<ImageProps> }): JSX.Element {
               <Chevron onClick={nextSlide} direction="right" />
             </ControlsWrapper>
           )}
-          {images.map((obj: ImageProps, index: number) => (
-            <Slide
-              key={obj.id}
-              url={obj.url}
-              index={index}
-              cur={currentSlide}
-              size={images.length}
-              alt={obj.alt}
-              redirectUrl={obj.redirectUrl}
-            />
-          ))}
         </>
       )}
     </Wrapper>
