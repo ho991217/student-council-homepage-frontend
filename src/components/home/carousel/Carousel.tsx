@@ -1,7 +1,6 @@
 // 훅스, 라이브러리 import
-import axios from 'axios';
 import { useInterval } from 'hooks/UseInterval';
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import styled from 'styled-components';
 
 // static 이미지 import
@@ -122,6 +121,7 @@ function Carousel({ images }: { images: Array<ImageProps> }): JSX.Element {
               cur={currentSlide}
               size={images.length}
               alt={obj.alt}
+              redirectUrl={obj.redirectUrl}
             />
           ))}
         </>

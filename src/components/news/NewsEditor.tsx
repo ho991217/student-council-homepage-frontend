@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Modal from 'components/sign-up/Modal';
 import { PropagateLoader } from 'react-spinners';
 
@@ -106,12 +106,15 @@ function NewsEditor() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [form, setForm] = useState<FormData>();
+  const [carouselForm, setCarouselForm] = useState<FormData>();
   const [postState, setPostState] = useState({
     sent: false,
     success: false,
   });
+  const [carouselUpload, setCarouselUpload] = useState(false);
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const onContentHandler = (event: React.FormEvent<HTMLTextAreaElement>) => {
     const {
@@ -132,10 +135,14 @@ function NewsEditor() {
       return;
     }
     const formData = new FormData();
+    const form = new FormData();
     formData.append('files', e.target.files[0]);
     formData.append('text', content);
     formData.append('title', title);
+    form.append('imageFile', e.target.files[0]);
+    // form.append('redirectUrl', location.pathname);
     setForm(formData);
+    setCarouselForm(form);
   };
 
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
@@ -168,6 +175,19 @@ function NewsEditor() {
             ...prev,
             success: response.data.successful,
           }));
+          if (carouselUpload) {
+            const form = carouselForm;
+            form?.append('redirectUrl', `/news?id=${response.data.data.id}`);
+            axios({
+              method: 'post',
+              url: '/api/carousel',
+              data: form,
+              headers: {
+                'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+          }
           navigate('/council-news');
         })
         .catch(function (error) {
@@ -214,6 +234,14 @@ function NewsEditor() {
               </Label>
               <Label htmlFor="file">
                 첨부파일
+                <form>
+                  <input
+                    checked={carouselUpload}
+                    onChange={() => setCarouselUpload((prev) => !prev)}
+                    type="checkbox"
+                  />
+                  캐러셀 업로드
+                </form>
                 <input
                   type="file"
                   onChange={handleChange}

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 // 인터페이스 import
@@ -15,11 +16,30 @@ const Wrapper = styled.div<SlideProps>`
   transform: ${(props) =>
     `translateX(${(props.index - (props.cur % props.size)) * 100}%)`};
   transition: transform 0.25s ease-in-out;
+  cursor: ${({ redirectUrl }) => (redirectUrl ? 'pointer' : 'default')};
 `;
 
-function Slide({ url, index, cur, size, alt }: SlideProps): JSX.Element {
+function Slide({
+  url,
+  index,
+  cur,
+  size,
+  alt,
+  redirectUrl,
+}: SlideProps): JSX.Element {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(redirectUrl || '#');
+  };
   return (
-    <Wrapper url={url} index={index} cur={cur} size={size}>
+    <Wrapper
+      onClick={handleClick}
+      url={url}
+      index={index}
+      cur={cur}
+      size={size}
+      redirectUrl={redirectUrl}
+    >
       {!url && alt}
     </Wrapper>
   );
