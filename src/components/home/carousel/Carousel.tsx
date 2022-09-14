@@ -1,6 +1,6 @@
 // 훅스, 라이브러리 import
 import { useInterval } from 'hooks/UseInterval';
-import {  useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 
 // static 이미지 import
@@ -19,7 +19,7 @@ import Slide from './Slide';
 const Wrapper = styled.div`
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    height: 530px;
+    height: 28.125vw;
   }
   ${({ theme }) => theme.media.tablet} {
     height: 300px;
@@ -36,7 +36,7 @@ const Wrapper = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  overflow: hidden;
+  overflow: hidden; ;
 `;
 
 const ControlsWrapper = styled.div`
