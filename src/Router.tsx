@@ -52,7 +52,39 @@ function Router() {
   if (isLoggedIn === undefined) return <div>로딩중...</div>;
   return (
     <BrowserRouter>
-      <Gnb />
+      <Routes>
+        <Route
+          path="*"
+          element={
+            <div
+              style={{
+                width: '100vw',
+                height: '100vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+              }}
+            >
+              <h1
+                style={{
+                  fontSize: '2rem',
+                  fontWeight: 'bold',
+                  marginBottom: '1rem',
+                }}
+              >
+                점검중
+              </h1>
+              <h3 style={{ marginBottom: '0.5rem' }}>
+                현재 서버 점검중입니다. 빠른 시일 내에 복구하도록 하겠습니다.
+              </h3>
+              <h4>이용에 불편을드려 죄송합니다.</h4>
+            </div>
+          }
+        />
+      </Routes>
+      {/* <Gnb />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
@@ -183,10 +215,7 @@ function Router() {
           path="/editor"
           element={
             isLoggedIn ? (
-              <>
-                <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
-                {/* <Editor /> */}
-              </>
+              <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
             ) : (
               <Navigate to="/login" />
             )
@@ -312,7 +341,7 @@ function Router() {
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <Footer />
+      <Footer /> */}
     </BrowserRouter>
   );
 }
