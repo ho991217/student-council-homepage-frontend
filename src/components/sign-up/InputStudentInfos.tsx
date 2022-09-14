@@ -341,6 +341,14 @@ function InputStudentInfos({
     }
   };
 
+  /** 이름입력 */
+  const handleNameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.currentTarget;
+    // value의 값이 숫자가 아닐경우 빈문자열로 replace 해버림.
+    const onlyKorean = value.replace(/[^(가-힣)|(ㄱ-ㅎ)]/, '');
+    setSignUpForm((prev) => ({ ...prev, name: onlyKorean }));
+  };
+
   /** 비밀번호 메시지를 설정 해 주는 함수 */
   const passwordMsg = (level: number) => {
     let errMsg = '';
@@ -392,9 +400,7 @@ function InputStudentInfos({
           <NameInput
             placeholder="이름 입력"
             value={signUpForm.name}
-            onChange={({ currentTarget }) =>
-              setSignUpForm((prev) => ({ ...prev, name: currentTarget.value }))
-            }
+            onChange={handleNameInput}
           />
         </InputContainer>
         <InputContainer>
