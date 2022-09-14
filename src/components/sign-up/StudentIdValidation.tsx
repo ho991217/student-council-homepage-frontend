@@ -133,7 +133,7 @@ function StudentIdValidation({ type }: { type: string }): JSX.Element {
           {emailState.errMsg.length < 1 ? (
             emailState.success ? (
               <>
-                <Text>학교 계정 이메일 스펨메일함을 확인하세요!</Text>
+                <Text>학교 계정 이메일 메일함(또는 스펨메일함)을 확인하세요!</Text>
                 <LinktoGmail href="https://mail.google.com/mail/u/1/?ogbl#spam">
                   G-MAIL 바로가기
                 </LinktoGmail>
