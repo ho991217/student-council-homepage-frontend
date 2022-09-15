@@ -15,11 +15,31 @@ const Wrapper = styled.div<SlideProps>`
   transform: ${(props) =>
     `translateX(${(props.index - (props.cur % props.size)) * 100}%)`};
   transition: transform 0.25s ease-in-out;
+  cursor: ${(props) => (props.redirectUrl ? 'pointer' : 'default')};
 `;
 
-function Slide({ url, index, cur, size, alt }: SlideProps): JSX.Element {
+function Slide({
+  url,
+  index,
+  cur,
+  size,
+  alt,
+  redirectUrl,
+}: SlideProps): JSX.Element {
+  const handleClick = () => {
+    if (redirectUrl) {
+      window.location.href = `${redirectUrl}`;
+    }
+  };
   return (
-    <Wrapper url={url} index={index} cur={cur} size={size}>
+    <Wrapper
+      onClick={handleClick}
+      url={url}
+      index={index}
+      cur={cur}
+      size={size}
+      redirectUrl={redirectUrl}
+    >
       {!url && alt}
     </Wrapper>
   );

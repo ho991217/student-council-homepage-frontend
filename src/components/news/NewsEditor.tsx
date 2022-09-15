@@ -16,7 +16,7 @@ const Container = styled.div`
 const InnerContainer = styled.div`
   width: 100%;
   display: flex;
-  align-divs: center;
+  align-items: center;
   justify-content: center;
 `;
 
@@ -106,10 +106,12 @@ function NewsEditor() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [form, setForm] = useState<FormData>();
+  const [carouselForm, setCarouselForm] = useState<FormData>();
   const [postState, setPostState] = useState({
     sent: false,
     success: false,
   });
+  const [carouselUpload, setCarouselUpload] = useState(false);
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
 
@@ -131,11 +133,16 @@ function NewsEditor() {
     if (!e.target.files) {
       return;
     }
+    console.log(e.target.files);
     const formData = new FormData();
-    formData.append('files', e.target.files[0]);
+    const form = new FormData();
+    Array.from(e.target.files).forEach((f) => formData.append('files', f));
     formData.append('text', content);
     formData.append('title', title);
+    form.append('imageFile', e.target.files[0]);
+    // // form.append('redirectUrl', location.pathname);
     setForm(formData);
+    setCarouselForm(form);
   };
 
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
@@ -168,6 +175,19 @@ function NewsEditor() {
             ...prev,
             success: response.data.successful,
           }));
+          if (carouselUpload) {
+            const form = carouselForm;
+            form?.append('redirectUrl', `/news?id=${response.data.data.id}`);
+            axios({
+              method: 'post',
+              url: '/api/carousel',
+              data: form,
+              headers: {
+                'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+          }
           navigate('/council-news');
         })
         .catch(function (error) {
@@ -214,8 +234,17 @@ function NewsEditor() {
               </Label>
               <Label htmlFor="file">
                 첨부파일
+                <form>
+                  <input
+                    checked={carouselUpload}
+                    onChange={() => setCarouselUpload((prev) => !prev)}
+                    type="checkbox"
+                  />
+                  캐러셀 업로드
+                </form>
                 <input
                   type="file"
+                  multiple
                   onChange={handleChange}
                   style={{ marginTop: 10 }}
                 />

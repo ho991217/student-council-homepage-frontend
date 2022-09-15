@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+import { PagingProps } from 'components/global/PageControl';
 import { PostProps } from './PostProps';
-import { PagingProps } from './PageControl';
 
 const Container = styled.div`
   width: 100%;

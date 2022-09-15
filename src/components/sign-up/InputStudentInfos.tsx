@@ -341,15 +341,23 @@ function InputStudentInfos({
     }
   };
 
+  /** 이름입력 */
+  const handleNameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.currentTarget;
+    // value의 값이 숫자가 아닐경우 빈문자열로 replace 해버림.
+    const onlyKorean = value.replace(/[^(가-힣)|(ㄱ-ㅎ)]/, '');
+    setSignUpForm((prev) => ({ ...prev, name: onlyKorean }));
+  };
+
   /** 비밀번호 메시지를 설정 해 주는 함수 */
   const passwordMsg = (level: number) => {
     let errMsg = '';
     switch (level) {
       case 0:
-        errMsg = '사용할 수 없는 비밀번호입니다.';
+        errMsg = '영문자와 숫자를 포함한 8자 이상의 비밀번호가 필요합니다.';
         break;
       case 1:
-        errMsg = '아주 약한 비밀번호입니다.';
+        errMsg = '영문자와 숫자를 포함한 8자 이상의 비밀번호가 필요합니다.';
         break;
       case 2:
         errMsg = '약한 비밀번호입니다.';
@@ -392,13 +400,12 @@ function InputStudentInfos({
           <NameInput
             placeholder="이름 입력"
             value={signUpForm.name}
-            onChange={({ currentTarget }) =>
-              setSignUpForm((prev) => ({ ...prev, name: currentTarget.value }))
-            }
+            onChange={handleNameInput}
           />
         </InputContainer>
         <InputContainer>
           <PasswordInput
+            pattern="[A-Za-z\d@$!%*#?&]"
             placeholder="비밀번호 입력"
             value={signUpForm.password}
             onChange={handlePasswordChange}
@@ -416,6 +423,7 @@ function InputStudentInfos({
 
         <InputContainer>
           <PasswordInput
+            pattern="[A-Za-z\d@$!%*#?&]"
             placeholder="비밀번호 확인"
             value={passwordState.checkPassword}
             onChange={handleCheckPassword}

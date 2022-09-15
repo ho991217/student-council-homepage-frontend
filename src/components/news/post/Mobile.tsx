@@ -37,6 +37,7 @@ const HeadContent = styled.div`
 `;
 
 const ContentWrapper = styled.div`
+  width: 90%;
   padding: 5px 10px;
 `;
 
@@ -110,6 +111,12 @@ const Svg = styled.svg`
   width: 13px;
   height: 13px;
   cursor: pointer;
+`;
+
+const Image = styled.img`
+  width: 100%;
+  margin-top: 20px;
+  object-fit: contain;
 `;
 
 function Detail() {
@@ -205,23 +212,32 @@ function Detail() {
       <ContentWrapper>
         <Content>{detail?.text}</Content>
         {detail?.files[0] ? (
-          <Download>
-            <FolderIcon>
-              <IoIosFolder size="30" />
-            </FolderIcon>
-            <Data>
-              <Name>{detail?.files[0].originName}</Name>
-            </Data>
-            <DownloadIcon>
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href={detail?.files[0].url}
-              >
-                <FiDownload size="15" color="76787A" />
-              </a>
-            </DownloadIcon>
-          </Download>
+          <>
+            {detail?.files[0].url.endsWith('png' || 'jpg' || 'jpeg') && (
+              <Image
+                role="presentation"
+                src={detail?.files[0].url}
+                alt={detail?.files[0].url}
+              />
+            )}
+            <Download>
+              <FolderIcon>
+                <IoIosFolder size="30" />
+              </FolderIcon>
+              <Data>
+                <Name>{detail?.files[0].originName}</Name>
+              </Data>
+              <DownloadIcon>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={detail?.files[0].url}
+                >
+                  <FiDownload size="15" color="76787A" />
+                </a>
+              </DownloadIcon>
+            </Download>
+          </>
         ) : null}
       </ContentWrapper>
       {/* <NextList>

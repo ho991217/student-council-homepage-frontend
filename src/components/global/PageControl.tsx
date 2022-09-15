@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import qs from 'qs';
 import styled from 'styled-components';
 
@@ -14,18 +14,6 @@ const Arrow = styled.svg``;
 
 const Indexes = styled.ol`
   display: flex;
-  box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.1) inset;
-  ${({ theme }) => theme.media.desktop} {
-    max-width: 400px;
-  }
-  ${({ theme }) => theme.media.tablet} {
-    max-width: 200px;
-  }
-  ${({ theme }) => theme.media.mobile} {
-    max-width: 200px;
-  }
-  overflow-x: scroll;
-  padding: 15px 0;
 `;
 
 const Index = styled.li<{ cur: boolean }>`
@@ -50,26 +38,50 @@ function PageControl({
   currentPage: number;
   pagingInfo: PagingProps;
 }) {
-  const [pageCount, setPageCount] = useState(0);
+  const [info, setInfo] = useState({
+    startIdx: 0,
+    endIdx: 0,
+    total: 0,
+  });
   const params = useSearchParams();
+  const location = useLocation();
 
   const generateParams = (page: number) => {
-    const qstring = qs.parse(params[0].toString());
-    const { filter } = qstring;
-    if (!filter) {
-      return `/board-petition/boards?page=${page}`;
+    let { filter } = qs.parse(params[0].toString());
+    let { query } = qs.parse(params[0].toString());
+
+    if (!filter) filter = '';
+    if (!query) query = '';
+
+    if (filter === '' && query === '') {
+      return `${location.pathname}?page=${page}`;
     }
-    return `/board-petition/boards?page=${page}&filter=${filter}`;
+    return `${location.pathname}?page=${page}&filter=${filter}&query=${query}`;
   };
 
   useEffect(() => {
-    setPageCount(Math.ceil(pagingInfo.totalElements / pagingInfo.size));
-  }, [pagingInfo.totalElements]);
+    const total = Math.ceil(pagingInfo.totalElements / pagingInfo.size);
+    const startIdx =
+      currentPage % 10 === 0
+        ? currentPage - (currentPage % 10) - 9
+        : currentPage - (currentPage % 10) + 1;
+    let endIdx =
+      currentPage % 10 === 0
+        ? currentPage - (currentPage % 10)
+        : currentPage - (currentPage % 10) + 10;
+
+    if (endIdx > pagingInfo.totalPages) endIdx = pagingInfo.totalPages;
+    setInfo({
+      startIdx,
+      endIdx,
+      total,
+    });
+  }, [pagingInfo.totalElements, currentPage]);
 
   return (
     <Container>
-      {currentPage !== 1 && (
-        <Link to={generateParams(currentPage - 1)}>
+      {info.startIdx !== 1 && (
+        <Link to={generateParams(info.startIdx - 1)}>
           <Arrow
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 48 48"
@@ -81,14 +93,14 @@ function PageControl({
         </Link>
       )}
       <Indexes>
-        {Array.from({ length: pageCount }, (_, i) => (
-          <Index cur={i + 1 === currentPage} key={i}>
-            <Link to={generateParams(i + 1)}>{i + 1}</Link>
+        {Array.from({ length: info.endIdx - info.startIdx + 1 }, (_, i) => (
+          <Index cur={info.startIdx + i === currentPage} key={i}>
+            <Link to={generateParams(i + 1)}>{info.startIdx + i}</Link>
           </Index>
         ))}
       </Indexes>
-      {currentPage !== pageCount && (
-        <Link to={generateParams(currentPage + 1)}>
+      {info.endIdx !== pagingInfo.totalPages && (
+        <Link to={generateParams(info.startIdx + 10)}>
           <Arrow
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 48 48"

@@ -12,6 +12,7 @@ const Dot = styled.div<{ active: boolean }>`
   margin: 0 5px;
   transition: all 0.25s ease-in-out;
   cursor: ${(props) => (props.active ? 'default' : 'pointer')};
+  z-index: 1;
 `;
 
 function DotNav({ active, onClick }: DotNavProps): JSX.Element {

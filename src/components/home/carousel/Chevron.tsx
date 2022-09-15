@@ -10,6 +10,7 @@ const Wrapper = styled.div<{ direction: string }>`
   justify-content: center;
   cursor: pointer;
   transition: box-shadow 0.25s ease-in-out;
+  z-index: 1;
 `;
 
 function Chevron({

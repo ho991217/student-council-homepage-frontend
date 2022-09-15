@@ -2,6 +2,7 @@ export interface ImageProps {
   url: string;
   id: string;
   alt: string;
+  redirectUrl?: string;
 }
 
 export interface SlideProps {
@@ -10,6 +11,7 @@ export interface SlideProps {
   cur: number;
   size: number;
   alt?: string;
+  redirectUrl?: string;
 }
 
 export interface ChevronProps {

@@ -19,7 +19,10 @@ function Home() {
   // 권장 해상도: 1920x530 (1440x530 영역 밖으로는 넘어가지 않는 것 권장)
 
   useEffect(() => {
-    getCarouselImages().then(({ data }) => setImages(data));
+    getCarouselImages().then(({ data }) => {
+      setImages(data);
+      console.log(data);
+    });
   }, []);
 
   return (

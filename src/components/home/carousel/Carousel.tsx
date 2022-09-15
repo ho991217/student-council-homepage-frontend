@@ -1,7 +1,6 @@
 // 훅스, 라이브러리 import
-import axios from 'axios';
 import { useInterval } from 'hooks/UseInterval';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 
 // static 이미지 import
@@ -20,7 +19,7 @@ import Slide from './Slide';
 const Wrapper = styled.div`
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    height: 530px;
+    height: 28.125vw;
   }
   ${({ theme }) => theme.media.tablet} {
     height: 300px;
@@ -37,7 +36,7 @@ const Wrapper = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  overflow: hidden;
+  overflow: hidden; ;
 `;
 
 const ControlsWrapper = styled.div`
@@ -47,7 +46,6 @@ const ControlsWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 10;
 `;
 
 const DotNavContainer = styled.div`
@@ -95,6 +93,17 @@ function Carousel({ images }: { images: Array<ImageProps> }): JSX.Element {
     <Wrapper>
       {images.length > 0 && (
         <>
+          {images.map((obj: ImageProps, index: number) => (
+            <Slide
+              key={obj.id}
+              url={obj.url}
+              index={index}
+              cur={currentSlide}
+              size={images.length}
+              alt={obj.alt}
+              redirectUrl={obj.redirectUrl}
+            />
+          ))}
           {images.length > 1 && (
             <ControlsWrapper>
               <Chevron onClick={prevSlide} direction="left" />
@@ -114,16 +123,6 @@ function Carousel({ images }: { images: Array<ImageProps> }): JSX.Element {
               <Chevron onClick={nextSlide} direction="right" />
             </ControlsWrapper>
           )}
-          {images.map((obj: ImageProps, index: number) => (
-            <Slide
-              key={obj.id}
-              url={obj.url}
-              index={index}
-              cur={currentSlide}
-              size={images.length}
-              alt={obj.alt}
-            />
-          ))}
         </>
       )}
     </Wrapper>

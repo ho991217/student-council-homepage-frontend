@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 import styled from 'styled-components';
 import axios from 'axios';
-import { PagingProps } from 'components/boards/petition/PageControl';
+import { PagingProps } from 'components/global/PageControl';
 import qs from 'qs';
 
 import { RuleProps } from 'components/rules/RuleProps';
@@ -20,7 +20,7 @@ const Container = styled.div`
 const TopContainer = styled.div`
   width: 100%;
   display: flex;
-  align-divs: center;
+  align-items: center;
   justify-content: center;
   padding-top: 30px;
 `;
@@ -189,7 +189,7 @@ function Rules() {
   const onSearchButtonHandler = async () => {
     await axios
       .get(`/api/rule?sort=createDate,desc&query=${searchWord}`)
-      .then(function (response) {
+      .then((response) => {
         const result = response.data;
         setBoard(result.content.slice((page - 1) * 6, page * 6));
         setBoardsCount(result.totalElements);
