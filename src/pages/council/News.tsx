@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 import styled from 'styled-components';
 import axios from 'axios';
-import { PagingProps } from 'components/boards/petition/PageControl';
+import { PagingProps } from 'components/global/PageControl';
 import qs from 'qs';
 
 import { NewsProps } from 'components/news/NewsProps';

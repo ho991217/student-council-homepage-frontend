@@ -1,9 +1,7 @@
 import axios from 'axios';
 import Board from 'components/boards/suggestion/Board';
 import FilterControl from 'components/boards/suggestion/FilterControl';
-import PageControl, {
-  PagingProps,
-} from 'components/boards/suggestion/PageControl';
+import PageControl, { PagingProps } from 'components/global/PageControl';
 import qs from 'qs';
 
 import { PostProps } from 'components/boards/suggestion/PostProps';
