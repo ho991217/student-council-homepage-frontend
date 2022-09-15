@@ -25,13 +25,24 @@ const Block = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: ${({ theme }) => theme.colors.gray020};
-  width: 750px;
-  height: 400px;
+  ${({ theme }) => theme.media.desktop} {
+    width: 750px;
+    height: 400px;
+    border-radius: 10px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    width: 750px;
+    height: 400px;
+    border-radius: 10px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    width: 100%;
+    height: 100%;
+  }
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
   box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.1);
 `;
 
