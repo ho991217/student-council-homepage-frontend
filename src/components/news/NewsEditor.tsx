@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Modal from 'components/sign-up/Modal';
 import { PropagateLoader } from 'react-spinners';
 
@@ -16,7 +16,7 @@ const Container = styled.div`
 const InnerContainer = styled.div`
   width: 100%;
   display: flex;
-  align-divs: center;
+  align-items: center;
   justify-content: center;
 `;
 
@@ -114,7 +114,6 @@ function NewsEditor() {
   const [carouselUpload, setCarouselUpload] = useState(false);
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
-  const location = useLocation();
 
   const onContentHandler = (event: React.FormEvent<HTMLTextAreaElement>) => {
     const {

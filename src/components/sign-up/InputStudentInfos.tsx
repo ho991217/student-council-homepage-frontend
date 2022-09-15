@@ -354,10 +354,10 @@ function InputStudentInfos({
     let errMsg = '';
     switch (level) {
       case 0:
-        errMsg = '사용할 수 없는 비밀번호입니다.';
+        errMsg = '영문자와 숫자를 포함한 8자 이상의 비밀번호가 필요합니다.';
         break;
       case 1:
-        errMsg = '아주 약한 비밀번호입니다.';
+        errMsg = '영문자와 숫자를 포함한 8자 이상의 비밀번호가 필요합니다.';
         break;
       case 2:
         errMsg = '약한 비밀번호입니다.';
@@ -405,6 +405,7 @@ function InputStudentInfos({
         </InputContainer>
         <InputContainer>
           <PasswordInput
+            pattern="[A-Za-z\d@$!%*#?&]"
             placeholder="비밀번호 입력"
             value={signUpForm.password}
             onChange={handlePasswordChange}
@@ -422,6 +423,7 @@ function InputStudentInfos({
 
         <InputContainer>
           <PasswordInput
+            pattern="[A-Za-z\d@$!%*#?&]"
             placeholder="비밀번호 확인"
             value={passwordState.checkPassword}
             onChange={handleCheckPassword}
