@@ -4,11 +4,11 @@ import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 import styled from 'styled-components';
 import { FiEye } from 'react-icons/fi';
 
+import { PagingProps } from 'components/global/PageControl';
 import TopBar from './top-bar/TopBar';
 import MobileTopBar from './top-bar/MobileTopBar';
 
 import { PostProps } from './PostProps';
-import { PagingProps } from './PageControl';
 
 const Container = styled.div`
   width: 100%;
