@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ReactModal from 'react-modal';
 import axios from 'axios';
 import styled from 'styled-components';
 import { majorList } from 'components/user/Major';
@@ -234,6 +235,7 @@ function InputStudentInfos({
     errMsg: '',
     verified: false,
   });
+  const [error, setError] = useState('');
 
   const codeInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -277,7 +279,9 @@ function InputStudentInfos({
         alert('something`s not right!');
       }
     } catch (e) {
-      console.error(e);
+      const err = e as any;
+      alert(err.response.data.message);
+      console.error(err);
     }
   };
 
