@@ -171,10 +171,6 @@ function NewsEditor() {
 
       axios(config)
         .then(function (response) {
-          setPostState((prev) => ({
-            ...prev,
-            success: response.data.successful,
-          }));
           if (carouselUpload) {
             const form = carouselForm;
             form?.append('redirectUrl', `/news?id=${response.data.data.id}`);
@@ -188,6 +184,10 @@ function NewsEditor() {
               },
             });
           }
+          setPostState((prev) => ({
+            ...prev,
+            success: response.data.successful,
+          }));
           navigate('/council-news');
         })
         .catch(function (error) {
