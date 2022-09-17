@@ -413,7 +413,7 @@ function InputStudentInfos({
         </InputContainer>
         <InputContainer>
           <PasswordInput
-            pattern="[A-Za-z\d!@#$%^*()~&]"
+            pattern="[A-Za-z\d!@#$%^*()~?&]"
             placeholder="비밀번호 입력"
             value={signUpForm.password}
             onChange={handlePasswordChange}
