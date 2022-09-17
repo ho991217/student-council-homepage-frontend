@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ReactModal from 'react-modal';
 import axios from 'axios';
 import styled from 'styled-components';
 import { majorList } from 'components/user/Major';
@@ -20,9 +19,7 @@ import { validateSMSCode } from './functions/ValidateSMSCode';
 const InnerContainer = styled.div`
   max-width: 1400px;
   width: 100%;
-  /* height: 620px; */
   ${({ theme }) => theme.media.mobile} {
-    height: 350px;
     background-color: ${({ theme }) => theme.colors.white};
     padding: 5px;
     span {
@@ -114,6 +111,10 @@ const SendButton = styled.input.attrs({ type: 'submit' })<{ active: boolean }>`
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.fonts.size.base};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
+  ${({ theme }) => theme.media.mobile} {
+    width: 250px;
+    padding: 5px 15px;
+  }
 `;
 
 const SignUpButton = styled.button<{ active: boolean }>`
@@ -135,7 +136,8 @@ const SignUpButton = styled.button<{ active: boolean }>`
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
   ${({ theme }) => theme.media.mobile} {
     width: 70%;
-    margin: 5px 0;
+    margin: 5px 0 35px 0;
+    height: 40px;
   }
 `;
 
@@ -166,8 +168,8 @@ const PasswordSecurityLevel = styled.div<{ level: number }>`
   display: grid;
   overflow: hidden;
   ${({ theme }) => theme.media.mobile} {
-    width: 70%;
-    height: 40px;
+    width: 90%;
+    height: 15px;
     margin-top: 20px;
   }
 `;
@@ -353,7 +355,9 @@ function InputStudentInfos({
     setSignUpForm((prev) => ({ ...prev, name: onlyKorean }));
   };
 
-  /** 비밀번호 메시지를 설정 해 주는 함수 */
+  /** 비밀번호 메시지를 설정 해 주는 함수
+   * @params level = 비밀번호 보안레벨
+   */
   const passwordMsg = (level: number) => {
     let errMsg = '';
     switch (level) {
