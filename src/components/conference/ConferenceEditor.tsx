@@ -177,7 +177,7 @@ function ConferenceEditor() {
             ...prev,
             success: response.data.successful,
           }));
-          navigate('/council-news');
+          navigate('/conference');
         })
         .catch(function (error) {
           // 에러 핸들링
