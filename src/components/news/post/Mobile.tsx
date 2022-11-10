@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import axios from 'axios';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { FiDownload } from 'react-icons/fi';
@@ -76,36 +76,6 @@ const DownloadIcon = styled.div`
   cursor: pointer;
 `;
 
-const NextList = styled.div`
-  width: 100%;
-  border-top: 1px solid ${({ theme }) => theme.colors.gray100};
-  margin-top: 50px;
-`;
-
-const Row = styled.div`
-  width: 100%;
-  height: 60px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
-  :last-child {
-    border-bottom: none;
-  }
-  display: grid;
-  grid-template-columns: 0.5fr 2fr;
-`;
-
-const Id = styled.div`
-  margin: 16px auto;
-`;
-
-const Infos = styled.div`
-  margin: 10px 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-`;
-
-const Info = styled.div``;
-
 const Svg = styled.svg`
   margin: 16px auto;
   width: 13px;
@@ -123,18 +93,18 @@ function Detail() {
   const [searchParams] = useSearchParams();
   const [board, setBoard] = useState<NewsProps[]>([]);
   const [detail, setDetail] = useState<DetailProps>();
-  const [nextList, setNextList] = useState<NewsProps[]>();
+  const [, setNextList] = useState<NewsProps[]>();
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
+  const [isAdmin] = useState<boolean>(cookies.isAdmin === 'true');
 
   useEffect(() => {
     axios
       .get('/api/news')
-      .then(function (response) {
+      .then((response) => {
         const result = response.data;
         setBoard(result.content);
       })
-      .catch(function (error) {
+      .catch((error) => {
         // 에러 핸들링
         console.log(error);
       });
@@ -153,11 +123,11 @@ function Detail() {
   useEffect(() => {
     axios
       .get(`/api/news/${searchParams.get('id')}`)
-      .then(function (response) {
+      .then((response) => {
         const result = response.data.data;
         setDetail(result);
       })
-      .catch(function (error) {
+      .catch((error) => {
         // 에러 핸들링
         console.log(error);
       });
@@ -170,10 +140,10 @@ function Detail() {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
       })
-      .then(function (response) {
+      .then(() => {
         window.location.replace('/conference');
       })
-      .catch(function (error) {
+      .catch((error) => {
         // 에러 핸들링
         console.log(error);
       });
@@ -211,7 +181,7 @@ function Detail() {
       </Head>
       <ContentWrapper>
         <Content>{detail?.text}</Content>
-        {detail?.files[0] ? (
+        {detail?.files[0] && (
           <>
             {detail?.files[0].url.endsWith('png' || 'jpg' || 'jpeg') && (
               <Image
@@ -238,21 +208,8 @@ function Detail() {
               </DownloadIcon>
             </Download>
           </>
-        ) : null}
+        )}
       </ContentWrapper>
-      {/* <NextList>
-        {nextList?.map((post) => (
-          <Row key={post.id}>
-            <Id>{post?.id}</Id>
-            <Infos>
-              <Info>
-                <Link to={`/news?id=${post.id}`}>{post?.title}</Link>
-              </Info>
-              <Info>{post?.createDate}</Info>
-            </Infos>
-          </Row>
-        ))}
-      </NextList> */}
     </Wrapper>
   );
 }
