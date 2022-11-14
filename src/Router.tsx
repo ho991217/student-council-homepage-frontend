@@ -39,6 +39,7 @@ import PrivacyPolicy from 'components/global/footer/sub-routes/PrivacyPolicy';
 import { LoginStateAtom } from 'atoms/LoginState';
 import Success from 'components/sign-up/Succes';
 import PasswordSuccess from 'components/password/Succes';
+import Event from 'pages/Event';
 
 function Router() {
   const [{ isLoggedIn, admin }, setLoginState] = useRecoilState(LoginStateAtom);
@@ -308,6 +309,7 @@ function Router() {
           path="/admin"
           element={admin ? <Admin /> : <Navigate to="/" />}
         />
+        <Route path="/event" element={<Event />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
