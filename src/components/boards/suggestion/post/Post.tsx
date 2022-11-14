@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 
-import { PostProps } from './PostProps'
+import { PostProps } from './PostProps';
 
 const Container = styled.div`
   width: 100%;
@@ -253,15 +253,17 @@ function Post() {
       })
       .catch((err) => {
         // 에러 처리
+        alert(err);
       });
   };
 
   const onDeletePost = () => {
-    if(window.confirm('해당 글을 삭제하시겠습니까?')) {
+    if (window.confirm('해당 글을 삭제하시겠습니까?')) {
       axios({
-        url: cookies.isAdmin === 'true'
-          ? `/api/suggestion/admin/${postId}`
-          : `/api/suggestion/${postId}`,
+        url:
+          cookies.isAdmin === 'true'
+            ? `/api/suggestion/admin/${postId}`
+            : `/api/suggestion/${postId}`,
         method: 'delete',
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
@@ -277,11 +279,12 @@ function Post() {
   };
 
   const onDeleteComment = (item: number) => {
-    if(window.confirm('해당 댓글을 삭제하시겠습니까?')) {
+    if (window.confirm('해당 댓글을 삭제하시겠습니까?')) {
       axios({
-        url: cookies.isAdmin === 'true'
-          ? `/api/suggestion/comment/admin/${item}`
-          : `/api/suggestion/comment/${item}`,
+        url:
+          cookies.isAdmin === 'true'
+            ? `/api/suggestion/comment/admin/${item}`
+            : `/api/suggestion/comment/${item}`,
         method: 'delete',
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
@@ -327,26 +330,27 @@ function Post() {
           <CommentLists>
             {post?.commentList.map((comment) => (
               <Comment key={post.commentList.indexOf(comment)}>
-                {(cookies.isAdmin === 'true' && (comment.status === ('등록') || comment.status === ('수정'))) && (
-                  <Button onClick={() => onDeleteComment(comment.id)}>
-                    삭제
-                  </Button>
-                )}
-                {(cookies.isAdmin === 'false' && comment?.mine && (comment.status === ('등록') || comment.status === ('수정'))) && (
-                  <EditButtons>
-                    <Button onClick={() => currentComment(comment)}>
-                      수정
-                    </Button>
-                    <Button onClick={() => setIsEdit(false)}>
-                      취소
-                    </Button>
+                {cookies.isAdmin === 'true' &&
+                  (comment.status === '등록' || comment.status === '수정') && (
                     <Button onClick={() => onDeleteComment(comment.id)}>
                       삭제
                     </Button>
-                  </EditButtons>
-                )}
+                  )}
+                {cookies.isAdmin === 'false' &&
+                  comment?.mine &&
+                  (comment.status === '등록' || comment.status === '수정') && (
+                    <EditButtons>
+                      <Button onClick={() => currentComment(comment)}>
+                        수정
+                      </Button>
+                      <Button onClick={() => setIsEdit(false)}>취소</Button>
+                      <Button onClick={() => onDeleteComment(comment.id)}>
+                        삭제
+                      </Button>
+                    </EditButtons>
+                  )}
                 <CommentInfo>
-                  <CommentAuthor>익명</CommentAuthor>
+                  <CommentAuthor>익명 {comment.anonymousNum}</CommentAuthor>
                   <VSeparator />
                   <CommentDate>
                     {comment.time.slice(0, 10)} {comment.time.slice(11, 16)}

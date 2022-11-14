@@ -18,4 +18,5 @@ interface Comment {
   text: string;
   mine: boolean;
   status: string;
+  anonymousNum: number;
 }
