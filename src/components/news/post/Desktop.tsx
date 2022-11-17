@@ -6,7 +6,7 @@ import { useCookies } from 'react-cookie';
 import { FiDownload } from 'react-icons/fi';
 import { IoIosFolder } from 'react-icons/io';
 
-import { NewsProps, DetailProps } from '../NewsProps';
+import { NewsProps, DetailProps, FileProps } from '../NewsProps';
 
 const Wrapper = styled.div`
   max-width: 1280px;
@@ -187,15 +187,19 @@ function Detail() {
         <Content>{detail?.text}</Content>
         {detail?.files[0] && (
           <>
-            {detail?.files[0].url.endsWith('png' || 'jpg' || 'jpeg') && (
-              <ImageContainer>
-                <Image
-                  role="presentation"
-                  src={detail?.files[0].url}
-                  alt={detail?.files[0].url}
-                />
-              </ImageContainer>
-            )}
+            <ImageContainer>
+              {detail?.files
+                .filter((file) => file.url.endsWith('png' || 'jpg' || 'jpeg'))
+                .map((img: FileProps, index: number) => (
+                  <Image
+                    key={img.id}
+                    role="presentation"
+                    src={detail?.files[index].url}
+                    alt={detail?.files[index].url}
+                  />
+                ))}
+            </ImageContainer>
+
             <Download>
               <FolderIcon>
                 <IoIosFolder size="35" />
