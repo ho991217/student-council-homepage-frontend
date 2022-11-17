@@ -132,7 +132,7 @@ function RuleEditor() {
       return;
     }
     const formData = new FormData();
-    formData.append('files', e.target.files[0]);
+    Array.from(e.target.files).forEach((f) => formData.append('files', f));
     formData.append('text', content);
     formData.append('title', title);
     setForm(formData);
@@ -216,6 +216,7 @@ function RuleEditor() {
                 첨부파일
                 <input
                   type="file"
+                  multiple
                   onChange={handleChange}
                   style={{ marginTop: 10 }}
                 />
