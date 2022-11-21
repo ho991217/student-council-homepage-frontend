@@ -99,6 +99,31 @@ const HashTag = styled.div`
   }
 `;
 
+const Like = styled.div<{ liked?: boolean }>`
+  ${({ theme }) => theme.media.mobile} {
+    max-width: 90px;
+  }
+  user-select: none;
+  cursor: pointer;
+  max-width: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: ${({ theme, liked }) =>
+    liked ? theme.colors.gray020 : theme.colors.gray900};
+  background-color: ${({ theme, liked }) =>
+    liked ? theme.colors.accent : theme.colors.gray040};
+  font-size: 0.9rem;
+  padding: 5px 0px;
+  margin-top: 0.5rem;
+  border-radius: 9999px;
+  :hover {
+    background-color: ${({ theme }) => theme.colors.accent};
+    color: ${({ theme }) => theme.colors.gray020};
+  }
+`;
+
 const CommentWrapper = styled.div`
   max-width: 1280px;
   width: 100%;
@@ -232,7 +257,7 @@ function Post() {
       .catch((err) => {
         // 에러 처리
       });
-  }, []);
+  }, [post]);
 
   const onCommentHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -255,6 +280,18 @@ function Post() {
         // 에러 처리
         alert(err);
       });
+  };
+
+  const toggleLike = async () => {
+    const res = await axios({
+      url: `/api/posts/likes/${postId}`,
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+      },
+    });
+    console.log(res);
   };
 
   const onDeletePost = () => {
@@ -322,6 +359,9 @@ function Post() {
         <Contents>
           <Text>{post?.text}</Text>
           <HashTag>#{post?.category}</HashTag>
+          <Like liked={post?.like} onClick={toggleLike}>
+            좋아요 - {post?.likeCount}
+          </Like>
         </Contents>
         <Hr bold />
         <CommentWrapper>
@@ -350,7 +390,7 @@ function Post() {
                     </EditButtons>
                   )}
                 <CommentInfo>
-                  <CommentAuthor>익명 {comment.anonymousNum}</CommentAuthor>
+                  <CommentAuthor>익명 {comment.anonymousNum + 1}</CommentAuthor>
                   <VSeparator />
                   <CommentDate>
                     {comment.time.slice(0, 10)} {comment.time.slice(11, 16)}

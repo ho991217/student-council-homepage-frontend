@@ -9,6 +9,8 @@ export interface PostProps {
   text: string;
   title: string;
   mine: boolean;
+  likeCount: number;
+  like: boolean;
 }
 
 interface Comment {
