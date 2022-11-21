@@ -53,11 +53,11 @@ const Row = styled.div`
   place-items: center;
   ${({ theme }) => theme.media.desktop} {
     padding: 0px 50px;
-    grid-template-columns: 1fr 2fr 8fr 2fr 1fr;
+    grid-template-columns: 1fr 2fr 6fr 1fr 1fr 1fr;
   }
   ${({ theme }) => theme.media.tablet} {
     padding: 0px 50px;
-    grid-template-columns: 1fr 2fr 8fr 2fr 1fr;
+    grid-template-columns: 1fr 2fr 6fr 1fr 1fr 1fr;
   }
   ${({ theme }) => theme.media.mobile} {
     padding: 0px 5px;
@@ -145,6 +145,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                   <div>제목</div>
                   <div>조회</div>
                   <div>댓글</div>
+                  <div>좋아요</div>
                 </Row>
               </BoardHead>
               {board.map((post, index) => (
@@ -184,6 +185,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                     </Svg>
                     {post.commentCount}
                   </div>
+                  <div>{post.likeCount}</div>
                 </Row>
               ))}
             </>
