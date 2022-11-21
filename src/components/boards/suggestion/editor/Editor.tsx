@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Desktop, Mobile, Tablet} from 'hooks/MediaQueries';
+import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import styled, { css } from 'styled-components';
@@ -185,9 +185,14 @@ function Editor(): JSX.Element {
         .then((res) => {
           if (res.data.successful) navigate('/board-suggestion/boards?page=1');
         })
-        .catch((err) =>
-          // 에러 처리
-          console.log(err),
+        .catch(
+          ({
+            response: {
+              data: { message },
+            },
+          }) =>
+            // 에러 처리
+            alert(message),
         );
     }
   };
