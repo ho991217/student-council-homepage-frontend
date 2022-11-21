@@ -350,7 +350,7 @@ function Post() {
                     </EditButtons>
                   )}
                 <CommentInfo>
-                  <CommentAuthor>익명 {comment.anonymousNum}</CommentAuthor>
+                  <CommentAuthor>익명 {comment.anonymousNum + 1}</CommentAuthor>
                   <VSeparator />
                   <CommentDate>
                     {comment.time.slice(0, 10)} {comment.time.slice(11, 16)}
