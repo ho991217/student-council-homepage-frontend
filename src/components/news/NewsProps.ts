@@ -17,6 +17,7 @@ export interface DetailProps {
 }
 
 export interface FileProps {
+  id: number;
   originName: string;
   url: string;
 }

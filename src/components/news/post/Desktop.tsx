@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import axios from 'axios';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { FiDownload } from 'react-icons/fi';
 import { IoIosFolder } from 'react-icons/io';
 
-import { NewsProps, DetailProps } from '../NewsProps';
+import { NewsProps, DetailProps, FileProps } from '../NewsProps';
 
 const Wrapper = styled.div`
   max-width: 1280px;
@@ -76,50 +76,6 @@ const DownloadIcon = styled.div`
   cursor: pointer;
 `;
 
-const NextList = styled.div`
-  width: 100%;
-  margin-top: 80px;
-`;
-
-const ListHead = styled.div`
-  width: 100%;
-  height: 70px;
-  border-top: 3px solid ${({ theme }) => theme.colors.gray900};
-  border-collapse: collapse;
-  font-weight: ${({ theme }) => theme.fonts.weight.bold};
-`;
-
-const Row = styled.div`
-  width: 100%;
-  height: 60px;
-  display: grid;
-  grid-template-columns: 0.8fr 5fr 1.2fr 1fr;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
-  text-align: center;
-  div {
-    display: flex;
-    place-content: center;
-    place-items: center;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
-  }
-`;
-
-const Title = styled.div`
-  border-right: 1px solid ${({ theme }) => theme.colors.gray100};
-  :last-child {
-    border-right: none;
-  }
-`;
-
-const Info = styled.div`
-  :nth-child(2) {
-    display: flex;
-    justify-content: left;
-    padding-left: 25px;
-    cursor: pointer;
-  }
-`;
-
 const Svg = styled.svg`
   width: 16px;
   height: 16px;
@@ -127,27 +83,33 @@ const Svg = styled.svg`
 `;
 
 const Image = styled.img`
-  width: 100%;
+  width: 50%;
   margin-top: 20px;
   object-fit: contain;
+`;
+
+const ImageContainer = styled.div`
+  display: grid;
+  place-items: center;
+  width: 100%;
 `;
 
 function Detail() {
   const [searchParams] = useSearchParams();
   const [board, setBoard] = useState<NewsProps[]>([]);
   const [detail, setDetail] = useState<DetailProps>();
-  const [nextList, setNextList] = useState<NewsProps[]>();
+  const [, setNextList] = useState<NewsProps[]>();
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const [isAdmin] = useState<boolean>(cookies.isAdmin === 'true');
 
   useEffect(() => {
     axios
       .get('/api/news')
-      .then(function (response) {
+      .then((response) => {
         const result = response.data;
         setBoard(result.content);
       })
-      .catch(function (error) {
+      .catch((error) => {
         // 에러 핸들링
         console.log(error);
       });
@@ -166,11 +128,11 @@ function Detail() {
   useEffect(() => {
     axios
       .get(`/api/news/${searchParams.get('id')}`)
-      .then(function (response) {
+      .then((response) => {
         const result = response.data.data;
         setDetail(result);
       })
-      .catch(function (error) {
+      .catch((error) => {
         // 에러 핸들링
         console.log(error);
       });
@@ -183,10 +145,10 @@ function Detail() {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
       })
-      .then(function (response) {
+      .then(() => {
         window.location.replace('/council-news');
       })
-      .catch(function (error) {
+      .catch((error) => {
         // 에러 핸들링
         console.log(error);
       });
@@ -225,13 +187,19 @@ function Detail() {
         <Content>{detail?.text}</Content>
         {detail?.files[0] && (
           <>
-            {detail?.files[0].url.endsWith('png' || 'jpg' || 'jpeg') && (
-              <Image
-                role="presentation"
-                src={detail?.files[0].url}
-                alt={detail?.files[0].url}
-              />
-            )}
+            <ImageContainer>
+              {detail?.files
+                .filter((file) => file.url.endsWith('png' || 'jpg' || 'jpeg'))
+                .map((img: FileProps, index: number) => (
+                  <Image
+                    key={img.id}
+                    role="presentation"
+                    src={detail?.files[index].url}
+                    alt={detail?.files[index].url}
+                  />
+                ))}
+            </ImageContainer>
+
             <Download>
               <FolderIcon>
                 <IoIosFolder size="35" />
@@ -252,41 +220,6 @@ function Detail() {
           </>
         )}
       </ContentWrapper>
-      {/* <NextList>
-        <ListHead>
-          <Row>
-            <Title>번호</Title>
-            <Title>제목</Title>
-            <Title>등록일</Title>
-            <Title>첨부파일</Title>
-          </Row>
-        </ListHead>
-        {nextList?.map((post) => (
-          <Row key={post.id}>
-            <Info>{post?.id}</Info>
-            <Info>
-              <Link to={`/news?id=${post.id}`}>{post?.title}</Link>
-            </Info>
-            <Info>{post?.createDate}</Info>
-            <Info>
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href={post.fileList[0] ? post?.fileList[0]?.url : ''}
-              >
-                <Svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 64 64"
-                  height="64"
-                  width="64"
-                >
-                  <path d="M45.414 36.586a2 2 0 0 0-2.828 0L41 38.172l-3.811-3.811A20.908 20.908 0 0 0 42 21C42 9.42 32.579 0 21 0S0 9.42 0 21s9.421 21 21 21c5.071 0 9.728-1.808 13.361-4.811L38.172 41l-1.586 1.586a2 2 0 0 0 0 2.828l18 18c.391.391.902.586 1.414.586s1.023-.195 1.414-.586l6-6a2 2 0 0 0 0-2.828l-18-18zM4 21c0-9.374 7.626-17 17-17s17 7.626 17 17-7.626 17-17 17S4 30.374 4 21zm52 38.171L40.828 44 44 40.829 59.172 56 56 59.171z" />
-                </Svg>
-              </a>
-            </Info>
-          </Row>
-        ))}
-      </NextList> */}
     </Wrapper>
   );
 }

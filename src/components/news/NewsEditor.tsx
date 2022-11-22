@@ -133,13 +133,13 @@ function NewsEditor() {
     if (!e.target.files) {
       return;
     }
-    console.log(e.target.files);
+
     const formData = new FormData();
     const form = new FormData();
     Array.from(e.target.files).forEach((f) => formData.append('files', f));
     formData.append('text', content);
     formData.append('title', title);
-    form.append('imageFile', e.target.files[0]);
+
     // // form.append('redirectUrl', location.pathname);
     setForm(formData);
     setCarouselForm(form);

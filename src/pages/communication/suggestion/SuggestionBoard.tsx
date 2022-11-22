@@ -41,6 +41,7 @@ function PetitionBoard(): JSX.Element {
         .concat(filter ? `&category=${filter}` : '')
         .concat(query ? `&query=${query}` : ''),
     });
+    console.log(data);
 
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);
