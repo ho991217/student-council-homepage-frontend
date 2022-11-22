@@ -257,7 +257,7 @@ function Post() {
       .catch((err) => {
         // 에러 처리
       });
-  }, [post]);
+  }, []);
 
   const onCommentHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -283,7 +283,7 @@ function Post() {
   };
 
   const toggleLike = async () => {
-    const res = await axios({
+    await axios({
       url: `/api/posts/likes/${postId}`,
       method: 'post',
       headers: {
@@ -291,7 +291,7 @@ function Post() {
         'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
       },
     });
-    console.log(res);
+    window.location.reload();
   };
 
   const onDeletePost = () => {
