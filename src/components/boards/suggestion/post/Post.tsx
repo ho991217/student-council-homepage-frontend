@@ -257,7 +257,7 @@ function Post() {
       .catch((err) => {
         // 에러 처리
       });
-  }, [post]);
+  }, []);
 
   const onCommentHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
