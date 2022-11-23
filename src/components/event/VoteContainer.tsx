@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import CheckIcon from './CheckIcon';
+import CloseIcon from './CloseIcon';
 import { Bears } from './data';
+import Modal from './Modal';
 
 const Container = styled.div`
   display: flex;
@@ -94,6 +96,14 @@ const Candidate = styled.div<{ isSelected: boolean }>`
   }
 `;
 
+const Box = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
 const DetailButton = styled.button`
   position: relative;
   top: 18px;
@@ -135,7 +145,39 @@ const VoteButton = styled.button<{ isDisabled: boolean }>`
   color: #ffffff;
 `;
 
+const initSelected = Array.from({ length: 6 }, () => false);
+
 function VoteContainer() {
+  const [selected, setSelected] = useState(initSelected);
+  const [modalOpen, setModalOpen] = useState<number | null>(null);
+
+  const onCandidateClick = (id: number) => {
+    if (
+      selected.filter((value) => value).length > 1 &&
+      selected[id] === false
+    ) {
+      alert('두 개까지만 선택할 수 있습니다.');
+      return;
+    }
+    const newSelected = [...selected];
+
+    newSelected[id] = !newSelected[id];
+
+    setSelected(newSelected);
+  };
+
+  const onDetailClick = (id: number) => {
+    setModalOpen(id);
+  };
+
+  const buttonDisabled = () => {
+    if (selected.filter((value) => value).length > 0) {
+      return false;
+    }
+
+    return true;
+  };
+
   return (
     <Container>
       <TitleBlock>
@@ -146,17 +188,28 @@ function VoteContainer() {
         <SubTitle>투표기간: 2022. 11. 29(화) - 11. 30(수)</SubTitle>
         <Candidates>
           {Bears.map((bear) => (
-            <Candidate key={bear.id} isSelected>
-              <CheckIcon />
-              <img src={bear.img} alt={`투표 이미지 ${bear.id}`} />
-              <span>{bear.title}</span>
-              <DetailButton>자세히 보기</DetailButton>
+            <Candidate key={bear.id} isSelected={selected[bear.id]}>
+              <Box onClick={() => onCandidateClick(bear.id)}>
+                {selected[bear.id] && <CheckIcon />}
+                <img src={bear.img} alt={`투표 이미지 ${bear.id}`} />
+                <span>{bear.title}</span>
+              </Box>
+              <DetailButton onClick={() => onDetailClick(bear.id)}>
+                자세히 보기
+              </DetailButton>
             </Candidate>
           ))}
         </Candidates>
       </Vote>
       <Description>하나의 ID당 2마리의 곰 투표가 가능합니다.</Description>
-      <VoteButton isDisabled>투표하기</VoteButton>
+      <VoteButton isDisabled={buttonDisabled()}>투표하기</VoteButton>
+      {modalOpen && (
+        <Modal
+          id={modalOpen}
+          choose={onCandidateClick}
+          close={() => setModalOpen(null)}
+        />
+      )}
     </Container>
   );
 }
