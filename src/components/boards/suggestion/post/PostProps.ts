@@ -5,7 +5,6 @@ export interface PostProps {
   commentList: Comment[];
   createDate: string;
   fileList: [];
-  postHits: number;
   text: string;
   title: string;
   mine: boolean;
