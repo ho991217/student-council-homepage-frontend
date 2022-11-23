@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import CheckIcon from './CheckIcon';
-import CloseIcon from './CloseIcon';
 import { Bears } from './data';
 import Modal from './Modal';
 
@@ -143,6 +142,8 @@ const VoteButton = styled.button<{ isDisabled: boolean }>`
 
   font-size: 24px;
   color: #ffffff;
+
+  cursor: ${(p) => (p.isDisabled ? 'default' : 'pointer')};
 `;
 
 const initSelected = Array.from({ length: 6 }, () => false);
@@ -150,6 +151,7 @@ const initSelected = Array.from({ length: 6 }, () => false);
 function VoteContainer() {
   const [selected, setSelected] = useState(initSelected);
   const [modalOpen, setModalOpen] = useState<number | null>(null);
+  const [voteCompleted, setVoteCompleted] = useState(true);
 
   const onCandidateClick = (id: number) => {
     if (
@@ -201,8 +203,16 @@ function VoteContainer() {
           ))}
         </Candidates>
       </Vote>
-      <Description>하나의 ID당 2마리의 곰 투표가 가능합니다.</Description>
-      <VoteButton isDisabled={buttonDisabled()}>투표하기</VoteButton>
+      {!voteCompleted && (
+        <Description>하나의 ID당 2마리의 곰 투표가 가능합니다.</Description>
+      )}
+      {voteCompleted ? (
+        <VoteButton style={{ cursor: 'default' }} disabled isDisabled={false}>
+          투표 완료
+        </VoteButton>
+      ) : (
+        <VoteButton isDisabled={buttonDisabled()}>투표하기</VoteButton>
+      )}
       {modalOpen && (
         <Modal
           id={modalOpen}
