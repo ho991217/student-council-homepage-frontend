@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import axios, { AxiosError } from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import styled from 'styled-components';
 import CheckIcon from './CheckIcon';
 import { Bears } from './data';
@@ -151,9 +153,36 @@ const initSelected = Array.from({ length: 6 }, () => false);
 function VoteContainer() {
   const [selected, setSelected] = useState(initSelected);
   const [modalOpen, setModalOpen] = useState<number | null>(null);
-  const [voteCompleted, setVoteCompleted] = useState(true);
+  const [voteCompleted, setVoteCompleted] = useState(false);
+
+  const [cookies] = useCookies(['X-AUTH-TOKEN']);
+  useEffect(() => {
+    const getVoteCompleted = async () => {
+      const { data } = await axios({
+        method: 'get',
+        url: '/api/event/character',
+        headers: {
+          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        },
+      });
+      return data;
+    };
+
+    getVoteCompleted()
+      .then((res) => {
+        setVoteCompleted(res.vote);
+        setSelected(res.selected);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const onCandidateClick = (id: number) => {
+    if (voteCompleted) {
+      return;
+    }
+
     if (
       selected.filter((value) => value).length > 1 &&
       selected[id] === false
@@ -170,6 +199,28 @@ function VoteContainer() {
 
   const onDetailClick = (id: number) => {
     setModalOpen(id);
+  };
+
+  const onVoteClick = async () => {
+    const data = JSON.stringify({
+      checkList: selected,
+    });
+    await axios({
+      method: 'post',
+      url: '/api/event/character',
+      headers: {
+        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        'Content-Type': 'application/json',
+      },
+      data,
+    })
+      .then(() => {
+        alert('투표가 완료되었습니다.');
+        setVoteCompleted(true);
+      })
+      .catch((err) => {
+        alert('에러가 발생했습니다.');
+      });
   };
 
   const buttonDisabled = () => {
@@ -192,7 +243,7 @@ function VoteContainer() {
           {Bears.map((bear) => (
             <Candidate key={bear.id} isSelected={selected[bear.id]}>
               <Box onClick={() => onCandidateClick(bear.id)}>
-                {selected[bear.id] && <CheckIcon />}
+                {!voteCompleted && selected[bear.id] && <CheckIcon />}
                 <img src={bear.img} alt={`투표 이미지 ${bear.id}`} />
                 <span>{bear.title}</span>
               </Box>
@@ -211,7 +262,9 @@ function VoteContainer() {
           투표 완료
         </VoteButton>
       ) : (
-        <VoteButton isDisabled={buttonDisabled()}>투표하기</VoteButton>
+        <VoteButton onClick={onVoteClick} isDisabled={buttonDisabled()}>
+          투표하기
+        </VoteButton>
       )}
       {modalOpen && (
         <Modal
