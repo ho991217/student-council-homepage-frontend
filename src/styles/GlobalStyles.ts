@@ -4,6 +4,19 @@ import reset from 'styled-reset'; // 리셋 기본 스타일
 import 'static/fonts/pretendard.css'; // 폰트 설정
 
 export const GlobalStyles = createGlobalStyle`
+    @font-face {
+        font-family: 'Cafe24Ohsquare';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/Cafe24Ohsquare.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'Cafe24Ohsquareair';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202@1.0/Cafe24Ohsquareair.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
     ${reset}
     :root {
         font-family: 'Pretendard', sans-serif;
