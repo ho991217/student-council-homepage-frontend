@@ -61,7 +61,7 @@ const Content = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: 'RixDongnimGothic_Pro';
+  font-family: RixDongnimGothic_Pro;
   font-style: normal;
   font-weight: 400;
   font-size: 20px;
