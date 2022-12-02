@@ -7,7 +7,7 @@ const Container = styled.div`
   height: 100%;
 
   left: -10px;
-  top: -20px;
+  top: -15px;
 
   svg {
     width: 32px;

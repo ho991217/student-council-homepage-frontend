@@ -13,7 +13,7 @@ const Overlay = styled.div`
   background: rgba(0, 0, 0, 0.5);
   mix-blend-mode: normal;
   backdrop-filter: blur(5px);
-  z-index: 10;
+  z-index: 100;
 `;
 
 const Container = styled.div`
@@ -23,23 +23,29 @@ const Container = styled.div`
   padding: 30px;
 
   width: 80%;
+  height: 80%;
 
   left: 50%;
-  top: 30%;
+  top: 10%;
   transform: translateX(-50%);
   background: #ffffff;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.25);
   border-radius: 30px;
 
-  z-index: 20;
+  z-index: 110;
 
   img {
-    width: 50%;
+    width: 30%;
+    object-fit: contain;
   }
 
   ${({ theme }) => theme.media.mobile} {
     width: 90%;
-    padding: 30px 10px;
+    padding: 30px 20px;
+
+    img {
+      width: 80%;
+    }
   }
 `;
 
@@ -49,6 +55,9 @@ const Content = styled.div`
   align-items: center;
   justify-content: space-around;
   gap: 40px;
+
+  font-size: 16px;
+  line-height: 150%;
 `;
 
 const Title = styled.h1`
@@ -68,13 +77,6 @@ const Hr = styled.hr`
   border: 0.5px solid #721b9c;
 `;
 
-const Text = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  width: 80%;
-`;
-
 const Team = styled.div`
   display: flex;
   align-items: center;
@@ -86,7 +88,9 @@ const Team = styled.div`
   }
 `;
 const Description = styled.p`
-  line-height: 120%;
+  font-size: 14px;
+  line-height: 130%;
+  overflow-y: scroll;
 `;
 const Button = styled.button`
   width: 80%;
@@ -96,6 +100,8 @@ const Button = styled.button`
   border: none;
   color: #ffffff;
   cursor: pointer;
+
+  z-index: 300;
 `;
 
 const PCImage = styled.img`
@@ -105,6 +111,9 @@ const PCImage = styled.img`
 `;
 
 const MobileImage = styled.img`
+  height: 50%;
+  margin: 0 auto;
+  object-fit: contain;
   ${({ theme }) => theme.media.desktop} {
     display: none;
   }
@@ -115,15 +124,21 @@ const MobileImage = styled.img`
 
 const MobileContent = styled.div`
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: 12px;
+
+  overflow-y: scroll;
+
+  z-index: 300;
 `;
 
 interface Props {
   id: number;
-  choose: (id: number) => void;
+  isSelected: boolean;
+  choose: () => void;
   close: () => void;
 }
-function Modal({ id, choose, close }: Props) {
+function Modal({ id, isSelected, choose, close }: Props) {
   return (
     <div>
       <Container>
@@ -135,16 +150,23 @@ function Modal({ id, choose, close }: Props) {
           </div>
           <MobileContent>
             <MobileImage src={Bears[id].img} alt={`후보 이미지 ${id}`} />
-            <Text>
-              <Team>
-                <span>{Bears[id].team} 팀</span>
-                <span>{`(${Bears[id].members})`}</span>
-              </Team>
-              <Description>{Bears[id].description}</Description>
-            </Text>
+            <Team>
+              <span>{Bears[id].team} 팀</span>
+              <span>{`(${Bears[id].members})`}</span>
+            </Team>
+            <Description>
+              {Bears[id].description.split('\n').map((value) => (
+                <>
+                  {value}
+                  <br />
+                  <br />
+                </>
+              ))}
+            </Description>
           </MobileContent>
-
-          <Button onClick={() => choose(id)}>곰 선택하기</Button>
+          <Button onClick={choose} type="button">
+            {isSelected ? '선택 취소하기' : '곰 선택하기'}
+          </Button>
         </Content>
         <CloseIcon close={close} />
       </Container>

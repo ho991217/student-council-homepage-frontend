@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import styled from 'styled-components';
@@ -82,8 +82,10 @@ const Candidate = styled.div<{ isSelected: boolean }>`
 
   cursor: pointer;
 
+  padding: 20px 10px;
+
   img {
-    width: 100%;
+    width: 90%;
     margin: 12px 0px;
   }
   span {
@@ -98,6 +100,7 @@ const Candidate = styled.div<{ isSelected: boolean }>`
 `;
 
 const Box = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -106,16 +109,17 @@ const Box = styled.div`
 `;
 
 const DetailButton = styled.button`
-  position: relative;
-  top: 18px;
+  position: absolute;
   width: 80%;
   padding: 3px 0px;
-
   margin: 0 auto;
   background: #e9d2f1;
   border-radius: 20px;
   border: none;
 
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
   color: #ffffff;
 
   font-size: 18px;
@@ -190,6 +194,7 @@ function VoteContainer() {
       alert('두 개까지만 선택할 수 있습니다.');
       return;
     }
+
     const newSelected = [...selected];
 
     newSelected[id] = !newSelected[id];
@@ -242,10 +247,10 @@ function VoteContainer() {
         <Candidates>
           {Bears.map((bear) => (
             <Candidate key={bear.id} isSelected={selected[bear.id]}>
+              {!voteCompleted && selected[bear.id] && <CheckIcon />}
               <Box onClick={() => onCandidateClick(bear.id)}>
-                {!voteCompleted && selected[bear.id] && <CheckIcon />}
                 <img src={bear.img} alt={`투표 이미지 ${bear.id}`} />
-                <span>{bear.title}</span>
+                <span>#{bear.title.split('#')[1]}</span>
               </Box>
               <DetailButton onClick={() => onDetailClick(bear.id)}>
                 자세히 보기
@@ -266,11 +271,12 @@ function VoteContainer() {
           투표하기
         </VoteButton>
       )}
-      {modalOpen && (
+      {modalOpen !== null && (
         <Modal
           id={modalOpen}
-          choose={onCandidateClick}
+          choose={() => onCandidateClick(modalOpen)}
           close={() => setModalOpen(null)}
+          isSelected={selected[modalOpen]}
         />
       )}
     </Container>
