@@ -207,12 +207,28 @@ function VoteContainer() {
   };
 
   const onVoteClick = async () => {
-    if (buttonDisabled()) {
+    if (!cookies['X-AUTH-TOKEN']) {
+      alert('로그인 후 이용해주세요.');
       return;
     }
+
+    if (buttonDisabled()) {
+      alert('당신의 곰을 하나 이상 선택해주세요.');
+      return;
+    }
+
+    const confirmMessage = window.confirm(
+      '투표는 번복할 수 없습니다. 투표하시겠습니까?',
+    );
+
+    if (!confirmMessage) {
+      return;
+    }
+
     const data = JSON.stringify({
       checkList: selected,
     });
+
     await axios({
       method: 'post',
       url: '/api/event/character',
@@ -246,7 +262,7 @@ function VoteContainer() {
         <h1>당신의 곰에게 투표하세요!</h1>
       </TitleBlock>
       <Vote>
-        <SubTitle>투표기간: 2022. 11. 29(화) - 11. 30(수)</SubTitle>
+        <SubTitle>투표기간: 2022. 12. 2(금) - 12. 5(월)</SubTitle>
         <Candidates>
           {Bears.map((bear) => (
             <Candidate key={bear.id} isSelected={selected[bear.id]}>
