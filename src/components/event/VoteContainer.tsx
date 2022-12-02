@@ -207,6 +207,9 @@ function VoteContainer() {
   };
 
   const onVoteClick = async () => {
+    if (buttonDisabled()) {
+      return;
+    }
     const data = JSON.stringify({
       checkList: selected,
     });
