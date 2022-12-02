@@ -152,7 +152,6 @@ function Modal({ id, isSelected, choose, close }: Props) {
             <MobileImage src={Bears[id].img} alt={`후보 이미지 ${id}`} />
             <Team>
               <span>{Bears[id].team} 팀</span>
-              <span>{`(${Bears[id].members})`}</span>
             </Team>
             <Description>
               {Bears[id].description.split('\n').map((value) => (
