@@ -61,7 +61,7 @@ const Content = styled.div`
 `;
 
 const Title = styled.h1`
-  font-family: 'RixDongnimGothic_Pro';
+  font-family: RixDongnimGothic_Pro;
   font-style: normal;
   font-weight: 400;
   font-size: 20px;
@@ -164,7 +164,13 @@ function Modal({ id, isSelected, choose, close }: Props) {
               ))}
             </Description>
           </MobileContent>
-          <Button onClick={choose} type="button">
+          <Button
+            onClick={() => {
+              choose();
+              close();
+            }}
+            type="button"
+          >
             {isSelected ? '선택 취소하기' : '곰 선택하기'}
           </Button>
         </Content>
