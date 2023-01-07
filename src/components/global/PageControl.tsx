@@ -60,8 +60,6 @@ function PageControl({
   };
 
   useEffect(() => {
-    console.log(pagingInfo);
-
     const total = Math.ceil(pagingInfo.totalElements / pagingInfo.size);
     const startIdx =
       currentPage % 10 === 0
