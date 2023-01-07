@@ -60,6 +60,8 @@ function PageControl({
   };
 
   useEffect(() => {
+    console.log(pagingInfo);
+
     const total = Math.ceil(pagingInfo.totalElements / pagingInfo.size);
     const startIdx =
       currentPage % 10 === 0
@@ -95,7 +97,9 @@ function PageControl({
       <Indexes>
         {Array.from({ length: info.endIdx - info.startIdx + 1 }, (_, i) => (
           <Index cur={info.startIdx + i === currentPage} key={i}>
-            <Link to={generateParams(i + 1)}>{info.startIdx + i}</Link>
+            <Link to={generateParams(info.startIdx + i)}>
+              {info.startIdx + i}
+            </Link>
           </Index>
         ))}
       </Indexes>

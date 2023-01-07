@@ -215,7 +215,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                         style={{ cursor: 'default' }}
                       >
                         관리자에 의해 삭제된
-                        게시물입니다.ㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㅓㄴㄴ
+                        게시물입니다.
                       </Link>
                     ) : (
                       <Link to={`/board-suggestion/board?id=${post.id}`}>
