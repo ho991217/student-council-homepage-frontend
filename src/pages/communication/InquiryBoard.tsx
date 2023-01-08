@@ -76,9 +76,9 @@ const Row = styled.div`
 
 function InquiryBoard(): JSX.Element {
   // TODO: 총학생회에서 url 제공하면 변경
-  const [snsInfo, setSnsInfo] = useState({
+  const [snsInfo] = useState({
     '총학생회 이메일': '54thplay@naver.com',
-    인스타그램: '@dku_play',
+    인스타그램: '@dku_damda',
     페이스북: '@dkuplay54',
     유튜브: '단국대학교 54대 play 총학생회',
     '카카오톡 플러스 친구': '단국대학교 총학생회',
