@@ -3,8 +3,8 @@ import styled, { css } from 'styled-components';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Modal from 'pages/sign-up/components/Modal';
 import { PropagateLoader } from 'react-spinners';
+import Modal from 'components/modal/Modal';
 
 const Container = styled.div`
   margin: 40px 0;
@@ -61,7 +61,7 @@ const Content = css`
   }
 `;
 
-const TitleInput = styled.input.attrs({ type: 'text', required: true })`
+const TitleInput = styled.input.attrs({ type: 'text' })`
   ${Content}
   width: 100%;
   height: 40px;
@@ -105,6 +105,8 @@ const Button = styled.input.attrs({ type: 'submit' })`
 function NewsEditor() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string>('');
   const [form, setForm] = useState<FormData>();
   const [carouselForm, setCarouselForm] = useState<FormData>();
   const [postState, setPostState] = useState({
@@ -140,7 +142,6 @@ function NewsEditor() {
     formData.append('text', content);
     formData.append('title', title);
 
-    // // form.append('redirectUrl', location.pathname);
     setForm(formData);
     setCarouselForm(form);
   };
@@ -149,11 +150,14 @@ function NewsEditor() {
     e.preventDefault();
 
     if (title === '') {
-      alert('제목을 입력해주세요');
+      setErrorMsg('소식명을 입력해주세요');
+      setIsOpen(true);
     } else if (content === '') {
-      alert('내용을 입력해주세요');
+      setErrorMsg('소식 내용을 입력해주세요');
+      setIsOpen(true);
     } else if (form === undefined) {
-      alert('파일을 첨부해주세요');
+      setErrorMsg('사진을 첨부해주세요');
+      setIsOpen(true);
     } else {
       setPostState((prev) => ({
         ...prev,
@@ -170,7 +174,7 @@ function NewsEditor() {
       };
 
       axios(config)
-        .then(function (response) {
+        .then((response) => {
           if (carouselUpload) {
             const form = carouselForm;
             form?.append('redirectUrl', `/news?id=${response.data.data.id}`);
@@ -190,25 +194,21 @@ function NewsEditor() {
           }));
           navigate('/council-news');
         })
-        .catch(function (error) {
-          // 에러 핸들링
-          console.log(error);
+        .catch((error) => {
+          setErrorMsg(error.response.data.message);
+          setIsOpen(true);
         });
     }
   };
 
   return (
     <>
-      {postState.sent && !postState.success && (
-        <Modal>
-          <>
-            <Text>작성 중...</Text>
-            <PropagateLoader
-              style={{ transform: 'translateX(-5px)' }}
-              color="#9753DC"
-            />
-          </>
-        </Modal>
+      {isOpen && (
+        <Modal
+          onClose={() => setIsOpen(false)}
+          title="소식 등록 실패"
+          contents={errorMsg}
+        />
       )}
       <Container>
         <InnerContainer>
@@ -217,7 +217,6 @@ function NewsEditor() {
               <Label htmlFor="title">
                 소식명
                 <TitleInput
-                  type="text"
                   id="title"
                   value={title}
                   onChange={onTitleHandler}

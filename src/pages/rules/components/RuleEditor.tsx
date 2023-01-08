@@ -3,8 +3,7 @@ import styled, { css } from 'styled-components';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Modal from 'pages/sign-up/components/Modal';
-import { PropagateLoader } from 'react-spinners';
+import Modal from 'components/modal/Modal';
 
 const Container = styled.div`
   margin: 40px 0;
@@ -16,7 +15,7 @@ const Container = styled.div`
 const InnerContainer = styled.div`
   width: 100%;
   display: flex;
-  align-divs: center;
+  align-items: center;
   justify-content: center;
 `;
 
@@ -61,7 +60,7 @@ const Content = css`
   }
 `;
 
-const TitleInput = styled.input.attrs({ type: 'text', required: true })`
+const TitleInput = styled.input.attrs({ type: 'text' })`
   ${Content}
   width: 100%;
   height: 40px;
@@ -96,21 +95,13 @@ const Button = styled.input.attrs({ type: 'submit' })`
   border-radius: 5px;
 `;
 
-const Text = styled.span`
-  font-size: ${({ theme }) => theme.fonts.size.xl};
-  font-weight: ${({ theme }) => theme.fonts.weight.bold};
-  margin-bottom: 20px;
-`;
-
 function RuleEditor() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [form, setForm] = useState<FormData>();
-  const [postState, setPostState] = useState({
-    sent: false,
-    success: false,
-  });
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
+  const [isOpen, setIsOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
 
   const onContentHandler = (event: React.FormEvent<HTMLTextAreaElement>) => {
@@ -141,17 +132,15 @@ function RuleEditor() {
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (title === '') {
-      alert('제목을 입력해주세요');
+      setErrorMsg('제목을 입력해주세요');
+      setIsOpen(true);
     } else if (content === '') {
-      alert('내용을 입력해주세요');
+      setErrorMsg('내용을 입력해주세요');
+      setIsOpen(true);
     } else if (form === undefined) {
-      alert('파일을 첨부해주세요');
+      setErrorMsg('파일을 첨부해주세요');
+      setIsOpen(true);
     } else {
-      setPostState((prev) => ({
-        ...prev,
-        sent: true,
-      }));
-
       const config = {
         method: 'post',
         url: '/api/rule',
@@ -163,32 +152,29 @@ function RuleEditor() {
       };
 
       axios(config)
-        .then(function (response) {
-          setPostState((prev) => ({
-            ...prev,
-            success: response.data.successful,
-          }));
-          navigate('/rules');
+        .then((response) => {
+          if (response.data.successful) {
+            navigate('/rules');
+          } else {
+            setErrorMsg(response.data.message);
+            setIsOpen(true);
+          }
         })
-        .catch(function (error) {
-          // 에러 핸들링
-          console.log(error);
+        .catch((error) => {
+          setErrorMsg(error.response.data.message);
+          setIsOpen(true);
         });
     }
   };
 
   return (
     <>
-      {postState.sent && !postState.success && (
-        <Modal>
-          <>
-            <Text>작성 중...</Text>
-            <PropagateLoader
-              style={{ transform: 'translateX(-5px)' }}
-              color="#9753DC"
-            />
-          </>
-        </Modal>
+      {isOpen && (
+        <Modal
+          title="등록 실패"
+          contents={errorMsg}
+          onClose={() => setIsOpen(false)}
+        />
       )}
       <Container>
         <InnerContainer>
@@ -197,7 +183,6 @@ function RuleEditor() {
               <Label htmlFor="title">
                 회칙명
                 <TitleInput
-                  type="text"
                   id="title"
                   value={title}
                   onChange={onTitleHandler}

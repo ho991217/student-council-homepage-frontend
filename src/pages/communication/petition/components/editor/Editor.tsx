@@ -3,39 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import ReactModal from 'react-modal';
-import { Desktop, Tablet, Mobile } from 'hooks/MediaQueries';
-import Modal from './Modal';
+import Modal from 'components/modal/Modal';
 import { getCategories } from '../../functions/GetCategories';
-
-const customStylesDesktop = {
-  content: {
-    top: '25%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginTop: '290px',
-    transform: 'translate(-50%, -50%)',
-    padding: 0,
-  },
-};
-
-const customStylesMobile = {
-  content: {
-    top: '40%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginTop: '80px',
-    transform: 'translate(-50%, -50%)',
-    padding: 0,
-  },
-};
 
 const Container = styled.div`
   width: 100%;
   display: flex;
-  align-divs: center;
+  align-items: center;
   justify-content: center;
 `;
 
@@ -150,6 +124,7 @@ function Editor(): JSX.Element {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string>('');
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
 
@@ -174,23 +149,19 @@ function Editor(): JSX.Element {
     setContent(value);
   };
 
-  const onOpenModalHandler = () => {
+  const onSubmitHandler = async () => {
     if (category === '') {
-      alert('카테고리를 선택해주세요.');
+      setErrorMsg('카테고리를 선택해주세요.');
+      setIsOpen(true);
     } else if (title === '') {
-      alert('청원 제목을 입력해주세요');
+      setErrorMsg('제목을 입력해주세요.');
+      setIsOpen(true);
     } else if (content === '') {
-      alert('청원 내용을 입력해주세요');
+      setErrorMsg('내용을 입력해주세요.');
+      setIsOpen(true);
     } else {
       setIsOpen(true);
     }
-  };
-
-  const onCloseModalHandler = () => {
-    setIsOpen(false);
-  };
-
-  const onSubmitHandler = async () => {
     const data = JSON.stringify({
       category,
       title,
@@ -209,11 +180,9 @@ function Editor(): JSX.Element {
       navigate(`/board-petition/board?id=${res.data.data.id}`);
     } catch (e) {
       const err = e as ErrorProps;
-      // TODO:등록 실패
-      // 하루 여러개 등의 이유
       if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
-        navigate(-1);
-        alert(err.response.data.message);
+        setErrorMsg(err.response.data.message);
+        setIsOpen(true);
       }
     }
   };
@@ -266,53 +235,21 @@ function Editor(): JSX.Element {
             />
           </Label>
           <ButtonDiv>
-            <Button type="button" onClick={onOpenModalHandler}>
+            <Button type="button" onClick={onSubmitHandler}>
               작성완료
             </Button>
           </ButtonDiv>
         </Form>
-        <Desktop>
-          <ReactModal
-            isOpen={isOpen}
-            style={customStylesDesktop}
-            ariaHideApp={false}
-            contentLabel="개인정보 수집 및 이용 동의"
-            onRequestClose={() => setIsOpen(false)}
-          >
-            <Modal
-              onCloseModalHandler={onCloseModalHandler}
-              onSubmitHandler={onSubmitHandler}
-            />
-          </ReactModal>
-        </Desktop>
-        <Tablet>
-          <ReactModal
-            isOpen={isOpen}
-            style={customStylesMobile}
-            ariaHideApp={false}
-            contentLabel="개인정보 수집 및 이용 동의"
-            onRequestClose={() => setIsOpen(false)}
-          >
-            <Modal
-              onCloseModalHandler={onCloseModalHandler}
-              onSubmitHandler={onSubmitHandler}
-            />
-          </ReactModal>
-        </Tablet>
-        <Mobile>
-          <ReactModal
-            isOpen={isOpen}
-            style={customStylesMobile}
-            ariaHideApp={false}
-            contentLabel="개인정보 수집 및 이용 동의"
-            onRequestClose={() => setIsOpen(false)}
-          >
-            <Modal
-              onCloseModalHandler={onCloseModalHandler}
-              onSubmitHandler={onSubmitHandler}
-            />
-          </ReactModal>
-        </Mobile>
+        {isOpen && (
+          <Modal
+            title="청원 등록 실패"
+            contents={errorMsg}
+            onClose={() => {
+              setIsOpen(false);
+              setErrorMsg('');
+            }}
+          />
+        )}
       </Wrapper>
     </Container>
   );

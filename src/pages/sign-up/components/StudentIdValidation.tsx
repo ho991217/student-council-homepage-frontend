@@ -3,8 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import CopyrightTerm from 'components/CopyrightTerm';
 import { PropagateLoader } from 'react-spinners';
+import Modal from 'components/modal/Modal';
 import styled from 'styled-components';
-import Modal from 'pages/sign-up/components/Modal';
 import {
   Header,
   HeaderPoint,
@@ -74,7 +74,8 @@ function StudentIdValidation({ type }: { type: string }): JSX.Element {
     success: false,
     errMsg: '',
   });
-  const [url, setUrl] = useState<string>(
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [url] = useState<string>(
     type === '회원가입' ? '/api/email' : '/api/email/password',
   );
   const navigate = useNavigate();
@@ -114,7 +115,6 @@ function StudentIdValidation({ type }: { type: string }): JSX.Element {
         success: data.successful,
       }));
     } catch (error) {
-      console.log(error);
       const e = error as any;
       if (
         e.response.data.message === '이미 존재하는 회원입니다.' ||
@@ -128,38 +128,45 @@ function StudentIdValidation({ type }: { type: string }): JSX.Element {
   return (
     <>
       {emailState.sent && (
-        <Modal>
-          {/* eslint-disable-next-line no-nested-ternary */}
-          {emailState.errMsg.length < 1 ? (
-            emailState.success ? (
-              <>
-                <Text>
-                  학교 계정 이메일 메일함(또는 스팸메일함)을 확인하세요!
-                </Text>
-                <LinktoGmail href="https://mail.google.com/mail/u/1/?ogbl#inbox">
-                  G-MAIL 바로가기
-                </LinktoGmail>
-              </>
+        <Modal
+          title="이메일 인증"
+          onClose={() => setIsOpen(false)}
+          contents={
+            // eslint-disable-next-line no-nested-ternary
+            emailState.errMsg.length < 1 ? (
+              emailState.success ? (
+                <>
+                  <Text>
+                    학교 계정 이메일 메일함(또는 스팸메일함)을 확인하세요!
+                  </Text>
+                  <LinktoGmail
+                    target="_self"
+                    href="https://mail.google.com/mail/u/1/?ogbl#inbox"
+                  >
+                    G-MAIL 바로가기
+                  </LinktoGmail>
+                </>
+              ) : (
+                <>
+                  <Text>이메일 보내는 중...</Text>
+                  <PropagateLoader
+                    style={{ transform: 'translateX(-5px)' }}
+                    color="#9753DC"
+                  />
+                </>
+              )
             ) : (
               <>
-                <Text>이메일 보내는 중...</Text>
-                <PropagateLoader
-                  style={{ transform: 'translateX(-5px)' }}
-                  color="#9753DC"
+                <div>{emailState.errMsg}</div>
+                <CloseButton
+                  type="button"
+                  value="닫기"
+                  onClick={() => navigate(-1)}
                 />
               </>
             )
-          ) : (
-            <>
-              <div>{emailState.errMsg}</div>
-              <CloseButton
-                type="button"
-                value="닫기"
-                onClick={() => navigate(-1)}
-              />
-            </>
-          )}
-        </Modal>
+          }
+        />
       )}
       <Wrapper>
         <Header>

@@ -4,7 +4,6 @@ import { useCookies } from 'react-cookie';
 import styled from 'styled-components';
 import CheckIcon from './CheckIcon';
 import { Bears } from '../data';
-import Modal from './Modal';
 
 const Container = styled.div`
   display: flex;
@@ -290,14 +289,14 @@ function VoteContainer() {
           투표하기
         </VoteButton>
       )}
-      {modalOpen !== null && (
+      {/* {modalOpen !== null && (
         <Modal
           id={modalOpen}
           choose={() => onCandidateClick(modalOpen)}
           close={() => setModalOpen(null)}
           isSelected={selected[modalOpen]}
         />
-      )}
+      )} */}
     </Container>
   );
 }

@@ -5,8 +5,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import Modal from 'pages/sign-up/components/Modal';
+
 import { PropagateLoader } from 'react-spinners';
+import Modal from 'components/modal/Modal';
 
 const Container = styled.div`
   margin: 40px 0;
@@ -18,7 +19,7 @@ const Container = styled.div`
 const InnerContainer = styled.div`
   width: 100%;
   display: flex;
-  align-divs: center;
+  align-items: center;
   justify-content: center;
 `;
 
@@ -63,7 +64,13 @@ const Content = css`
   }
 `;
 
-const TitleInput = styled.input.attrs({ type: 'text', required: true })`
+const TitleInput = styled.input.attrs({ type: 'text' })`
+  ${Content}
+  width: 100%;
+  height: 40px;
+`;
+
+const RoundInput = styled.input.attrs({ type: 'number' })`
   ${Content}
   width: 100%;
   height: 40px;
@@ -109,6 +116,8 @@ const Text = styled.span`
 
 function ConferenceEditor() {
   const [round, setRound] = useState<string>('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string>('');
   const [date, settDate] = useState<Date>(new Date());
   const [title, setTitle] = useState<string>('');
   const [form, setForm] = useState<FormData>();
@@ -147,15 +156,18 @@ function ConferenceEditor() {
 
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (title === '') {
-      alert('제목을 입력해주세요');
-    } else if (round === '') {
-      alert('회차를 입력해주세요');
+    if (round === '') {
+      setErrorMsg('회차를 입력해주세요');
+      setIsOpen(true);
+    } else if (title === '') {
+      setErrorMsg('회의록명을 입력해주세요');
+      setIsOpen(true);
     } else if (date === undefined) {
-      alert('날짜를 입력해주세요');
+      setErrorMsg('날짜를 입력해주세요');
+      setIsOpen(true);
     } else if (form === undefined) {
-      alert('파일을 첨부해주세요');
+      setErrorMsg('파일을 선택해주세요');
+      setIsOpen(true);
     } else {
       setPostState((prev) => ({
         ...prev,
@@ -172,32 +184,33 @@ function ConferenceEditor() {
       };
 
       axios(config)
-        .then(function (response) {
-          setPostState((prev) => ({
-            ...prev,
-            success: response.data.successful,
-          }));
-          navigate('/conference');
+        .then(({ data }) => {
+          if (data.successful) {
+            setPostState((prev) => ({
+              ...prev,
+              success: data.successful,
+            }));
+            navigate('/conference');
+          } else {
+            setErrorMsg(data.message);
+            setIsOpen(true);
+          }
         })
-        .catch(function (error) {
-          // 에러 핸들링
-          console.log(error);
+        .catch(({ response }) => {
+          setErrorMsg(response.data.message);
+          setIsOpen(true);
         });
     }
   };
 
   return (
     <>
-      {postState.sent && !postState.success && (
-        <Modal>
-          <>
-            <Text>작성 중...</Text>
-            <PropagateLoader
-              style={{ transform: 'translateX(-5px)' }}
-              color="#9753DC"
-            />
-          </>
-        </Modal>
+      {isOpen && (
+        <Modal
+          title="회의록 작성 실패"
+          contents={errorMsg}
+          onClose={() => setIsOpen(false)}
+        />
       )}
       <Container>
         <InnerContainer>
@@ -205,8 +218,7 @@ function ConferenceEditor() {
             <Form onSubmit={onSubmitHandler}>
               <Label htmlFor="round">
                 회차
-                <TitleInput
-                  type="text"
+                <RoundInput
                   id="round"
                   value={round}
                   onChange={onRoundHandler}
@@ -217,14 +229,13 @@ function ConferenceEditor() {
                 개최일자
                 <MyDatePicker
                   selected={date}
-                  dateFormat="yyyy-MM-dd" // 날짜 형식
+                  dateFormat="yyyy-MM-dd"
                   onChange={(selectDate: Date) => settDate(selectDate)}
                 />
               </Label>
               <Label htmlFor="title">
                 회의록명
                 <TitleInput
-                  type="text"
                   id="title"
                   value={title}
                   onChange={onTitleHandler}

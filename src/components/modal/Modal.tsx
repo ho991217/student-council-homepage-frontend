@@ -6,7 +6,7 @@ import useOutsideClick from './useOutsideClick';
 interface ModalProps {
   onClose: () => void;
   title: string;
-  contents: string;
+  contents: string | JSX.Element;
   accept?: string;
   onAccept?: () => void;
   decline?: string;
@@ -61,8 +61,12 @@ function Modal({
             </svg>
           </CloseButton>
           <Contents>
-            <h1>{title}</h1>
-            <span>{contents}</span>
+            {title && <h1>{title}</h1>}
+            {typeof contents === 'string' ? (
+              <span>{contents}</span>
+            ) : (
+              <div>{contents}</div>
+            )}
             <ButtonsContainer>
               {accept && <Button onClick={onAccept}>{accept}</Button>}
               {decline && <Button onClick={onDecline}>{decline}</Button>}

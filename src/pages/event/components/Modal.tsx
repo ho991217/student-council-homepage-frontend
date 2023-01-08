@@ -179,5 +179,3 @@ function Modal({ id, isSelected, choose, close }: Props) {
     </div>
   );
 }
-
-export default Modal;
