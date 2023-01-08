@@ -13,8 +13,10 @@
     "@types/react-modal": "^3.13.1",
     "@types/react-responsive": "^8.0.5",
     "axios": "^0.27.2",
+    "dayjs": "^1.11.7",
     "dotenv-cli": "^6.0.0",
     "react": "^17.0.2",
+    "react-calendar": "^4.0.0",
     "react-cookie": "^4.1.1",
     "react-datepicker": "^4.8.0",
     "react-dom": "^17.0.2",
@@ -56,6 +58,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-calendar": "^3.9.0",
     "@types/react-datepicker": "^4.4.2",
     "@types/styled-components": "^5.1.25",
     "eslint": "^8.16.0",

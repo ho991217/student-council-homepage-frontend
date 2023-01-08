@@ -1,9 +1,5 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import Schedule from './components/Schedule';
-import News from './components/News';
-import Petition from './components/Petition';
-import Proceeding from './components/Proceeding';
 
 import { TileProps } from './TileProps';
 
@@ -37,7 +33,7 @@ const MoreLink = styled(Link)`
   font-weight: ${({ theme }) => theme.fonts.weight.light};
 `;
 
-function Tile({ title, linkTitle, to, detail }: TileProps): JSX.Element {
+function Tile({ title, linkTitle, to, children }: TileProps): JSX.Element {
   return (
     <Container>
       {title && linkTitle && (
@@ -46,10 +42,7 @@ function Tile({ title, linkTitle, to, detail }: TileProps): JSX.Element {
           <MoreLink to={to}>{linkTitle}</MoreLink>
         </TitleContainer>
       )}
-      {detail === 'schedule' && <Schedule />}
-      {detail === 'news' && <News />}
-      {detail === 'petition' && <Petition />}
-      {detail === 'proceeding' && <Proceeding />}
+      {children}
     </Container>
   );
 }

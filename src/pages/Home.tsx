@@ -1,4 +1,3 @@
-import axios from 'axios';
 import Carousel from 'components/home/carousel/Carousel';
 import { ImageProps } from 'components/home/carousel/CarouselProps';
 import { getCarouselImages } from 'components/home/carousel/getCarouselImages';
@@ -21,7 +20,6 @@ function Home() {
   useEffect(() => {
     getCarouselImages().then(({ data }) => {
       setImages(data);
-      console.log(data);
     });
   }, []);
 

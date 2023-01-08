@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 import Tile from './Tile';
+import Schedule from './components/Schedule';
+import News from './components/News';
+import Petition from './components/Petition';
+import Proceeding from './components/Proceeding';
 
 const Container = styled.div`
   ${({ theme }) => theme.media.desktop} {
@@ -79,32 +83,29 @@ function Tiles(): JSX.Element {
   return (
     <Container>
       <BigTile>
-        <Tile to="/" detail="schedule" />
+        <Tile to="/">
+          <Schedule />
+        </Tile>
       </BigTile>
       <SmallTileContainer>
         <SmallTile>
-          <Tile
-            title="총학소식"
-            linkTitle="더보기"
-            to="/council-news"
-            detail="news"
-          />
+          <Tile title="총학소식" linkTitle="더보기" to="/council-news">
+            <News />
+          </Tile>
         </SmallTile>
         <SmallTile>
           <Tile
             title="실시간 인기청원"
             linkTitle="더보기"
             to="/board-petition/boards?page=1"
-            detail="petition"
-          />
+          >
+            <Petition />
+          </Tile>
         </SmallTile>
         <SmallTile>
-          <Tile
-            title="금주의 회의록"
-            linkTitle="더보기"
-            to="/conference"
-            detail="proceeding"
-          />
+          <Tile title="금주의 회의록" linkTitle="더보기" to="/conference">
+            <Proceeding />
+          </Tile>
         </SmallTile>
       </SmallTileContainer>
     </Container>

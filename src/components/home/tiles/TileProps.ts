@@ -1,8 +1,10 @@
+import { ReactNode } from "react";
+
 export interface TileProps {
   title?: string;
   linkTitle?: string;
   to: string;
-  detail?: string;
+  children: ReactNode;
 }
 
 export interface NewsProps {

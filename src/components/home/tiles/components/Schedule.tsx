@@ -1,10 +1,11 @@
 import axios from 'axios';
-import Chevron from 'components/home/carousel/Chevron';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Calendar from './Calendar';
+import Calendar from 'react-calendar';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 
-const API_URL = process.env.REACT_APP_API_URL;
+dayjs.extend(isBetween);
 
 const Container = styled.div`
   width: 100%;
@@ -21,31 +22,84 @@ const DetailWrapper = styled.div`
   overflow: scroll;
 `;
 
-const MonthContainer = styled.div`
+const ReactCalendar = styled(Calendar)`
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-`;
 
-const MonthDisplay = styled.div`
-  ${({ theme }) => theme.media.desktop} {
-    font-size: ${({ theme }) => theme.fonts.size.lg};
-    font-weight: ${({ theme }) => theme.fonts.weight.medium};
-  }
+  .react-calendar__navigation {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    ${({ theme }) => theme.media.desktop} {
+      font-size: ${({ theme }) => theme.fonts.size.lg};
+      font-weight: ${({ theme }) => theme.fonts.weight.medium};
+    }
 
-  ${({ theme }) => theme.media.tablet} {
-    font-size: ${({ theme }) => theme.fonts.size.lg};
-    font-weight: ${({ theme }) => theme.fonts.weight.medium};
-  }
+    ${({ theme }) => theme.media.tablet} {
+      font-size: ${({ theme }) => theme.fonts.size.lg};
+      font-weight: ${({ theme }) => theme.fonts.weight.medium};
+    }
 
-  ${({ theme }) => theme.media.mobile} {
-    font-size: ${({ theme }) => theme.fonts.size.xl};
-    font-weight: ${({ theme }) => theme.fonts.weight.bold};
+    ${({ theme }) => theme.media.mobile} {
+      font-size: ${({ theme }) => theme.fonts.size.xl};
+      font-weight: ${({ theme }) => theme.fonts.weight.bold};
+    }
+    button {
+      all: unset;
+      text-align: center;
+      padding: 0 10px;
+      color: ${({ theme }) => theme.colors.gray900};
+    }
   }
-  cursor: pointer;
-  user-select: none;
+  .react-calendar__month-view__weekdays {
+    background-color: rgb(242, 246, 249);
+    border: 0.5px solid ${({ theme }) => theme.colors.gray300};
+    display: flex;
+    align-items: center;
+    text-align: center;
+    height: 40px;
+    abbr {
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: ${({ theme }) => theme.colors.gray900};
+    }
+    abbr[title='일요일'] {
+      color: rgb(179, 81, 65);
+    }
+    abbr[title='토요일'] {
+      color: rgb(0, 34, 245);
+    }
+  }
+  .react-calendar__tile--now {
+    abbr {
+      color: ${({ theme }) => theme.colors.accent};
+      font-weight: 700;
+    }
+  }
+  .react-calendar__tile {
+    border: 0.5px solid ${({ theme }) => theme.colors.gray300};
+    background-color: ${({ theme }) => theme.colors.white};
+    font-size: 0.8rem;
+    height: 45px;
+    cursor: pointer;
+    :hover {
+      background-color: ${({ theme }) => theme.colors.primary};
+      color: ${({ theme }) => theme.colors.white};
+      div > div {
+        background-color: ${({ theme }) => theme.colors.white};
+      }
+    }
+  }
+  .react-calendar__month-view__days__day--neighboringMonth {
+    color: ${({ theme }) => theme.colors.gray500};
+  }
+  .react-calendar__tile--active {
+    background-color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.white};
+    div > div {
+      background-color: ${({ theme }) => theme.colors.white};
+    }
+  }
 `;
 
 const DateContainer = styled.div`
@@ -93,7 +147,14 @@ const P = styled.div`
   }
 `;
 
-const Span = styled.span``;
+const Tag = styled.div`
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.colors.gray200};
+  margin: auto;
+  margin-top: 2px;
+`;
 
 interface DetailProps {
   title: string;
@@ -102,8 +163,6 @@ interface DetailProps {
 }
 
 function Schedule(): JSX.Element {
-  const [curYear, setCurYear] = useState(new Date().getFullYear());
-  const [curMonth, setCurMonth] = useState(new Date().getMonth());
   const [curMonthDetails, setCurMonthDetails] = useState<DetailProps[]>([
     {
       start: '',
@@ -112,79 +171,53 @@ function Schedule(): JSX.Element {
     },
   ]);
 
-  const getMonthDetails = async (
-    year: number,
-    month: number,
-  ): Promise<void> => {
-    const dateString = month <= 9 ? `${year}0${month}` : `${year}${month}`;
-
+  const getMonthDetails = async (activeStartDate: Date): Promise<void> => {
+    const fromDate = dayjs(activeStartDate).format('YYYYMMDD');
+    const toDate = dayjs(activeStartDate).endOf('month').format('YYYYMMDD');
     const config = {
       method: 'get',
-      url: `/api/schedule?from=${dateString}01&to=${dateString}${new Date(
-        curYear,
-        curMonth + 1,
-        0,
-      ).getDate()}`,
+      url: `/api/schedule?from=${fromDate}&to=${toDate}`,
       headers: {},
     };
 
     axios(config)
-      .then((response) => setCurMonthDetails(response.data.data))
+      .then(({ data }) => {
+        setCurMonthDetails(data.data);
+      })
       .catch((error) => {
         // TODO:에러 처리
       });
   };
 
   useEffect(() => {
-    getMonthDetails(curYear, curMonth + 1);
-  }, [curYear, curMonth]);
-
-  const handleMonthChange = (direction: string) => {
-    if (direction === 'prev') {
-      if (curMonth === 0) {
-        setCurYear(curYear - 1);
-        setCurMonth(11);
-      } else {
-        setCurMonth(curMonth - 1);
-      }
-    } else if (direction === 'cur') {
-      setCurYear(new Date().getFullYear());
-      setCurMonth(new Date().getMonth());
-    } else if (direction === 'next') {
-      if (curMonth === 11) {
-        setCurYear(curYear + 1);
-        setCurMonth(0);
-      } else {
-        setCurMonth(curMonth + 1);
-      }
-    }
-  };
+    const now = new Date();
+    getMonthDetails(new Date(now.getFullYear(), now.getMonth(), 1));
+  }, []);
 
   return (
     <Container>
-      <MonthContainer>
-        <Chevron
-          direction="left"
-          onClick={() => handleMonthChange('prev')}
-          color="darkgrey"
-        />
-        <MonthDisplay onClick={() => handleMonthChange('cur')}>
-          {curYear}년 {curMonth + 1}월 학사일정
-        </MonthDisplay>
-        <Chevron
-          direction="right"
-          onClick={() => handleMonthChange('next')}
-          color="darkgrey"
-        />
-      </MonthContainer>
-      <Calendar curYear={curYear} curMonth={curMonth} />
+      <ReactCalendar
+        maxDetail="month"
+        minDetail="month"
+        onActiveStartDateChange={({ activeStartDate }) =>
+          getMonthDetails(activeStartDate)
+        }
+        // eslint-disable-next-line react/no-unstable-nested-components
+        tileContent={({ date }) => (
+          <div>
+            {curMonthDetails?.find((detail) =>
+              dayjs(date).isBetween(detail.start, detail.end, 'day', '[]'),
+            ) && <Tag />}
+          </div>
+        )}
+      />
       <DetailWrapper>
         {curMonthDetails?.map((detail) => (
           <P key={curMonthDetails.indexOf(detail)}>
             <DateContainer>
-              <Span>{detail.start}</Span> ~ <Span>{detail.end}</Span>
+              <span>{detail.start}</span> ~ <span>{detail.end}</span>
             </DateContainer>
-            <Span>{detail.title}</Span>
+            <span>{detail.title}</span>
           </P>
         ))}
       </DetailWrapper>
