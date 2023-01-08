@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import Modal from 'components/modal/Modal';
+import TextBoxS from 'components/editor/input/TextBoxS';
 import { getCategories } from '../../functions/GetCategories';
 
 const Container = styled.div`
@@ -74,11 +75,6 @@ const Content = css`
   }
 `;
 
-const TitleInput = styled.input`
-  ${Content}
-  width: 100%;
-  height: 40px;
-`;
 
 const Textarea = styled.textarea`
   ${Content}
@@ -216,16 +212,12 @@ function Editor(): JSX.Element {
               ))}
             </Select>
           </Label>
-          <Label htmlFor="title">
-            청원 제목
-            <TitleInput
-              type="text"
-              id="title"
-              value={title}
-              onChange={onTitleHandler}
-              placeholder="청원 제목을 입력해주세요."
-            />
-          </Label>
+          <TextBoxS
+            label="청원 제목"
+            value={title}
+            onChange={onTitleHandler}
+            placeholder="청원 제목을 입력해주세요."
+          />
           <Label htmlFor="content">
             청원 내용
             <Textarea
