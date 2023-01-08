@@ -7,6 +7,8 @@ import ReactModal from 'react-modal';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
+import parse from 'html-react-parser';
+
 const TARGET_AGREEMENT = 150;
 
 const Container = styled.div`
@@ -388,6 +390,10 @@ function Post() {
   const [comment, setComment] = useState<string>('동의합니다.');
   const [answer, setAnswer] = useState<string>();
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
+  const [error, setError] = useState({
+    isOpen: false,
+    message: '',
+  });
   const navigate = useNavigate();
   const [modalState, setModalState] = useState({
     content: <div />,
@@ -423,8 +429,13 @@ function Post() {
         data: JSON.stringify({ text: answer }),
       });
       getCurrentPost(postId);
-    } catch (e) {
-      // 에러처리
+    } catch ({ response }) {
+      const { data } = response as any;
+      setError((prev) => ({
+        ...prev,
+        isOpen: true,
+        message: data.message,
+      }));
     }
   };
 
@@ -444,7 +455,6 @@ function Post() {
       });
       if (data.successful) {
         getCurrentPost(postId);
-        console.log(data.successful);
       }
     } catch (err) {
       const error = err as any;
@@ -468,7 +478,6 @@ function Post() {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
       });
-      console.log(data.data);
       setPost(data.data);
     } catch {
       navigate(-1);
@@ -520,7 +529,7 @@ function Post() {
 
   return (
     <Container>
-      <ReactModal
+      {/* <ReactModal
         isOpen={modalState.open}
         contentLabel="Example Modal"
         style={modalStyle}
@@ -531,7 +540,7 @@ function Post() {
         shouldCloseOnOverlayClick
       >
         {modalState.content}
-      </ReactModal>
+      </ReactModal> */}
       {post && (
         <Wrapper>
           {cookies.isAdmin === 'true' && (
@@ -571,7 +580,7 @@ function Post() {
               )}
               <HSeparator />
 
-              <Contents>{post?.text}</Contents>
+              <Contents>{parse(post?.text)}</Contents>
               {post.commentCount >= TARGET_AGREEMENT &&
                 !post.adminComment &&
                 cookies.isAdmin === 'true' && (
@@ -581,7 +590,9 @@ function Post() {
                       <AnswerInput
                         placeholder="답변 내용을 입력해주세요"
                         value={answer}
-                        onChange={(e) => setAnswer(e.currentTarget.value)}
+                        onChange={({ currentTarget }) =>
+                          setAnswer(currentTarget.value)
+                        }
                       />
                       <AnswerSubmit value="전송" />
                     </AnswerForm>
@@ -595,7 +606,9 @@ function Post() {
                     disabled={post.status === '기간종료'}
                     value={comment}
                     required
-                    onChange={(e) => setComment(e.currentTarget.value)}
+                    onChange={({ currentTarget }) =>
+                      setComment(currentTarget.value)
+                    }
                   />
                   <CommentSubmit
                     disabled={post.status === '기간종료'}

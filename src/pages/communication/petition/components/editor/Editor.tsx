@@ -5,6 +5,7 @@ import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import Modal from 'components/modal/Modal';
 import TextBoxS from 'components/editor/input/TextBoxS';
+import WYSIWYG from 'components/editor/input/WYSIWYG';
 import { getCategories } from '../../functions/GetCategories';
 
 const Container = styled.div`
@@ -75,11 +76,9 @@ const Content = css`
   }
 `;
 
-
 const Textarea = styled.textarea`
   ${Content}
-  width: 100%;
-  height: 450px;
+
   padding-top: 10px;
   resize: none;
 `;
@@ -136,13 +135,6 @@ function Editor(): JSX.Element {
       currentTarget: { value },
     } = event;
     setTitle(value);
-  };
-
-  const onContentHandler = (event: React.FormEvent<HTMLTextAreaElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setContent(value);
   };
 
   const onSubmitHandler = async () => {
@@ -218,14 +210,11 @@ function Editor(): JSX.Element {
             onChange={onTitleHandler}
             placeholder="청원 제목을 입력해주세요."
           />
-          <Label htmlFor="content">
-            청원 내용
-            <Textarea
-              id="content"
-              value={content}
-              onChange={onContentHandler}
-            />
-          </Label>
+          <WYSIWYG
+            label="청원 내용"
+            htmlStr={content}
+            setHtmlStr={setContent}
+          />
           <ButtonDiv>
             <Button type="button" onClick={onSubmitHandler}>
               작성완료
