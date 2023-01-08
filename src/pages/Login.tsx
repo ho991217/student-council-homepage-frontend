@@ -1,7 +1,7 @@
 import { LoginStateAtom } from 'atoms/LoginState';
 import axios from 'axios';
-import GlobalBanner from 'components/global/banner/GlobalBanner';
-import CopyrightTerm from 'components/global/CopyrightTerm';
+import GlobalBanner from 'components/banner/GlobalBanner';
+import CopyrightTerm from 'components/CopyrightTerm';
 import { Desktop } from 'hooks/MediaQueries';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';

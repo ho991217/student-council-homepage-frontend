@@ -1,4 +1,4 @@
-import Block from 'components/global/Block';
+import Block from 'components/Block';
 import styled from 'styled-components';
 
 // TODO: 이미지 스토리지 서버에 올라가면 변경하기

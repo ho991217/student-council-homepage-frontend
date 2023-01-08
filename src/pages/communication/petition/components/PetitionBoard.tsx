@@ -1,10 +1,10 @@
 import axios from 'axios';
-import Board from 'pages/communication/suggestion/components/Board';
-import FilterControl from 'pages/communication/suggestion/components/FilterControl';
+import Board from 'pages/communication/petition/Board';
+import FilterControl from 'pages/communication/petition/components/FilterControl';
 import PageControl, { PagingProps } from 'components/PageControl';
 import qs from 'qs';
 
-import { PostProps } from 'pages/communication/suggestion/PostProps';
+import { PostProps } from 'pages/communication/petition/PostProps';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -29,19 +29,18 @@ function PetitionBoard(): JSX.Element {
   const [searchParams] = useSearchParams();
 
   const getPosts = async () => {
-    const { page } = qs.parse(searchParams.toString());
-    let { filter } = qs.parse(searchParams.toString());
-    const { query } = qs.parse(searchParams.toString());
+    let { page } = qs.parse(searchParams.toString());
+    const { filter } = qs.parse(searchParams.toString());
 
-    if (filter === '전체') filter = '';
-
+    if (!page) page = '1';
     const { data } = await axios({
       method: 'get',
-      url: `/api/suggestion?page=${Number(page) - 1}&size=6&sort=id,desc`
-        .concat(filter ? `&category=${filter}` : '')
-        .concat(query ? `&query=${query}` : ''),
+      url: `/api/petition?page=${
+        Number(page) - 1
+      }&size=6&sort=status,asc&sort=createDate,desc`.concat(
+        filter ? `&category=${filter}` : '',
+      ),
     });
-
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);
     setPagingInfo(data);

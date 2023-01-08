@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Editor from 'pages/communication/suggestion/components/editor/Editor';
+import Content from 'pages/communication/petition/components/editor/Editor';
 
 const Container = styled.div`
   margin: 40px 0;
@@ -8,12 +8,12 @@ const Container = styled.div`
   }
 `;
 
-function SuggestionEditor() {
+function Editor() {
   return (
     <Container>
-      <Editor />
+      <Content />
     </Container>
   );
 }
 
-export default SuggestionEditor;
+export default Editor;

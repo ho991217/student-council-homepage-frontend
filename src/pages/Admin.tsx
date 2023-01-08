@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getCarouselImages } from 'components/home/carousel/getCarouselImages';
+import { getCarouselImages } from 'pages/home/components/carousel/getCarouselImages';
 import React, { useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import ReactModal from 'react-modal';
