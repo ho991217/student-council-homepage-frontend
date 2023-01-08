@@ -1,21 +1,21 @@
 import styled from 'styled-components';
 
-interface TextBoxSProps {
+interface NumBoxSProps {
   label: string;
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-TextBoxS.defaultProps = {
+NumBoxS.defaultProps = {
   placeholder: '값을 입력하시오.',
   value: '',
   onChange: () => null,
 };
 
-function TextBoxS({ label, placeholder, value, onChange }: TextBoxSProps) {
+function NumBoxS({ label, placeholder, value, onChange }: NumBoxSProps) {
   return (
-    <Label>
+    <Label htmlFor="title">
       {label}
       <Input value={value} onChange={onChange} placeholder={placeholder} />
     </Label>
@@ -31,7 +31,7 @@ const Label = styled.label`
   user-select: none;
 `;
 
-const Input = styled.input.attrs({ type: 'text' })`
+const Input = styled.input.attrs({ type: 'number' })`
   margin-top: 15px;
   padding-left: 12px;
   background-color: ${({ theme }) => theme.colors.gray040};
@@ -47,4 +47,4 @@ const Input = styled.input.attrs({ type: 'text' })`
   width: 100%;
 `;
 
-export default TextBoxS;
+export default NumBoxS;

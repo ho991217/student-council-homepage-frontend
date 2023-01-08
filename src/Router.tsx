@@ -20,13 +20,13 @@ import ConferenceEditor from 'pages/conference/components/ConferenceEditor';
 import RuleEditor from 'pages/rules/components/RuleEditor';
 import NewsEditor from 'pages/council/news/components/NewsEditor';
 import PetitionBoard from 'pages/communication/petition/components/PetitionBoard';
-import PetitionPost from 'pages/communication/petition/components/post/Post';
+import PetitionPost from 'pages/communication/petition/components/Post';
 import PetitionEditor from 'pages/communication/petition/components/Editor';
 import News from 'pages/council/news/News';
 import Admin from 'pages/Admin';
 import SuggestionBoard from 'pages/communication/suggestion/SuggestionBoard';
 import SuggestionPost from 'pages/communication/suggestion/components/post/Post';
-import SuggestionEditor from 'pages/communication/suggestion/Editor';
+import SuggestionEditor from 'pages/communication/suggestion/SuggestionEditor';
 
 import NotFound from 'pages/NotFound';
 import NewsPost from 'pages/council/news/components/post/Post';

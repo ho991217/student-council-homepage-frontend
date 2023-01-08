@@ -7,12 +7,12 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 
-interface WYSIWYGProps {
+interface TextBoxLProps {
   htmlStr: string;
   label: string;
   setHtmlStr: (htmlStr: string) => void;
   wrapperStyle?: React.CSSProperties;
-  /** callback은 image를 업로드하고 
+  /** callback은 image를 업로드하고
    * resolve({ data: { link: res.data } }) 해야함
    * @param file: Blob
    * @returns Promise<any>
@@ -20,19 +20,19 @@ interface WYSIWYGProps {
   uploadCallback?: (file: Blob) => Promise<any>;
 }
 
-WYSIWYG.defaultProps = {
+TextBoxL.defaultProps = {
   wrapperStyle: {},
   // eslint-disable-next-line no-promise-executor-return
   uploadCallback: (file: Blob) => new Promise((resolve) => resolve),
 };
 
-function WYSIWYG({
+function TextBoxL({
   htmlStr,
   label,
   setHtmlStr,
   wrapperStyle,
   uploadCallback,
-}: WYSIWYGProps) {
+}: TextBoxLProps) {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
   useEffect(() => {
@@ -135,4 +135,4 @@ const Label = styled.label`
   user-select: none;
 `;
 
-export default WYSIWYG;
+export default TextBoxL;

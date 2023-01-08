@@ -61,7 +61,7 @@ function Modal({
             </svg>
           </CloseButton>
           <Contents>
-            {title && <h1>{title}</h1>}
+            {title && <H1>{title}</H1>}
             {typeof contents === 'string' ? (
               <span>{contents}</span>
             ) : (
@@ -110,6 +110,15 @@ const ModalWrap = styled.div`
   transform: translate(-50%, -50%);
 `;
 
+const H1 = styled.h1`
+  font-size: 2.5rem;
+  ${({ theme }) => theme.media.mobile} {
+    font-size: 2rem;
+  }
+  font-weight: 600;
+  margin-bottom: 10px;
+`;
+
 const CloseButton = styled.div`
   float: right;
   width: 40px;
@@ -128,11 +137,6 @@ const CloseButton = styled.div`
 
 const Contents = styled.div`
   margin: 50px 40px;
-  h1 {
-    font-size: 30px;
-    font-weight: 600;
-    margin-bottom: 10px;
-  }
   span {
     color: ${({ theme }) => theme.colors.gray500};
   }
@@ -141,6 +145,9 @@ const Contents = styled.div`
 const ButtonsContainer = styled.div`
   display: flex;
   justify-content: center;
+  ${({ theme }) => theme.media.mobile} {
+    margin-top: 15px;
+  }
   margin-top: 30px;
   * {
     margin: 0 5px;
@@ -148,6 +155,10 @@ const ButtonsContainer = styled.div`
 `;
 
 const Button = styled.button`
+  ${({ theme }) => theme.media.mobile} {
+    font-size: 12px;
+    padding: 5px 15px;
+  }
   font-size: 14px;
   padding: 10px 20px;
   border: none;

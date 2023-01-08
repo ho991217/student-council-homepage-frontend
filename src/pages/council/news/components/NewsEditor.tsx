@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { PropagateLoader } from 'react-spinners';
 import Modal from 'components/modal/Modal';
+import SubmitButtonM from 'components/editor/button/SubmitButtonM';
 
 const Container = styled.div`
   margin: 40px 0;
@@ -73,33 +74,6 @@ const Textarea = styled.textarea`
   height: 450px;
   padding-top: 10px;
   resize: none;
-`;
-
-const ButtonDiv = styled.div`
-  margin: auto;
-  ${({ theme }) => theme.media.mobile} {
-    width: 100%;
-  }
-`;
-
-const Text = styled.span`
-  font-size: ${({ theme }) => theme.fonts.size.xl};
-  font-weight: ${({ theme }) => theme.fonts.weight.bold};
-  margin-bottom: 20px;
-`;
-
-const Button = styled.input.attrs({ type: 'submit' })`
-  width: 260px;
-  height: 50px;
-  border: none;
-  cursor: pointer;
-  font-size: ${({ theme }) => theme.fonts.size.base};
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.white};
-  ${({ theme }) => theme.media.mobile} {
-    width: 100%;
-  }
-  border-radius: 5px;
 `;
 
 function NewsEditor() {
@@ -248,9 +222,7 @@ function NewsEditor() {
                   style={{ marginTop: 10 }}
                 />
               </Label>
-              <ButtonDiv>
-                <Button value="작성완료" />
-              </ButtonDiv>
+              <SubmitButtonM text='작성 완료'/>
             </Form>
           </Wrapper>
         </InnerContainer>

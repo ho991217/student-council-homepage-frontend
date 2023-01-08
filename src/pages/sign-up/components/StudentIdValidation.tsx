@@ -131,41 +131,12 @@ function StudentIdValidation({ type }: { type: string }): JSX.Element {
         <Modal
           title="이메일 인증"
           onClose={() => setIsOpen(false)}
-          contents={
-            // eslint-disable-next-line no-nested-ternary
-            emailState.errMsg.length < 1 ? (
-              emailState.success ? (
-                <>
-                  <Text>
-                    학교 계정 이메일 메일함(또는 스팸메일함)을 확인하세요!
-                  </Text>
-                  <LinktoGmail
-                    target="_self"
-                    href="https://mail.google.com/mail/u/1/?ogbl#inbox"
-                  >
-                    G-MAIL 바로가기
-                  </LinktoGmail>
-                </>
-              ) : (
-                <>
-                  <Text>이메일 보내는 중...</Text>
-                  <PropagateLoader
-                    style={{ transform: 'translateX(-5px)' }}
-                    color="#9753DC"
-                  />
-                </>
-              )
-            ) : (
-              <>
-                <div>{emailState.errMsg}</div>
-                <CloseButton
-                  type="button"
-                  value="닫기"
-                  onClick={() => navigate(-1)}
-                />
-              </>
-            )
-          }
+          contents="학교 계정 이메일 메일함(또는 스팸메일함)을 확인하세요!"
+          accept="G-MAIL 바로가기"
+          onAccept={() => {
+            window.location.href =
+              'https://mail.google.com/mail/u/1/?ogbl#inbox';
+          }}
         />
       )}
       <Wrapper>
