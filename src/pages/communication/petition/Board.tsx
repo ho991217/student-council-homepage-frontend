@@ -72,7 +72,6 @@ const Row = styled.div`
   }
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   text-align: center;
-
   div:last-child {
     width: 60px;
   }
@@ -152,7 +151,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                 <PostTitle>{post.title}</PostTitle>
                 <div>
                   <Svg
-                    xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 48 48"
                     height="48"
                     width="48"
