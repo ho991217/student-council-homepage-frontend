@@ -35,7 +35,7 @@ jobs:
       run: |
         yarn add react-scripts
         npm install -save react-scripts --legacy-peer-deps
-        npm install immutable
+        npm install immutable --save-dev
         CI=false npm run build:development
       shell: bash
 
