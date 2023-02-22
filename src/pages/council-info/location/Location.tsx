@@ -1,12 +1,13 @@
 import CouncilMap from 'pages/council-info/location/components/CouncilMap';
 import Block from 'components/Block';
 import styled from 'styled-components';
+import SideNav from 'components/nav/SideNav';
 
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
+  gap: 30px;
 `;
 
 const Container = styled.div``;
@@ -55,8 +56,10 @@ function Location() {
   ];
   return (
     <Wrapper>
+      <SideNav/>
       <Block
         title="주소 / 연락처"
+        width="calc(100% - 310px)"
         contents={
           <Container>
             <CouncilMap />

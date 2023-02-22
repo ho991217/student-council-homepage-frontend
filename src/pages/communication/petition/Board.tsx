@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-
+import SideNav from 'components/nav/SideNav';
 import { PagingProps } from 'components/PageControl';
 import { PostProps } from './PostProps';
 
@@ -14,10 +14,10 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   max-width: 1290px;
-  width: 100%;
+  width: 90%;
 
   ${({ theme }) => theme.media.desktop} {
-    padding: 30px 50px 10px 50px;
+    padding: 30px 0px 10px 0px;
   }
   ${({ theme }) => theme.media.tablet} {
     padding: 30px 50px 10px 50px;
