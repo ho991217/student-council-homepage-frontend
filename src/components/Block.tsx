@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 const Container = styled.div<{width?: string}>`
   max-width: 1440px;
-  width: ${props => props.width};
   ${({ theme }) => theme.media.desktop} {
+    width: ${props => props.width};
     padding: 70px 120px 60px 120px;
     margin-top: 40px;
     margin-bottom: 100px;

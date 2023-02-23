@@ -28,7 +28,10 @@ const TopContainer = styled.div`
 `;
 
 const Contents = styled.div`
-  width: calc(100% - 310px);
+  width: 100%;
+  ${({ theme }) => theme.media.desktop} {
+    width: calc(100% - 310px);
+  }
   max-width: 1300px;
 `
 

@@ -18,7 +18,10 @@ const Wrapper = styled.div`
 `
 const Container = styled.div`
   background-color: ${(props) => props.theme.colors.white};
-  width: calc(100% - 310px);
+  width: 100%;
+  ${({ theme }) => theme.media.desktop} {
+    width: calc(100% - 310px);
+  }
   max-width: 1200px;
 `
 function PetitionBoard(): JSX.Element {

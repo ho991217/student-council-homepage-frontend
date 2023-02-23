@@ -7,6 +7,12 @@ const Nav = styled.ul<{margin?: string}>`
   width: 180px;
   font-size: 18px;
   margin: ${props => props.margin};
+  ${({ theme }) => theme.media.mobile} {
+    display: none;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    display: none;
+  }
 `;
 const Hr = styled.hr`
   color: ${(props) => props.theme.colors.primary};
