@@ -71,17 +71,17 @@ export const NavItems: NavigationProps[] = [
   },
   {
     title: 'VOC',
-    path: '/voc',
+    path: '/',
     id: 6,
     subPath: [
       {
         title: 'Q&A',
-        path: '/board-qna/boards?page=1',
+        path: '/voc/qna/boards?page=1',
         id: 1,
       },
       {
         title: 'My Voice',
-        path: '/board-myvoice/boards?page=1',
+        path: '/voc/my-voice/boards?page=1',
         id: 2,
       },
     ],

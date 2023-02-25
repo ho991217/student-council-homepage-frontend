@@ -15,7 +15,6 @@ import Login from 'pages/Login';
 import SignUp from 'pages/sign-up/SignUp';
 import Password from 'pages/password/Password';
 import Pledge from 'pages/council/Pledge';
-// import Editor from 'pages/communication/Editor';
 import ConferenceEditor from 'pages/conference/components/ConferenceEditor';
 import RuleEditor from 'pages/rules/components/RuleEditor';
 import NewsEditor from 'pages/council/news/components/NewsEditor';
@@ -116,39 +115,6 @@ function Router() {
                   detail="총학소식 작성 입니다."
                 />
                 <NewsEditor />
-              </>
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
-        <Route
-          path="/rules"
-          element={isLoggedIn ? <Rules /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/rule"
-          element={
-            isLoggedIn ? (
-              <>
-                <GlobalBanner
-                  title="회칙 및 세칙"
-                  detail="회칙 및 세칙 입니다."
-                />
-                <RulesPost />
-              </>
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route
-          path="/rule/editor"
-          element={
-            isLoggedIn ? (
-              <>
-                <GlobalBanner title="회칙작성" detail="회칙작성 입니다." />
-                <RuleEditor />
               </>
             ) : (
               <Navigate to="/" />
@@ -310,6 +276,18 @@ function Router() {
           element={admin ? <Admin /> : <Navigate to="/" />}
         />
         <Route path="/event" element={<Event />} />
+        <Route path="/rental" />
+        <Route path="/voc">
+          <Route path="qna">
+            <Route path="boards" element={<div>qna</div>} />
+            <Route path="board" element={<div>qna-detail</div>} />
+            <Route path="editor" element={<div>qna-editor</div>} />
+          </Route>
+          <Route path="my-voice">
+            <Route path="boards" element={<div>my-voice</div>} />
+            <Route path="board" element={<div>my-voice-board</div>} />
+          </Route>
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

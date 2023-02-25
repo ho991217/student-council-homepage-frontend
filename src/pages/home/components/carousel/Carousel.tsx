@@ -3,9 +3,6 @@ import { useInterval } from 'hooks/UseInterval';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-// static 이미지 import
-import DefaultImg from 'static/images/carousel/carousel-default.png';
-
 // 인터페이스 import
 import { ImageProps } from './CarouselProps';
 
@@ -32,7 +29,6 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
-  background-image: url(${DefaultImg});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
