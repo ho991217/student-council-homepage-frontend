@@ -1,4 +1,4 @@
-import Block from 'components/global/Block';
+import Block from 'components/Block';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 

@@ -1,10 +1,10 @@
 import axios from 'axios';
-import Board from 'components/boards/suggestion/Board';
-import FilterControl from 'components/boards/suggestion/FilterControl';
-import PageControl, { PagingProps } from 'components/global/PageControl';
+import Board from 'pages/communication/suggestion/components/Board';
+import FilterControl from 'pages/communication/suggestion/components/FilterControl';
+import PageControl, { PagingProps } from 'components/PageControl';
 import qs from 'qs';
 
-import { PostProps } from 'components/boards/suggestion/PostProps';
+import { PostProps } from 'pages/communication/suggestion/PostProps';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';

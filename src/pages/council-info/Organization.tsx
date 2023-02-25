@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Block from 'components/global/Block';
+import Block from 'components/Block';
 import styled from 'styled-components';
 
 import sampleImage from 'static/images/samples/hierachy.png';

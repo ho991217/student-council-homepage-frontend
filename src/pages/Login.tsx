@@ -1,11 +1,11 @@
 import { LoginStateAtom } from 'atoms/LoginState';
 import axios from 'axios';
-import GlobalBanner from 'components/global/banner/GlobalBanner';
-import CopyrightTerm from 'components/global/CopyrightTerm';
+import GlobalBanner from 'components/banner/GlobalBanner';
+import CopyrightTerm from 'components/CopyrightTerm';
+import Modal from 'components/modal/Modal';
 import { Desktop } from 'hooks/MediaQueries';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import ReactModal from 'react-modal';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
@@ -247,50 +247,6 @@ const SaveIdToggle = styled.div<{ saveId: boolean }>`
   transition: background-color 0.2s ease-in-out, left 0.2s ease-in-out; ;
 `;
 
-const ModalContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ModalMessage = styled.span`
-  font-size: ${({ theme }) => theme.fonts.size.lg};
-  font-weight: ${({ theme }) => theme.fonts.weight.medium};
-  margin-bottom: 1rem;
-`;
-
-const ModalClose = styled.input.attrs({ type: 'button' })`
-  all: unset;
-  background-color: ${({ theme }) => theme.colors.primary};
-  cursor: pointer;
-  border-radius: 9999px;
-  padding: 10px 15px;
-  color: ${({ theme }) => theme.colors.gray020};
-`;
-
-const modalStyle = {
-  overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    backdropFilter: 'blur(1px)',
-  },
-  content: {
-    width: '30%',
-    height: '200px',
-    left: '50%',
-    top: '50%',
-    transform: 'translate(-50%,-50%)',
-    border: 'none',
-    boxShadow: '0px 4px 5px 2px rgba(0, 0, 0, 0.05)',
-    borderRadius: '15px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-};
-
 interface LoginErrorProps {
   response: {
     data: {
@@ -302,6 +258,7 @@ interface LoginErrorProps {
 
 function Login(): JSX.Element {
   const [id, setId] = useState<string>('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
   const [idMessage, setIdMessage] = useState<string>('');
   const [isValidId, setIsValidId] = useState<boolean>(false);
@@ -357,6 +314,7 @@ function Login(): JSX.Element {
           error: true,
           message,
         });
+        setIsOpen(true);
       });
   };
 
@@ -393,15 +351,21 @@ function Login(): JSX.Element {
   return (
     <>
       <GlobalBanner title="로그인" detail="로그인 화면입니다." />
-      <ReactModal style={modalStyle} isOpen={loginErrorState.error}>
-        <ModalContainer>
-          <ModalMessage>{loginErrorState.message}</ModalMessage>
-          <ModalClose
-            value="닫기"
-            onClick={() => setLoginErrorState({ error: false, message: '' })}
-          />
-        </ModalContainer>
-      </ReactModal>
+      {isOpen && (
+        <Modal
+          onClose={() => setIsOpen(false)}
+          title="로그인 실패!"
+          contents={loginErrorState.message}
+          accept={
+            loginErrorState.message === '가입되지 않은 학번입니다.'
+              ? '회원가입'
+              : ''
+          }
+          onAccept={() => {
+            navigate('/sign-up');
+          }}
+        />
+      )}
       <Wrapper>
         <Header>
           단국대학생 <HeaderPoint>로그인</HeaderPoint>
