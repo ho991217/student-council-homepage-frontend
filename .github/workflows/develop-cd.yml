@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   build:
-
+    environment: dev
     runs-on: ubuntu-latest
 
     steps:
@@ -25,36 +25,46 @@ jobs:
     - name: Setup Node.js environment
       uses: actions/setup-node@v3.4.1
 
-
-    - name: create .env.development
+    - name: Create .env
+      env:
+        ENV_NAME: ${{ secrets.ENV_NAME }}
+        ENV: ${{ secrets.ENV }}
       run: |
-        touch ./.env.development
-        echo "${{ secrets.ENV_DEVELOPMENT}}" > ./.env.development
-
-    - name: build
+        touch ./$ENV_NAME
+        echo "$ENV" > ./$ENV_NAME
+    - name: Build
       run: |
         yarn add react-scripts
         npm install -save react-scripts --legacy-peer-deps
         CI=false npm run build:development
       shell: bash
-
+      
     - name: Docker build and push
+      env:
+        USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        REPO: ${{ secrets.DOCKER_REPO }}
       run: |
-        docker login -u ${{ secrets.USERNAME }} -p ${{ secrets.PASSWORD }}
-        docker build -t ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPOSITORY_DEV }}:${GITHUB_SHA::7} .
-        docker push ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPOSITORY_DEV }}:${GITHUB_SHA::7}
+        docker login -u $USERNAME -p $PASSWORD
+        docker build -t $USERNAME/$REPO:${GITHUB_SHA::7} -t $USERNAME/$REPO:latest .
+        docker push $USERNAME/$REPO:${GITHUB_SHA::7}
+        docker push $USERNAME/$REPO:latest
         
-          
     - name: SSH Remote Commands
       uses: appleboy/ssh-action@v0.1.4
+      env:
+        REPO: ${{ secrets.DOCKER_REPO }}
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ubuntu
-        key: ${{ secrets.SERVER_KEY }}
-        envs: GITHUB_SHA
+        key: ${{ secrets.PUBLIC_PEM_KEY }}
+        proxy_host: ${{ secrets.BASTION_HOST }} 
+        proxy_username: ubuntu
+        proxy_key: ${{ secrets.PUBLIC_PEM_KEY }}
+        envs: GITHUB_SHA,REPO
         script: |
-          docker pull ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPOSITORY_DEV }}:${GITHUB_SHA::7}
-          docker tag ${{ secrets.USERNAME }}/${{ secrets.DOCKER_REPOSITORY_DEV }}:${GITHUB_SHA::7} ${{ secrets.DOCKER_REPOSITORY_DEV }}
-          docker stop ${{ secrets.DOCKER_REPOSITORY_DEV }}
-          docker run -d --rm --name ${{ secrets.DOCKER_REPOSITORY_DEV }} -p 3000:80 ${{ secrets.DOCKER_REPOSITORY_DEV }}
-        
+          docker pull ${{ secrets.DOCKER_USERNAME }}/$REPO:${GITHUB_SHA::7}
+          docker tag ${{ secrets.DOCKER_USERNAME }}/$REPO:${GITHUB_SHA::7} $REPO
+          docker stop $REPO
+          docker rm $REPO
+          docker run -d --name $REPO -p 3000:80 $REPO
