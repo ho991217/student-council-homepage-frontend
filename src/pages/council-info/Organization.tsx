@@ -5,12 +5,13 @@ import styled from 'styled-components';
 import sampleImage from 'static/images/samples/hierachy.png';
 
 import { useState, useEffect } from 'react';
+import SideNav from 'components/nav/SideNav';
 
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
+  gap: 30px;
 `;
 
 const Img = styled.img`
@@ -29,7 +30,12 @@ function Organization() {
   // }, []);
   return (
     <Wrapper>
-      <Block title="조직도" contents={<Img src={sampleImage} alt="" />} />
+      <SideNav/>
+      <Block 
+        title="조직도" 
+        contents={<Img src={sampleImage} alt=""/>} 
+        width="calc(100% - 310px)"  
+      />
     </Wrapper>
   );
 }

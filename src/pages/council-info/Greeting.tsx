@@ -1,14 +1,13 @@
 import Block from 'components/Block';
 import styled from 'styled-components';
 
-// TODO: 이미지 스토리지 서버에 올라가면 변경하기
 import samplePhoto from 'static/images/samples/council-image.png';
 
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
+  gap: 30px;
 `;
 
 const Img = styled.img`
@@ -22,6 +21,7 @@ const P = styled.p`
 function Greeting(): JSX.Element {
   return (
     <Wrapper>
+      <SideNav />
       <Block
         title="인사말"
         contents={
