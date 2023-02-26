@@ -67,4 +67,4 @@ jobs:
           docker tag ${{ secrets.DOCKER_USERNAME }}/$REPO:${GITHUB_SHA::7} $REPO
           docker stop $REPO
           docker rm $REPO
-          docker run -d --name $REPO -p 3000:80 $REPO
+          docker run -d --name $REPO -p 8080:80 $REPO
