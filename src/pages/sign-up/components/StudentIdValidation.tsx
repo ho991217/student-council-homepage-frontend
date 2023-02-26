@@ -1,181 +1,164 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import CopyrightTerm from 'components/CopyrightTerm';
 import { PropagateLoader } from 'react-spinners';
 import Modal from 'components/modal/Modal';
 import styled from 'styled-components';
-import {
-  Header,
-  HeaderPoint,
-  InnerContainerByStudentNum,
-  InputContainer,
-  VerifyStduentButton,
-  Wrapper,
-} from './SignUpComponents';
+import LogoSrc from 'static/images/logos/emb.png';
+import { Info } from '../SignUp';
 
-const StudentNumInput = styled.input`
-  all: unset;
-  background-color: ${({ theme }) => theme.colors.white};
-  height: 100%;
-  width: 540px;
-  padding: 0 10px;
-`;
-
-const GmailInformation = styled.div`
+const Container = styled.div`
+  width: 100%;
+  max-width: 1400px;
+  margin-top: 100px;
   display: flex;
-  width: 540px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Logo = styled.img.attrs({ src: LogoSrc, alt: '로고 이미지' })`
+  height: 150px;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 60px;
+  max-width: 540px;
+  width: 100%;
+`;
+
+const Input = styled.input`
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  height: 60px;
+  font-size: 1.2rem;
+  background-color: #f7f7f7;
+  padding: 0 1.2rem;
+  border-radius: 5px;
+  :focus {
+    outline: none;
+    background-color: #eeeeee;
+  }
+  ::placeholder {
+    font-size: 1.2rem;
+    color: ${({ theme }) => theme.colors.gray300};
+  }
+`;
+
+const IdInput = styled(Input).attrs({
+  type: 'number',
+  maxLength: 8,
+  placeholder: '학번(ID) 입력',
+})`
   margin-bottom: 10px;
-  padding: 0 10px;
-  justify-content: space-between;
-  ${({ theme }) => theme.media.mobile} {
-    width: 100%;
-    font-size: ${({ theme }) => theme.fonts.size.xs};
-    margin-bottom: 5px;
+  ::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
+`;
+
+const PasswordInput = styled(Input).attrs({
+  type: 'password',
+  placeholder: '비밀번호 입력',
+})``;
+
+const ErrorMsg = styled.div`
+  color: #ff6565;
+  width: 100%;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
   div {
-    display: inline-block;
-    color: ${({ theme }) => theme.colors.gray400};
-    :last-child {
-      border-bottom: 1px solid ${({ theme }) => theme.colors.gray400};
-    }
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 1px solid #ff6565;
   }
 `;
 
-const Text = styled.span`
-  font-size: ${({ theme }) => theme.fonts.size.xl};
-  font-weight: ${({ theme }) => theme.fonts.weight.bold};
-  margin-bottom: 20px;
-`;
-
-const LinktoGmail = styled.a`
+const SubmitButton = styled.input.attrs({ type: 'submit' })<{ valid: boolean }>`
   all: unset;
-  font-size: ${({ theme }) => theme.fonts.size.lg};
-  font-weight: ${({ theme }) => theme.fonts.weight.regular};
-  cursor: pointer;
-  :hover {
-    text-decoration: underline;
-  }
-`;
-
-const CloseButton = styled.input.attrs({ type: 'button' })`
-  all: unset;
-  padding: 15px 30px;
-  background-color: ${({ theme }) => theme.colors.primary};
+  box-sizing: border-box;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  margin-top: 30px;
+  margin-bottom: 80px;
+  font-size: 1.2rem;
+  background-color: ${({ valid, theme }) =>
+    valid ? theme.colors.primary : theme.colors.gray200};
   color: ${({ theme }) => theme.colors.white};
-  border-radius: 9999px;
-  margin-top: 1rem;
+  cursor: ${({ valid }) => (valid ? 'pointer' : '')};
 `;
 
-function StudentIdValidation({ type }: { type: string }): JSX.Element {
-  const [studentNum, setStudentNum] = useState('');
-  const [emailState, setEmailState] = useState({
-    sent: false,
-    success: false,
-    errMsg: '',
-  });
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [url] = useState<string>(
-    type === '회원가입' ? '/api/email' : '/api/email/password',
-  );
-  const navigate = useNavigate();
+function StudentIdValidation({ setInfo }: { setInfo: (info: Info) => void }) {
+  const [Error, setError] = useState('');
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+  const [isValid, setIsValid] = useState(false);
 
-  const validateStudentNum = (studentNum: string) => {
-    const regex = /[0-9]/;
-    return regex.test(studentNum);
-  };
-
-  const onStudentIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (validateStudentNum(e.currentTarget.value)) {
-      setStudentNum(e.currentTarget.value);
-    } else if (e.currentTarget.value === '') {
-      setStudentNum('');
+  useEffect(() => {
+    if (id.length === 8 && password.length > 0) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
     }
-  };
+  }, [id, password]);
 
-  const sendVerificationEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setEmailState((prev) => ({
-      ...prev,
-      sent: true,
-    }));
-    try {
-      const { data } = await axios({
-        method: 'post',
-        url: `${url}`,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: JSON.stringify({ classId: studentNum }),
+    axios({
+      method: 'post',
+      url: '/user/dku/verify',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        dkuStudentId: id,
+        dkuPassword: password,
+      },
+    })
+      .then(({ data }) => {
+        setInfo(data);
+      })
+      .catch(({ response }) => {
+        setError(response.data.message[0]);
       });
-
-      setEmailState((prev) => ({
-        ...prev,
-
-        success: data.successful,
-      }));
-    } catch (error) {
-      const e = error as any;
-      if (
-        e.response.data.message === '이미 존재하는 회원입니다.' ||
-        e.response.data.message === '회원가입을 진행해주세요'
-      ) {
-        setEmailState((prev) => ({ ...prev, errMsg: e.response.data.message }));
-      }
-    }
   };
 
   return (
-    <>
-      {emailState.sent && (
-        <Modal
-          title="이메일 인증"
-          onClose={() => setIsOpen(false)}
-          contents="학교 계정 이메일 메일함(또는 스팸메일함)을 확인하세요!"
-          accept="G-MAIL 바로가기"
-          onAccept={() => {
-            window.location.href =
-              'https://mail.google.com/mail/u/1/?ogbl#inbox';
-          }}
+    <Container>
+      <Logo />
+      <Form onSubmit={onSubmit}>
+        <IdInput value={id} onChange={(e) => setId(e.currentTarget.value)} />
+        <PasswordInput
+          value={password}
+          onChange={(e) => setPassword(e.currentTarget.value)}
         />
-      )}
-      <Wrapper>
-        <Header>
-          단국대학교 총학생회 <HeaderPoint>{type}</HeaderPoint>
-        </Header>
-        <InnerContainerByStudentNum>
-          {type === '회원가입' && (
-            <GmailInformation>
-              <div>단국대학교 Gmail 계정을 통해 회원가입을 진행합니다.</div>
-              <div>
-                <a
-                  target="_blank "
-                  href="https://sites.google.com/dankook.ac.kr/help"
-                >
-                  Gmail 사용 안내
-                </a>
-              </div>
-            </GmailInformation>
-          )}
-          <InputContainer onSubmit={sendVerificationEmail}>
-            <StudentNumInput
-              required
-              type="text"
-              placeholder="학번(ID) 입력"
-              maxLength={8}
-              minLength={8}
-              onChange={onStudentIdChange}
-              value={studentNum}
-            />
-            <VerifyStduentButton type="submit" value="인증" />
-          </InputContainer>
-          {type === '비밀번호 찾기' && (
-            <span>비밀번호를 찾고자 하는 학번(ID)을 입력해 주세요.</span>
-          )}
-        </InnerContainerByStudentNum>
-        <CopyrightTerm />
-      </Wrapper>
-    </>
+        {Error.length > 0 && (
+          <ErrorMsg>
+            <div>!</div>
+            {Error}
+          </ErrorMsg>
+        )}
+        <SubmitButton valid={isValid} value="인증" disabled={!isValid} />
+      </Form>
+    </Container>
   );
 }
 

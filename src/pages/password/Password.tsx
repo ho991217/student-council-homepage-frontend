@@ -13,14 +13,7 @@ function Password() {
     setEmailVerificationToken(searchParams.get('token'));
   }, []);
 
-  return emailVerificationToken ? (
-    <InputNewPassword
-      studentId={searchParams.get('id')}
-      token={emailVerificationToken}
-    />
-  ) : (
-    <StudentIdValidation type="비밀번호 찾기" />
-  );
+  return <div />;
 }
 
 export default Password;
