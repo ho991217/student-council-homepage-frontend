@@ -1,13 +1,24 @@
 import styled from "styled-components";
 
 import logo from 'static/images/logos/student-council.png';
+import SideNav from "components/nav/SideNav";
+import Block from 'components/Block';
 
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+`
 const Container = styled.div`
-  max-width: 1160px;
+  max-width: 1440px;
   width: 100%;
   background-color: ${({ theme }) => theme.colors.white};
   padding: 60px 80px;
   margin: 40px auto;
+  ${({ theme }) => theme.media.desktop} { 
+    margin: 40px 0px 40px 30px;
+  }
   ${({ theme }) => theme.media.mobile} { 
     font-size: 12px;
     padding: 50px 10px; 
@@ -77,30 +88,39 @@ const Dd = styled.dd`
 
 function Pledge() {
   return (
-    <Container>
-      <Title>단국대학교 제54대 PLAY! 총학생회</Title>
-      <SubTitle>총학생회 기조</SubTitle>
-      <Line /> 
-      <DetailContainer>
-        <Img src={logo} alt="student-council-logo" width={490} height={250} />
-        <InfoWrapper>
-          <Dl>
-            <Dt>자치</Dt>
-            <Dd>- 우리를 위해 적극적으로 소통하는 총학생회</Dd>
-            <Dd>- 우리의 권리를 지키고 나아가는 총학생회</Dd>
-          </Dl>
-          <Dl>
-            <Dt>인권</Dt>
-            <Dd>- 인권의 사각지대를 직접 비춰 들여다보는 총학생회</Dd>
-            <Dd>- 믿고 도움을 요청할 수 있는 총학생회</Dd>
-          </Dl>
-          <Dl>
-            <Dt>낭만</Dt>
-            <Dd>- 우리의 기대를 현실로 보여주는 총학생회</Dd>
-          </Dl>
-        </InfoWrapper>
-      </DetailContainer>
-    </Container>
+    <Wrapper>
+      <SideNav/>
+      <Block
+      title="인사말"
+      width="calc(100% - 310px)"
+      
+      contents={
+        <>
+          <Title>단국대학교 제54대 PLAY! 총학생회</Title>
+          <SubTitle>총학생회 기조</SubTitle>
+          <Line /> 
+          <DetailContainer>
+            <Img src={logo} alt="student-council-logo" width={490} height={250} />
+            <InfoWrapper>
+              <Dl>
+                <Dt>자치</Dt>
+                <Dd>- 우리를 위해 적극적으로 소통하는 총학생회</Dd>
+                <Dd>- 우리의 권리를 지키고 나아가는 총학생회</Dd>
+              </Dl>
+              <Dl>
+                <Dt>인권</Dt>
+                <Dd>- 인권의 사각지대를 직접 비춰 들여다보는 총학생회</Dd>
+                <Dd>- 믿고 도움을 요청할 수 있는 총학생회</Dd>
+              </Dl>
+              <Dl>
+                <Dt>낭만</Dt>
+                <Dd>- 우리의 기대를 현실로 보여주는 총학생회</Dd>
+              </Dl>
+            </InfoWrapper>
+          </DetailContainer>
+        </>
+      }/>
+    </Wrapper>
   )
 }
 

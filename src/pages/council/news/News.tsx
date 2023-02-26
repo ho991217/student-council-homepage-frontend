@@ -17,6 +17,7 @@ const Container = styled.div`
   background-color: ${(props) => props.theme.colors.white};
   display: flex;
   justify-content: center;
+  gap: 30px;
 `;
 
 const TopContainer = styled.div`
