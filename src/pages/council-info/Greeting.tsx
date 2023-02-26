@@ -2,6 +2,7 @@ import Block from 'components/Block';
 import styled from 'styled-components';
 
 import samplePhoto from 'static/images/samples/council-image.png';
+import SideNav from 'components/nav/SideNav';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -18,7 +19,7 @@ const P = styled.p`
   margin-bottom: 20px;
 `;
 
-function Greeting(): JSX.Element {
+function Greeting() {
   return (
     <Wrapper>
       <SideNav />
