@@ -32,7 +32,6 @@ jobs:
       run: |
         touch ./$ENV_NAME
         echo "$ENV" > ./$ENV_NAME
-
     - name: Build
       run: |
         yarn add react-scripts
@@ -69,4 +68,3 @@ jobs:
           docker stop $REPO
           docker rm $REPO
           docker run -d --name $REPO -p 3000:80 $REPO
-        
