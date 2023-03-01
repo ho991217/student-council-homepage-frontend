@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 
 // 클릭시에 홈으로 돌아가는 로고 링크 (재사용 가능)
-import LogoImg from 'static/images/logos/univ-logo-transparent.png';
-import CouncilLogo from 'static/images/logos/CouncilLogo';
+import LogoImg from 'static/images/logos/logo-transparent.png';
 import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 
 const Container = styled.div`
@@ -15,14 +14,11 @@ const Container = styled.div`
   }
 `;
 
-function Logo(): JSX.Element {
+function FooterLogo(): JSX.Element {
   return (
     <Container>
       <Desktop>
-        <>
-          <img src={LogoImg} alt="dankook logo" height={50} />
-          <CouncilLogo />
-        </>
+        <img src={LogoImg} alt="dankook logo" height={50} />
       </Desktop>
       <Tablet>
         <img src={LogoImg} alt="dankook logo" height={50} />
@@ -34,4 +30,4 @@ function Logo(): JSX.Element {
   );
 }
 
-export default Logo;
+export default FooterLogo;
