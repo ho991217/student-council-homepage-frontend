@@ -15,7 +15,7 @@ const Container = styled.div`
   }
 `;
 
-function Logo(): JSX.Element {
+function Logo() {
   return (
     <Container>
       <Desktop>

@@ -14,7 +14,7 @@ const Container = styled.div`
   }
 `;
 
-function FooterLogo(): JSX.Element {
+function FooterLogo() {
   return (
     <Container>
       <Desktop>
