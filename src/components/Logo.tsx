@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 // 클릭시에 홈으로 돌아가는 로고 링크 (재사용 가능)
 import LogoImg from 'static/images/logos/univ-logo-transparent.png';
-import CouncilLogo from 'static/images/logos/CouncilLogo';
+import CouncilLogo from 'components/logo/CouncilLogo';
 import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 
 const Container = styled.div`
