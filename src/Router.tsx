@@ -83,15 +83,59 @@ function Router() {
         />
         <Route path="/sign-up/success" element={<Success />} />
         <Route path="/password/success" element={<PasswordSuccess />} />
-        <Route path="/greeting" element={<Greeting />} />
-        <Route path="/organization" element={<Organization />} />
-        <Route path="/location" element={<Location />} />
-        <Route path="/pledge" element={<Pledge />} />
+        <Route 
+          path="/greeting" 
+          element={
+            <>
+              <GlobalBanner 
+                title="인사말" 
+                detail="안녕하세요 제 55대 담다 총학생회입니다." 
+              />
+              <Greeting />
+            </>
+          } 
+        />
+        <Route 
+          path="/organization"
+          element={
+            <>
+              <GlobalBanner 
+                title="조직도" 
+                detail="제 55대 담다 총학생회 조직도입니다." 
+              />
+              <Organization />
+            </>
+          }
+        />
+        <Route 
+          path="/location" 
+          element={
+            <>
+              <GlobalBanner 
+                title="오시는길" 
+                detail="총학생회실로 오시는 길입니다." 
+              />
+              <Location />
+            </>
+          } 
+        />
+        <Route 
+          path="/pledge" 
+          element={
+            <>
+              <GlobalBanner 
+                title="공약" 
+                detail="제 55대 총학생회 담다 공약입니다." 
+              />
+              <Pledge />
+            </>
+          }
+        />
         <Route
           path="/council-news"
           element={
             <>
-              <GlobalBanner title="총학소식" detail="총학소식 입니다." />
+              <GlobalBanner title="총학소식" detail=""/>
               <News />
             </>
           }
@@ -126,7 +170,7 @@ function Router() {
           element={
             isLoggedIn ? (
               <>
-                <GlobalBanner title="회의록" detail="회의록 입니다." />
+                <GlobalBanner title="회의록" detail="" />
                 <Conference />
               </>
             ) : (
@@ -151,7 +195,7 @@ function Router() {
           path="/editor"
           element={
             isLoggedIn ? (
-              <GlobalBanner title="청원게시판" detail="청원게시판 입니다." />
+              <GlobalBanner title="청원게시판" detail="" />
             ) : (
               <Navigate to="/login" />
             )
@@ -166,7 +210,7 @@ function Router() {
                 <>
                   <GlobalBanner
                     title="청원게시판"
-                    detail="청원게시판 입니다."
+                    detail=""
                   />
                   <PetitionBoard />
                 </>
@@ -182,7 +226,7 @@ function Router() {
                 <>
                   <GlobalBanner
                     title="청원게시판"
-                    detail="청원게시판 입니다."
+                    detail=""
                   />
                   <PetitionPost />
                 </>
@@ -198,7 +242,7 @@ function Router() {
                 <>
                   <GlobalBanner
                     title="청원게시판"
-                    detail="청원게시판 입니다."
+                    detail=""
                   />
                   <PetitionEditor />
                 </>
@@ -217,7 +261,7 @@ function Router() {
                 <>
                   <GlobalBanner
                     title="자유게시판"
-                    detail="자유게시판 입니다."
+                    detail=""
                   />
                   <SuggestionBoard />
                 </>
@@ -233,7 +277,7 @@ function Router() {
                 <>
                   <GlobalBanner
                     title="자유게시판"
-                    detail="자유게시판 입니다."
+                    detail=""
                   />
                   <SuggestionPost />
                 </>
@@ -249,7 +293,7 @@ function Router() {
                 <>
                   <GlobalBanner
                     title="자유게시판"
-                    detail="자유게시판 입니다."
+                    detail=""
                   />
                   <SuggestionEditor />
                 </>
