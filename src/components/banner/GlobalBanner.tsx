@@ -1,19 +1,21 @@
 import styled from 'styled-components';
-import BannerImg from 'static/images/global-banner/dankook.png';
+import BannerImg from 'static/images/global-banner/globalBannerBackground.png';
 
 const Container = styled.div`
   background-image: url(${BannerImg});
-  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
+    background-size: 100% 250px;
     height: 250px;
   }
   ${({ theme }) => theme.media.tablet} {
+    background-size: 100% 200px;
     height: 200px;
   }
   ${({ theme }) => theme.media.mobile} {
+    background-size: 100% 150px;
     height: 150px;
   }
 `;
@@ -21,8 +23,6 @@ const Container = styled.div`
 const Banner = styled.div`
   width: 100%;
   height: 100%;
-  backdrop-filter: blur(1px);
-  background-color: rgba(0, 0, 0, 0.33);
   color: ${({ theme }) => theme.colors.white};
   display: flex;
   flex-direction: column;
