@@ -25,6 +25,7 @@ function Greeting() {
       <SideNav />
       <Block
         title="인사말"
+        width="calc(100% - 310px)"  
         contents={
           <div>
             <P style={{ lineHeight: 1.4 }}>
