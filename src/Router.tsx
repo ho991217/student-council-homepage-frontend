@@ -43,12 +43,12 @@ import Event from 'pages/event/Event';
 function Router() {
   const [{ isLoggedIn, admin }, setLoginState] = useRecoilState(LoginStateAtom);
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  useEffect(() => {
-    setLoginState({
-      isLoggedIn: !!cookies['X-AUTH-TOKEN'],
-      admin: cookies.isAdmin === 'true',
-    });
-  }, []);
+  // useEffect(() => {
+  //   setLoginState({
+  //     isLoggedIn: !!cookies['X-AUTH-TOKEN'],
+  //     admin: cookies.isAdmin === 'true',
+  //   });
+  // }, []);
   if (isLoggedIn === undefined) return <div>로딩중...</div>;
   return (
     <BrowserRouter>

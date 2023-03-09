@@ -104,7 +104,7 @@ function Detail() {
 
   useEffect(() => {
     axios
-      .get('/api/news')
+      .get('/api/post/news')
       .then((response) => {
         const result = response.data;
         setBoard(result.content);
@@ -127,7 +127,7 @@ function Detail() {
 
   useEffect(() => {
     axios
-      .get(`/api/news/${searchParams.get('id')}`)
+      .get(`/api/post/news/${searchParams.get('id')}`)
       .then((response) => {
         const result = response.data.data;
         setDetail(result);
@@ -140,7 +140,7 @@ function Detail() {
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/api/news/${id}`, {
+      .delete(`/api/post/news/${id}`, {
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
@@ -160,7 +160,7 @@ function Detail() {
       <Head isAdmin={isAdmin}>
         <div>제목</div>
         <div>{detail?.title}</div>
-        <div>{detail?.createDate.slice(0, 10)}</div>
+        <div>{detail?.createdAt.slice(0, 10)}</div>
         {isAdmin && detail && (
           <div>
             <Svg
@@ -184,7 +184,7 @@ function Detail() {
         )}
       </Head>
       <ContentWrapper>
-        <Content>{detail?.text}</Content>
+        <Content>{detail?.body}</Content>
         {detail?.files[0] && (
           <>
             <ImageContainer>

@@ -139,7 +139,7 @@ function NewsEditor() {
       }));
       const config = {
         method: 'post',
-        url: '/api/news',
+        url: '/api/post/news',
         data: form,
         headers: {
           'Content-Type': 'multipart/form-data',

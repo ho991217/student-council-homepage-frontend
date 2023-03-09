@@ -8,7 +8,7 @@ interface LoginStateProps {
 export const LoginStateAtom = atom<LoginStateProps>({
   key: 'loginStateAtom',
   default: {
-    isLoggedIn: undefined,
+    isLoggedIn: true,
     admin: undefined,
   },
 });
