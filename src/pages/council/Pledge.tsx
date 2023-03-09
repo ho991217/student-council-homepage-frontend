@@ -92,8 +92,7 @@ function Pledge() {
       <SideNav/>
       <Block
       title="인사말"
-      width="calc(100% - 310px)"
-      
+      isSideNav
       contents={
         <>
           <Title>단국대학교 제54대 PLAY! 총학생회</Title>
