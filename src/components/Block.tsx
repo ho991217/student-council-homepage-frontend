@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
-const Container = styled.div<{width?: string}>`
+const Container = styled.div<{isSideNav?: boolean}>`
   max-width: 1440px;
   ${({ theme }) => theme.media.desktop} {
-    width: ${props => props.width};
+    width: ${props => props.isSideNav?"calc(100% - 310px)":"100%"};
     padding: 70px 120px 60px 120px;
     margin-top: 40px;
     margin-bottom: 100px;
@@ -38,14 +38,14 @@ const Contents = styled.div`
 interface BlockProps {
   title: string;
   contents: JSX.Element;
-  width?: string;
+  isSideNav?: boolean;
 }
 Block.defaultProps = {
-  width: '100%',
+  isSideNav: false,
 }
-function Block({ title, contents, width }: BlockProps): JSX.Element {
+function Block({ title, contents, isSideNav }: BlockProps): JSX.Element {
   return (
-    <Container width={width}>
+    <Container isSideNav={isSideNav}>
       <TitleContainer>
         <Title>{title}</Title>
       </TitleContainer>
