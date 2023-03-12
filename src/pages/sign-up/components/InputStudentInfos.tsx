@@ -268,7 +268,7 @@ function InputStudentInfos({
     try {
       const res = await axios({
         method: 'post',
-        url: '/api/users',
+        url: '/users',
         headers: {
           'Content-Type': 'application/json',
           'EMAIL-VALIDATION-TOKEN': token,

@@ -64,7 +64,7 @@ function ConferenceEditor() {
     } else {
       const config = {
         method: 'post',
-        url: '/api/conference',
+        url: '/conference',
         data: form,
         headers: {
           'Content-Type': 'multipart/form-data',

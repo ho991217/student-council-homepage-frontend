@@ -76,7 +76,7 @@ function StudentIdValidation({ type }: { type: string }): JSX.Element {
   });
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [url] = useState<string>(
-    type === '회원가입' ? '/api/email' : '/api/email/password',
+    type === '회원가입' ? '/email' : '/email/password',
   );
   const navigate = useNavigate();
 

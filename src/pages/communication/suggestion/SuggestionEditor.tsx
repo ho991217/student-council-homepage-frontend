@@ -33,7 +33,7 @@ function SuggestionEditor() {
       }
 
       axios({
-        url: '/api/suggestion',
+        url: '/suggestion',
         method: 'post',
         headers: {
           'Content-Type': 'multipart/form-data',

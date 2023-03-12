@@ -421,7 +421,7 @@ function Post() {
     try {
       await axios({
         method: 'post',
-        url: `/api/petition/comment/admin/${postId}`,
+        url: `/petition/comment/admin/${postId}`,
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
           'Content-Type': 'application/json',
@@ -473,7 +473,7 @@ function Post() {
     try {
       const { data } = await axios({
         method: 'get',
-        url: `/api/petition/${postid}`,
+        url: `/petition/${postid}`,
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
@@ -488,7 +488,7 @@ function Post() {
     try {
       await axios({
         method: 'post',
-        url: `/api/petition/blind/${postId}`,
+        url: `/petition/blind/${postId}`,
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
@@ -503,7 +503,7 @@ function Post() {
     try {
       await axios({
         method: 'delete',
-        url: `/api/petition/${postId}`,
+        url: `/petition/${postId}`,
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },

@@ -46,7 +46,7 @@ function PetitionBoard(): JSX.Element {
     if (!page) page = '1';
     const { data } = await axios({
       method: 'get',
-      url: `/api/post/petition?page=${
+      url: `/post/petition?page=${
         Number(page) - 1
       }&size=6`,
     });

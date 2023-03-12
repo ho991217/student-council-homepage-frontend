@@ -104,7 +104,7 @@ function Detail() {
 
   useEffect(() => {
     axios
-      .get('/api/post/news')
+      .get('/post/news')
       .then((response) => {
         const result = response.data;
         setBoard(result.content);
@@ -127,7 +127,7 @@ function Detail() {
 
   useEffect(() => {
     axios
-      .get(`/api/post/news/${searchParams.get('id')}`)
+      .get(`/post/news/${searchParams.get('id')}`)
       .then((response) => {
         const result = response.data.data;
         setDetail(result);
@@ -140,7 +140,7 @@ function Detail() {
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/api/post/news/${id}`, {
+      .delete(`/post/news/${id}`, {
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },

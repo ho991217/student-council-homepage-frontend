@@ -143,7 +143,7 @@ function Admin(): JSX.Element {
     setUploadState((prev) => ({ ...prev, set: true }));
     if (currentImage) {
       await axios({
-        url: '/api/carousel',
+        url: '/carousel',
         method: 'post',
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -161,7 +161,7 @@ function Admin(): JSX.Element {
   /** 이미지 삭제를 관리하는 함수 */
   const handleDeletePic = async (id: number) => {
     await axios({
-      url: `/api/carousel/${id}`,
+      url: `/carousel/${id}`,
       method: 'delete',
       headers: {
         'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],

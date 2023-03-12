@@ -139,7 +139,7 @@ function NewsEditor() {
       }));
       const config = {
         method: 'post',
-        url: '/api/post/news',
+        url: '/post/news',
         data: form,
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -154,7 +154,7 @@ function NewsEditor() {
             form?.append('redirectUrl', `/news?id=${response.data.data.id}`);
             axios({
               method: 'post',
-              url: '/api/carousel',
+              url: '/carousel',
               data: form,
               headers: {
                 'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],

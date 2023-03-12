@@ -20,7 +20,7 @@ function Conference(): JSX.Element {
 
   useEffect(() => {
     axios
-      .get('/api/post/conference')
+      .get('/post/conference')
       .then(function (response) {
         console.log(response.data)
         const result = response.data;

@@ -70,7 +70,7 @@ function Editor(): JSX.Element {
     try {
       const res = await axios({
         method: 'post',
-        url: '/api/post/petition',
+        url: '/post/petition',
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
           'Content-Type': 'application/json',

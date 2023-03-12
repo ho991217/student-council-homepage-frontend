@@ -15,7 +15,7 @@ export const validateSMSCode = async (token: string, code: string) => {
   try {
     const res = await axios({
       method: 'post',
-      url: '/api/auth/sms-code',
+      url: '/auth/sms-code',
       headers: {
         'Content-Type': 'application/json',
       },

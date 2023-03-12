@@ -256,7 +256,7 @@ interface LoginErrorProps {
   };
 }
 
-function Login(): JSX.Element {
+function Login() {
   const [id, setId] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
@@ -278,11 +278,11 @@ function Login(): JSX.Element {
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = JSON.stringify({ classId: id, password });
+    const data = JSON.stringify({ studentId: id, password });
 
     const config = {
       method: 'post',
-      url: '/api/users/login',
+      url: '/user/login',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -291,28 +291,18 @@ function Login(): JSX.Element {
 
     axios(config)
       .then((response) => {
-        const { accessToken, admin } = response.data.data;
+        console.log(response)
+        const { accessToken } = response.data;
         setCookie('X-AUTH-TOKEN', accessToken);
-        setCookie('isAdmin', admin);
         setLoginState({
           isLoggedIn: true,
-          admin,
         });
         navigate('/');
       })
       .catch(({ response }: LoginErrorProps) => {
-        let message = '';
-
-        if (response.data.message === 'classId not found;') {
-          message = '가입되지 않은 학번입니다.';
-        } else if (response.data.message === 'Wrong pwd') {
-          message = '올바르지 않은 비밀번호 입니다.';
-        } else {
-          message = 'UNKNOWN ERROR';
-        }
         setLoginErrorState({
           error: true,
-          message,
+          message: response.data.message[0],
         });
         setIsOpen(true);
       });

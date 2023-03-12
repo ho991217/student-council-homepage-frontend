@@ -41,14 +41,13 @@ import PasswordSuccess from 'pages/password/components/Succes';
 import Event from 'pages/event/Event';
 
 function Router() {
-  const [{ isLoggedIn, admin }, setLoginState] = useRecoilState(LoginStateAtom);
+  const [{ isLoggedIn }, setLoginState] = useRecoilState(LoginStateAtom);
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  // useEffect(() => {
-  //   setLoginState({
-  //     isLoggedIn: !!cookies['X-AUTH-TOKEN'],
-  //     admin: cookies.isAdmin === 'true',
-  //   });
-  // }, []);
+  useEffect(() => {
+    setLoginState({
+      isLoggedIn: !!cookies['X-AUTH-TOKEN'],
+    });
+  }, []);
   if (isLoggedIn === undefined) return <div>로딩중...</div>;
   return (
     <BrowserRouter>
@@ -317,7 +316,7 @@ function Router() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route
           path="/admin"
-          element={admin ? <Admin /> : <Navigate to="/" />}
+          element={<Navigate to="/" />}
         />
         <Route path="/event" element={<Event />} />
         <Route path="/rental" />

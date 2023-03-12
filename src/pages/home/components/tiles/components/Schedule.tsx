@@ -176,7 +176,7 @@ function Schedule(): JSX.Element {
     const toDate = dayjs(activeStartDate).endOf('month').format('YYYYMMDD');
     const config = {
       method: 'get',
-      url: `/api/schedule?from=${fromDate}&to=${toDate}`,
+      url: `/schedule?from=${fromDate}&to=${toDate}`,
       headers: {},
     };
 

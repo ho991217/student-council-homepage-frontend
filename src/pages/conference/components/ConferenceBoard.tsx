@@ -113,7 +113,7 @@ function ConferenceBoard({
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/api/conference/${id}`, {
+      .delete(`/conference/${id}`, {
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },

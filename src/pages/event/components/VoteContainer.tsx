@@ -163,7 +163,7 @@ function VoteContainer() {
     const getVoteCompleted = async () => {
       const { data } = await axios({
         method: 'get',
-        url: '/api/event/character',
+        url: '/event/character',
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
@@ -230,7 +230,7 @@ function VoteContainer() {
 
     await axios({
       method: 'post',
-      url: '/api/event/character',
+      url: '/event/character',
       headers: {
         'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         'Content-Type': 'application/json',

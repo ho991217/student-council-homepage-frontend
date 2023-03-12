@@ -20,7 +20,7 @@ function Post() {
 
   useEffect(() => {
     axios({
-      url: `/api/suggestion/${postId}`,
+      url: `/suggestion/${postId}`,
       method: 'get',
       headers: {
         'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
@@ -39,8 +39,8 @@ function Post() {
 
     axios({
       url: isEdit
-        ? `/api/suggestion/comment/${commentId}`
-        : `/api/suggestion/comment/${postId}`,
+        ? `/suggestion/comment/${commentId}`
+        : `/suggestion/comment/${postId}`,
       method: isEdit ? 'PATCH' : 'post',
       headers: {
         'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
@@ -59,7 +59,7 @@ function Post() {
 
   const toggleLike = async () => {
     await axios({
-      url: `/api/posts/likes/${postId}`,
+      url: `/posts/likes/${postId}`,
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -74,8 +74,8 @@ function Post() {
       axios({
         url:
           cookies.isAdmin === 'true'
-            ? `/api/suggestion/admin/${postId}`
-            : `/api/suggestion/${postId}`,
+            ? `/suggestion/admin/${postId}`
+            : `/suggestion/${postId}`,
         method: 'delete',
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
@@ -95,8 +95,8 @@ function Post() {
       axios({
         url:
           cookies.isAdmin === 'true'
-            ? `/api/suggestion/comment/admin/${item}`
-            : `/api/suggestion/comment/${item}`,
+            ? `/suggestion/comment/admin/${item}`
+            : `/suggestion/comment/${item}`,
         method: 'delete',
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
