@@ -353,9 +353,7 @@ function Login(): JSX.Element {
           title="로그인 실패!"
           contents={loginErrorState.message}
           accept={
-            loginErrorState.message === '가입되지 않은 학번입니다.'
-              ? '회원가입'
-              : ''
+            loginErrorState.message === '없는 회원입니다.' ? '회원가입' : ''
           }
           onAccept={() => {
             navigate('/sign-up/agreements');

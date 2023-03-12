@@ -2,13 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import CopyrightTerm from 'components/CopyrightTerm';
-import { PropagateLoader } from 'react-spinners';
-import Modal from 'components/modal/Modal';
 import styled from 'styled-components';
 import LogoSrc from 'static/images/logos/emb.png';
-import { Info } from '../../SignUp';
 import { StudentInfoAtom } from './StudentInfoAtom';
+import Message from '../Message';
 
 const Container = styled.div`
   width: 100%;
@@ -69,31 +66,6 @@ const PasswordInput = styled(Input).attrs({
   type: 'password',
   placeholder: '비밀번호 입력',
 })``;
-
-const MsgContainer = styled.div<{ color: string }>`
-  color: ${({ color }) => color};
-  width: 100%;
-  margin-top: 1rem;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  font-size: 0.9rem;
-  line-height: 1.2rem;
-`;
-
-const ExpIcon = styled.div<{ color: string }>`
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 5px;
-  margin-top: 2.5px;
-  width: 15px !important;
-  height: 15px;
-  border-radius: 50%;
-  background-color: transparent;
-  border: 1px solid ${({ color }) => color};
-`;
 
 const SubmitButton = styled.input.attrs({ type: 'submit' })<{ valid: boolean }>`
   all: unset;
@@ -165,21 +137,19 @@ function StudentIdValidation() {
           value={password}
           onChange={({ currentTarget }) => setPassword(currentTarget.value)}
         />
-        {Error.length > 0 && (
-          <MsgContainer color="#ff6565">
-            <ExpIcon color="#ff6565">!</ExpIcon>
-            {Error}
-          </MsgContainer>
-        )}
-        <MsgContainer color="#4c4c4c">
-          <ExpIcon color="#4c4c4c">!</ExpIcon>
-          <span>
-            단국대학교 웹정보 로그인 시 사용하는 ID, PW를 통해 학생인증이
-            진행됩니다.
-            <br />
-            (입력한 정보는 인증 후 즉시 폐기됩니다.)
-          </span>
-        </MsgContainer>
+        <Message type="에러" message={Error} open={Error.length > 0} />
+        <Message
+          type="알림"
+          message={
+            <span>
+              단국대학교 웹정보 로그인 시 사용하는 ID, PW를 통해 학생인증이
+              진행됩니다.
+              <br /> (입력한 정보는 인증 후 즉시 폐기됩니다.)
+            </span>
+          }
+          open
+        />
+
         <SubmitButton valid={isValid} value="인증" disabled={!isValid} />
       </Form>
     </Container>
