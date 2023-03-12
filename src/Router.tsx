@@ -64,7 +64,15 @@ function Router() {
           path="/login"
           element={isLoggedIn ? <Navigate to="/" /> : <Login />}
         />
-        <Route path="/sign-up" element={<SignUp />}>
+        <Route
+          path="/sign-up"
+          element={
+            <>
+              <GlobalBanner title="회원가입" detail="" />
+              <SignUp />
+            </>
+          }
+        >
           <Route path="agreements" element={<Agreements />} />
           <Route path="verification" element={<StudentIdValidation />} />
           <Route path="info" element={<InputStudentInfos />} />
