@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import SideNav from 'components/nav/SideNav';
 import { PagingProps } from 'components/PageControl';
 import { PostProps } from './PostProps';
 

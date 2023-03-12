@@ -64,13 +64,13 @@ function Editor(): JSX.Element {
     const data = JSON.stringify({
       category,
       title,
-      text: content,
+      body: content,
     });
 
     try {
       const res = await axios({
         method: 'post',
-        url: '/api/petition',
+        url: '/api/post/petition',
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
           'Content-Type': 'application/json',
