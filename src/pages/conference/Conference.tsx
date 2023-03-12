@@ -22,7 +22,6 @@ function Conference(): JSX.Element {
     axios
       .get('/post/conference')
       .then(function (response) {
-        console.log(response.data)
         const result = response.data;
         setBoard(result.content.slice((page - 1) * 6, page * 6));
         setBoardsCount(result.totalElements);
