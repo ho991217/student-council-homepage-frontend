@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -11,10 +12,11 @@ import {
 } from 'pages/sign-up/components/SignUpComponents';
 
 import CopyrightTerm from 'components/CopyrightTerm';
-import CheckPasswordSecurity from '../functions/CheckPasswordSecurity';
-import { RemoveHyphen } from '../functions/RemoveHyphen';
-import { validateSMSCode } from '../functions/ValidateSMSCode';
-import { Info } from '../SignUp';
+import CheckPasswordSecurity from '../../functions/CheckPasswordSecurity';
+import { RemoveHyphen } from '../../functions/RemoveHyphen';
+import { validateSMSCode } from '../../functions/ValidateSMSCode';
+import { Info } from '../../SignUp';
+import { StudentInfoAtom } from '../verification/StudentInfoAtom';
 
 const Container = styled.div`
   margin-top: 50px;
@@ -81,11 +83,12 @@ const SubmitButton = styled(Input)<{ valid: boolean }>`
   color: ${({ theme }) => theme.colors.white};
 `;
 
-function InputStudentInfos({ info, key }: { info: Info; key: string }) {
+function InputStudentInfos() {
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isAllValid, setIsAllValid] = useState(false);
+  const [info, setInfo] = useRecoilState(StudentInfoAtom);
 
   const onTelNnumberAuth = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -161,7 +164,7 @@ function InputStudentInfos({ info, key }: { info: Info; key: string }) {
           </TelContainer>
           <Input
             type="text"
-            id="tel"
+            id="validation-code"
             placeholder="인증번호 6자리를 입력하세요."
           />
         </Seg>

@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -65,13 +67,31 @@ const Badge = styled.div<{ current: boolean }>`
 `;
 
 const stages = [
-  { id: 0, title: '학생 인증' },
-  { id: 1, title: '회원 정보 입력' },
-  { id: 2, title: '이용약관 동의' },
+  { id: 0, title: '이용약관 동의' },
+  { id: 1, title: '학생 인증' },
+  { id: 2, title: '회원 정보 입력' },
   { id: 3, title: '가입 완료' },
 ];
 
-function Header({ stage }: { stage: number }) {
+function Header() {
+  const [stage, setStage] = useState(0);
+  const location = useLocation();
+
+  useEffect(() => {
+    const path = location.pathname.split('/')[2];
+    if (path === 'agreements') {
+      setStage(0);
+    } else if (path === 'verification') {
+      setStage(1);
+    } else if (path === 'info') {
+      setStage(2);
+    } else if (path === 'success') {
+      setStage(3);
+    } else {
+      setStage(0);
+    }
+  }, [location.pathname]);
+
   return (
     <Container>
       <HeaderContainer>

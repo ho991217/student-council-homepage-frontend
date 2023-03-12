@@ -358,7 +358,7 @@ function Login(): JSX.Element {
               : ''
           }
           onAccept={() => {
-            navigate('/sign-up');
+            navigate('/sign-up/agreements');
           }}
         />
       )}
@@ -404,7 +404,7 @@ function Login(): JSX.Element {
               아이디 저장
             </SaveId>
             <Extras>
-              <SignUpButton to="/sign-up">회원가입</SignUpButton>
+              <SignUpButton to="/sign-up/agreements">회원가입</SignUpButton>
               <Vseparator />
               <FindPasswordButton to="/password">
                 비밀번호 찾기

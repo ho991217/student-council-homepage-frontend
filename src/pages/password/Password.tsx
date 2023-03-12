@@ -1,5 +1,5 @@
 import InputNewPassword from 'pages/password/components/InputNewPassword';
-import StudentIdValidation from 'pages/sign-up/components/StudentIdValidation';
+import StudentIdValidation from 'pages/sign-up/components/verification/StudentIdValidation';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
