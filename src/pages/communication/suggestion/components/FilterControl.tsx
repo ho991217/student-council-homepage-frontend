@@ -31,11 +31,11 @@ const Container = styled.div`
   }
 `;
 
-const Hashtag = styled(Link)<{ cur: boolean }>`
-  background-color: ${({ cur, theme }) =>
-    cur ? theme.colors.accent : theme.colors.gray050};
-  color: ${({ cur, theme }) =>
-    cur ? theme.colors.white : theme.colors.gray700};
+const Hashtag = styled(Link)<{ $cur: boolean }>`
+  background-color: ${({ $cur, theme }) =>
+    $cur ? theme.colors.accent : theme.colors.gray050};
+  color: ${({ $cur, theme }) =>
+    $cur ? theme.colors.white : theme.colors.gray700};
   ${({ theme }) => theme.media.mobile} {
     min-width: 90px;
     min-height: 40px;
@@ -69,7 +69,7 @@ function FilterControl() {
   return (
     <Container>
       <Hashtag
-        cur={
+        $cur={
           !qs.parse(params.toString())?.filter ||
           qs.parse(params.toString())?.filter === '전체'
         }
@@ -80,7 +80,7 @@ function FilterControl() {
       {categoryList?.map((tag) => (
         <Hashtag
           key={tag}
-          cur={tag === qs.parse(params.toString())?.filter}
+          $cur={tag === qs.parse(params.toString())?.filter}
           to={generateParams(tag)}
         >
           #{tag}

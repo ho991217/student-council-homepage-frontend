@@ -37,7 +37,7 @@ function PetitionBoard(): JSX.Element {
 
     const { data } = await axios({
       method: 'get',
-      url: `/suggestion?page=${Number(page) - 1}&size=6&sort=id,desc`
+      url: `/post/general-forum?page=${Number(page) - 1}&size=6&sort=id,desc`
         .concat(filter ? `&category=${filter}` : '')
         .concat(query ? `&query=${query}` : ''),
     });
