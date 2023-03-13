@@ -1,25 +1,23 @@
-import InputStudentInfos from 'pages/sign-up/components/InputStudentInfos';
-import StudentIdValidation from 'pages/sign-up/components/StudentIdValidation';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import styled from 'styled-components';
+import { Outlet } from 'react-router-dom';
+import Header from './components/Header';
+
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({ theme }) => theme.colors.white};
+`;
 
 function SignUp() {
-  const [emailVerificationToken, setEmailVerificationToken] = useState<
-    string | null
-  >(null);
-  const [searchParams] = useSearchParams();
-
-  useEffect(() => {
-    setEmailVerificationToken(searchParams.get('token'));
-  }, []);
-
-  return emailVerificationToken ? (
-    <InputStudentInfos
-      studentId={searchParams.get('id')}
-      token={emailVerificationToken}
-    />
-  ) : (
-    <StudentIdValidation type="회원가입" />
+  return (
+    <Container>
+      <Header />
+      <Outlet />
+    </Container>
   );
 }
 
