@@ -39,6 +39,10 @@ import { LoginStateAtom } from 'atoms/LoginState';
 import Success from 'pages/sign-up/components/Succes';
 import PasswordSuccess from 'pages/password/components/Succes';
 import Event from 'pages/event/Event';
+import Agreements from 'pages/sign-up/components/agreements/Agreements';
+import Header from 'pages/sign-up/components/Header';
+import StudentIdValidation from 'pages/sign-up/components/verification/StudentIdValidation';
+import InputStudentInfos from 'pages/sign-up/components/info/InputStudentInfos';
 
 function Router() {
   const [{ isLoggedIn }, setLoginState] = useRecoilState(LoginStateAtom);
@@ -63,11 +67,16 @@ function Router() {
           path="/sign-up"
           element={
             <>
-              <GlobalBanner title="회원가입" detail="회원가입 입니다." />
+              <GlobalBanner title="회원가입" detail="" />
               <SignUp />
             </>
           }
-        />
+        >
+          <Route path="agreements" element={<Agreements />} />
+          <Route path="verification" element={<StudentIdValidation />} />
+          <Route path="info" element={<InputStudentInfos />} />
+          <Route path="success" element={<Success />} />
+        </Route>
         <Route
           path="/password"
           element={
