@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div<{ type: MessageProps['type'] }>`
-  color: ${({ type }) => (type === '에러' ? '#ff6565' : '#4a4a4a')};
+  color: ${({ type }) => (type === 'error' ? '#ff6565' : '#4a4a4a')};
   width: 100%;
   margin-top: 1rem;
   display: flex;
@@ -26,7 +26,7 @@ const ExpIcon = styled.div`
 `;
 
 interface MessageProps {
-  type: '에러' | '알림';
+  type: 'error' | 'notice';
   message: ReactNode;
   open: boolean;
 }

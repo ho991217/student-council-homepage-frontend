@@ -137,9 +137,9 @@ function StudentIdValidation() {
           value={password}
           onChange={({ currentTarget }) => setPassword(currentTarget.value)}
         />
-        <Message type="에러" message={Error} open={Error.length > 0} />
+        <Message type="error" message={Error} open={Error.length > 0} />
         <Message
-          type="알림"
+          type="notice"
           message={
             <span>
               단국대학교 웹정보 로그인 시 사용하는 ID, PW를 통해 학생인증이
