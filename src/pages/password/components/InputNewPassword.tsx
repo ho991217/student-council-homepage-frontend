@@ -232,7 +232,7 @@ function InputNewPassword({
     try {
       const res = await axios({
         method: 'patch',
-        url: '/api/users/password',
+        url: '/users/password',
         headers: {
           'Content-Type': 'application/json',
           'EMAIL-VALIDATION-TOKEN': token,

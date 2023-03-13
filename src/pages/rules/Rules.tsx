@@ -188,7 +188,7 @@ function Rules() {
 
   const onSearchButtonHandler = async () => {
     await axios
-      .get(`/api/rule?sort=createDate,desc&query=${searchWord}`)
+      .get(`/rule?sort=createDate,desc&query=${searchWord}`)
       .then((response) => {
         const result = response.data;
         setBoard(result.content.slice((page - 1) * 6, page * 6));
@@ -213,7 +213,7 @@ function Rules() {
     if (!page) page = '1';
     const { data } = await axios({
       method: 'get',
-      url: `/api/rule?page=${Number(page) - 1}&size=6&sort=createDate,desc`,
+      url: `/rule?page=${Number(page) - 1}&size=6&sort=createDate,desc`,
     });
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);

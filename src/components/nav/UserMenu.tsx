@@ -53,7 +53,6 @@ function UserMenu(): JSX.Element {
     logOut();
     setLoginState({
       isLoggedIn: false,
-      admin: false,
     });
   };
 

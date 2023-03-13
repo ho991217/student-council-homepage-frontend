@@ -50,7 +50,7 @@ function RuleEditor() {
     } else {
       const config = {
         method: 'post',
-        url: '/api/rule',
+        url: '/rule',
         data: form,
         headers: {
           'Content-Type': 'multipart/form-data',

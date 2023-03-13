@@ -259,7 +259,7 @@ interface LoginErrorProps {
   };
 }
 
-function Login(): JSX.Element {
+function Login() {
   const [id, setId] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
@@ -294,21 +294,18 @@ function Login(): JSX.Element {
 
     axios(config)
       .then((response) => {
-        const { accessToken, admin } = response.data.data;
+        console.log(response)
+        const { accessToken } = response.data;
         setCookie('X-AUTH-TOKEN', accessToken);
-        setCookie('isAdmin', admin);
         setLoginState({
           isLoggedIn: true,
-          admin,
         });
         navigate('/');
       })
-      .catch(({ response: { data } }: LoginErrorProps) => {
-        const message = data.message[0];
-
+      .catch(({ response }: LoginErrorProps) => {
         setLoginErrorState({
           error: true,
-          message,
+          message: response.data.message[0],
         });
         setIsOpen(true);
       });

@@ -421,7 +421,7 @@ function Post() {
     try {
       await axios({
         method: 'post',
-        url: `/api/petition/comment/admin/${postId}`,
+        url: `/petition/comment/admin/${postId}`,
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
           'Content-Type': 'application/json',
@@ -473,9 +473,9 @@ function Post() {
     try {
       const { data } = await axios({
         method: 'get',
-        url: `/api/petition/${postid}`,
+        url: `/post/petition/${postid}`,
         headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+          'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
       });
       setPost(data.data);
@@ -488,9 +488,9 @@ function Post() {
     try {
       await axios({
         method: 'post',
-        url: `/api/petition/blind/${postId}`,
+        url: `/post/petition/blind/${postId}`,
         headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+          'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
       });
       getCurrentPost(postId);
@@ -503,9 +503,9 @@ function Post() {
     try {
       await axios({
         method: 'delete',
-        url: `/api/petition/${postId}`,
+        url: `/post/petition/${postId}`,
         headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+          'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
       });
       getCurrentPost(postId);

@@ -46,11 +46,9 @@ function PetitionBoard(): JSX.Element {
     if (!page) page = '1';
     const { data } = await axios({
       method: 'get',
-      url: `/api/petition?page=${
+      url: `/post/petition?page=${
         Number(page) - 1
-      }&size=6&sort=status,asc&sort=createDate,desc`.concat(
-        filter ? `&category=${filter}` : '',
-      ),
+      }&size=6`,
     });
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);

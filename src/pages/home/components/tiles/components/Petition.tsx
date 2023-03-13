@@ -30,7 +30,7 @@ function Petition(): JSX.Element {
 
   useEffect(() => {
     axios
-      .get('/api/main')
+      .get('/main')
       .then(function (response) {
         const result = response.data.data;
         setPetition(result.popularPetitions.slice(0, 4));

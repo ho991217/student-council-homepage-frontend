@@ -197,7 +197,7 @@ function News() {
 
   const onSearchButtonHandler = async () => {
     await axios
-      .get(`/api/news?sort=createDate,desc&query=${searchWord}`)
+      .get(`/post/news?&query=${searchWord}`)
       .then(function (response) {
         const result = response.data;
         setBoard(result.content.slice((page - 1) * 6, page * 6));
@@ -222,7 +222,7 @@ function News() {
     if (!page) page = '1';
     const { data } = await axios({
       method: 'get',
-      url: `/api/news?page=${Number(page) - 1}&size=6&sort=createDate,desc`,
+      url: `/post/news?page=${Number(page) - 1}&size=6`,
     });
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);

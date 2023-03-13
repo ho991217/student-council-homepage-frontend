@@ -137,7 +137,7 @@ function Detail() {
 
   useEffect(() => {
     axios
-      .get('/api/rule')
+      .get('/rule')
       .then(function (response) {
         const result = response.data;
         setBoard(result.content);
@@ -160,7 +160,7 @@ function Detail() {
 
   useEffect(() => {
     axios
-      .get(`/api/rule/${searchParams.get('id')}`, {
+      .get(`/rule/${searchParams.get('id')}`, {
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
@@ -177,7 +177,7 @@ function Detail() {
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/api/rule/${id}`, {
+      .delete(`/rule/${id}`, {
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },

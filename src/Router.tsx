@@ -45,12 +45,11 @@ import StudentIdValidation from 'pages/sign-up/components/verification/StudentId
 import InputStudentInfos from 'pages/sign-up/components/info/InputStudentInfos';
 
 function Router() {
-  const [{ isLoggedIn, admin }, setLoginState] = useRecoilState(LoginStateAtom);
+  const [{ isLoggedIn }, setLoginState] = useRecoilState(LoginStateAtom);
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   useEffect(() => {
     setLoginState({
       isLoggedIn: !!cookies['X-AUTH-TOKEN'],
-      admin: cookies.isAdmin === 'true',
     });
   }, []);
   if (isLoggedIn === undefined) return <div>로딩중...</div>;
@@ -326,7 +325,7 @@ function Router() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route
           path="/admin"
-          element={admin ? <Admin /> : <Navigate to="/" />}
+          element={<Navigate to="/" />}
         />
         <Route path="/event" element={<Event />} />
         <Route path="/rental" />

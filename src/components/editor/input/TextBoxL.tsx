@@ -6,6 +6,7 @@ import htmlToDraft from 'html-to-draftjs';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
+import { useRecoilState } from 'recoil';
 
 interface TextBoxLProps {
   htmlStr: string;
@@ -34,7 +35,7 @@ function TextBoxL({
   uploadCallback,
 }: TextBoxLProps) {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-
+  
   useEffect(() => {
     const blocksFromHtml = htmlToDraft(htmlStr);
     if (blocksFromHtml) {

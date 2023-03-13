@@ -23,7 +23,7 @@ function News(): JSX.Element {
 
   useEffect(() => {
     axios
-      .get('/api/main')
+      .get('/main')
       .then(function (response) {
         const result = response.data.data;
         setNews(result.recentNews.slice(0, 4));

@@ -83,5 +83,6 @@
     "prettier": "^2.6.2",
     "qs": "^6.11.0",
     "react-scripts": "5.0.1"
-  }
+  },
+  "proxy": "https://dev.dkustu.com"
 }

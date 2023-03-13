@@ -126,12 +126,12 @@ function NewsBoard({
               <Content>
                 <Link to={`/news?id=${post.id}`}>{post.title}</Link>
               </Content>
-              <Content>{post.createDate}</Content>
+              <Content>{post.createdDate}</Content>
               <Content>
                 <a
                   target="_blank"
                   rel="noopener noreferrer"
-                  href={post?.fileList[0]?.url}
+                  href={post?.files[0]?.url}
                 >
                   <Svg
                     xmlns="http://www.w3.org/2000/svg"

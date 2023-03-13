@@ -33,11 +33,11 @@ function SuggestionEditor() {
       }
 
       axios({
-        url: '/api/suggestion',
+        url: '/suggestion',
         method: 'post',
         headers: {
           'Content-Type': 'multipart/form-data',
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+          'Authorization': cookies['X-AUTH-TOKEN'],
         },
         data: formData,
       })
