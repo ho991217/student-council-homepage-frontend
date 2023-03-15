@@ -1,15 +1,12 @@
 export interface PostProps {
+  author: string;
+  body: string;
+  createdAt: string;
+  files: [];
   id: number;
-  answer: string;
-  category: string;
-  commentList: Comment[];
-  createDate: string;
-  fileList: [];
-  text: string;
-  title: string;
   mine: boolean;
-  likeCount: number;
-  like: boolean;
+  tag: [];
+  title: string
 }
 
 interface Comment {

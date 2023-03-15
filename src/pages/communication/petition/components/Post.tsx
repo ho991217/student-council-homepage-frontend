@@ -16,7 +16,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.gray040};
 `;
 
 const Wrapper = styled.div`
@@ -37,7 +37,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  background-color: ${({ theme }) => theme.colors.gray040};
+  background-color: ${({ theme }) => theme.colors.white};
 `;
 
 const Hashtag = styled.div`
@@ -192,6 +192,7 @@ const CommentLists = styled.ul`
   justify-content: flex-start;
   margin-top: 20px;
   width: 100%;
+  margin: 20px;
 `;
 
 const Comment = styled.li`
@@ -203,6 +204,7 @@ const Comment = styled.li`
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray300};
   padding: 0px 10px 15px 10px;
   width: 100%;
+  margin: 20px;
 `;
 
 const CommentInfo = styled.div`
@@ -369,18 +371,29 @@ const TextLength = styled.span`
   margin: 5px 0;
 `;
 
+const CommentTitle = styled.p`
+  color: ${({ theme }) => theme.colors.gray900};
+  font-weight:  ${({ theme }) => theme.fonts.weight.bold};
+  margin: 50px 50px 0px 50px;
+  font-size: ${({ theme }) => theme.fonts.size.lg};
+`
+
 interface PostProps {
-  adminComment?: string;
-  blind: boolean;
-  category: string;
-  commentCount: number;
-  comments: [{ createDate: string; text: string; major: string }];
-  createDate: string;
-  deleteDate: string;
-  postHits: number;
-  status: string;
-  text: string;
   title: string;
+  body: string;
+  author: string;
+  createdAt: string;
+  status: string;
+  answer?: string;
+  mine: boolean;
+  tags: [];
+}
+
+interface CommentProps {
+  id: number;
+  major: string;
+  text: string;
+  createdDate: string;
 }
 
 function Post() {
@@ -389,6 +402,7 @@ function Post() {
   const [postId, setPostId] = useState<number>(0);
   const [comment, setComment] = useState<string>('동의합니다.');
   const [answer, setAnswer] = useState<string>();
+  const [commentList, setCommentList] = useState([]);
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const [error, setError] = useState({
     isOpen: false,
@@ -402,7 +416,6 @@ function Post() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     setModalState({
       open: true,
       content: (
@@ -421,9 +434,9 @@ function Post() {
     try {
       await axios({
         method: 'post',
-        url: `/petition/comment/admin/${postId}`,
+        url: `/post/petition/comment/${postId}`,
         headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
           'Content-Type': 'application/json',
         },
         data: JSON.stringify({ text: answer }),
@@ -446,9 +459,9 @@ function Post() {
     try {
       const { data } = await axios({
         method: 'post',
-        url: `api/petition/comment/${postId}`,
+        url: `/post/petition/comment/${postId}`,
         headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
           'Content-Type': 'application/json',
         },
         data: text,
@@ -475,10 +488,11 @@ function Post() {
         method: 'get',
         url: `/post/petition/${postid}`,
         headers: {
-          'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
       });
-      setPost(data.data);
+      setPost(data);
+      console.log(data)
     } catch {
       navigate(-1);
     }
@@ -490,7 +504,7 @@ function Post() {
         method: 'post',
         url: `/post/petition/blind/${postId}`,
         headers: {
-          'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
       });
       getCurrentPost(postId);
@@ -505,7 +519,7 @@ function Post() {
         method: 'delete',
         url: `/post/petition/${postId}`,
         headers: {
-          'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
       });
       getCurrentPost(postId);
@@ -519,17 +533,34 @@ function Post() {
       sendComment();
     }
     setModalState((prev) => ({ ...prev, open: false }));
+    getCommentList(postId)
+  };
+
+  const getCommentList = async (postid: number) => {
+    try {
+      const data = await axios({
+        method: 'get',
+        url: `/post/petition/comment/${postid}`,
+        headers: {
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+        },
+      });
+      setCommentList(data.data.content);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   useEffect(() => {
     const postId = Number(searchParams.get('id'));
     setPostId(postId);
     getCurrentPost(postId);
-  }, []);
+    getCommentList(postId)
 
+  }, []);
   return (
     <Container>
-      {/* <ReactModal
+      <ReactModal
         isOpen={modalState.open}
         contentLabel="Example Modal"
         style={modalStyle}
@@ -540,7 +571,7 @@ function Post() {
         shouldCloseOnOverlayClick
       >
         {modalState.content}
-      </ReactModal> */}
+      </ReactModal>
       {post && (
         <Wrapper>
           {cookies.isAdmin === 'true' && (
@@ -549,39 +580,33 @@ function Post() {
               <input type="button" value="삭제" onClick={handleDelete} />
             </AdminPanel>
           )}
-          {post?.blind ? (
-            <div>블라인드 된 게시글</div>
-          ) : (
-            <>
-              <Hashtag>#{post?.category}</Hashtag>
-              <HSeparator bold />
-              <Header>[ {post?.status} ]</Header>
-              <Title>{post?.title}</Title>
-              <Etc>
-                <div>등록일 : {post?.createDate}</div>
-                <div>
-                  청원 동의 인원 : {post?.commentCount} / {TARGET_AGREEMENT}
-                </div>
-                <div>청원 마감 : {post?.deleteDate}</div>
-              </Etc>
-              <Meter
-                min={0}
-                max={100}
-                value={(post.commentCount / TARGET_AGREEMENT) * 100}
-              />
-              <HSeparator />
-              {post.adminComment && (
+
+          <Hashtag>#</Hashtag>
+          <HSeparator bold />
+          <Header>{`[ ${post?.status === 'ACTIVE' ? "진행중" : "마감" }  ]`}</Header>
+          <Title>{post?.title}</Title>
+          <Etc>
+            <div>등록일 : {post?.createdAt}</div>
+            <div>
+              청원 동의 인원 : {commentList.length} / {TARGET_AGREEMENT}
+            </div>
+            <div>청원 마감 : {}</div>
+          </Etc>
+          
+          <HSeparator />
+          {/* {post.adminComment && (
                 <AnswerContainer>
                   <AnswerTitle>
                     총학생회 <AnserTitlePoint>답변</AnserTitlePoint>
                   </AnswerTitle>
                   <div>{post.adminComment}</div>
                 </AnswerContainer>
-              )}
-              <HSeparator />
+              )} */}
+          <Contents>{parse(post?.body)}</Contents>
 
-              <Contents>{parse(post?.text)}</Contents>
-              {post.commentCount >= TARGET_AGREEMENT &&
+          <HSeparator />
+
+          {/* {post.commentCount >= TARGET_AGREEMENT &&
                 !post.adminComment &&
                 cookies.isAdmin === 'true' && (
                   <>
@@ -597,41 +622,39 @@ function Post() {
                       <AnswerSubmit value="전송" />
                     </AnswerForm>
                   </>
-                )}
-              <CommentSection>
-                <CommentForm onSubmit={handleSubmit}>
-                  <CommentInput
-                    maxLength={50}
-                    placeholder="동의 내용을 입력해 주세요."
-                    disabled={post.status === '기간종료'}
-                    value={comment}
-                    required
-                    onChange={({ currentTarget }) =>
-                      setComment(currentTarget.value)
-                    }
-                  />
-                  <CommentSubmit
-                    disabled={post.status === '기간종료'}
-                    value="전송"
-                  />
-                </CommentForm>
-                <TextLength>{comment.length} / 50</TextLength>
-                <CommentLists>
-                  {post?.comments.length > 0 &&
-                    post?.comments.map((comment) => (
-                      <Comment key={post.comments.indexOf(comment)}>
+                )}   */}
+          <CommentSection>
+            <CommentForm onSubmit={handleSubmit}>
+              <CommentInput
+                maxLength={50}
+                placeholder="동의 내용을 입력해 주세요."
+                disabled={post.status === '기간종료'}
+                value={comment}
+                required
+                onChange={({ currentTarget }) =>
+                  setComment(currentTarget.value)
+                }
+                />
+              <CommentSubmit
+                disabled={post.status === '기간종료'}
+                value="전송"
+                />
+            </CommentForm>
+            <CommentTitle>청원 동의 {commentList.length}명</CommentTitle>
+            <CommentLists>
+                  {commentList.length > 0 &&
+                    commentList.map((comment: CommentProps) => (
+                      <Comment key={comment.id}>
                         <CommentInfo>
                           <CommentAuthor>{comment.major}</CommentAuthor>
                           <VSeparator />
-                          <CommentDate>{comment.createDate}</CommentDate>
+                          <CommentDate>{comment.createdDate}</CommentDate>
                         </CommentInfo>
                         <CommentText>{comment.text}</CommentText>
                       </Comment>
                     ))}
                 </CommentLists>
-              </CommentSection>
-            </>
-          )}
+          </CommentSection>
         </Wrapper>
       )}
     </Container>

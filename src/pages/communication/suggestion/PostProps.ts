@@ -1,7 +1,7 @@
 export interface PostProps {
   commentCount: number;
   id: number;
-  postHits: number;
+  views: number;
   title: string;
   category: string;
   status: string;

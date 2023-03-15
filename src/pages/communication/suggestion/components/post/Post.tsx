@@ -20,14 +20,14 @@ function Post() {
 
   useEffect(() => {
     axios({
-      url: `/suggestion/${postId}`,
+      url: `post/general-forum/${postId}`,
       method: 'get',
       headers: {
-        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
       },
     })
       .then((res) => {
-        setPost(res.data.data);
+        setPost(res.data);
       })
       .catch((err) => {
         // 에러 처리
@@ -43,7 +43,7 @@ function Post() {
         : `/suggestion/comment/${postId}`,
       method: isEdit ? 'PATCH' : 'post',
       headers: {
-        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
         'Content-Type': 'application/json',
       },
       data: isEdit ? { text: editComment } : { text: comment },
@@ -127,19 +127,19 @@ function Post() {
           <Button onClick={onDeletePost}>삭제</Button>
         )}
         <Header>
-          <Date>{post?.createDate}</Date>
+          <Date>{post?.createdAt}</Date>
           <Title>{post?.title}</Title>
         </Header>
         <Hr bold />
         <Contents>
-          <Text>{parse(post?.text ?? '')}</Text>
-          <HashTag>#{post?.category}</HashTag>
-          <Like liked={post?.like} onClick={toggleLike}>
+          <Text>{parse(post?.body ?? '')}</Text>
+          <HashTag>#{post?.tag}</HashTag>
+          {/* <Like liked={post?.like} onClick={toggleLike}>
             좋아요 - {post?.likeCount}
-          </Like>
+          </Like> */}
         </Contents>
         <Hr bold />
-        <CommentWrapper>
+        {/* <CommentWrapper>
           댓글 {post?.commentList.length}
           <Hr />
           <CommentLists>
@@ -202,7 +202,7 @@ function Post() {
               <CommentSubmit value="수정" />
             </CommentForm>
           )}
-        </CommentWrapper>
+        </CommentWrapper> */}
       </Wrapper>
     </Container>
   );

@@ -25,7 +25,7 @@ function SuggestionEditor() {
     if (window.confirm('게시글 작성을 완료하시겠습니까?')) {
       const formData = new FormData();
       formData.append('title', title);
-      formData.append('text', text);
+      formData.append('body', text);
       if (category === '') {
         formData.append('category', '기타');
       } else {
@@ -33,15 +33,16 @@ function SuggestionEditor() {
       }
 
       axios({
-        url: '/suggestion',
+        url: '/post/general-forum',
         method: 'post',
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': cookies['X-AUTH-TOKEN'],
+          'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
         data: formData,
       })
         .then((res) => {
+          console.log(res)
           if (res.data.successful) navigate('/board-suggestion/boards?page=1');
         })
         .catch(

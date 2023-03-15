@@ -8,8 +8,17 @@ import TextBoxS from 'components/editor/input/TextBoxS';
 import TextBoxL from 'components/editor/input/TextBoxL';
 import SelectBoxS from 'components/editor/input/SelectBoxS';
 import SubmitButtonM from 'components/editor/button/SubmitButtonM';
+import { TagsInput } from 'react-tag-input-component';
 import { getCategories } from '../functions/GetCategories';
 
+const TagBoxLabel = styled.label`
+  display: flex;
+  flex-direction: column;
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
+  font-size: ${({ theme }) => theme.fonts.size.md};
+  user-select: none;
+  margin-bottom: 15px;
+`
 interface ErrorProps {
   response: {
     data: {
@@ -20,15 +29,16 @@ interface ErrorProps {
 }
 
 function Editor(): JSX.Element {
-  const [categoryList, setCategoryList] = useState<string[]>(['category']);
   const [category, setCategory] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
+  const [tagList, setTagList] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
   const formData = new FormData();
+
 
   const onCategoryHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const {
@@ -63,23 +73,24 @@ function Editor(): JSX.Element {
     }
     formData.append('title', title);
     formData.append('body', content);
-
-    console.log(formData.get('title'))
-    console.log(formData.get('body'))
+    formData.append("tagIds", new Blob(tagList))
+    console.log(formData.get('title'));
+    console.log(formData.get('body'));
+    
     try {
       const res = await axios({
         method: 'post',
         url: '/post/petition',
         headers: {
-          'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
           'Content-Type': 'multipart/form-data',
         },
         data: formData,
       });
-      console.log(res)
+      console.log(res);
       navigate(`/board-petition/board?id=${res.data.id}`);
     } catch (e) {
-      console.log(e)
+      console.log(e);
       const err = e as ErrorProps;
       if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
         setErrorMsg(err.response.data.message);
@@ -87,24 +98,13 @@ function Editor(): JSX.Element {
       }
     }
   };
-
-  useEffect(() => {
-    getCategories(cookies['X-AUTH-TOKEN']).then((res) => {
-      setCategoryList(res);
-    });
-  }, []);
-
+  useEffect(()=>{
+    console.log(tagList)
+  },[setTagList])
   return (
     <Container>
       <Wrapper>
         <Form onSubmit={onSubmitHandler}>
-          <SelectBoxS
-            label="카테고리"
-            defaultMsg="카테고리를 선택해주세요."
-            value={category}
-            onChange={onCategoryHandler}
-            options={categoryList}
-          />
           <TextBoxS
             label="청원 제목"
             value={title}
@@ -115,6 +115,15 @@ function Editor(): JSX.Element {
             label="청원 내용"
             htmlStr={content}
             setHtmlStr={setContent}
+          />
+          <TagBoxLabel>
+            태그
+          </TagBoxLabel>
+          <TagsInput
+            value={tagList}
+            onChange={setTagList}
+            name="tagListInput"
+            placeHolder="태그들을 입력해주세요"
           />
           <SubmitButtonM text="작성 완료" />
         </Form>

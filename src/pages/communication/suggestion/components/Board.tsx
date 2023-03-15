@@ -172,7 +172,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                     <ViewIcon>
                       <FiEye />
                     </ViewIcon>
-                    {post.postHits}
+                    {post.views}
                   </div>
                   <div>
                     <Svg
@@ -226,7 +226,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                     <ViewIcon>
                       <FiEye />
                     </ViewIcon>
-                    {post.postHits}
+                    {post.views}
                   </div>
                   <div>
                     <Svg
