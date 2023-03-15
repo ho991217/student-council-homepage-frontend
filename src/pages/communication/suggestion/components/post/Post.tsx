@@ -8,6 +8,7 @@ import { PostProps } from './PostProps';
 
 function Post() {
   const [post, setPost] = useState<PostProps>();
+  const [commentList, setCommentList] = useState<string[]>();
   const [comment, setComment] = useState<string>('');
   const [editComment, setEditComment] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -41,7 +42,7 @@ function Post() {
     })
       .then((res) => {
         console.log(res)
-        // 에러 처리
+        setCommentList(res.data.content)
       });
   }, []);
 
@@ -157,10 +158,11 @@ function Post() {
           <CommentSubmit value="입력" />
         </CommentForm>
         {/* <CommentWrapper>
-          댓글 {post?.commentList.length}
+          
+          댓글 {commentList?.length}
           <Hr />
           <CommentLists>
-            {post?.commentList.map((comment) => (
+            {commentList?.map((comment) => (
               <Comment key={post.commentList.indexOf(comment)}>
                 {cookies.isAdmin === 'true' &&
                   (comment.status === '등록' || comment.status === '수정') && (
