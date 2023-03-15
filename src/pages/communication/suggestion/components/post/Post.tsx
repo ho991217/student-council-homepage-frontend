@@ -23,13 +23,24 @@ function Post() {
       url: `post/general-forum/${postId}`,
       method: 'get',
       headers: {
-        'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
+        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
       },
     })
       .then((res) => {
         setPost(res.data);
       })
       .catch((err) => {
+        // 에러 처리
+      });
+    axios({
+      url: `post/general-forum/comment/${postId}`,
+      method: 'get',
+      headers: {
+        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+      },
+    })
+      .then((res) => {
+        console.log(res)
         // 에러 처리
       });
   }, []);
@@ -39,17 +50,18 @@ function Post() {
 
     axios({
       url: isEdit
-        ? `/suggestion/comment/${commentId}`
-        : `/suggestion/comment/${postId}`,
+        ? `/post/general-forum/comment/${commentId}`
+        : `/post/general-forum/comment/${postId}`,
       method: isEdit ? 'PATCH' : 'post',
       headers: {
-        'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
+        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         'Content-Type': 'application/json',
       },
       data: isEdit ? { text: editComment } : { text: comment },
     })
       .then((res) => {
         if (res.data.successful) window.location.reload();
+        console.log(res);
       })
       .catch((err) => {
         // 에러 처리
@@ -63,7 +75,7 @@ function Post() {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
-        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
       },
     });
     window.location.reload();
@@ -74,11 +86,11 @@ function Post() {
       axios({
         url:
           cookies.isAdmin === 'true'
-            ? `/suggestion/admin/${postId}`
-            : `/suggestion/${postId}`,
+            ? `/post/general-forum/admin/${postId}`
+            : `/post/general-forum/${postId}`,
         method: 'delete',
         headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
       })
         .then((res) => {
@@ -99,7 +111,7 @@ function Post() {
             : `/suggestion/comment/${item}`,
         method: 'delete',
         headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
       })
         .then((res) => {
@@ -131,14 +143,19 @@ function Post() {
           <Title>{post?.title}</Title>
         </Header>
         <Hr bold />
+
         <Contents>
           <Text>{parse(post?.body ?? '')}</Text>
-          <HashTag>#{post?.tag}</HashTag>
-          {/* <Like liked={post?.like} onClick={toggleLike}>
-            좋아요 - {post?.likeCount}
-          </Like> */}
         </Contents>
         <Hr bold />
+        <CommentForm onSubmit={onCommentHandler}>
+          <CommentInput
+            placeholder="댓글을 입력해주세요."
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+          <CommentSubmit value="입력" />
+        </CommentForm>
         {/* <CommentWrapper>
           댓글 {post?.commentList.length}
           <Hr />
