@@ -87,7 +87,7 @@ function Carousel({ images }: { images: Array<ImageProps> }): JSX.Element {
 
   return (
     <Wrapper>
-      {images && images.length > 0 && (
+      {images.length > 0 && (
         <>
           {images.map((obj: ImageProps, index: number) => (
             <Slide

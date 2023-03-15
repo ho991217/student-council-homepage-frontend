@@ -19,7 +19,9 @@ function Home() {
 
   useEffect(() => {
     getCarouselImages().then(({ data }) => {
-      setImages(data);
+      if(typeof data === 'object') {
+        setImages(data);
+      }
     });
   }, []);
 
