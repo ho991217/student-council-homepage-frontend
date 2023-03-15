@@ -182,7 +182,6 @@ function MobileMenu(): JSX.Element {
     logOut();
     setLoginState({
       isLoggedIn: false,
-      admin: false,
     });
   };
 

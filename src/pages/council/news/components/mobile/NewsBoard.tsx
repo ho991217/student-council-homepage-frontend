@@ -129,7 +129,7 @@ function NewsBoard({
               <Content>
                 <Link to={`/news?id=${post.id}`}>{post.title}</Link>
               </Content>
-              <Content>{post.createDate}</Content>
+              <Content>{post.createdDate}</Content>
             </Row>
           ))}
           {isAdmin && (

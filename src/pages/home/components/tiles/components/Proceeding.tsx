@@ -23,7 +23,7 @@ function Proceeding(): JSX.Element {
 
   useEffect(() => {
     axios
-      .get('/api/main')
+      .get('/main')
       .then(function (response) {
         const result = response.data.data;
         setConference(result.recentConferences.slice(0, 4));

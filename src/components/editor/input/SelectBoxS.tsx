@@ -22,7 +22,7 @@ function SelectBoxS({
   return (
     <Label>
       {label}
-      <Select name="value" value={value} onChange={onChange} defaultValue="">
+      <Select name="value" value={value} onChange={onChange}>
         <option value="" disabled>
           {defaultMsg}
         </option>

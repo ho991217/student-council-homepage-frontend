@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import Logo from 'components/Logo';
 import { Link } from 'react-router-dom';
+import FooterLogo from 'components/FooterLogo';
 
 const Wrapper = styled.footer`
   display: flex;
@@ -57,7 +57,7 @@ function Footer(): JSX.Element {
   return (
     <Wrapper>
       <Container>
-        <Logo />
+        <FooterLogo />
         <InnerContainer>
           <Span>
             {

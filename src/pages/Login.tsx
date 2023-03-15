@@ -250,13 +250,16 @@ const SaveIdToggle = styled.div<{ saveId: boolean }>`
 interface LoginErrorProps {
   response: {
     data: {
-      message: string;
-      successful: boolean;
+      code: string;
+      message: [string];
+      status: string;
+      timestamp: string;
+      trackingId: string;
     };
   };
 }
 
-function Login(): JSX.Element {
+function Login() {
   const [id, setId] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [password, setPassword] = useState<string>('');
@@ -278,11 +281,11 @@ function Login(): JSX.Element {
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = JSON.stringify({ classId: id, password });
+    const data = JSON.stringify({ studentId: id, password });
 
     const config = {
       method: 'post',
-      url: '/api/users/login',
+      url: '/user/login',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -291,28 +294,18 @@ function Login(): JSX.Element {
 
     axios(config)
       .then((response) => {
-        const { accessToken, admin } = response.data.data;
+        console.log(response)
+        const { accessToken } = response.data;
         setCookie('X-AUTH-TOKEN', accessToken);
-        setCookie('isAdmin', admin);
         setLoginState({
           isLoggedIn: true,
-          admin,
         });
         navigate('/');
       })
       .catch(({ response }: LoginErrorProps) => {
-        let message = '';
-
-        if (response.data.message === 'classId not found;') {
-          message = '가입되지 않은 학번입니다.';
-        } else if (response.data.message === 'Wrong pwd') {
-          message = '올바르지 않은 비밀번호 입니다.';
-        } else {
-          message = 'UNKNOWN ERROR';
-        }
         setLoginErrorState({
           error: true,
-          message,
+          message: response.data.message[0],
         });
         setIsOpen(true);
       });
@@ -357,12 +350,10 @@ function Login(): JSX.Element {
           title="로그인 실패!"
           contents={loginErrorState.message}
           accept={
-            loginErrorState.message === '가입되지 않은 학번입니다.'
-              ? '회원가입'
-              : ''
+            loginErrorState.message === '없는 회원입니다.' ? '회원가입' : ''
           }
           onAccept={() => {
-            navigate('/sign-up');
+            navigate('/sign-up/agreements');
           }}
         />
       )}
@@ -408,7 +399,7 @@ function Login(): JSX.Element {
               아이디 저장
             </SaveId>
             <Extras>
-              <SignUpButton to="/sign-up">회원가입</SignUpButton>
+              <SignUpButton to="/sign-up/agreements">회원가입</SignUpButton>
               <Vseparator />
               <FindPasswordButton to="/password">
                 비밀번호 찾기

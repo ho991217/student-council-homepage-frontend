@@ -99,7 +99,7 @@ function Detail() {
 
   useEffect(() => {
     axios
-      .get('/api/news')
+      .get('/post/news')
       .then((response) => {
         const result = response.data;
         setBoard(result.content);
@@ -122,7 +122,7 @@ function Detail() {
 
   useEffect(() => {
     axios
-      .get(`/api/news/${searchParams.get('id')}`)
+      .get(`/post/news/${searchParams.get('id')}`)
       .then((response) => {
         const result = response.data.data;
         setDetail(result);
@@ -135,7 +135,7 @@ function Detail() {
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/api/news/${id}`, {
+      .delete(`/post/news/${id}`, {
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
@@ -155,7 +155,7 @@ function Detail() {
       <Head isAdmin={isAdmin}>
         <HeadContent>
           <div>{detail?.title}</div>
-          <div>{detail?.createDate.slice(0, 10)}</div>
+          <div>{detail?.createdAt.slice(0, 10)}</div>
         </HeadContent>
         {isAdmin && detail && (
           <div>
@@ -180,7 +180,7 @@ function Detail() {
         )}
       </Head>
       <ContentWrapper>
-        <Content>{detail?.text}</Content>
+        <Content>{detail?.body}</Content>
         {detail?.files[0] && (
           <>
             {detail?.files

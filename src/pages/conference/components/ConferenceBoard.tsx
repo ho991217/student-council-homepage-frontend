@@ -113,7 +113,7 @@ function ConferenceBoard({
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/api/conference/${id}`, {
+      .delete(`/conference/${id}`, {
         headers: {
           'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
@@ -153,7 +153,7 @@ function ConferenceBoard({
                 {post.date.substring(0, 4)}년 {post.date.substring(5, 7)}월{' '}
                 {post.date.substring(8, 10)}일
               </div>
-              <div>{post.createDate}</div>
+              <div>{post.createdDate}</div>
               <div>{post.title}</div>
               <div>
                 <a

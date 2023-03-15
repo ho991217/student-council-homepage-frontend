@@ -4,7 +4,7 @@ export const sendSMSCode = async (phoneNumber: string) => {
   try {
     const { data } = await axios({
       method: 'get',
-      url: `/api/auth/sms-code?phone=${phoneNumber}`,
+      url: `/auth/sms-code?phone=${phoneNumber}`,
     });
     return data.token;
   } catch (e) {

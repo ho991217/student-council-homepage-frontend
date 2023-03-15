@@ -28,6 +28,7 @@ function Editor(): JSX.Element {
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
+  const formData = new FormData();
 
   const onCategoryHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const {
@@ -45,40 +46,40 @@ function Editor(): JSX.Element {
 
   const onSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
-    if (category === '') {
+    if (category.length < 0) {
       setErrorMsg('카테고리를 선택해주세요.');
       setIsOpen(true);
       return;
     }
-    if (title === '') {
+    if (title.length < 0) {
       setErrorMsg('제목을 입력해주세요.');
       setIsOpen(true);
       return;
     }
-    if (content === '') {
+    if (content.length < 0) {
       setErrorMsg('내용을 입력해주세요.');
       setIsOpen(true);
       return;
     }
+    formData.append('title', title);
+    formData.append('body', content);
 
-    const data = JSON.stringify({
-      category,
-      title,
-      text: content,
-    });
-
+    console.log(formData.get('title'))
+    console.log(formData.get('body'))
     try {
       const res = await axios({
         method: 'post',
-        url: '/api/petition',
+        url: '/post/petition',
         headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
+          'Content-Type': 'multipart/form-data',
         },
-        data,
+        data: formData,
       });
-      navigate(`/board-petition/board?id=${res.data.data.id}`);
+      console.log(res)
+      navigate(`/board-petition/board?id=${res.data.id}`);
     } catch (e) {
+      console.log(e)
       const err = e as ErrorProps;
       if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
         setErrorMsg(err.response.data.message);
