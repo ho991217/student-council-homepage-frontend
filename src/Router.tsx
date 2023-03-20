@@ -63,78 +63,50 @@ function Router() {
           path="/login"
           element={isLoggedIn ? <Navigate to="/" /> : <Login />}
         />
-        <Route
-          path="/sign-up"
-          element={
-            <>
-              <GlobalBanner title="회원가입" detail="" />
-              <SignUp />
-            </>
-          }
-        >
-          <Route path="agreements" element={<Agreements />} />
-          <Route path="verification" element={<StudentIdValidation />} />
-          <Route path="info" element={<InputStudentInfos />} />
-          <Route path="success" element={<Success />} />
+        <Route path="/sign-up" element={<GlobalBanner title="회원가입" />}>
+          <Route path="" element={<SignUp />}>
+            <Route path="agreements" element={<Agreements />} />
+            <Route path="verification" element={<StudentIdValidation />} />
+            <Route path="info" element={<InputStudentInfos />} />
+            <Route path="success" element={<Success />} />
+          </Route>
+        </Route>
+        <Route path="/password" element={<GlobalBanner title="비밀번호찾기" />}>
+          <Route path="" element={<Password />} />
+          <Route path="success" element={<PasswordSuccess />} />
         </Route>
         <Route
-          path="/password"
+          path="/greeting"
           element={
             <>
-              <GlobalBanner
-                title="비밀번호찾기"
-                detail="비밀번호찾기 입니다."
-              />
-              <Password />
+              <GlobalBanner title="인사말" />
+              <Greeting />
             </>
           }
         />
-        <Route path="/sign-up/success" element={<Success />} />
-        <Route path="/password/success" element={<PasswordSuccess />} />
-        <Route 
-          path="/greeting" 
-          element={
-            <>
-              <GlobalBanner 
-                title="인사말" 
-                detail="안녕하세요 제 55대 담다 총학생회입니다." 
-              />
-              <Greeting />
-            </>
-          } 
-        />
-        <Route 
+        <Route
           path="/organization"
           element={
             <>
-              <GlobalBanner 
-                title="조직도" 
-                detail="제 55대 담다 총학생회 조직도입니다." 
-              />
+              <GlobalBanner title="조직도" />
               <Organization />
             </>
           }
         />
-        <Route 
-          path="/location" 
+        <Route
+          path="/location"
           element={
             <>
-              <GlobalBanner 
-                title="오시는길" 
-                detail="총학생회실로 오시는 길입니다." 
-              />
+              <GlobalBanner title="오시는길" />
               <Location />
             </>
-          } 
+          }
         />
-        <Route 
-          path="/pledge" 
+        <Route
+          path="/pledge"
           element={
             <>
-              <GlobalBanner 
-                title="공약" 
-                detail="제 55대 총학생회 담다 공약입니다." 
-              />
+              <GlobalBanner title="공약" />
               <Pledge />
             </>
           }
@@ -143,7 +115,7 @@ function Router() {
           path="/council-news"
           element={
             <>
-              <GlobalBanner title="총학소식" detail=""/>
+              <GlobalBanner title="총학소식" />
               <News />
             </>
           }
@@ -152,7 +124,7 @@ function Router() {
           path="/news"
           element={
             <>
-              <GlobalBanner title="총학소식" detail="총학소식 입니다." />
+              <GlobalBanner title="총학소식" />
               <NewsPost />
             </>
           }
@@ -162,10 +134,7 @@ function Router() {
           element={
             isLoggedIn ? (
               <>
-                <GlobalBanner
-                  title="총학소식 작성"
-                  detail="총학소식 작성 입니다."
-                />
+                <GlobalBanner title="총학소식" />
                 <NewsEditor />
               </>
             ) : (
@@ -178,7 +147,7 @@ function Router() {
           element={
             isLoggedIn ? (
               <>
-                <GlobalBanner title="회의록" detail="" />
+                <GlobalBanner title="회의록" />
                 <Conference />
               </>
             ) : (
@@ -191,7 +160,7 @@ function Router() {
           element={
             isLoggedIn ? (
               <>
-                <GlobalBanner title="회의록작성" detail="회의록작성 입니다." />
+                <GlobalBanner title="회의록작성" />
                 <ConferenceEditor />
               </>
             ) : (
@@ -203,111 +172,48 @@ function Router() {
           path="/editor"
           element={
             isLoggedIn ? (
-              <GlobalBanner title="청원게시판" detail="" />
+              <GlobalBanner title="청원게시판" />
             ) : (
               <Navigate to="/login" />
             )
           }
         />
-        <Route path="/board-petition">
-          <Route path="/board-petition" element={<NotFound />} />
+        <Route
+          path="/board-petition"
+          element={<GlobalBanner title="청원게시판" />}
+        >
           <Route
             path="boards"
-            element={
-              isLoggedIn ? (
-                <>
-                  <GlobalBanner
-                    title="청원게시판"
-                    detail=""
-                  />
-                  <PetitionBoard />
-                </>
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={isLoggedIn ? <PetitionBoard /> : <Navigate to="/login" />}
           />
           <Route
             path="board"
-            element={
-              isLoggedIn ? (
-                <>
-                  <GlobalBanner
-                    title="청원게시판"
-                    detail=""
-                  />
-                  <PetitionPost />
-                </>
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={isLoggedIn ? <PetitionPost /> : <Navigate to="/login" />}
           />
           <Route
             path="editor"
-            element={
-              isLoggedIn ? (
-                <>
-                  <GlobalBanner
-                    title="청원게시판"
-                    detail=""
-                  />
-                  <PetitionEditor />
-                </>
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={isLoggedIn ? <PetitionEditor /> : <Navigate to="/login" />}
           />
         </Route>
-        <Route path="/board-suggestion">
-          <Route path="/board-suggestion" element={<NotFound />} />
+
+        <Route
+          path="/board-suggestion"
+          element={<GlobalBanner title="자유게시판" />}
+        >
           <Route
             path="boards"
             element={
-              isLoggedIn ? (
-                <>
-                  <GlobalBanner
-                    title="자유게시판"
-                    detail=""
-                  />
-                  <SuggestionBoard />
-                </>
-              ) : (
-                <Navigate to="/login" />
-              )
+              isLoggedIn ? <SuggestionBoard /> : <Navigate to="/login" />
             }
           />
           <Route
             path="board"
-            element={
-              isLoggedIn ? (
-                <>
-                  <GlobalBanner
-                    title="자유게시판"
-                    detail=""
-                  />
-                  <SuggestionPost />
-                </>
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={isLoggedIn ? <SuggestionPost /> : <Navigate to="/login" />}
           />
           <Route
             path="editor"
             element={
-              isLoggedIn ? (
-                <>
-                  <GlobalBanner
-                    title="자유게시판"
-                    detail=""
-                  />
-                  <SuggestionEditor />
-                </>
-              ) : (
-                <Navigate to="/login" />
-              )
+              isLoggedIn ? <SuggestionEditor /> : <Navigate to="/login" />
             }
           />
         </Route>
@@ -315,7 +221,7 @@ function Router() {
           path="/board-inquiry"
           element={
             <>
-              <GlobalBanner title="소통 창구" detail="소통 창구 입니다." />
+              <GlobalBanner title="소통 창구" />
               <InquiryBoard />
             </>
           }
@@ -323,10 +229,7 @@ function Router() {
         <Route path="/who-made-this" element={<Makers />} />
         <Route path="/term" element={<Term />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route
-          path="/admin"
-          element={<Navigate to="/" />}
-        />
+        <Route path="/admin" element={<Navigate to="/" />} />
         <Route path="/event" element={<Event />} />
         <Route path="/rental" />
         <Route path="/voc">

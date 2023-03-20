@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import BannerImg from 'static/images/global-banner/globalBannerBackground.png';
+import { Outlet } from 'react-router-dom';
 
 const Container = styled.div`
   background-image: url(${BannerImg});
@@ -37,25 +38,16 @@ const Title = styled.h1`
   margin-bottom: 12px;
 `;
 
-const Detail = styled.h2`
-  font-size: ${({ theme }) => theme.fonts.size.base};
-  font-weight: ${({ theme }) => theme.fonts.weight.regular};
-`;
-
-function GlobalBanner({
-  title,
-  detail,
-}: {
-  title: string;
-  detail: string;
-}): JSX.Element {
+function GlobalBanner({ title }: { title: string }) {
   return (
-    <Container>
-      <Banner>
-        <Title>{title}</Title>
-        <Detail>{detail}</Detail>
-      </Banner>
-    </Container>
+    <>
+      <Container>
+        <Banner>
+          <Title>{title}</Title>
+        </Banner>
+      </Container>
+      <Outlet />
+    </>
   );
 }
 

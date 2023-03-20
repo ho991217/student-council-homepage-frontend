@@ -294,7 +294,7 @@ function Login() {
 
     axios(config)
       .then((response) => {
-        console.log(response)
+        console.log(response);
         const { accessToken } = response.data;
         setCookie('X-AUTH-TOKEN', accessToken);
         setLoginState({
@@ -343,7 +343,6 @@ function Login() {
 
   return (
     <>
-      <GlobalBanner title="로그인" detail="로그인 화면입니다." />
       {isOpen && (
         <Modal
           onClose={() => setIsOpen(false)}
