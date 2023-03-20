@@ -49,7 +49,7 @@ export const NavItems: NavigationProps[] = [
   },
   {
     title: '대여물품',
-    path: '/rental',
+    path: '/rental/lists?page=1',
     id: 4,
   },
   {
