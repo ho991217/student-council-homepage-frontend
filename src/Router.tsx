@@ -111,65 +111,29 @@ function Router() {
             </>
           }
         />
-        <Route
-          path="/council-news"
-          element={
-            <>
-              <GlobalBanner title="총학소식" />
-              <News />
-            </>
-          }
-        />
-        <Route
-          path="/news"
-          element={
-            <>
-              <GlobalBanner title="총학소식" />
-              <NewsPost />
-            </>
-          }
-        />
-        <Route
-          path="/news/editor"
-          element={
-            isLoggedIn ? (
-              <>
-                <GlobalBanner title="총학소식" />
-                <NewsEditor />
-              </>
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
+        <Route path="/council-news" element={<GlobalBanner title="총학소식" />}>
+          <Route path="" element={<News />} />
+          <Route
+            path="editor"
+            element={isLoggedIn ? <NewsEditor /> : <Navigate to="/" />}
+          />
+        </Route>
         <Route
           path="/conference"
           element={
             isLoggedIn ? (
-              <>
-                <GlobalBanner title="회의록" />
-                <Conference />
-              </>
+              <GlobalBanner title="회의록" />
             ) : (
               <Navigate to="/login" />
             )
           }
-        />
+        >
+          <Route path="" element={<Conference />} />
+          <Route path="editor" element={<ConferenceEditor />} />
+        </Route>
+
         <Route
-          path="/conference/editor"
-          element={
-            isLoggedIn ? (
-              <>
-                <GlobalBanner title="회의록작성" />
-                <ConferenceEditor />
-              </>
-            ) : (
-              <Navigate to="/" />
-            )
-          }
-        />
-        <Route
-          path="/editor"
+          path="/board-petition"
           element={
             isLoggedIn ? (
               <GlobalBanner title="청원게시판" />
@@ -177,45 +141,25 @@ function Router() {
               <Navigate to="/login" />
             )
           }
-        />
-        <Route
-          path="/board-petition"
-          element={<GlobalBanner title="청원게시판" />}
         >
-          <Route
-            path="boards"
-            element={isLoggedIn ? <PetitionBoard /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="board"
-            element={isLoggedIn ? <PetitionPost /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="editor"
-            element={isLoggedIn ? <PetitionEditor /> : <Navigate to="/login" />}
-          />
+          <Route path="boards" element={<PetitionBoard />} />
+          <Route path="board" element={<PetitionPost />} />
+          <Route path="editor" element={<PetitionEditor />} />
         </Route>
 
         <Route
           path="/board-suggestion"
-          element={<GlobalBanner title="자유게시판" />}
+          element={
+            isLoggedIn ? (
+              <GlobalBanner title="자유게시판" />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         >
-          <Route
-            path="boards"
-            element={
-              isLoggedIn ? <SuggestionBoard /> : <Navigate to="/login" />
-            }
-          />
-          <Route
-            path="board"
-            element={isLoggedIn ? <SuggestionPost /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="editor"
-            element={
-              isLoggedIn ? <SuggestionEditor /> : <Navigate to="/login" />
-            }
-          />
+          <Route path="boards" element={<SuggestionBoard />} />
+          <Route path="board" element={<SuggestionPost />} />
+          <Route path="editor" element={<SuggestionEditor />} />
         </Route>
         <Route
           path="/board-inquiry"
