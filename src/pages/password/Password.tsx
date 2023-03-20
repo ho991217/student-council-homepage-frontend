@@ -1,5 +1,5 @@
 import InputNewPassword from 'pages/password/components/InputNewPassword';
-import StudentIdValidation from 'pages/sign-up/components/StudentIdValidation';
+import StudentIdValidation from 'pages/sign-up/components/verification/StudentIdValidation';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -13,14 +13,7 @@ function Password() {
     setEmailVerificationToken(searchParams.get('token'));
   }, []);
 
-  return emailVerificationToken ? (
-    <InputNewPassword
-      studentId={searchParams.get('id')}
-      token={emailVerificationToken}
-    />
-  ) : (
-    <StudentIdValidation type="비밀번호 찾기" />
-  );
+  return <div />;
 }
 
 export default Password;

@@ -1,83 +1,7 @@
 import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import ModalContainer from './ModalContainer';
-import useOutsideClick from './useOutsideClick';
-
-interface ModalProps {
-  onClose: () => void;
-  title: string;
-  contents: string | JSX.Element;
-  accept?: string;
-  onAccept?: () => void;
-  decline?: string;
-  onDecline?: () => void;
-}
-
-Modal.defaultProps = {
-  accept: '',
-  onAccept: () => null,
-  decline: '',
-  onDecline: () => null,
-};
-
-function Modal({
-  onClose,
-  title,
-  contents,
-  accept,
-  onAccept,
-  decline,
-  onDecline,
-}: ModalProps) {
-  const modalRef = useRef<HTMLDivElement>(null);
-  const handleClose = () => {
-    onClose?.();
-  };
-
-  useEffect(() => {
-    const $body = document.querySelector('body');
-    if (!$body) return () => [];
-    const { overflow } = $body.style;
-    $body.style.overflow = 'hidden';
-    return () => {
-      $body.style.overflow = overflow;
-    };
-  }, []);
-
-  useOutsideClick(modalRef, handleClose);
-
-  return (
-    <ModalContainer>
-      <Overlay>
-        <ModalWrap ref={modalRef}>
-          <CloseButton onClick={handleClose}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="36"
-              width="36"
-              viewBox="0 0 48 48"
-            >
-              <path d="m12.45 37.65-2.1-2.1L21.9 24 10.35 12.45l2.1-2.1L24 21.9l11.55-11.55 2.1 2.1L26.1 24l11.55 11.55-2.1 2.1L24 26.1Z" />
-            </svg>
-          </CloseButton>
-          <Contents>
-            {title && <H1>{title}</H1>}
-            {typeof contents === 'string' ? (
-              <span>{contents}</span>
-            ) : (
-              <div>{contents}</div>
-            )}
-            <ButtonsContainer>
-              {accept && <Button onClick={onAccept}>{accept}</Button>}
-              {decline && <Button onClick={onDecline}>{decline}</Button>}
-              <Button onClick={handleClose}>닫기</Button>
-            </ButtonsContainer>
-          </Contents>
-        </ModalWrap>
-      </Overlay>
-    </ModalContainer>
-  );
-}
+import useOutsideClick from './hooks/useOutsideClick';
 
 const Overlay = styled.div`
   position: fixed;
@@ -171,5 +95,81 @@ const Button = styled.button`
   }
   cursor: pointer;
 `;
+
+interface ModalProps {
+  onClose: () => void;
+  title: string;
+  contents: string | JSX.Element;
+  accept?: string;
+  onAccept?: () => void;
+  decline?: string;
+  onDecline?: () => void;
+}
+
+Modal.defaultProps = {
+  accept: '',
+  onAccept: () => null,
+  decline: '',
+  onDecline: () => null,
+};
+
+function Modal({
+  onClose,
+  title,
+  contents,
+  accept,
+  onAccept,
+  decline,
+  onDecline,
+}: ModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const handleClose = () => {
+    onClose?.();
+  };
+
+  useEffect(() => {
+    const $body = document.querySelector('body');
+    if (!$body) return () => [];
+    const { overflow } = $body.style;
+    $body.style.overflow = 'hidden';
+    return () => {
+      $body.style.overflow = overflow;
+    };
+  }, []);
+
+  useOutsideClick(modalRef, handleClose);
+
+  return (
+    <ModalContainer>
+      <Overlay>
+        <ModalWrap ref={modalRef}>
+          <CloseButton onClick={handleClose}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="36"
+              width="36"
+              viewBox="0 0 48 48"
+            >
+              <path d="m12.45 37.65-2.1-2.1L21.9 24 10.35 12.45l2.1-2.1L24 21.9l11.55-11.55 2.1 2.1L26.1 24l11.55 11.55-2.1 2.1L24 26.1Z" />
+            </svg>
+          </CloseButton>
+          <Contents>
+            {title && <H1>{title}</H1>}
+            {typeof contents === 'string' ? (
+              <span>{contents}</span>
+            ) : (
+              <div>{contents}</div>
+            )}
+            <ButtonsContainer>
+              {accept && <Button onClick={onAccept}>{accept}</Button>}
+              {decline && <Button onClick={onDecline}>{decline}</Button>}
+              <Button onClick={handleClose}>닫기</Button>
+            </ButtonsContainer>
+          </Contents>
+        </ModalWrap>
+      </Overlay>
+    </ModalContainer>
+  );
+}
 
 export default Modal;

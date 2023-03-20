@@ -1,4 +1,3 @@
-import Block from 'components/Block';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -12,9 +11,9 @@ const Container = styled.div`
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 10rem 0;
   align-items: center;
   justify-content: center;
+  margin: 5rem 0;
 `;
 
 const Title = styled.h1`
@@ -25,42 +24,73 @@ const Title = styled.h1`
 `;
 
 const SubTitle = styled.h2`
-  color: ${({ theme }) => theme.colors.gray500};
-  font-size: ${({ theme }) => theme.fonts.size.lg};
-  font-weight: ${({ theme }) => theme.fonts.weight.regular};
-  margin-bottom: 4rem;
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: ${({ theme }) => theme.fonts.size.xl};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
+  margin-bottom: 8rem;
 `;
 
-const GoHomeButton = styled(Link)`
+const Button = styled(Link)`
+  font-size: ${({ theme }) => theme.fonts.size.md};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
+  border-radius: 2px;
+  width: 220px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const GoHomeButton = styled(Button)`
+  border: 2px solid ${({ theme }) => theme.colors.gray200};
+  color: ${({ theme }) => theme.colors.gray200};
+  margin-right: 1rem;
+`;
+
+const LoginButton = styled(Button)`
   background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.white};
-  font-size: ${({ theme }) => theme.fonts.size.lg};
-  font-weight: ${({ theme }) => theme.fonts.weight.regular};
-  padding: 0.7rem 2rem;
-  border-radius: 9999px;
-  margin-bottom: 5rem;
-  text-align: center;
 `;
 
 function Success() {
   return (
     <Container>
-      <Block
-        title=""
-        contents={
-          <Wrapper>
-            <Title>회원가입 성공!</Title>
-            <SubTitle>
-              회원가입에 성공했습니다. <br /> 로그인 화면으로 돌아가서 로그인
-              하세요.
-            </SubTitle>
-            <GoHomeButton to="/login">
-              로그인 화면으로 <br />
-              돌아가기
-            </GoHomeButton>
-          </Wrapper>
-        }
-      />
+      <Wrapper>
+        <Title>
+          <svg
+            width="87"
+            height="87"
+            viewBox="0 0 87 87"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M43.63 84.26C66.0693 84.26 84.26 66.0693 84.26 43.63C84.26 21.1907 66.0693 3 43.63 3C21.1907 3 3 21.1907 3 43.63C3 66.0693 21.1907 84.26 43.63 84.26Z"
+              stroke="#1D64AA"
+              strokeWidth="5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M21.7012 38.9903L40.0212 60.1803L67.1312 30.8203"
+              stroke="#1D64AA"
+              strokeWidth="5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </Title>
+        <SubTitle>가입이 완료되었습니다 :)</SubTitle>
+        <ButtonContainer>
+          <GoHomeButton to="/">홈 화면으로</GoHomeButton>
+          <LoginButton to="/login">로그인</LoginButton>
+        </ButtonContainer>
+      </Wrapper>
     </Container>
   );
 }

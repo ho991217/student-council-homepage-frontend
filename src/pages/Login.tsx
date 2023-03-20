@@ -250,8 +250,11 @@ const SaveIdToggle = styled.div<{ saveId: boolean }>`
 interface LoginErrorProps {
   response: {
     data: {
-      message: string;
-      successful: boolean;
+      code: string;
+      message: [string];
+      status: string;
+      timestamp: string;
+      trackingId: string;
     };
   };
 }
@@ -347,12 +350,10 @@ function Login() {
           title="로그인 실패!"
           contents={loginErrorState.message}
           accept={
-            loginErrorState.message === '가입되지 않은 학번입니다.'
-              ? '회원가입'
-              : ''
+            loginErrorState.message === '없는 회원입니다.' ? '회원가입' : ''
           }
           onAccept={() => {
-            navigate('/sign-up');
+            navigate('/sign-up/agreements');
           }}
         />
       )}
@@ -398,7 +399,7 @@ function Login() {
               아이디 저장
             </SaveId>
             <Extras>
-              <SignUpButton to="/sign-up">회원가입</SignUpButton>
+              <SignUpButton to="/sign-up/agreements">회원가입</SignUpButton>
               <Vseparator />
               <FindPasswordButton to="/password">
                 비밀번호 찾기
