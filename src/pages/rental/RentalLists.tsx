@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import qs from 'qs';
 import PageControl, { PagingProps } from 'components/PageControl';
@@ -60,7 +60,20 @@ const SearchInput = styled.input``;
 
 const SearchButton = styled.button``;
 
-type IRentalList = {
+const NewRentalButton = styled(Link)`
+  position: absolute;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5em 1.2em;
+  position: absolute;
+  bottom: -3em;
+  right: 1em;
+`;
+
+export type IRentalList = {
   id: number;
   name: string;
   remaining: number;
@@ -145,6 +158,7 @@ function RentalLists() {
             <BoardComponents.Col>{el.remaining}</BoardComponents.Col>
           </BoardComponents.Item>
         ))}
+        <NewRentalButton to="/rental/new">대여 신청</NewRentalButton>
       </BoardComponents.BoardContainer>
       <PageControl currentPage={page} pagingInfo={pagingInfo} />
     </Container>

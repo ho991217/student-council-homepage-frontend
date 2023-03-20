@@ -15,6 +15,7 @@ const BoardContainer = styled.div`
     border-bottom: 1px solid ${({ theme }) => theme.colors.gray200};
   }
   margin-bottom: 2rem;
+  position: relative;
 `;
 
 const Row = styled.div`

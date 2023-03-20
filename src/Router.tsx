@@ -45,6 +45,7 @@ import StudentIdValidation from 'pages/sign-up/components/verification/StudentId
 import InputStudentInfos from 'pages/sign-up/components/info/InputStudentInfos';
 import RentalLists from 'pages/rental/RentalLists';
 import RentalInfo from 'pages/rental/RentalInfo';
+import RentalNew from 'pages/rental/RentalNew';
 
 function Router() {
   const [{ isLoggedIn }, setLoginState] = useRecoilState(LoginStateAtom);
@@ -181,6 +182,7 @@ function Router() {
           <Route index element={<Navigate to="/rental/lists?page=1" />} />
           <Route path="lists" element={<RentalLists />} />
           <Route path="info" element={<RentalInfo />} />
+          <Route path="new" element={<RentalNew />} />
         </Route>
         <Route path="/voc">
           <Route path="qna">
