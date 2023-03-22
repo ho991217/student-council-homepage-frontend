@@ -5,5 +5,6 @@ export interface PostProps {
   title: string;
   category: string;
   status: string;
-  likeCount: number;
+  likes: number;
+  comments: number;
 }

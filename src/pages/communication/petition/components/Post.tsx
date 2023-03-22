@@ -91,6 +91,31 @@ const Contents = styled.div`
   margin-bottom: 45px;
 `;
 
+const Like = styled.div<{ liked?: boolean }>`
+  ${({ theme }) => theme.media.mobile} {
+    max-width: 90px;
+  }
+  user-select: none;
+  cursor: pointer;
+  max-width: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: ${({ theme, liked }) =>
+    liked ? theme.colors.gray020 : theme.colors.gray900};
+  background-color: ${({ theme, liked }) =>
+    liked ? theme.colors.accent : theme.colors.gray040};
+  font-size: 0.9rem;
+  padding: 5px 0px;
+  margin-top: 0.5rem;
+  border-radius: 9999px;
+  :hover {
+    background-color: ${({ theme }) => theme.colors.accent};
+    color: ${({ theme }) => theme.colors.gray020};
+  }
+`;
+
 const CommentSection = styled.section`
   max-width: 1280px;
   width: 100%;
@@ -373,19 +398,22 @@ const TextLength = styled.span`
 
 const CommentTitle = styled.p`
   color: ${({ theme }) => theme.colors.gray900};
-  font-weight:  ${({ theme }) => theme.fonts.weight.bold};
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
   margin: 50px 50px 0px 50px;
   font-size: ${({ theme }) => theme.fonts.size.lg};
-`
+`;
 
 interface PostProps {
   title: string;
   body: string;
   author: string;
   createdAt: string;
+  expiresAt: string;
   status: string;
   answer?: string;
   mine: boolean;
+  liked: boolean;
+  likes: number;
   tags: [];
 }
 
@@ -393,13 +421,14 @@ interface CommentProps {
   id: number;
   major: string;
   text: string;
-  createdDate: string;
+  createdAt: string;
 }
 
 function Post() {
   const [searchParams] = useSearchParams();
   const [post, setPost] = useState<PostProps>();
   const [postId, setPostId] = useState<number>(0);
+  const [likeCount, setLikeCount] = useState<number>(0);
   const [comment, setComment] = useState<string>('동의합니다.');
   const [answer, setAnswer] = useState<string>();
   const [commentList, setCommentList] = useState([]);
@@ -492,7 +521,8 @@ function Post() {
         },
       });
       setPost(data);
-      console.log(data)
+      setLikeCount(data.likes)
+      console.log(data);
     } catch {
       navigate(-1);
     }
@@ -533,8 +563,33 @@ function Post() {
       sendComment();
     }
     setModalState((prev) => ({ ...prev, open: false }));
-    getCommentList(postId)
+    getCommentList(postId);
   };
+  const postLike = async () => {
+    await axios({
+      url: `/post/general-forum/like/${postId}`,
+      method: 'post',
+      headers: {
+        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+      },
+    }).then((res) => {
+      console.log(res);
+    });
+    getCurrentPost(postId);
+  };
+  
+  const deleteLike = async () => {
+    await axios({
+      url: `/post/general-forum/like/${postId}`,
+      method: 'delete',
+      headers: {
+        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+      },
+    }).then((res) => {
+      console.log(res);
+    });
+    getCurrentPost(postId);
+  }
 
   const getCommentList = async (postid: number) => {
     try {
@@ -555,8 +610,7 @@ function Post() {
     const postId = Number(searchParams.get('id'));
     setPostId(postId);
     getCurrentPost(postId);
-    getCommentList(postId)
-
+    getCommentList(postId);
   }, []);
   return (
     <Container>
@@ -583,16 +637,18 @@ function Post() {
 
           <Hashtag>#</Hashtag>
           <HSeparator bold />
-          <Header>{`[ ${post?.status === 'ACTIVE' ? "진행중" : "마감" }  ]`}</Header>
+          <Header>{`[ ${
+            post?.status === 'ACTIVE' ? '진행중' : '마감'
+          }  ]`}</Header>
           <Title>{post?.title}</Title>
           <Etc>
-            <div>등록일 : {post?.createdAt}</div>
+            <div>등록일 : {post?.createdAt.slice(0, 10)}</div>
             <div>
               청원 동의 인원 : {commentList.length} / {TARGET_AGREEMENT}
             </div>
-            <div>청원 마감 : {}</div>
+            <div>청원 마감 : {post.expiresAt}</div>
           </Etc>
-          
+
           <HSeparator />
           {/* {post.adminComment && (
                 <AnswerContainer>
@@ -602,7 +658,15 @@ function Post() {
                   <div>{post.adminComment}</div>
                 </AnswerContainer>
               )} */}
-          <Contents>{parse(post?.body)}</Contents>
+          <Contents>
+            {parse(post?.body)}
+            <Like
+              liked={post?.liked}
+              onClick={post?.liked ? deleteLike : postLike}
+            >
+              좋아요 {likeCount}
+            </Like>
+          </Contents>
 
           <HSeparator />
 
@@ -634,26 +698,26 @@ function Post() {
                 onChange={({ currentTarget }) =>
                   setComment(currentTarget.value)
                 }
-                />
+              />
               <CommentSubmit
                 disabled={post.status === '기간종료'}
                 value="전송"
-                />
+              />
             </CommentForm>
             <CommentTitle>청원 동의 {commentList.length}명</CommentTitle>
             <CommentLists>
-                  {commentList.length > 0 &&
-                    commentList.map((comment: CommentProps) => (
-                      <Comment key={comment.id}>
-                        <CommentInfo>
-                          <CommentAuthor>{comment.major}</CommentAuthor>
-                          <VSeparator />
-                          <CommentDate>{comment.createdDate}</CommentDate>
-                        </CommentInfo>
-                        <CommentText>{comment.text}</CommentText>
-                      </Comment>
-                    ))}
-                </CommentLists>
+              {commentList.length > 0 &&
+                commentList.map((comment: CommentProps) => (
+                  <Comment key={comment.id}>
+                    <CommentInfo>
+                      <CommentAuthor>{comment.major}</CommentAuthor>
+                      <VSeparator />
+                      <CommentDate>{comment.createdAt}</CommentDate>
+                    </CommentInfo>
+                    <CommentText>{comment.text}</CommentText>
+                  </Comment>
+                ))}
+            </CommentLists>
           </CommentSection>
         </Wrapper>
       )}

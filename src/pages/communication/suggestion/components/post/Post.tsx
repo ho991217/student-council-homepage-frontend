@@ -4,24 +4,29 @@ import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import parse from 'html-react-parser';
-import { PostProps } from './PostProps';
+import { CommentProps, PostProps } from './PostProps';
 
 function Post() {
   const [post, setPost] = useState<PostProps>();
-  const [commentList, setCommentList] = useState<string[]>();
+  const [commentList, setCommentList] = useState<CommentProps[]>();
   const [comment, setComment] = useState<string>('');
+  const [likeCount, setLikeCount] = useState<number>(0);
   const [editComment, setEditComment] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [commentId, setCommentId] = useState<number>();
-
   const [searchParams] = useSearchParams();
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const navigate = useNavigate();
   const postId = searchParams.get('id');
 
   useEffect(() => {
+    getPost();
+    getComment();
+  }, []);
+  
+  const getPost = () => {
     axios({
-      url: `post/general-forum/${postId}`,
+      url: `/post/general-forum/${postId}`,
       method: 'get',
       headers: {
         Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
@@ -29,22 +34,27 @@ function Post() {
     })
       .then((res) => {
         setPost(res.data);
+        setLikeCount(res.data.likes)
+        console.log(res);
       })
       .catch((err) => {
         // 에러 처리
       });
+
+  }
+
+  const getComment = () => {
     axios({
       url: `post/general-forum/comment/${postId}`,
       method: 'get',
       headers: {
         Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
       },
-    })
-      .then((res) => {
-        console.log(res)
-        setCommentList(res.data.content)
-      });
-  }, []);
+    }).then((res) => {
+      setCommentList(res.data.content);
+      console.log(res.data.content);
+    });
+  };
 
   const onCommentHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,7 +72,7 @@ function Post() {
     })
       .then((res) => {
         if (res.data.successful) window.location.reload();
-        console.log(res);
+        getComment();
       })
       .catch((err) => {
         // 에러 처리
@@ -70,35 +80,46 @@ function Post() {
       });
   };
 
-  const toggleLike = async () => {
+  const postLike = async () => {
     await axios({
-      url: `/posts/likes/${postId}`,
+      url: `/post/general-forum/like/${postId}`,
       method: 'post',
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
       },
+    }).then((res) => {
+      console.log(res);
     });
-    window.location.reload();
+    getPost();
   };
+  
+  const deleteLike = async () => {
+    await axios({
+      url: `/post/general-forum/like/${postId}`,
+      method: 'delete',
+      headers: {
+        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+      },
+    }).then((res) => {
+      console.log(res);
+    });
+    getPost()
+  }
 
   const onDeletePost = () => {
     if (window.confirm('해당 글을 삭제하시겠습니까?')) {
       axios({
-        url:
-          cookies.isAdmin === 'true'
-            ? `/post/general-forum/admin/${postId}`
-            : `/post/general-forum/${postId}`,
+        url: `/post/general-forum/${postId}`,
         method: 'delete',
         headers: {
           Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
       })
         .then((res) => {
-          if (res.data.successful) navigate('/board-suggestion/boards');
+          navigate('/board-suggestion/boards');
         })
         .catch((err) => {
-          // 에러 처리
+          console.log(err)
         });
     }
   };
@@ -123,17 +144,10 @@ function Post() {
         });
     }
   };
-
-  const currentComment = (item: any) => {
-    setIsEdit(true);
-    setEditComment(item.text);
-    setCommentId(item.id);
-  };
-
   return (
     <Container>
       <Wrapper>
-        {cookies.isAdmin === 'true' && (
+        {post?.mine === true && (
           <Button onClick={onDeletePost}>삭제</Button>
         )}
         {cookies.isAdmin === 'false' && post?.mine && (
@@ -147,6 +161,9 @@ function Post() {
 
         <Contents>
           <Text>{parse(post?.body ?? '')}</Text>
+          <Like liked={post?.liked} onClick={post?.liked?deleteLike:postLike}>
+            좋아요 {likeCount}
+          </Like>
         </Contents>
         <Hr bold />
         <CommentForm onSubmit={onCommentHandler}>
@@ -157,10 +174,26 @@ function Post() {
           />
           <CommentSubmit value="입력" />
         </CommentForm>
-        {/* <CommentWrapper>
-          
+        <CommentWrapper>
           댓글 {commentList?.length}
           <Hr />
+        </CommentWrapper>
+        <CommentLists>
+          {commentList?.map((comment, index) => (
+            <Comment key={comment.id}>
+              <CommentInfo>
+                <CommentAuthor>
+                  익명 {index + 1}
+                  <CommentMajor>{comment.major}</CommentMajor>
+                </CommentAuthor>
+                <VSeparator />
+                <CommentDate>{comment.createdAt}</CommentDate>
+              </CommentInfo>
+              <CommentText>{comment.text}</CommentText>
+            </Comment>
+          ))}
+        </CommentLists>
+        {/* 
           <CommentLists>
             {commentList?.map((comment) => (
               <Comment key={post.commentList.indexOf(comment)}>
@@ -390,9 +423,16 @@ const VSeparator = styled.div`
 `;
 
 const CommentAuthor = styled.div`
-  margin-right: 10px;
+  margin-right: 5px;
   font-size: ${({ theme }) => theme.fonts.size.sm};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
+`;
+
+const CommentMajor = styled.span`
+  margin-left: 10px;
+  font-size: ${({ theme }) => theme.fonts.size.sm};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
+  color: ${({ theme }) => theme.colors.gray500};
 `;
 
 const CommentDate = styled.div`

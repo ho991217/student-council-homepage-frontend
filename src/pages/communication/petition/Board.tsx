@@ -111,6 +111,10 @@ const PostTitle = styled.div`
   white-space: nowrap;
 `;
 
+const PostStatus = styled.p`
+  color: #204A80;
+`
+
 interface BoardProps {
   posts: PostProps[];
   pagingInfo: PagingProps;
@@ -146,7 +150,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
             <Link key={post.id} to={`/board-petition/board?id=${post.id}`}>
               <Row>
                 <div>{index + 1 + (pagingInfo.page - 1) * pagingInfo.size}</div>
-                <div>{post.petitionStatus}</div>
+                <PostStatus>{post.status && "[진행중]"}</PostStatus>
                 <PostTitle>{post.title}</PostTitle>
                 <div>
                   <Svg

@@ -6,15 +6,15 @@ export interface PostProps {
   id: number;
   mine: boolean;
   tag: [];
-  title: string
+  title: string;
+  likes: number;
+  liked: boolean;
 }
 
-interface Comment {
+export interface CommentProps {
+  createdAt: string;
   id: number;
-  name: string;
-  time: string;
+  major: string;
   text: string;
-  mine: boolean;
-  status: string;
-  anonymousNum: number;
+  length: number;
 }
