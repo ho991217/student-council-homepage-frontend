@@ -34,7 +34,7 @@ function Organization() {
       <Block 
         title="조직도" 
         contents={<Img src={sampleImage} alt=""/>} 
-        isSideNav
+        hasSideNav
       />
     </Wrapper>
   );

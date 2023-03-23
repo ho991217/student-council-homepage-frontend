@@ -94,6 +94,7 @@ const PointText = styled.div`
 
 const BottomBar = styled.div`
   display: flex;
+  justify-content: flex-end;
 `;
 
 const PageInfo = styled.div`
@@ -138,6 +139,11 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
           <Desktop>
             <>
               <TopBar />
+              <PageInfo>
+              Total <PointText>{pagingInfo.totalElements}건,</PointText>
+              {currentPage}/
+              {Math.ceil(pagingInfo.totalElements / pagingInfo.size)}
+            </PageInfo>
               <BoardHead>
                 <Row>
                   <div>번호</div>
@@ -288,11 +294,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
             </>
           </Mobile>
           <BottomBar>
-            <PageInfo>
-              Total <PointText>{pagingInfo.totalElements}건,</PointText>
-              {currentPage}/
-              {Math.ceil(pagingInfo.totalElements / pagingInfo.size)}
-            </PageInfo>
             <Link to="/board-suggestion/editor">
               <Button type="button">작성</Button>
             </Link>

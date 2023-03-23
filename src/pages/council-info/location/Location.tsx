@@ -59,7 +59,7 @@ function Location() {
       <SideNav/>
       <Block
         title="주소 / 연락처"
-        isSideNav
+        hasSideNav
         contents={
           <Container>
             <CouncilMap />

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import SideNav from 'components/nav/SideNav';
 import axios from 'axios';
 import parse from 'html-react-parser';
 import { PostProps } from './PostProps';
@@ -119,6 +120,7 @@ function Post() {
 
   return (
     <Container>
+      <SideNav />
       <Wrapper>
         {cookies.isAdmin === 'true' && (
           <Button onClick={onDeletePost}>삭제</Button>
@@ -214,6 +216,8 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   background-color: ${({ theme }) => theme.colors.white};
+  align-items: flex-start;
+  padding-left: 50px;
 `;
 
 const Wrapper = styled.div`
@@ -221,13 +225,13 @@ const Wrapper = styled.div`
   width: 100%;
   margin: 40px 0;
   ${({ theme }) => theme.media.desktop} {
-    padding: 30px 50px;
+    padding: 0px 50px;
   }
   ${({ theme }) => theme.media.tablet} {
-    padding: 30px 50px;
+    padding: 0px 50px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 10px 20px;
+    padding: 0px 20px;
   }
   background-color: ${({ theme }) => theme.colors.white};
 `;
