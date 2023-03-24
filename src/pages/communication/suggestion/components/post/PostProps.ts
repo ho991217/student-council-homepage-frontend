@@ -11,10 +11,14 @@ export interface PostProps {
   liked: boolean;
 }
 
+interface CommentData {
+  mine: boolean
+}
 export interface CommentProps {
   createdAt: string;
   id: number;
   major: string;
   text: string;
   length: number;
+  mine: boolean;
 }

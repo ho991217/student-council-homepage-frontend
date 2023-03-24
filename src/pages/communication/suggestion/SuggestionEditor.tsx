@@ -44,6 +44,7 @@ function SuggestionEditor() {
         .then((res) => {
           console.log(res)
           if (res.data.successful) navigate('/board-suggestion/boards?page=1');
+          navigate('/board-suggestion/boards')
         })
         .catch(
           ({

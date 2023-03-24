@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 import styled from 'styled-components';
-import { FiEye, FiThumbsUp } from 'react-icons/fi';
+import { FiThumbsUp } from 'react-icons/fi';
 
 import { PagingProps } from 'components/PageControl';
 import TopBar from './top-bar/TopBar';
@@ -94,6 +94,7 @@ const PointText = styled.div`
 
 const BottomBar = styled.div`
   display: flex;
+  justify-content: flex-end;
 `;
 
 const PageInfo = styled.div`
@@ -138,6 +139,11 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
           <Desktop>
             <>
               <TopBar />
+              <PageInfo>
+              Total <PointText>{pagingInfo.totalElements}건,</PointText>
+              {currentPage}/
+              {Math.ceil(pagingInfo.totalElements / pagingInfo.size)}
+            </PageInfo>
               <BoardHead>
                 <Row>
                   <div>번호</div>
@@ -174,7 +180,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                     >
                       <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
                     </Svg>
-                    {post.comments}
+                    {post.commentCount}
                   </div>
                   <div>
                     <Icon>
@@ -225,7 +231,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                     >
                       <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
                     </Svg>
-                    {post.comments}
+                    {post.commentCount}
                   </div>
                   <div>
                     <Icon>
@@ -275,18 +281,13 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                     >
                       <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
                     </Svg>
-                    {post.comments}
+                    {post.commentCount}
                   </div>
                 </Row>
               ))}
             </>
           </Mobile>
           <BottomBar>
-            <PageInfo>
-              Total <PointText>{pagingInfo.totalElements}건,</PointText>
-              {currentPage}/
-              {Math.ceil(pagingInfo.totalElements / pagingInfo.size)}
-            </PageInfo>
             <Link to="/board-suggestion/editor">
               <Button type="button">작성</Button>
             </Link>

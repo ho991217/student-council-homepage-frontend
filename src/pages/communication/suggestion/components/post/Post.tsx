@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import SideNav from 'components/nav/SideNav';
 import axios from 'axios';
 import parse from 'html-react-parser';
 import { CommentProps, PostProps } from './PostProps';
@@ -23,7 +24,7 @@ function Post() {
     getPost();
     getComment();
   }, []);
-  
+
   const getPost = () => {
     axios({
       url: `/post/general-forum/${postId}`,
@@ -34,14 +35,12 @@ function Post() {
     })
       .then((res) => {
         setPost(res.data);
-        setLikeCount(res.data.likes)
-        console.log(res);
+        setLikeCount(res.data.likes);
       })
       .catch((err) => {
         // 에러 처리
       });
-
-  }
+  };
 
   const getComment = () => {
     axios({
@@ -52,7 +51,6 @@ function Post() {
       },
     }).then((res) => {
       setCommentList(res.data.content);
-      console.log(res.data.content);
     });
   };
 
@@ -73,6 +71,10 @@ function Post() {
       .then((res) => {
         if (res.data.successful) window.location.reload();
         getComment();
+        setComment('');
+        setEditComment('');
+        setIsEdit(false);
+        setCommentId(0);
       })
       .catch((err) => {
         // 에러 처리
@@ -89,10 +91,10 @@ function Post() {
       },
     }).then((res) => {
       console.log(res);
+      getPost();
     });
-    getPost();
   };
-  
+
   const deleteLike = async () => {
     await axios({
       url: `/post/general-forum/like/${postId}`,
@@ -102,9 +104,9 @@ function Post() {
       },
     }).then((res) => {
       console.log(res);
+      getPost();
     });
-    getPost()
-  }
+  };
 
   const onDeletePost = () => {
     if (window.confirm('해당 글을 삭제하시겠습니까?')) {
@@ -119,37 +121,50 @@ function Post() {
           navigate('/board-suggestion/boards');
         })
         .catch((err) => {
-          console.log(err)
+          console.log(err);
         });
     }
   };
+  const onEditComment = (item: number) => {
+    setIsEdit(true)
+    setCommentId(item)
 
+  } 
+  const onCancleModify = () => {
+    setIsEdit(false); 
+    setCommentId(0);
+    setEditComment('');
+  }
   const onDeleteComment = (item: number) => {
     if (window.confirm('해당 댓글을 삭제하시겠습니까?')) {
       axios({
-        url:
-          cookies.isAdmin === 'true'
-            ? `/suggestion/comment/admin/${item}`
-            : `/suggestion/comment/${item}`,
+        url: `/post/general-forum/comment/${item}`,
         method: 'delete',
         headers: {
           Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
+        data: {id : item}
       })
         .then((res) => {
+          console.log(res)
           if (res.data.successful) window.location.reload();
+          getComment()
         })
         .catch((err) => {
-          // 에러 처리
+          console.log(err)
         });
     }
+    useEffect(()=>{
+      if (isEdit) {
+        console.log('수정')
+      }
+    },[setIsEdit])
   };
   return (
     <Container>
+      <SideNav margin="50px 0" />
       <Wrapper>
-        {post?.mine === true && (
-          <Button onClick={onDeletePost}>삭제</Button>
-        )}
+        {post?.mine === true && <Button onClick={onDeletePost}>삭제</Button>}
         {cookies.isAdmin === 'false' && post?.mine && (
           <Button onClick={onDeletePost}>삭제</Button>
         )}
@@ -161,18 +176,22 @@ function Post() {
 
         <Contents>
           <Text>{parse(post?.body ?? '')}</Text>
-          <Like liked={post?.liked} onClick={post?.liked?deleteLike:postLike}>
+          <Like
+            liked={post?.liked}
+            onClick={post?.liked ? deleteLike : postLike}
+          >
             좋아요 {likeCount}
           </Like>
         </Contents>
         <Hr bold />
+        {isEdit && <Button onClick={onCancleModify}>수정 취소</Button>}
         <CommentForm onSubmit={onCommentHandler}>
           <CommentInput
-            placeholder="댓글을 입력해주세요."
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
+            placeholder={isEdit?"수정할 내용을 입력해주세요":"댓글을 입력해주세요."}
+            value={isEdit? editComment : comment}
+            onChange={(e) => isEdit? setEditComment(e.target.value) : setComment(e.target.value)}
           />
-          <CommentSubmit value="입력" />
+          <CommentSubmit value={isEdit?"수정하기":"댓글 등록"} />
         </CommentForm>
         <CommentWrapper>
           댓글 {commentList?.length}
@@ -181,15 +200,25 @@ function Post() {
         <CommentLists>
           {commentList?.map((comment, index) => (
             <Comment key={comment.id}>
-              <CommentInfo>
-                <CommentAuthor>
-                  익명 {index + 1}
-                  <CommentMajor>{comment.major}</CommentMajor>
-                </CommentAuthor>
-                <VSeparator />
-                <CommentDate>{comment.createdAt}</CommentDate>
-              </CommentInfo>
-              <CommentText>{comment.text}</CommentText>
+              <CommentTopContainer>
+                <CommentInfo>
+                  <CommentAuthor>
+                    익명 {index + 1}
+                    <CommentMajor>{comment.major}</CommentMajor>
+                  </CommentAuthor>
+                  <VSeparator />
+                  <CommentDate>{comment.createdAt}</CommentDate>
+                </CommentInfo>
+                {comment.mine && (
+                  <CommentButtonContainer>
+                    <CommentButton onClick={() => onEditComment(comment.id)} >수정</CommentButton>/
+                    <CommentButton onClick={() => onDeleteComment(comment.id)}>
+                      삭제
+                    </CommentButton>
+                  </CommentButtonContainer>
+                )}
+              </CommentTopContainer>
+              <CommentText isEdit={comment.id === commentId}>{comment.text}</CommentText>
             </Comment>
           ))}
         </CommentLists>
@@ -266,20 +295,25 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   background-color: ${({ theme }) => theme.colors.white};
+  align-items: flex-start;
+  ${({ theme }) => theme.media.desktop} {
+    padding-left: 50px;
+  }
+  background-color: ${({ theme }) => theme.colors.gray040};
 `;
 
 const Wrapper = styled.div`
   max-width: 1280px;
   width: 100%;
-  margin: 40px 0;
   ${({ theme }) => theme.media.desktop} {
-    padding: 30px 50px;
+    padding: 40px 50px;
+    margin: 40px 30px;
   }
   ${({ theme }) => theme.media.tablet} {
-    padding: 30px 50px;
+    padding: 40px 50px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 10px 20px;
+    padding: 40px 20px;
   }
   background-color: ${({ theme }) => theme.colors.white};
 `;
@@ -406,12 +440,17 @@ const Comment = styled.li`
   padding: 0px 10px 15px 10px;
   width: 100%;
 `;
-
+const CommentTopContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 10px;
+`;
 const CommentInfo = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  margin-bottom: 10px;
   height: 14px;
 `;
 
@@ -441,9 +480,22 @@ const CommentDate = styled.div`
   font-weight: ${({ theme }) => theme.fonts.weight.regular};
 `;
 
-const CommentText = styled.div`
+const CommentButtonContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  font-size: ${({ theme }) => theme.fonts.size.xs};
+  color: ${({ theme }) => theme.colors.gray500};
+`;
+const CommentButton = styled.a`
+  margin: 0 5px;
+  cursor: pointer;
+`;
+
+const CommentText = styled.div<{ isEdit : boolean }>`
   font-size: ${({ theme }) => theme.fonts.size.sm};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
+  background-color: ${( {isEdit, theme} ) => isEdit && theme.colors.gray050};
+  color: ${( {isEdit, theme} ) => isEdit && theme.colors.accent};
 `;
 
 const CommentForm = styled.form`
