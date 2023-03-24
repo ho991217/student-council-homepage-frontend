@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
 import parse from 'html-react-parser';
+import SideNav from 'components/nav/SideNav';
 
 const TARGET_AGREEMENT = 150;
 
@@ -529,6 +530,7 @@ function Post() {
 
   return (
     <Container>
+      <SideNav/>
       {/* <ReactModal
         isOpen={modalState.open}
         contentLabel="Example Modal"
@@ -579,6 +581,7 @@ function Post() {
                 </AnswerContainer>
               )}
               <HSeparator />
+              <SideNav/>
 
               <Contents>{parse(post?.text)}</Contents>
               {post.commentCount >= TARGET_AGREEMENT &&

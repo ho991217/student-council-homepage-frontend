@@ -92,7 +92,7 @@ function Pledge() {
       <SideNav/>
       <Block
       title="인사말"
-      isSideNav
+      hasSideNav
       contents={
         <>
           <Title>단국대학교 제54대 PLAY! 총학생회</Title>
