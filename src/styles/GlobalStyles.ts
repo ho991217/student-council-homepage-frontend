@@ -95,4 +95,20 @@ table {
         flex-direction: column;
         overflow: hidden;
     }
+
+    .rti--container {
+        --rti-bg: #F2F3F5;
+        border-radius: 0;
+        border: 1px solid #C4C8CC;
+        margin-bottom: 50px;
+    }
+    .rti--input {
+        background-color: #F2F3F5;
+        color: default;
+        ::placeholder {color: #C4C8CC};
+        border-radius: 0;
+    }
+    
+
+    
 `;

@@ -343,7 +343,6 @@ function InputStudentInfos() {
               type="password"
               placeholder="비밀번호 입력"
               onChange={({ currentTarget }) => {
-                console.log(currentTarget.value);
                 setPassword((prev) => ({
                   content: currentTarget.value,
                   msg: prev.msg,

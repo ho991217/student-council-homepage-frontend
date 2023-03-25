@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 import styled from 'styled-components';
-import { FiEye } from 'react-icons/fi';
+import { FiThumbsUp } from 'react-icons/fi';
 
 import { PagingProps } from 'components/PageControl';
 import TopBar from './top-bar/TopBar';
@@ -53,11 +53,11 @@ const Row = styled.div`
   place-items: center;
   ${({ theme }) => theme.media.desktop} {
     padding: 0px 50px;
-    grid-template-columns: 1fr 2fr 6fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 6fr 1fr 1fr;
   }
   ${({ theme }) => theme.media.tablet} {
     padding: 0px 50px;
-    grid-template-columns: 1fr 2fr 6fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 6fr 1fr 1fr;
   }
   ${({ theme }) => theme.media.mobile} {
     padding: 0px 5px;
@@ -77,7 +77,7 @@ const LinkDiv = styled.div`
   }
 `;
 
-const ViewIcon = styled.span`
+const Icon = styled.span`
   margin-right: 3px;
 `;
 
@@ -147,9 +147,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               <BoardHead>
                 <Row>
                   <div>번호</div>
-                  <div>분류</div>
                   <div>제목</div>
-                  <div>조회</div>
                   <div>댓글</div>
                   <div>좋아요</div>
                 </Row>
@@ -159,7 +157,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                   <div>
                     {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
                   </div>
-                  <div>{post.category}</div>
                   <LinkDiv>
                     {post.status === '정지' ? (
                       <Link
@@ -175,12 +172,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                     )}
                   </LinkDiv>
                   <div>
-                    <ViewIcon>
-                      <FiEye />
-                    </ViewIcon>
-                    {post.postHits}
-                  </div>
-                  <div>
                     <Svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 48 48"
@@ -191,7 +182,12 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                     </Svg>
                     {post.commentCount}
                   </div>
-                  <div>{post.likeCount}</div>
+                  <div>
+                    <Icon>
+                      <FiThumbsUp />
+                    </Icon>
+                    {post.likes}
+                  </div>
                 </Row>
               ))}
             </>
@@ -202,10 +198,9 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               <BoardHead>
                 <Row>
                   <div>번호</div>
-                  <div>분류</div>
                   <div>제목</div>
-                  <div>조회</div>
                   <div>댓글</div>
+                  <div>좋아요</div>
                 </Row>
               </BoardHead>
               {board.map((post, index) => (
@@ -213,7 +208,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                   <div>
                     {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
                   </div>
-                  <div>{post.category}</div>
                   <LinkDiv>
                     {post.status === '정지' ? (
                       <Link
@@ -229,12 +223,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                     )}
                   </LinkDiv>
                   <div>
-                    <ViewIcon>
-                      <FiEye />
-                    </ViewIcon>
-                    {post.postHits}
-                  </div>
-                  <div>
                     <Svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 48 48"
@@ -244,6 +232,12 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                       <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
                     </Svg>
                     {post.commentCount}
+                  </div>
+                  <div>
+                    <Icon>
+                      <FiThumbsUp/>
+                    </Icon>
+                    {post.likes}
                   </div>
                 </Row>
               ))}

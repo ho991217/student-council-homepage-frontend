@@ -52,7 +52,6 @@ function PetitionBoard(): JSX.Element {
         .concat(filter ? `&category=${filter}` : '')
         .concat(query ? `&query=${query}` : ''),
     });
-
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);
     setPagingInfo(data);
