@@ -10,10 +10,6 @@ export interface PostProps {
   likes: number;
   liked: boolean;
 }
-
-interface CommentData {
-  mine: boolean
-}
 export interface CommentProps {
   createdAt: string;
   id: number;

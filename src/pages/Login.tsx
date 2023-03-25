@@ -294,7 +294,6 @@ function Login() {
 
     axios(config)
       .then((response) => {
-        console.log(response);
         const { accessToken } = response.data;
         setCookie('X-AUTH-TOKEN', accessToken);
         setLoginState({
