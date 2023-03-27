@@ -180,16 +180,12 @@ function InputStudentInfos() {
 
   // 비밀번호 유효성 검사
   useEffect(() => {
-    if (password.content.length < 8) {
+    const reg =
+      /^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*+=\-_(){}[\]:;<>,.?~]{8,16}$/;
+    if (!reg.test(password.content)) {
       setPassword((prev) => ({
         content: prev.content,
-        msg: '비밀번호는 8자 이상이어야 합니다.',
-        valid: false,
-      }));
-    } else if (password.content.length > 20) {
-      setPassword((prev) => ({
-        content: prev.content,
-        msg: '비밀번호는 20자 이하여야 합니다.',
+        msg: '비밀번호는 영문과 숫자를 1자 이상 포함하는 8-16 자리여야 합니다.',
         valid: false,
       }));
     } else {
@@ -220,24 +216,12 @@ function InputStudentInfos() {
 
   // 닉네임 유효성 검사
   useEffect(() => {
-    const regex = /^[a-zA-Z가-힣\d_]{3,16}$/;
+    const regex = /^(?!.*\s{2,})[A-Za-z\dㄱ-ㅎㅏ-ㅣ가-힣_ ]{3,16}$/;
 
-    if (nickname.content.length < 3) {
+    if (!regex.test(nickname.content)) {
       setNickname((prev) => ({
         content: prev.content,
-        msg: '닉네임은 3자 이상이어야 합니다.',
-        valid: false,
-      }));
-    } else if (nickname.content.length > 16) {
-      setNickname((prev) => ({
-        content: prev.content,
-        msg: '닉네임은 16자 이하여야 합니다.',
-        valid: false,
-      }));
-    } else if (!regex.test(nickname.content)) {
-      setNickname((prev) => ({
-        content: prev.content,
-        msg: '닉네임은 한글, 영문, 숫자, _만 사용할 수 있습니다.',
+        msg: '닉네임은 한글, 영문, 숫자, _로 이루어진 3-16자여야 합니다.',
         valid: false,
       }));
     } else {
@@ -327,7 +311,7 @@ function InputStudentInfos() {
                   valid: prev.valid,
                 }))
               }
-              pattern="^[a-zA-Z가-힣\d_]{3,16}$"
+              pattern="^(?!.*\s{2,})[A-Za-z\dㄱ-ㅎㅏ-ㅣ가-힣_ ]{3,16}$"
             />
           </Label>
           <Message
