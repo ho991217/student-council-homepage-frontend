@@ -107,9 +107,7 @@ function Editor() {
     formData.append('title', title);
     formData.append('body', content);
     tagResult.forEach((tag) => formData.append('tagIds', tag));
-    console.log(formData.get('title'));
-    console.log(formData.get('body'));
-    console.log(formData.getAll('tagIds'));
+
     try {
       const res = await axios({
         method: 'post',
@@ -132,41 +130,48 @@ function Editor() {
     }
   };
   const handleEnterTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const tag = tagList[tagList.length - 1]
-    const previousTag = tagList[tagList.length - 2]
-    const resultIndex = (data:string) => originalTags.findIndex((originTag) => originTag.name === data);
-
-    if (e.key === 'Enter') {
-      if (previousTag !== tagNameResult[tagNameResult.length - 1]) {
-        if (resultIndex(tagNameResult[tagNameResult.length - 1]) >= 0) {
-          tagResult.pop()
-        } else {
-          tagObject.pop()
-        }
-        tagNameResult.pop()
-      }
-
-      
-      if (resultIndex(tag) >= 0) {
-        setTagResult(prev => [...prev, originalTags[resultIndex(tag)].id])
-        setTagNameResult(prev => [...prev, tag])
-        } else {
-        setTagObject(prev => [...prev, {name: tag}])
-        setTagNameResult(prev => [...prev, tag])
-      }
-    }  
+    // const tag = tagList[tagList.length - 1]
+    // const previousTagInTagList = tagList[tagList.length - 2]
+    // const resultIndex = (data:string) => originalTags.findIndex((originTag) => originTag.name === data);
+    // if (e.key === 'Enter') {
+    //   setTagNameResult(prev => [...prev, tagList[tagList.length - 1]])
+    //   let i = 1;
+    //   console.log(i)
+    //   const previousTagInTagNameResult = tagNameResult[tagNameResult.length - 1]
+    //   console.log(`previousTagInTagList: ${previousTagInTagList}`)
+    //   console.log(`previousTagInTagNameResult: ${previousTagInTagNameResult}`)
+    //   if (previousTagInTagList !== previousTagInTagNameResult) {
+    //     if (resultIndex(tagNameResult[tagNameResult.length - 1]) >= 0) {
+    //       tagResult.pop()
+    //     } else {
+    //       tagObject.pop()
+    //     }
+    //     tagNameResult.pop()
+    //     i += 1
+    //     return false
+    //   }   
+    // }  
+    // return true
   }
+
+
+
   useEffect(()=>{
     getTags()
   },[])
 
+
   useEffect(()=> {
-    console.log(tagNameResult)
-    console.log(tagObject)
-    console.log(tagResult)
-
-  },[handleEnterTag, registerTags, onSubmitHandler])
-
+    console.log(`------------------`)
+    console.log(`tagList : ${tagList}`)
+    console.log(`tagNameResult : ${tagNameResult}`)
+    console.log(`tagObject : ${tagObject}`)
+    console.log(`tagResult : ${tagResult}`)
+    console.log(`${tagList.length} !== ${tagNameResult.length}`)
+    if (tagList.length !== tagNameResult.length) {
+      // tagNameResult.pop([tagNameResult.length - 2])
+    } 
+  },[tagList, tagNameResult])
   return (
     <Container>
       <Wrapper>

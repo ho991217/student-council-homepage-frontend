@@ -1,22 +1,20 @@
 import styled from 'styled-components';
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import ReactModal from 'react-modal';
-
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
-
 import parse from 'html-react-parser';
+import SideNav from 'components/nav/SideNav';
 
 const TARGET_AGREEMENT = 150;
 
 const Container = styled.div`
   width: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   background-color: ${({ theme }) => theme.colors.gray040};
+  padding: 0 50px;
 `;
 
 const Wrapper = styled.div`
@@ -521,7 +519,7 @@ function Post() {
         },
       });
       setPost(data);
-      setLikeCount(data.likes)
+      setLikeCount(data.likes);
       console.log(data);
     } catch {
       navigate(-1);
@@ -577,7 +575,7 @@ function Post() {
     });
     getCurrentPost(postId);
   };
-  
+
   const deleteLike = async () => {
     await axios({
       url: `/post/general-forum/like/${postId}`,
@@ -589,7 +587,7 @@ function Post() {
       console.log(res);
     });
     getCurrentPost(postId);
-  }
+  };
 
   const getCommentList = async (postid: number) => {
     try {
@@ -614,7 +612,8 @@ function Post() {
   }, []);
   return (
     <Container>
-      <ReactModal
+      <SideNav margin="50px 30px 0 0" />
+      {/* {/* <ReactModal
         isOpen={modalState.open}
         contentLabel="Example Modal"
         style={modalStyle}
@@ -625,7 +624,7 @@ function Post() {
         shouldCloseOnOverlayClick
       >
         {modalState.content}
-      </ReactModal>
+      </ReactModal> */}
       {post && (
         <Wrapper>
           {cookies.isAdmin === 'true' && (
@@ -667,7 +666,7 @@ function Post() {
               좋아요 {likeCount}
             </Like>
           </Contents>
-
+          <HSeparator />
           <HSeparator />
 
           {/* {post.commentCount >= TARGET_AGREEMENT &&
