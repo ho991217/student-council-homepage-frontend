@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useMyInfo } from 'hooks/UseMyInfo';
 import { useToday } from 'hooks/UseToday';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Container } from './components/Board.style';
 import { H1, Hr, IRentalList } from './RentalLists';
@@ -49,9 +50,11 @@ const Tile = styled.div`
 
 const Label = styled.label`
   height: 100%;
+  min-width: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 1em;
 `;
 
 const Input = styled.input`
@@ -66,15 +69,58 @@ const Input = styled.input`
 
 const TextInput = styled(Input).attrs({ type: 'text' })``;
 
-const Select = styled.select``;
+const Select = styled.select`
+  height: 100%;
+  flex-grow: 1;
+  border-radius: 5px;
+  margin: 0 1em;
+  padding: 0 0.5em;
+  border: 1px solid ${({ theme }) => theme.colors.gray100};
+  background-color: ${({ theme }) => theme.colors.white};
+`;
 
 const Option = styled.option``;
 
-const DatePicker = styled(Input).attrs({ type: 'date' })``;
+const DatePicker = styled(Input).attrs({ type: 'date' })`
+  display: flex;
+  align-items: center;
+`;
 
-const Time = styled(Input).attrs({ type: 'time' })``;
+const TextArea = styled.textarea`
+  flex-grow: 1;
+  margin: 0 1em;
+  height: 10em;
+  border: 1px solid ${({ theme }) => theme.colors.gray100};
+  background-color: ${({ theme }) => theme.colors.white};
+  border-radius: 5px;
+  padding: 0.5em;
+`;
 
-const TextArea = styled.textarea``;
+const ButtonContainer = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 1em 0 5em 0;
+`;
+
+const Button = styled.button`
+  all: unset;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 0.5em 1.5em;
+  :first-child {
+    margin-right: 1em;
+    border: 1px solid ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.secondary};
+  }
+  :last-child {
+    background-color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.white};
+    border: 1px solid ${({ theme }) => theme.colors.secondary};
+  }
+`;
 
 interface IItem {
   itemId: number;
@@ -86,7 +132,7 @@ interface IItem {
 }
 
 const parseISODate = (day: string, time: string) => {
-  return `${day}T${time}.000z`;
+  return `${day}T${time}:00.000Z`;
 };
 
 function RentalNew() {
@@ -101,6 +147,7 @@ function RentalNew() {
     title: '',
     body: '',
   });
+  const navigate = useNavigate();
 
   const getRentalList = async () => {
     const { data } = await axios({
@@ -111,6 +158,29 @@ function RentalNew() {
       },
     });
     setRentalList(data.content);
+  };
+
+  const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const { itemId, userClass, rentalStart, rentalEnd, title, body } = item;
+    const { data } = await axios({
+      method: 'post',
+      url: '/rental',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        itemId,
+        userClass,
+        rentalStart: parseISODate(rentalStart.day, rentalStart.time),
+        rentalEnd: parseISODate(rentalEnd.day, rentalEnd.time),
+        title,
+        body,
+      },
+    });
+    if (data.success) {
+      navigate('/rental');
+    }
   };
 
   useEffect(() => {
@@ -145,7 +215,22 @@ function RentalNew() {
         <Row portion="1fr 1fr">
           <Tile>
             <Label>대여물품</Label>
-            <Select defaultValue="">
+            <Select
+              defaultValue=""
+              onChange={(e) => {
+                if (
+                  rentalList.filter((el) => el.id === Number(e.target.value))[0]
+                    .remaining === 0
+                ) {
+                  alert('대여 가능한 물품이 없습니다.');
+                  return;
+                }
+                setItem((prev) => ({
+                  ...prev,
+                  itemId: Number(e.target.value),
+                }));
+              }}
+            >
               <Option value="">선택</Option>
               {rentalList.map((item) => (
                 <Option key={item.id} value={item.id}>
@@ -156,11 +241,16 @@ function RentalNew() {
           </Tile>
           <Tile>
             <Label>대여자 구분</Label>
-            <Select defaultValue="">
+            <Select
+              defaultValue=""
+              onChange={(e) =>
+                setItem((prev) => ({ ...prev, userClass: e.target.value }))
+              }
+            >
               <Option value="">선택</Option>
-              <Option value="1">개인</Option>
-              <Option value="2">단과대 학생회</Option>
-              <Option value="3">과(학부) 학생회</Option>
+              <Option value="INDIVIDUAL">개인</Option>
+              <Option value="DEPARTMENT_STUDENT_COUNCIL">단과대 학생회</Option>
+              <Option value="MAJOR_STUDENT_COUNCIL">과(학부) 학생회</Option>
             </Select>
           </Tile>
         </Row>
@@ -178,7 +268,7 @@ function RentalNew() {
                 }));
               }}
             />
-            <Time
+            <Select
               onChange={(e) => {
                 setItem((prev) => ({
                   ...prev,
@@ -188,7 +278,31 @@ function RentalNew() {
                   },
                 }));
               }}
-            />
+              defaultValue=""
+              value={item.rentalStart.time}
+            >
+              <Option value="">선택</Option>
+              {Array(24)
+                .fill(0)
+                .map((_, i) => {
+                  return (
+                    <>
+                      <Option
+                        key={Math.random()}
+                        value={i < 10 ? `0${i}:00` : `${i}:00`}
+                      >
+                        {i < 10 ? `0${i}:00` : `${i}:00`}
+                      </Option>
+                      <Option
+                        key={Math.random()}
+                        value={i < 10 ? `0${i}:30` : `${i}:30`}
+                      >
+                        {i < 10 ? `0${i}:30` : `${i}:30`}
+                      </Option>
+                    </>
+                  );
+                })}
+            </Select>
             ~
             <DatePicker
               onChange={(e) => {
@@ -201,7 +315,7 @@ function RentalNew() {
                 }));
               }}
             />
-            <Time
+            <Select
               onChange={(e) => {
                 setItem((prev) => ({
                   ...prev,
@@ -211,22 +325,65 @@ function RentalNew() {
                   },
                 }));
               }}
-            />
+              defaultValue=""
+              value={item.rentalEnd.time}
+            >
+              <Option value="">선택</Option>
+              {Array(24)
+                .fill(0)
+                .map((_, i) => {
+                  return (
+                    <>
+                      <Option
+                        key={Math.random()}
+                        value={i < 10 ? `0${i}:00` : `${i}:00`}
+                      >
+                        {i < 10 ? `0${i}:00` : `${i}:00`}
+                      </Option>
+                      <Option
+                        key={Math.random()}
+                        value={i < 10 ? `0${i}:30` : `${i}:30`}
+                      >
+                        {i < 10 ? `0${i}:30` : `${i}:30`}
+                      </Option>
+                    </>
+                  );
+                })}
+            </Select>
           </Tile>
         </Row>
         <Row portion="1fr">
           <Tile>
             <Label>행사명</Label>
-            <TextInput />
+            <TextInput
+              style={{ flexGrow: 1 }}
+              onChange={(e) =>
+                setItem((prev) => ({ ...prev, title: e.target.value }))
+              }
+            />
           </Tile>
         </Row>
-        <Row portion="1fr">
+        <Row portion="1fr" style={{ height: '100%' }}>
           <Tile>
             <Label>행사내용</Label>
-            <TextArea />
+            <TextArea
+              onChange={(e) =>
+                setItem((prev) => ({ ...prev, body: e.target.value }))
+              }
+            />
           </Tile>
         </Row>
       </FormContainer>
+      <ButtonContainer>
+        <Button
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          취소
+        </Button>
+        <Button onClick={onSubmit}>신청</Button>
+      </ButtonContainer>
     </Container>
   );
 }
