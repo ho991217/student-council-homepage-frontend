@@ -119,6 +119,19 @@ function Router() {
           />
         </Route>
         <Route
+          path="/rules"
+          element={
+            isLoggedIn ? (
+              <GlobalBanner title="회칙" />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        >
+          <Route path="" element={<Rules />} />
+        </Route>
+
+        <Route
           path="/conference"
           element={
             isLoggedIn ? (
