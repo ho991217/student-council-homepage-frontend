@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
 import 'chartjs-plugin-doughnut-innertext';
@@ -58,8 +58,8 @@ interface ChartDataProps {
   totalAgree: number;
 }
 
-export default function PetitionChart() {
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
+export default function PetitionChart({ dataUpdate }: { dataUpdate: boolean }) {
+  const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const [searchParams] = useSearchParams();
   const [chartData, setChartData] = useState({
     department: [''],
@@ -143,15 +143,16 @@ export default function PetitionChart() {
 
   useEffect(() => {
     const postId = Number(searchParams.get('id'));
+    setChartData({
+      totalAgree: 0,
+      department: [],
+      agreeCount: [],
+    });
     getChartData(postId);
-  }, []);
+  }, [dataUpdate]);
 
   const chartRef = useRef<ChartJS>(null);
-  const chart = chartRef.current;
 
-  // const updateChart = () => {
-
-  // }
   const plugins = [
     {
       id: 'centerText',

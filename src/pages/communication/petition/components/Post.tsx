@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import ReactModal from 'react-modal';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import parse from 'html-react-parser';
@@ -99,7 +100,7 @@ const ButtonContainer = styled.div`
   justify-content: center;
 `;
 
-const AgreeButton = styled.div`
+const AgreeButton = styled.button`
   ${({ theme }) => theme.media.mobile} {
     max-width: 90px;
   }
@@ -118,6 +119,7 @@ const AgreeButton = styled.div`
   padding: 5px 0px;
   margin-top: 0.5rem;
   border-radius: 10px;
+  border: 0;
 `;
 
 const ChartContainer = styled.div`
@@ -131,10 +133,13 @@ const ChartTitle = styled.h3`
   gap: 5px;
   align-items: center;
   width: 100%;
-  margin-bottom: 30px;
 `;
+
 const ChartWrapper = styled.div<{ visibility: boolean }>`
   display: ${(props) => (props.visibility ? 'flex' : 'none')};
+  position: relative;
+  margin-top: 40px;
+  background-color: ${({ theme }) => theme.colors.white};
   transition: ${(props) =>
     props.visibility ? 'display 0s linear 0s, opacity 300ms' : 'none'};
   flex-direction: column;
@@ -148,28 +153,6 @@ const ChartWrapper = styled.div<{ visibility: boolean }>`
     width: 600px;
   }
   width: 800px;
-`;
-const ChartTextBox = styled.div``;
-const CommentSection = styled.section`
-  max-width: 1280px;
-  width: 100%;
-`;
-
-const CommentForm = styled.form`
-  width: 100%;
-
-  ${({ theme }) => theme.media.desktop} {
-    height: 100px;
-  }
-  ${({ theme }) => theme.media.tablet} {
-    height: 100px;
-  }
-  ${({ theme }) => theme.media.mobile} {
-    height: 80px;
-  }
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 const AnswerInput = styled.textarea`
@@ -201,7 +184,6 @@ const AnswerSubmit = styled.input.attrs({ type: 'submit' })`
 
 const AnswerForm = styled.form`
   width: 100%;
-
   ${({ theme }) => theme.media.desktop} {
     height: 200px;
   }
@@ -217,97 +199,15 @@ const AnswerForm = styled.form`
   margin-bottom: 50px;
 `;
 
-const CommentInput = styled.textarea`
-  all: unset;
-  flex-grow: 1;
-  height: 100%;
-  background-color: ${({ theme }) => theme.colors.gray100};
-  margin-right: 10px;
-  border-radius: 5px;
-  padding: 20px;
-  box-sizing: border-box;
-  color: ${({ theme }) => theme.colors.gray600};
-`;
-
-const CommentSubmit = styled.input.attrs({ type: 'submit' })`
-  all: unset;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.white};
-  width: 160px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  font-size: ${({ theme }) => theme.fonts.size.base};
-  font-weight: ${({ theme }) => theme.fonts.weight.medium};
-  cursor: pointer;
-`;
-
-const CommentLists = styled.ul`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  margin-top: 20px;
-  width: 100%;
-  margin: 20px;
-`;
-
-const Comment = styled.li`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  margin-bottom: 20px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray300};
-  padding: 0px 10px 15px 10px;
-  width: 100%;
-  margin: 20px;
-`;
-
-const CommentInfo = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin-bottom: 10px;
-  height: 14px;
-`;
-
-const VSeparator = styled.div`
-  height: 100%;
-  width: 1px;
-  background-color: ${({ theme }) => theme.colors.gray400};
-  margin: 0px 10px;
-`;
-
-const CommentAuthor = styled.div`
-  margin-right: 10px;
-  font-size: ${({ theme }) => theme.fonts.size.sm};
-  font-weight: ${({ theme }) => theme.fonts.weight.medium};
-`;
-
-const CommentDate = styled.div`
-  color: ${({ theme }) => theme.colors.gray400};
-  font-size: ${({ theme }) => theme.fonts.size.xs};
-  font-weight: ${({ theme }) => theme.fonts.weight.regular};
-`;
-
-const CommentText = styled.div`
-  font-size: ${({ theme }) => theme.fonts.size.sm};
-  font-weight: ${({ theme }) => theme.fonts.weight.medium};
-`;
-
 const AdminPanel = styled.div`
-  margin: 7px 0 15px 0;
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   input {
     all: unset;
-    padding: 15px 25px;
-    border-radius: 15px;
+    padding: 10px 15px;
+    border-radius: 5px;
     background-color: ${({ theme }) => theme.colors.red};
     color: ${({ theme }) => theme.colors.gray020};
     margin: 0 5px;
@@ -322,81 +222,60 @@ const modalStyle = {
   },
   content: {
     width: '30%',
-    height: '200px',
+    height: '150px',
     left: '50%',
     top: '50%',
     transform: 'translate(-50%,-50%)',
     border: 'none',
     boxShadow: '0px 4px 5px 2px rgba(0, 0, 0, 0.05)',
     borderRadius: '15px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
   },
 };
 
+const ModalContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+`;
+const ModalText = styled.p`
+  font-size: 20px;
+  font-weight: bold;
+`;
+const ModalButtonContainer = styled.div`
+  display: flex;
+  gap: 10px;
+`;
 const DenyButton = styled.input.attrs({ type: 'button' })`
   height: 100%;
   width: 5rem;
-  background-color: white;
-  border-radius: 15px 0 0 15px;
+  border-radius: 10px;
+  padding: 4px 0;
   border: none;
   font-size: ${({ theme }) => theme.fonts.size.lg};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
-  transition: all 0.1s ease-in-out;
-  cursor: pointer;
-  :hover {
-    width: 12rem;
-    border-radius: 15px;
-    background-color: ${({ theme }) => theme.colors.red};
-    color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.red};
+  color: ${({ theme }) => theme.colors.white};
+  &:hover {
+    cursor: pointer;
   }
 `;
 
 const ConfirmButton = styled.input.attrs({ type: 'button' })`
   height: 100%;
-  width: 100px;
-  background-color: white;
-  border-radius: 0 15px 15px 0;
+  width: 5rem;
+  border-radius: 10px;
+  padding: 4px 0;
   border: none;
   font-size: ${({ theme }) => theme.fonts.size.lg};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
-  transition: all 0.1s ease-in-out;
-  cursor: pointer;
-  :hover {
-    width: 12rem;
-    border-radius: 15px;
-    background-color: ${({ theme }) => theme.colors.primary};
-    color: ${({ theme }) => theme.colors.white};
-  }
-`;
-
-const Meter = styled.meter`
-  ::-webkit-meter-bar {
-    background: #fff;
-    outline: none;
-    border: none;
-    border-radius: 2.5px;
-  }
-  margin-top: 10px;
-  padding: 0 25px;
-  height: 35px;
-  width: 100%;
-  ::-webkit-meter-optimum-value {
-    background-image: ${({ theme }) =>
-      `linear-gradient(to right,${theme.colors.secondary}  0% , ${theme.colors.primary} 100% )`};
-  }
-  span {
-    animation: move 2s linear infinite;
-    overflow: hidden;
-  }
-  @keyframes move {
-    0% {
-      background-position: 0 0;
-    }
-    100% {
-      background-position: 50px 50px;
-    }
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  &:hover {
+    cursor: pointer;
   }
 `;
 
@@ -410,6 +289,7 @@ const AnswerContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  line-height: 150%;
 `;
 
 const AnserTitlePoint = styled.strong`
@@ -421,20 +301,6 @@ const AnswerTitle = styled.div`
   font-weight: ${({ theme }) => theme.fonts.weight.bold};
   color: ${({ theme }) => theme.colors.gray800};
   margin-bottom: 15px;
-`;
-
-const TextLength = styled.span`
-  font-size: ${({ theme }) => theme.fonts.size.sm};
-  font-weight: ${({ theme }) => theme.fonts.weight.regular};
-  color: ${({ theme }) => theme.colors.gray400};
-  margin: 5px 0;
-`;
-
-const CommentTitle = styled.p`
-  color: ${({ theme }) => theme.colors.gray900};
-  font-weight: ${({ theme }) => theme.fonts.weight.bold};
-  margin: 50px 50px 0px 50px;
-  font-size: ${({ theme }) => theme.fonts.size.lg};
 `;
 
 interface PostProps {
@@ -453,22 +319,15 @@ interface PostProps {
   agreeCount: number;
 }
 
-interface CommentProps {
-  id: number;
-  major: string;
-  text: string;
-  createdAt: string;
-}
-
 function Post() {
   const [searchParams] = useSearchParams();
   const [post, setPost] = useState<PostProps>();
   const [postId, setPostId] = useState<number>(0);
   const [likeCount, setLikeCount] = useState<number>(0);
   const [comment, setComment] = useState<string>('동의합니다.');
-  const [answer, setAnswer] = useState<string>();
-  const [commentList, setCommentList] = useState([]);
+  const [adminAnswer, setAdminAnswer] = useState<string>();
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
+  const [dataUpdate, setDataUpdate] = useState(false);
   const [error, setError] = useState({
     isOpen: false,
     message: '',
@@ -479,32 +338,35 @@ function Post() {
     open: false,
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setModalState({
       open: true,
       content: (
-        <>
-          <DenyButton value="취소" onClick={handleCloseModal} />
-          <div>등록 하시겠습니까?</div>
-          <ConfirmButton value="확인" onClick={handleCloseModal} />
-        </>
+        <ModalContainer>
+          <ModalText>동의하시겠습니까?</ModalText>
+          <ModalButtonContainer>
+            <DenyButton value="취소" onClick={handleCloseModal} />
+            <ConfirmButton value="확인" onClick={handleCloseModal} />
+          </ModalButtonContainer>
+        </ModalContainer>
       ),
     });
   };
 
   const handleAnswerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
       await axios({
         method: 'post',
-        url: `/post/petition/comment/${postId}`,
+        url: `/post/petition/reply/${postId}`,
         headers: {
           Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
           'Content-Type': 'application/json',
         },
-        data: JSON.stringify({ text: answer }),
+        data: { answer: adminAnswer },
+      }).then((res) => {
+        setAdminAnswer('');
       });
       getCurrentPost(postId);
     } catch ({ response }) {
@@ -555,14 +417,16 @@ function Post() {
         Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
       },
       data: '',
-    }).then((res) => {
-      console.log(res);
-      alert('청원에 동의하셨습니다.')
-      window.location.reload()
-    }).catch(function (error){
-      alert('이미 동의하셨습니다.')
     })
-  }
+      .then((res) => {
+        alert('청원에 동의하셨습니다.');
+        getCurrentPost(postId);
+        setDataUpdate(true);
+      })
+      .catch(function (error) {
+        alert('이미 동의하셨습니다.');
+      });
+  };
 
   const getCurrentPost = async (postid: number) => {
     try {
@@ -584,7 +448,7 @@ function Post() {
   const handleBlind = async () => {
     try {
       await axios({
-        method: 'post',
+        method: 'patch',
         url: `/post/petition/blind/${postId}`,
         headers: {
           Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
@@ -613,10 +477,9 @@ function Post() {
 
   const handleCloseModal = (e: React.MouseEvent<HTMLInputElement>) => {
     if ((e.target as HTMLInputElement).value === '확인') {
-      sendComment();
+      postAgree();
     }
     setModalState((prev) => ({ ...prev, open: false }));
-    getCommentList(postId);
   };
   const postLike = async () => {
     await axios({
@@ -644,26 +507,10 @@ function Post() {
     getCurrentPost(postId);
   };
 
-  const getCommentList = async (postid: number) => {
-    try {
-      const data = await axios({
-        method: 'get',
-        url: `/post/petition/comment/${postid}`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
-      });
-      setCommentList(data.data.content);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   useEffect(() => {
     const postId = Number(searchParams.get('id'));
     setPostId(postId);
     getCurrentPost(postId);
-    getCommentList(postId);
   }, []);
   const [chartVisbility, setChartVisibility] = useState(false);
   const handleShowChart = () => {
@@ -672,11 +519,10 @@ function Post() {
   const handleCancleChart = () => {
     setChartVisibility(false);
   };
-
   return (
     <Container>
       <SideNav margin="50px 30px 0 0" />
-      {/* {/* <ReactModal
+      <ReactModal
         isOpen={modalState.open}
         contentLabel="Example Modal"
         style={modalStyle}
@@ -687,7 +533,8 @@ function Post() {
         shouldCloseOnOverlayClick
       >
         {modalState.content}
-      </ReactModal> */}
+      </ReactModal>
+
       {post && (
         <Wrapper>
           {cookies.isAdmin === 'true' && (
@@ -696,7 +543,6 @@ function Post() {
               <input type="button" value="삭제" onClick={handleDelete} />
             </AdminPanel>
           )}
-
           <Hashtag>#</Hashtag>
           <HSeparator bold />
           <Header>{`[ ${
@@ -710,20 +556,11 @@ function Post() {
             </div>
             <div>청원 마감 : {post.expiresAt}</div>
           </Etc>
-
           <HSeparator />
-          {/* {post.adminComment && (
-                <AnswerContainer>
-                  <AnswerTitle>
-                    총학생회 <AnserTitlePoint>답변</AnserTitlePoint>
-                  </AnswerTitle>
-                  <div>{post.adminComment}</div>
-                </AnswerContainer>
-              )} */}
           <Contents>
             {parse(post?.body)}
             <ButtonContainer>
-              <AgreeButton onClick={postAgree}>동의하기</AgreeButton>
+              <AgreeButton onClick={handleSubmit}>동의하기</AgreeButton>
             </ButtonContainer>
             <ChartContainer>
               <ChartTitle>
@@ -769,29 +606,29 @@ function Post() {
                   }}
                   onClick={handleCancleChart}
                 />
-                <PetitionChart />
+                <PetitionChart dataUpdate={dataUpdate} />
               </ChartWrapper>
             </ChartContainer>
+            {post.answer && (
+              <AnswerContainer>
+                <AnswerTitle>
+                  총학생회 <AnserTitlePoint>답변</AnserTitlePoint>
+                </AnswerTitle>
+                <div>{post.answer}</div>
+              </AnswerContainer>
+            )}
           </Contents>
-          <HSeparator />
 
-          {/* {post.commentCount >= TARGET_AGREEMENT &&
-                !post.adminComment &&
-                cookies.isAdmin === 'true' && (
-                  <>
-                    <HSeparator />
-                    <AnswerForm onSubmit={handleAnswerSubmit}>
-                      <AnswerInput
-                        placeholder="답변 내용을 입력해주세요"
-                        value={answer}
-                        onChange={({ currentTarget }) =>
-                          setAnswer(currentTarget.value)
-                        }
-                      />
-                      <AnswerSubmit value="전송" />
-                    </AnswerForm>
-                  </>
-                )}   */}
+          {cookies.isAdmin === 'true' && (
+            <AnswerForm onSubmit={handleAnswerSubmit}>
+              <AnswerInput
+                placeholder="답변 내용을 입력해주세요"
+                value={adminAnswer}
+                onChange={(e) => setAdminAnswer(e.currentTarget.value)}
+              />
+              <AnswerSubmit value="답변하기" />
+            </AnswerForm>
+          )}
         </Wrapper>
       )}
     </Container>
