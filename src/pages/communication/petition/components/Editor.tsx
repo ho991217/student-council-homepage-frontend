@@ -130,31 +130,18 @@ function Editor() {
     }
   };
   const handleEnterTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // const tag = tagList[tagList.length - 1]
-    // const previousTagInTagList = tagList[tagList.length - 2]
-    // const resultIndex = (data:string) => originalTags.findIndex((originTag) => originTag.name === data);
-    // if (e.key === 'Enter') {
-    //   setTagNameResult(prev => [...prev, tagList[tagList.length - 1]])
-    //   let i = 1;
-    //   console.log(i)
-    //   const previousTagInTagNameResult = tagNameResult[tagNameResult.length - 1]
-    //   console.log(`previousTagInTagList: ${previousTagInTagList}`)
-    //   console.log(`previousTagInTagNameResult: ${previousTagInTagNameResult}`)
-    //   if (previousTagInTagList !== previousTagInTagNameResult) {
-    //     if (resultIndex(tagNameResult[tagNameResult.length - 1]) >= 0) {
-    //       tagResult.pop()
-    //     } else {
-    //       tagObject.pop()
-    //     }
-    //     tagNameResult.pop()
-    //     i += 1
-    //     return false
-    //   }   
-    // }  
-    // return true
+    const tag = tagList[tagList.length - 1]
+    const previousTagInTagList = tagList[tagList.length - 2]
+    const resultIndex = (data:string) => originalTags.findIndex((originTag) => originTag.name === data);
+    if (e.key === 'Enter' || e.key === 'Backspace') {
+      setTagNameResult(prev => [...prev, tagList[tagList.length - 1]])
+      const previousTagInTagNameResult = tagNameResult[tagNameResult.length - 1]
+      console.log(`previousTagInTagList: ${previousTagInTagList}`)
+      console.log(`previousTagInTagNameResult: ${previousTagInTagNameResult}`)
+    }  
+
+    return true
   }
-
-
 
   useEffect(()=>{
     getTags()
@@ -168,9 +155,6 @@ function Editor() {
     console.log(`tagObject : ${tagObject}`)
     console.log(`tagResult : ${tagResult}`)
     console.log(`${tagList.length} !== ${tagNameResult.length}`)
-    if (tagList.length !== tagNameResult.length) {
-      // tagNameResult.pop([tagNameResult.length - 2])
-    } 
   },[tagList, tagNameResult])
   return (
     <Container>
@@ -187,14 +171,14 @@ function Editor() {
             htmlStr={content}
             setHtmlStr={setContent}
           />
-          <TagBoxLabel>태그
+          <TagBoxLabel>태그</TagBoxLabel>
           <TagsInput
             value={tagList}
             onChange={setTagList}
             name="tagListInput"
             placeHolder="태그들을 입력해주세요"
             onKeyUp={handleEnterTag}
-          /></TagBoxLabel>
+          />
           <SubmitButtonM text="작성 완료" />
         </Form>
         {isOpen && (

@@ -37,13 +37,13 @@ function SuggestionEditor() {
         method: 'post',
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
         data: formData,
       })
         .then((res) => {
           if (res.data.successful) navigate('/board-suggestion/boards?page=1');
-          navigate('/board-suggestion/boards')
+          navigate('/board-suggestion/boards');
         })
         .catch(
           ({

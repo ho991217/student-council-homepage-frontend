@@ -5,6 +5,9 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import parse from 'html-react-parser';
 import SideNav from 'components/nav/SideNav';
+import { FaRegQuestionCircle } from 'react-icons/fa';
+import { GiCancel } from 'react-icons/gi';
+import PetitionChart from './PetitionChart';
 
 const TARGET_AGREEMENT = 150;
 
@@ -14,14 +17,16 @@ const Container = styled.div`
   align-items: flex-start;
   justify-content: center;
   background-color: ${({ theme }) => theme.colors.gray040};
-  padding: 0 50px;
+  ${({ theme }) => theme.media.desktop} {
+    padding: 0 50px;
+  }
 `;
 
 const Wrapper = styled.div`
   max-width: 1280px;
   width: 100%;
-  margin: 40px 0px;
   ${({ theme }) => theme.media.desktop} {
+    margin: 40px 0px;
     padding: 30px 50px;
   }
   ${({ theme }) => theme.media.tablet} {
@@ -89,31 +94,62 @@ const Contents = styled.div`
   margin-bottom: 45px;
 `;
 
-const Like = styled.div<{ liked?: boolean }>`
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const AgreeButton = styled.div`
   ${({ theme }) => theme.media.mobile} {
     max-width: 90px;
   }
   user-select: none;
   cursor: pointer;
-  max-width: 130px;
+  max-width: 160px;
+  height: 100px;
   display: flex;
+  font-weight: bold;
   align-items: center;
   justify-content: center;
   width: 100%;
-  color: ${({ theme, liked }) =>
-    liked ? theme.colors.gray020 : theme.colors.gray900};
-  background-color: ${({ theme, liked }) =>
-    liked ? theme.colors.accent : theme.colors.gray040};
-  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.accent};
+  font-size: ${({ theme }) => theme.fonts.size.sm};
   padding: 5px 0px;
   margin-top: 0.5rem;
-  border-radius: 9999px;
-  :hover {
-    background-color: ${({ theme }) => theme.colors.accent};
-    color: ${({ theme }) => theme.colors.gray020};
-  }
+  border-radius: 10px;
 `;
 
+const ChartContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 40px;
+`;
+
+const ChartTitle = styled.h3`
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 30px;
+`;
+const ChartWrapper = styled.div<{ visibility: boolean }>`
+  display: ${(props) => (props.visibility ? 'flex' : 'none')};
+  transition: ${(props) =>
+    props.visibility ? 'display 0s linear 0s, opacity 300ms' : 'none'};
+  flex-direction: column;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
+  padding: 10px 10px 30px 10px;
+  border-radius: 6px;
+  ${({ theme }) => theme.media.mobile} {
+    width: 300px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    width: 600px;
+  }
+  width: 800px;
+`;
+const ChartTextBox = styled.div``;
 const CommentSection = styled.section`
   max-width: 1280px;
   width: 100%;
@@ -412,7 +448,9 @@ interface PostProps {
   mine: boolean;
   liked: boolean;
   likes: number;
+  statisticList: [];
   tags: [];
+  agreeCount: number;
 }
 
 interface CommentProps {
@@ -508,6 +546,23 @@ function Post() {
       });
     }
   };
+
+  const postAgree = async () => {
+    axios({
+      url: `/post/petition/agree/${postId}`,
+      method: 'post',
+      headers: {
+        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+      },
+      data: '',
+    }).then((res) => {
+      console.log(res);
+      alert('청원에 동의하셨습니다.')
+      window.location.reload()
+    }).catch(function (error){
+      alert('이미 동의하셨습니다.')
+    })
+  }
 
   const getCurrentPost = async (postid: number) => {
     try {
@@ -610,6 +665,14 @@ function Post() {
     getCurrentPost(postId);
     getCommentList(postId);
   }, []);
+  const [chartVisbility, setChartVisibility] = useState(false);
+  const handleShowChart = () => {
+    setChartVisibility(true);
+  };
+  const handleCancleChart = () => {
+    setChartVisibility(false);
+  };
+
   return (
     <Container>
       <SideNav margin="50px 30px 0 0" />
@@ -643,7 +706,7 @@ function Post() {
           <Etc>
             <div>등록일 : {post?.createdAt.slice(0, 10)}</div>
             <div>
-              청원 동의 인원 : {commentList.length} / {TARGET_AGREEMENT}
+              청원 동의 인원 : {post.agreeCount} / {TARGET_AGREEMENT}
             </div>
             <div>청원 마감 : {post.expiresAt}</div>
           </Etc>
@@ -659,14 +722,57 @@ function Post() {
               )} */}
           <Contents>
             {parse(post?.body)}
-            <Like
-              liked={post?.liked}
-              onClick={post?.liked ? deleteLike : postLike}
-            >
-              좋아요 {likeCount}
-            </Like>
+            <ButtonContainer>
+              <AgreeButton onClick={postAgree}>동의하기</AgreeButton>
+            </ButtonContainer>
+            <ChartContainer>
+              <ChartTitle>
+                청원 동의 {post.agreeCount}명
+                <svg
+                  width="22"
+                  height="21"
+                  viewBox="0 0 22 21"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M21.2326 20.4651H0.767442C0.347907 20.4651 0 20.1172 0 19.6976C0 19.2781 0.347907 18.9302 0.767442 18.9302H21.2326C21.6521 18.9302 22 19.2781 22 19.6976C22 20.1172 21.6521 20.4651 21.2326 20.4651Z"
+                    fill="#1D64AA"
+                  />
+                  <path
+                    d="M8.69775 2.04651V20.4651H13.3024V2.04651C13.3024 0.92093 12.8419 0 11.4605 0H10.5396C9.15822 0 8.69775 0.92093 8.69775 2.04651Z"
+                    fill="#1D64AA"
+                  />
+                  <path
+                    opacity="0.4"
+                    d="M1.79053 8.18592V20.465H5.88355V8.18592C5.88355 7.06033 5.47425 6.1394 4.24634 6.1394H3.42774C2.19983 6.1394 1.79053 7.06033 1.79053 8.18592Z"
+                    fill="#1D64AA"
+                  />
+                  <path
+                    opacity="0.4"
+                    d="M16.1162 13.3026V20.4654H20.2092V13.3026C20.2092 12.177 19.7999 11.2561 18.572 11.2561H17.7534C16.5255 11.2561 16.1162 12.177 16.1162 13.3026Z"
+                    fill="#1D64AA"
+                  />
+                </svg>
+                <FaRegQuestionCircle
+                  onMouseOver={handleShowChart}
+                  style={{ color: '1D64AA', cursor: 'pointer' }}
+                />
+              </ChartTitle>
+              <ChartWrapper visibility={chartVisbility}>
+                <GiCancel
+                  style={{
+                    color: '1D64AA',
+                    cursor: 'pointer',
+                    fontSize: '25px',
+                    alignSelf: 'flex-end',
+                  }}
+                  onClick={handleCancleChart}
+                />
+                <PetitionChart />
+              </ChartWrapper>
+            </ChartContainer>
           </Contents>
-          <HSeparator />
           <HSeparator />
 
           {/* {post.commentCount >= TARGET_AGREEMENT &&
@@ -686,38 +792,6 @@ function Post() {
                     </AnswerForm>
                   </>
                 )}   */}
-          <CommentSection>
-            <CommentForm onSubmit={handleSubmit}>
-              <CommentInput
-                maxLength={50}
-                placeholder="동의 내용을 입력해 주세요."
-                disabled={post.status === '기간종료'}
-                value={comment}
-                required
-                onChange={({ currentTarget }) =>
-                  setComment(currentTarget.value)
-                }
-              />
-              <CommentSubmit
-                disabled={post.status === '기간종료'}
-                value="전송"
-              />
-            </CommentForm>
-            <CommentTitle>청원 동의 {commentList.length}명</CommentTitle>
-            <CommentLists>
-              {commentList.length > 0 &&
-                commentList.map((comment: CommentProps) => (
-                  <Comment key={comment.id}>
-                    <CommentInfo>
-                      <CommentAuthor>{comment.major}</CommentAuthor>
-                      <VSeparator />
-                      <CommentDate>{comment.createdAt}</CommentDate>
-                    </CommentInfo>
-                    <CommentText>{comment.text}</CommentText>
-                  </Comment>
-                ))}
-            </CommentLists>
-          </CommentSection>
         </Wrapper>
       )}
     </Container>
