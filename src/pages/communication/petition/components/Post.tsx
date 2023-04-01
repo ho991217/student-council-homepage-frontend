@@ -439,7 +439,6 @@ function Post() {
       });
       setPost(data);
       setLikeCount(data.likes);
-      console.log(data);
     } catch {
       navigate(-1);
     }
@@ -488,9 +487,7 @@ function Post() {
       headers: {
         Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
       },
-    }).then((res) => {
-      console.log(res);
-    });
+    })
     getCurrentPost(postId);
   };
 
@@ -501,9 +498,7 @@ function Post() {
       headers: {
         Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
       },
-    }).then((res) => {
-      console.log(res);
-    });
+    })
     getCurrentPost(postId);
   };
 

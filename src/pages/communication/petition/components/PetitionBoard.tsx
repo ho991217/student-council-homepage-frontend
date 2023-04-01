@@ -50,7 +50,6 @@ function PetitionBoard() {
         Number(page) - 1
       }&size=6&sort=id,desc`,
     })
-    console.log(data)
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);
     setPagingInfo(data);
