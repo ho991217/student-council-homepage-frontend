@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { IoChatbubblesOutline } from 'react-icons/io5'
 import styled from 'styled-components';
 import { PagingProps } from 'components/PageControl';
 import { PostProps } from './PostProps';
@@ -77,10 +76,10 @@ const Row = styled.div`
   }
 `;
 
-const AgreeIconContainer = styled.div`
+const AgreeCountWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 3px;
+  justify-content: center;
 `;
 
 const PointText = styled.div`
@@ -153,10 +152,9 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                 <div>{index + 1 + (pagingInfo.page - 1) * pagingInfo.size}</div>
                 <PostStatus>{post.status === 'ACTIVE' ? "[진행중]" : "[마감]"}</PostStatus>
                 <PostTitle>{post.title}</PostTitle>
-                <AgreeIconContainer>
-                  <IoChatbubblesOutline />
+                <AgreeCountWrapper>
                   {post.agreeCount}
-                </AgreeIconContainer>
+                </AgreeCountWrapper>
               </Row>
             </Link>
           ))}

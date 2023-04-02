@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ReactModal from 'react-modal';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import parse from 'html-react-parser';
 import SideNav from 'components/nav/SideNav';
-import { FaRegQuestionCircle } from 'react-icons/fa';
+import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import { GiCancel } from 'react-icons/gi';
 import PetitionChart from './PetitionChart';
 
@@ -487,7 +487,7 @@ function Post() {
       headers: {
         Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
       },
-    })
+    });
     getCurrentPost(postId);
   };
 
@@ -498,7 +498,7 @@ function Post() {
       headers: {
         Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
       },
-    })
+    });
     getCurrentPost(postId);
   };
 
@@ -586,17 +586,17 @@ function Post() {
                     fill="#1D64AA"
                   />
                 </svg>
-                <FaRegQuestionCircle
-                  onMouseOver={handleShowChart}
-                  style={{ color: '1D64AA', cursor: 'pointer' }}
+                <RiArrowDownSLine
+                  onClick={handleShowChart}
+                  style={{ color: 'gray', cursor: 'pointer', fontSize: '35px' }}
                 />
               </ChartTitle>
               <ChartWrapper visibility={chartVisbility}>
-                <GiCancel
+              <RiArrowUpSLine
                   style={{
-                    color: '1D64AA',
+                    color: 'gray',
                     cursor: 'pointer',
-                    fontSize: '25px',
+                    fontSize: '35px',
                     alignSelf: 'flex-end',
                   }}
                   onClick={handleCancleChart}
