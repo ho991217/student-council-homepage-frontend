@@ -34,6 +34,8 @@ function Editor() {
   const [originalTags, setOriginalTags] = useState<any[]>([]);
   const [check, setCheckTag] = useState<any[]>([]);
   const [tagObject, setTagObject] = useState<any[]>([]);
+  const [tagObjectResult, setTagObjectResult] = useState<any[]>([]);
+  const [tagListToObject, setTagListToObject] = useState<any[]>([]);
   const [isTagFind, setIsTagFind] = useState<boolean>();
   const [tagNameResult, setTagNameResult] = useState<any[]>([]);
   const [tagResult, setTagResult] = useState<any[]>([]);
@@ -46,15 +48,15 @@ function Editor() {
 
   const getTags = async () => {
     try {
-      const {data} = await axios({
+      const { data } = await axios({
         method: 'get',
         url: `/post/tag`,
         headers: {
           Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
-      })
+      });
+      console.log(data)
       setOriginalTags(data);
-
     } catch (e) {
       console.log(e);
     }
@@ -77,8 +79,10 @@ function Editor() {
           'Content-Type': 'application/json',
         },
         data: tag,
-      });
-      setTagResult( prev => [...prev, data.id] )
+      })
+      getTags()
+      setTagResult((prev) => [...prev, data.id]);
+      console.log(data)
     } catch (e) {
       console.log(e);
     }
@@ -96,66 +100,82 @@ function Editor() {
       setIsOpen(true);
       return;
     }
-
-    tagObject.forEach((tag) => {
+    console.log(`☆☆☆☆${JSON.stringify}`)
+    tagObjectResult.forEach((tag) => {
       registerTags(tag)
     })
-    
-    
-  
 
-    formData.append('title', title);
-    formData.append('body', content);
-    tagResult.forEach((tag) => formData.append('tagIds', tag));
+    // formData.append('title', title);
+    // formData.append('body', content);
+    // tagResult.forEach((tag) => formData.append('tagIds', tag));
 
-    try {
-      const res = await axios({
-        method: 'post',
-        url: '/post/petition',
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-          'Content-Type': 'multipart/form-data',
-        },
-        data: formData,
-      });
-      console.log(res);
-      // navigate(`/board-petition/board?id=${res.data.id}`);
-    } catch (e) {
-      console.log(e);
-      const err = e as ErrorProps;
-      if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
-        setErrorMsg(err.response.data.message);
-        setIsOpen(true);
-      }
-    }
+    // try {
+    //   const res = await axios({
+    //     method: 'post',
+    //     url: '/post/petition',
+    //     headers: {
+    //       Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+    //       'Content-Type': 'multipart/form-data',
+    //     },
+    //     data: formData,
+    //   });
+    //   console.log(res);
+    //   // navigate(`/board-petition/board?id=${res.data.id}`);
+    // } catch (e) {
+    //   console.log(e);
+    //   const err = e as ErrorProps;
+    //   if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
+    //     setErrorMsg(err.response.data.message);
+    //     setIsOpen(true);
+    //   }
+    // }
   };
   const handleEnterTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const tag = tagList[tagList.length - 1]
-    const previousTagInTagList = tagList[tagList.length - 2]
-    const resultIndex = (data:string) => originalTags.findIndex((originTag) => originTag.name === data);
-    if (e.key === 'Enter' || e.key === 'Backspace') {
-      setTagNameResult(prev => [...prev, tagList[tagList.length - 1]])
-      const previousTagInTagNameResult = tagNameResult[tagNameResult.length - 1]
-      console.log(`previousTagInTagList: ${previousTagInTagList}`)
-      console.log(`previousTagInTagNameResult: ${previousTagInTagNameResult}`)
-    }  
+    const tag = tagList[tagList.length - 1];
+    const findIndex = (data: string) =>
+      originalTags.findIndex((originTag) => originTag.name === data);
+    if (e.key === 'Enter') {
+      console.log(findIndex(tag));
+      setTagNameResult((prev) => [...prev, tagList[tagList.length - 1]]);
 
-    return true
-  }
+      if (findIndex(tag) === -1) {
+        setTagObject((prev) => [...prev, tag]);
+      } else {
+        setTagResult((prev) => [...prev, findIndex(tag)]);
+      }
+    }
+    const allObjectTags = new Set(tagObject)
+    
+    const allTags = new Set(tagNameResult);
+    const realTags = new Set(tagList);
+    const objectIntersect = [...allObjectTags].filter((data) =>
+      realTags.has(data),
+    );
 
-  useEffect(()=>{
-    getTags()
-  },[])
+    objectIntersect.forEach(tag => {
+      setTagObjectResult(prev => [...prev, {"name" : tag}])
+    })
+    return true;
+  };
 
+  useEffect(() => {
+    getTags();
+  }, []);
 
-  useEffect(()=> {
-    console.log(`------------------`)
-    console.log(`tagList : ${tagList}`)
-    console.log(`tagNameResult : ${tagNameResult}`)
-    console.log(`tagObject : ${tagObject}`)
-    console.log(`tagResult : ${tagResult}`)
-    console.log(`${tagList.length} !== ${tagNameResult.length}`)
-  },[tagList, tagNameResult])
+  useEffect(() => {
+    // console.log(`------------------`)
+    console.log(`tagList : ${tagList}`);
+    console.log(`tagNameResult : ${tagNameResult}`);
+    console.log(`tagObject : ${JSON.stringify(tagObject)}`);
+    console.log(`tagResult : ${tagResult}`);
+    console.log(`tagObjectResult : ${JSON.stringify(tagObjectResult)}`);
+    console.log(`originTags: ${JSON.stringify(originalTags)}`)
+    // console.log(`${tagList.length} !== ${tagNameResult.length}`)
+  }, [tagList, tagNameResult, onSubmitHandler, getTags, registerTags]);
+
+  // useEffect(()=>{
+    
+  // },[])
   return (
     <Container>
       <Wrapper>

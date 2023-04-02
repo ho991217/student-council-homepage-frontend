@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Chart } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 import 'chartjs-plugin-doughnut-innertext';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -187,7 +187,7 @@ export default function PetitionChart({ dataUpdate }: { dataUpdate: boolean }) {
   ];
   return (
     <Container>
-      <Chart type="doughnut" data={data} plugins={plugins} ref={chartRef} />
+      <Doughnut data={data} plugins={plugins}  />
       <TextContainer>
         <Title>
           {chartData.totalAgree === 0
