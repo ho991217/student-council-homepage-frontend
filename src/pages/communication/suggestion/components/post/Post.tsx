@@ -347,7 +347,6 @@ function Post() {
         Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
       },
     }).then((res) => {
-      console.log(res);
       getPost();
     });
   };
@@ -392,7 +391,6 @@ function Post() {
         data: { id: item },
       })
         .then((res) => {
-          console.log(res);
           if (res.data.successful) window.location.reload();
           getComment();
         })

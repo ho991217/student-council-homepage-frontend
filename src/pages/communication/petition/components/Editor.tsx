@@ -107,9 +107,7 @@ function Editor() {
     formData.append('title', title);
     formData.append('body', content);
     tagResult.forEach((tag) => formData.append('tagIds', tag));
-    console.log(formData.get('title'));
-    console.log(formData.get('body'));
-    console.log(formData.getAll('tagIds'));
+
     try {
       const res = await axios({
         method: 'post',
@@ -133,40 +131,31 @@ function Editor() {
   };
   const handleEnterTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const tag = tagList[tagList.length - 1]
-    const previousTag = tagList[tagList.length - 2]
+    const previousTagInTagList = tagList[tagList.length - 2]
     const resultIndex = (data:string) => originalTags.findIndex((originTag) => originTag.name === data);
-
-    if (e.key === 'Enter') {
-      if (previousTag !== tagNameResult[tagNameResult.length - 1]) {
-        if (resultIndex(tagNameResult[tagNameResult.length - 1]) >= 0) {
-          tagResult.pop()
-        } else {
-          tagObject.pop()
-        }
-        tagNameResult.pop()
-      }
-
-      
-      if (resultIndex(tag) >= 0) {
-        setTagResult(prev => [...prev, originalTags[resultIndex(tag)].id])
-        setTagNameResult(prev => [...prev, tag])
-        } else {
-        setTagObject(prev => [...prev, {name: tag}])
-        setTagNameResult(prev => [...prev, tag])
-      }
+    if (e.key === 'Enter' || e.key === 'Backspace') {
+      setTagNameResult(prev => [...prev, tagList[tagList.length - 1]])
+      const previousTagInTagNameResult = tagNameResult[tagNameResult.length - 1]
+      console.log(`previousTagInTagList: ${previousTagInTagList}`)
+      console.log(`previousTagInTagNameResult: ${previousTagInTagNameResult}`)
     }  
+
+    return true
   }
+
   useEffect(()=>{
     getTags()
   },[])
 
+
   useEffect(()=> {
-    console.log(tagNameResult)
-    console.log(tagObject)
-    console.log(tagResult)
-
-  },[handleEnterTag, registerTags, onSubmitHandler])
-
+    console.log(`------------------`)
+    console.log(`tagList : ${tagList}`)
+    console.log(`tagNameResult : ${tagNameResult}`)
+    console.log(`tagObject : ${tagObject}`)
+    console.log(`tagResult : ${tagResult}`)
+    console.log(`${tagList.length} !== ${tagNameResult.length}`)
+  },[tagList, tagNameResult])
   return (
     <Container>
       <Wrapper>
@@ -182,14 +171,14 @@ function Editor() {
             htmlStr={content}
             setHtmlStr={setContent}
           />
-          <TagBoxLabel>태그
+          <TagBoxLabel>태그</TagBoxLabel>
           <TagsInput
             value={tagList}
             onChange={setTagList}
             name="tagListInput"
             placeHolder="태그들을 입력해주세요"
             onKeyUp={handleEnterTag}
-          /></TagBoxLabel>
+          />
           <SubmitButtonM text="작성 완료" />
         </Form>
         {isOpen && (
