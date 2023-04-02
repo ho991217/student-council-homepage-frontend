@@ -1,23 +1,20 @@
 export interface PostProps {
+  author: string;
+  body: string;
+  createdAt: string;
+  files: [];
   id: number;
-  answer: string;
-  category: string;
-  commentList: Comment[];
-  createDate: string;
-  fileList: [];
-  text: string;
+  mine: boolean;
+  tag: [];
   title: string;
-  mine: boolean;
-  likeCount: number;
-  like: boolean;
+  likes: number;
+  liked: boolean;
 }
-
-interface Comment {
+export interface CommentProps {
+  createdAt: string;
   id: number;
-  name: string;
-  time: string;
+  major: string;
   text: string;
+  length: number;
   mine: boolean;
-  status: string;
-  anonymousNum: number;
 }

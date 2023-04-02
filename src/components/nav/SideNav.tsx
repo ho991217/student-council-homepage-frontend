@@ -31,15 +31,17 @@ const NavItem = styled.li<{ isLocated: boolean }>`
   border-bottom: 1px solid ${(props) => props.theme.colors.gray300};
 `;
 const MenuInfo = [
-  { title: '인사말', path: '/greeting', id: 0 },
-  { title: '조직도', path: '/organization', id: 0 },
-  { title: '오시는길', path: '/location', id: 0 },
-  { title: '총학소식', path: '/council-news', id: 1 },
-  { title: '공약', path: '/pledge', id: 1 },
-  { title: '청원게시판', path: '/board-petition/boards', id: 2 },
-  { title: '문의 및 건의사항', path: '/board-suggestion/boards', id: 2 },
-  { title: 'Q&A', path: '/qna', id: 3 },
-  { title: 'My voice', path: '/my-voice', id: 3 },
+  { title: '인사말', category: '/greeting', path:'/greeting', id: 0 },
+  { title: '공약', category: '/pledge', path: '/pledge', id: 0 },
+  { title: '조직도', category: '/organization', path: '/organization', id: 0 },
+  { title: '오시는길', category: '/location', path: '/location', id: 0 },
+  { title: '총학소식', category: '/council-news', path: '/council-news', id: 1 },
+  { title: '회칙', category: '/rules', path: '/rules', id: 1 },
+  { title: '회의록', category: '/conference', path: '/conference', id: 2 },
+  { title: '청원게시판', category: '/board-petition', path: '/board-petition/boards', id: 3 },
+  { title: '자유게시판', category: '/board-suggestion', path: '/board-suggestion/boards', id: 3 },
+  { title: 'Q&A', category: '/qna', path: '/qna', id: 4 },
+  { title: 'My voice', category: '/my-voice', path: '/my-voice', id: 4 },
 ];
 
 interface ISideNav {
@@ -50,11 +52,11 @@ SideNav.defaultProps = {
     margin: '40px 0 0 0'
 }
 
-function SideNav({ margin } : ISideNav): JSX.Element {
+function SideNav({ margin } : ISideNav) {
   const location = useLocation();
-  const menuIndex = MenuInfo.findIndex(
-    (menu) => menu.path === location.pathname,
-  );
+  const menuIndex = MenuInfo.findIndex((menu) => {
+    return location.pathname.indexOf(menu.category) === 0
+  })
   const menuList = MenuInfo.filter(
     (menu) => menu.id === MenuInfo[menuIndex].id,
   );
@@ -63,7 +65,7 @@ function SideNav({ margin } : ISideNav): JSX.Element {
       <Hr />
       {menuList.map((item) => (
         <Link key={item.path} to={item.path}>
-            <NavItem isLocated={item.path === location.pathname}>
+            <NavItem isLocated={location.pathname.indexOf(item.category) === 0}>
             {item.title}
             </NavItem>
         </Link>

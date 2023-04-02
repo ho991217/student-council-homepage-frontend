@@ -25,13 +25,10 @@ function Greeting() {
       <SideNav />
       <Block
         title="인사말"
-        isSideNav
+        hasSideNav
         contents={
           <div>
             <P style={{ lineHeight: 1.4 }}>
-              감사합니다.
-              <br />
-              <br />
               그대의 청춘에 단국을 담다,
               <br />
               <br />

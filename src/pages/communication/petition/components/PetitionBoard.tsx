@@ -24,7 +24,7 @@ const Container = styled.div`
   }
   max-width: 1200px;
 `
-function PetitionBoard(): JSX.Element {
+function PetitionBoard() {
   const [board, setBoard] = useState<PostProps[]>([]);
   const [boardsCount, setBoardsCount] = useState<number>(0);
   const [pagingInfo, setPagingInfo] = useState<PagingProps>({
@@ -48,8 +48,8 @@ function PetitionBoard(): JSX.Element {
       method: 'get',
       url: `/post/petition?page=${
         Number(page) - 1
-      }&size=6`,
-    });
+      }&size=6&sort=id,desc`,
+    })
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);
     setPagingInfo(data);

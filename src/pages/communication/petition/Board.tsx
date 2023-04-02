@@ -76,10 +76,10 @@ const Row = styled.div`
   }
 `;
 
-const Svg = styled.svg`
-  width: 16px;
-  height: 16px;
-  margin-right: 5px;
+const AgreeCountWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const PointText = styled.div`
@@ -110,6 +110,10 @@ const PostTitle = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
 `;
+
+const PostStatus = styled.p`
+  color: #204A80;
+`
 
 interface BoardProps {
   posts: PostProps[];
@@ -146,18 +150,11 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
             <Link key={post.id} to={`/board-petition/board?id=${post.id}`}>
               <Row>
                 <div>{index + 1 + (pagingInfo.page - 1) * pagingInfo.size}</div>
-                <div>{post.petitionStatus}</div>
+                <PostStatus>{post.status === 'ACTIVE' ? "[진행중]" : "[마감]"}</PostStatus>
                 <PostTitle>{post.title}</PostTitle>
-                <div>
-                  <Svg
-                    viewBox="0 0 48 48"
-                    height="48"
-                    width="48"
-                  >
-                    <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
-                  </Svg>
-                  {post.commentCount}
-                </div>
+                <AgreeCountWrapper>
+                  {post.agreeCount}
+                </AgreeCountWrapper>
               </Row>
             </Link>
           ))}

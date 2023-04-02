@@ -92,28 +92,27 @@ function Pledge() {
       <SideNav/>
       <Block
       title="인사말"
-      isSideNav
+      hasSideNav
       contents={
         <>
-          <Title>단국대학교 제54대 PLAY! 총학생회</Title>
+          <Title>단국대학교 제55대 담다 총학생회</Title>
           <SubTitle>총학생회 기조</SubTitle>
           <Line /> 
           <DetailContainer>
-            <Img src={logo} alt="student-council-logo" width={490} height={250} />
+            <Img src={logo} alt="student-council-logo" width={508} height={508} />
             <InfoWrapper>
               <Dl>
-                <Dt>자치</Dt>
-                <Dd>- 우리를 위해 적극적으로 소통하는 총학생회</Dd>
-                <Dd>- 우리의 권리를 지키고 나아가는 총학생회</Dd>
-              </Dl>
-              <Dl>
-                <Dt>인권</Dt>
-                <Dd>- 인권의 사각지대를 직접 비춰 들여다보는 총학생회</Dd>
-                <Dd>- 믿고 도움을 요청할 수 있는 총학생회</Dd>
-              </Dl>
-              <Dl>
                 <Dt>낭만</Dt>
-                <Dd>- 우리의 기대를 현실로 보여주는 총학생회</Dd>
+                <Dd>- 캠퍼스 라이프의 낭만 실현하는 총학생회</Dd>
+              </Dl>
+              <Dl>
+                <Dt>소통</Dt>
+                <Dd>- 학우들과 끊임없이 소통하는 총학생회</Dd>
+                <Dd>- 학우들의 의견을 반영하는 총학생회</Dd>
+              </Dl>
+              <Dl>
+                <Dt>자치</Dt>
+                <Dd>- 우리와 함께 문제에 맞서고 해결하는 총학생회</Dd>
               </Dl>
             </InfoWrapper>
           </DetailContainer>

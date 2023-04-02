@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import CopyrightTerm from 'components/CopyrightTerm';
-import CheckPasswordSecurity from 'pages/sign-up/functions/CheckPasswordSecurity';
 
 const InnerContainer = styled.div`
   max-width: 1400px;
@@ -215,7 +214,7 @@ function InputNewPassword({
     const password = currentTarget.value;
     setPassword(password);
 
-    const securityLevel = CheckPasswordSecurity(password);
+    const securityLevel = 5;
     passwordMsg(securityLevel);
     setPasswordState((prev) => ({
       ...prev,
@@ -253,7 +252,7 @@ function InputNewPassword({
     const { value } = e.currentTarget;
     setPasswordState((prev) => ({ ...prev, checkPassword: value }));
 
-    if (value === password && CheckPasswordSecurity(value) > 0) {
+    if (value === password && 5 > 0) {
       setPasswordState((prev) => ({ ...prev, verified: true }));
     }
   };
