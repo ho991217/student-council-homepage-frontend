@@ -74,6 +74,7 @@
     ]
   },
   "devDependencies": {
+    "@types/chart.js": "^2.9.37",
     "@types/draft-js": "^0.11.10",
     "@types/draftjs-to-html": "^0.8.1",
     "@types/html-to-draftjs": "^1.4.0",

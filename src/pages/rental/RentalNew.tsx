@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
 import { useMyInfo } from 'hooks/UseMyInfo';
 import { useToday } from 'hooks/UseToday';
 import { useEffect, useState } from 'react';
@@ -34,7 +35,6 @@ const Row = styled.div<{ portion: string }>`
   label {
     border-left: 1px solid ${({ theme }) => theme.colors.gray100};
     border-right: 1px solid ${({ theme }) => theme.colors.gray100};
-    /* padding: 0 2em; */
   }
   input {
     margin: 0 1em;
@@ -132,7 +132,7 @@ interface IItem {
 }
 
 const parseISODate = (day: string, time: string) => {
-  return `${day}T${time}:00.000Z`;
+  return `${day} ${time}:00`;
 };
 
 function RentalNew() {
@@ -147,6 +147,7 @@ function RentalNew() {
     title: '',
     body: '',
   });
+  const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
 
   const getRentalList = async () => {
@@ -163,23 +164,27 @@ function RentalNew() {
   const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const { itemId, userClass, rentalStart, rentalEnd, title, body } = item;
-    const { data } = await axios({
-      method: 'post',
-      url: '/rental',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: {
-        itemId,
-        userClass,
-        rentalStart: parseISODate(rentalStart.day, rentalStart.time),
-        rentalEnd: parseISODate(rentalEnd.day, rentalEnd.time),
-        title,
-        body,
-      },
-    });
-    if (data.success) {
+    try {
+      const { data } = await axios({
+        method: 'post',
+        url: '/rental',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+        },
+        data: {
+          itemId,
+          userClass,
+          rentalStart: parseISODate(rentalStart.day, rentalStart.time),
+          rentalEnd: parseISODate(rentalEnd.day, rentalEnd.time),
+          title,
+          body,
+        },
+      });
+      console.log(data);
       navigate('/rental');
+    } catch (e) {
+      console.log(e);
     }
   };
 
