@@ -164,6 +164,21 @@ function RentalNew() {
   const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const { itemId, userClass, rentalStart, rentalEnd, title, body } = item;
+
+    if (
+      !itemId ||
+      !userClass ||
+      !rentalStart.day ||
+      !rentalStart.time ||
+      !rentalEnd.day ||
+      !rentalEnd.time ||
+      !title ||
+      !body
+    ) {
+      // eslint-disable-next-line no-alert
+      alert('모든 항목을 입력해주세요.');
+      return;
+    }
     try {
       const { data } = await axios({
         method: 'post',
