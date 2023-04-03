@@ -39,6 +39,7 @@ function Editor() {
   const [isTagFind, setIsTagFind] = useState<boolean>();
   const [tagNameResult, setTagNameResult] = useState<any[]>([]);
   const [tagResult, setTagResult] = useState<any[]>([]);
+  const [tagIntersect, setTagIntersect] = useState(['']);
   const [tagList, setTagList] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -55,7 +56,7 @@ function Editor() {
           Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
       });
-      console.log(data)
+      console.log(data);
       setOriginalTags(data);
     } catch (e) {
       console.log(e);
@@ -79,10 +80,8 @@ function Editor() {
           'Content-Type': 'application/json',
         },
         data: tag,
-      })
-      getTags()
+      });
       setTagResult((prev) => [...prev, data.id]);
-      console.log(data)
     } catch (e) {
       console.log(e);
     }
@@ -100,14 +99,14 @@ function Editor() {
       setIsOpen(true);
       return;
     }
-    console.log(`☆☆☆☆${JSON.stringify}`)
-    tagObjectResult.forEach((tag) => {
-      registerTags(tag)
-    })
 
-    // formData.append('title', title);
-    // formData.append('body', content);
-    // tagResult.forEach((tag) => formData.append('tagIds', tag));
+    tagObjectResult.forEach((tag) => {
+      registerTags(tag);
+    });
+
+    formData.append('title', title);
+    formData.append('body', content);
+    tagResult.forEach((tag) => formData.append('tagIds', tag));
 
     // try {
     //   const res = await axios({
@@ -120,7 +119,7 @@ function Editor() {
     //     data: formData,
     //   });
     //   console.log(res);
-    //   // navigate(`/board-petition/board?id=${res.data.id}`);
+    //   navigate(`/board-petition/board?id=${res.data.id}`);
     // } catch (e) {
     //   console.log(e);
     //   const err = e as ErrorProps;
@@ -134,27 +133,11 @@ function Editor() {
     const tag = tagList[tagList.length - 1];
     const findIndex = (data: string) =>
       originalTags.findIndex((originTag) => originTag.name === data);
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' || e.key === 'Backspace') {
       console.log(findIndex(tag));
       setTagNameResult((prev) => [...prev, tagList[tagList.length - 1]]);
-
-      if (findIndex(tag) === -1) {
-        setTagObject((prev) => [...prev, tag]);
-      } else {
-        setTagResult((prev) => [...prev, findIndex(tag)]);
-      }
     }
-    const allObjectTags = new Set(tagObject)
-    
-    const allTags = new Set(tagNameResult);
-    const realTags = new Set(tagList);
-    const objectIntersect = [...allObjectTags].filter((data) =>
-      realTags.has(data),
-    );
 
-    objectIntersect.forEach(tag => {
-      setTagObjectResult(prev => [...prev, {"name" : tag}])
-    })
     return true;
   };
 
@@ -163,18 +146,46 @@ function Editor() {
   }, []);
 
   useEffect(() => {
+    setTagObjectResult([]);
+    const allObjectTags = new Set(tagObject);
+
+    const allTags = new Set(tagNameResult);
+    const realTags = new Set(tagList);
+    const tagsIntersect = [...allTags].filter((data) => realTags.has(data));
+    const objectIntersect = [...allObjectTags].filter((data) =>
+      realTags.has(data),
+    );
+    objectIntersect.forEach((tag) => {
+      setTagObjectResult((prev) => [...prev, { name: tag }]);
+    });
+  }, [tagObject, tagList]);
+  useEffect(() => {
     // console.log(`------------------`)
     console.log(`tagList : ${tagList}`);
     console.log(`tagNameResult : ${tagNameResult}`);
     console.log(`tagObject : ${JSON.stringify(tagObject)}`);
     console.log(`tagResult : ${tagResult}`);
     console.log(`tagObjectResult : ${JSON.stringify(tagObjectResult)}`);
-    console.log(`originTags: ${JSON.stringify(originalTags)}`)
+    console.log(`originTags: ${JSON.stringify(originalTags)}`);
+    console.log(`tagResult: ${JSON.stringify(tagResult)}`);
+
     // console.log(`${tagList.length} !== ${tagNameResult.length}`)
   }, [tagList, tagNameResult, onSubmitHandler, getTags, registerTags]);
 
+  useEffect(() => {
+    const tag = tagList[tagList.length - 1];
+    const findIndex = (data: string) =>
+      originalTags.findIndex((originTag) => originTag.name === data);
+
+    if (findIndex(tag) === -1) {
+      setTagObject((prev) => [...prev, tag]);
+    } else {
+      setTagResult((prev) => [...prev, originalTags[findIndex(tag)].id]);
+    }
+  }, [tagIntersect]);
+
   // useEffect(()=>{
-    
+
   // },[])
   return (
     <Container>

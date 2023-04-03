@@ -439,6 +439,7 @@ function Post() {
       });
       setPost(data);
       setLikeCount(data.likes);
+      console.log(data)
     } catch {
       navigate(-1);
     }
