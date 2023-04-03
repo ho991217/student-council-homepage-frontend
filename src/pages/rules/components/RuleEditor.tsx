@@ -95,8 +95,8 @@ function RuleEditor() {
               />
               <TextBoxL
                 label="회칙 내용"
-                htmlStr={content}
-                setHtmlStr={setContent}
+                content={content}
+                onChange={(e) => setContent(e.target.value)}
               />
               <FileBoxS label="첨부파일" onChange={handleChange} multiple />
               <SubmitButtonM text="작성 완료" />

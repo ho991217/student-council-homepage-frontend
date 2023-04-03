@@ -55,7 +55,7 @@ function Editor() {
           Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
       });
-      console.log(data)
+      console.log(data);
       setOriginalTags(data);
     } catch (e) {
       console.log(e);
@@ -79,10 +79,10 @@ function Editor() {
           'Content-Type': 'application/json',
         },
         data: tag,
-      })
-      getTags()
+      });
+      getTags();
       setTagResult((prev) => [...prev, data.id]);
-      console.log(data)
+      console.log(data);
     } catch (e) {
       console.log(e);
     }
@@ -100,10 +100,10 @@ function Editor() {
       setIsOpen(true);
       return;
     }
-    console.log(`☆☆☆☆${JSON.stringify}`)
+    console.log(`☆☆☆☆${JSON.stringify}`);
     tagObjectResult.forEach((tag) => {
-      registerTags(tag)
-    })
+      registerTags(tag);
+    });
 
     // formData.append('title', title);
     // formData.append('body', content);
@@ -144,17 +144,17 @@ function Editor() {
         setTagResult((prev) => [...prev, findIndex(tag)]);
       }
     }
-    const allObjectTags = new Set(tagObject)
-    
+    const allObjectTags = new Set(tagObject);
+
     const allTags = new Set(tagNameResult);
     const realTags = new Set(tagList);
     const objectIntersect = [...allObjectTags].filter((data) =>
       realTags.has(data),
     );
 
-    objectIntersect.forEach(tag => {
-      setTagObjectResult(prev => [...prev, {"name" : tag}])
-    })
+    objectIntersect.forEach((tag) => {
+      setTagObjectResult((prev) => [...prev, { name: tag }]);
+    });
     return true;
   };
 
@@ -162,20 +162,6 @@ function Editor() {
     getTags();
   }, []);
 
-  useEffect(() => {
-    // console.log(`------------------`)
-    console.log(`tagList : ${tagList}`);
-    console.log(`tagNameResult : ${tagNameResult}`);
-    console.log(`tagObject : ${JSON.stringify(tagObject)}`);
-    console.log(`tagResult : ${tagResult}`);
-    console.log(`tagObjectResult : ${JSON.stringify(tagObjectResult)}`);
-    console.log(`originTags: ${JSON.stringify(originalTags)}`)
-    // console.log(`${tagList.length} !== ${tagNameResult.length}`)
-  }, [tagList, tagNameResult, onSubmitHandler, getTags, registerTags]);
-
-  // useEffect(()=>{
-    
-  // },[])
   return (
     <Container>
       <Wrapper>
@@ -188,8 +174,8 @@ function Editor() {
           />
           <TextBoxL
             label="청원 내용"
-            htmlStr={content}
-            setHtmlStr={setContent}
+            content={content}
+            onChange={(e) => setContent(e.target.value)}
           />
           <TagBoxLabel>태그</TagBoxLabel>
           <TagsInput
