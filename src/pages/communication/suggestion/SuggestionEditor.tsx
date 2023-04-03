@@ -3,6 +3,7 @@ import SubmitButtonM from 'components/editor/button/SubmitButtonM';
 import TextBoxS from 'components/editor/input/TextBoxS';
 import TextBoxL from 'components/editor/input/TextBoxL';
 import TagSelectM from 'components/editor/TagSelectM';
+import Modal from 'components/modal/Modal';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -12,6 +13,8 @@ import { getCategories } from './functions/GetCategories';
 function SuggestionEditor() {
   const [title, setTitle] = useState<string>('');
   const [text, setText] = useState<string>('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [category, setCategory] = useState<string>('');
   const [categoryList, setCategoryList] = useState<string[]>(['']);
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
@@ -22,7 +25,13 @@ function SuggestionEditor() {
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (window.confirm('게시글 작성을 완료하시겠습니까?')) {
+    if (title.length === 0) {
+      setErrorMsg('제목을 입력해주세요.');
+      setIsOpen(true);
+    } else if (text.length < 9) {
+      setErrorMsg('내용을 입력해주세요.');
+      setIsOpen(true);
+    } else {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('body', text);
@@ -70,6 +79,16 @@ function SuggestionEditor() {
   return (
     <Container>
       <Wrapper>
+        {isOpen && (
+          <Modal
+            title="게시글 등록 실패"
+            contents={errorMsg}
+            onClose={() => {
+              setIsOpen(false);
+              setErrorMsg('');
+            }}
+          />
+        )}
         <Form onSubmit={onSubmitHandler}>
           <TagSelectM
             label="카테고리"
