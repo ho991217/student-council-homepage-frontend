@@ -379,36 +379,6 @@ function Post() {
     }
   };
 
-  const sendComment = async () => {
-    const text = JSON.stringify({
-      text: comment,
-    });
-    try {
-      const { data } = await axios({
-        method: 'post',
-        url: `/post/petition/comment/${postId}`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-          'Content-Type': 'application/json',
-        },
-        data: text,
-      });
-      if (data.successful) {
-        getCurrentPost(postId);
-      }
-    } catch (err) {
-      const error = err as any;
-      setModalState({
-        content: (
-          <div style={{ width: '100%', display: 'grid', placeItems: 'center' }}>
-            {error.response.data.message}
-          </div>
-        ),
-        open: true,
-      });
-    }
-  };
-
   const postAgree = async () => {
     axios({
       url: `/post/petition/agree/${postId}`,
@@ -507,7 +477,7 @@ function Post() {
     setPostId(postId);
     getCurrentPost(postId);
   }, []);
-  const [chartVisbility, setChartVisibility] = useState(false);
+  const [chartVisibility, setChartVisibility] = useState(false);
   const handleShowChart = () => {
     setChartVisibility(true);
   };
@@ -586,21 +556,29 @@ function Post() {
                     fill="#1D64AA"
                   />
                 </svg>
-                <RiArrowDownSLine
-                  onClick={handleShowChart}
-                  style={{ color: 'gray', cursor: 'pointer', fontSize: '35px' }}
-                />
+                {!chartVisibility ? (
+                  <RiArrowDownSLine
+                    style={{
+                      color: 'gray',
+                      cursor: 'pointer',
+                      fontSize: '35px',
+                      alignSelf: 'flex-end',
+                    }}
+                    onClick={handleShowChart}
+                  />
+                ) : (
+                  <RiArrowUpSLine
+                    style={{
+                      color: 'gray',
+                      cursor: 'pointer',
+                      fontSize: '35px',
+                      alignSelf: 'flex-end',
+                    }}
+                    onClick={handleCancleChart}
+                  />
+                )}
               </ChartTitle>
-              <ChartWrapper visibility={chartVisbility}>
-              <RiArrowUpSLine
-                  style={{
-                    color: 'gray',
-                    cursor: 'pointer',
-                    fontSize: '35px',
-                    alignSelf: 'flex-end',
-                  }}
-                  onClick={handleCancleChart}
-                />
+              <ChartWrapper visibility={chartVisibility}>
                 <PetitionChart dataUpdate={dataUpdate} />
               </ChartWrapper>
             </ChartContainer>
