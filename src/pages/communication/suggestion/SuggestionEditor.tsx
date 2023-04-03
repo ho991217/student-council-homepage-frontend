@@ -3,6 +3,7 @@ import SubmitButtonM from 'components/editor/button/SubmitButtonM';
 import TextBoxS from 'components/editor/input/TextBoxS';
 import TextBoxL from 'components/editor/input/TextBoxL';
 import TagSelectM from 'components/editor/TagSelectM';
+import FileBoxS from 'components/editor/input/FileBoxS';
 import Modal from 'components/modal/Modal';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';

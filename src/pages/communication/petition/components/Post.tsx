@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ReactModal from 'react-modal';
+import FileDownloader from 'components/post/FileDownloader';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import parse from 'html-react-parser';
 import SideNav from 'components/nav/SideNav';
 import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
-import { GiCancel } from 'react-icons/gi';
 import PetitionChart from './PetitionChart';
 
 const TARGET_AGREEMENT = 150;
@@ -317,7 +317,14 @@ interface PostProps {
   statisticList: [];
   tags: [];
   agreeCount: number;
+  files?: fileType[];
 }
+
+export type fileType = {
+  id: number;
+  originalName: string;
+  url: string;
+};
 
 function Post() {
   const [searchParams] = useSearchParams();
@@ -407,6 +414,8 @@ function Post() {
           Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
       });
+      console.log(data);
+
       setPost(data);
       setLikeCount(data.likes);
     } catch {
@@ -527,6 +536,7 @@ function Post() {
             <ButtonContainer>
               <AgreeButton onClick={handleSubmit}>동의하기</AgreeButton>
             </ButtonContainer>
+            {post.files && <FileDownloader files={post.files} />}
             <ChartContainer>
               <ChartTitle>
                 청원 동의 {post.agreeCount}명

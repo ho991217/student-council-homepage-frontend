@@ -9,6 +9,7 @@ import TextBoxL from 'components/editor/input/TextBoxL';
 import SubmitButtonM from 'components/editor/button/SubmitButtonM';
 import { TagsInput } from 'react-tag-input-component';
 import { faSmileWink } from '@fortawesome/free-regular-svg-icons';
+import FileBoxS from 'components/editor/input/FileBoxS';
 
 const TagBoxLabel = styled.label`
   display: flex;
@@ -42,6 +43,7 @@ function Editor() {
   const [tagList, setTagList] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [files, setFiles] = useState<File[]>([]);
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
   const formData = new FormData();
@@ -107,6 +109,7 @@ function Editor() {
     formData.append('title', title);
     formData.append('body', content);
     tagResult.forEach((tag) => formData.append('tagIds', tag));
+    files.forEach((file) => formData.append('files', file));
 
     try {
       const res = await axios({
@@ -182,6 +185,7 @@ function Editor() {
             placeHolder="태그들을 입력해주세요"
             onKeyUp={handleEnterTag}
           />
+          <FileBoxS setter={setFiles} multiple />
           <SubmitButtonM text="작성 완료" />
         </Form>
         {isOpen && (
