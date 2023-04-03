@@ -5,6 +5,7 @@ import { useCookies } from 'react-cookie';
 import SideNav from 'components/nav/SideNav';
 import axios from 'axios';
 import parse from 'html-react-parser';
+import { generateHyperlink } from 'pages/communication/petition/components/Post';
 import { CommentProps, PostProps } from './PostProps';
 
 const Container = styled.div`
@@ -80,6 +81,10 @@ const Contents = styled.div`
   padding: 40px 20px;
   ${({ theme }) => theme.media.mobile} {
     padding: 25px 15px;
+  }
+  a {
+    color: ${({ theme }) => theme.colors.primary};
+    text-decoration: underline;
   }
 `;
 
@@ -280,9 +285,9 @@ function Post() {
         Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
       },
     })
-      .then((res) => {
-        setPost(res.data);
-        setLikeCount(res.data.likes);
+      .then(({ data }) => {
+        setPost({ ...data, body: generateHyperlink(data.body) });
+        setLikeCount(data.likes);
       })
       .catch((err) => {
         console.log(err);
@@ -379,7 +384,7 @@ function Post() {
     setCommentId(0);
     setEditComment('');
   };
-  
+
   const onDeleteComment = (item: number) => {
     if (window.confirm('해당 댓글을 삭제하시겠습니까?')) {
       axios({
@@ -403,7 +408,9 @@ function Post() {
     <Container>
       <SideNav margin="50px 0" />
       <Wrapper>
-        {post?.mine === true && <Button onClick={handleDeletePost}>삭제</Button>}
+        {post?.mine === true && (
+          <Button onClick={handleDeletePost}>삭제</Button>
+        )}
         {cookies.isAdmin === 'false' && post?.mine && (
           <Button onClick={handleDeletePost}>삭제</Button>
         )}
@@ -447,15 +454,15 @@ function Post() {
             <Comment key={comment.id}>
               <CommentTopContainer>
                 <CommentInfo>
-                  <CommentAuthor>
-                    익명 {index + 1}
-                  </CommentAuthor>
+                  <CommentAuthor>익명 {index + 1}</CommentAuthor>
                   <VSeparator />
                   <CommentDate>{comment.createdAt}</CommentDate>
                 </CommentInfo>
                 {comment.mine && (
                   <CommentButtonContainer>
-                    <CommentButton onClick={() => handleEditComment(comment.id)}>
+                    <CommentButton
+                      onClick={() => handleEditComment(comment.id)}
+                    >
                       수정
                     </CommentButton>
                     /
