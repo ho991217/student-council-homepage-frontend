@@ -3,12 +3,42 @@ import SubmitButtonM from 'components/editor/button/SubmitButtonM';
 import TextBoxS from 'components/editor/input/TextBoxS';
 import TextBoxL from 'components/editor/input/TextBoxL';
 import TagSelectM from 'components/editor/TagSelectM';
+import FileBoxS from 'components/editor/input/FileBoxS';
 import Modal from 'components/modal/Modal';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { getCategories } from './functions/GetCategories';
+
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 40px 0;
+  ${({ theme }) => theme.media.mobile} {
+    margin: 0;
+  }
+`;
+
+const Wrapper = styled.div`
+  max-width: 1150px;
+  width: 100%;
+  padding: 70px 100px;
+  background-color: ${({ theme }) => theme.colors.white};
+  ${({ theme }) => theme.media.tablet} {
+    padding: 50px 50px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    padding: 40px 20px 60px 20px;
+  }
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
 
 function SuggestionEditor() {
   const [title, setTitle] = useState<string>('');
@@ -102,40 +132,16 @@ function SuggestionEditor() {
             value={title}
             onChange={({ currentTarget }) => setTitle(currentTarget.value)}
           />
-          <TextBoxL label="내용" htmlStr={text} setHtmlStr={setText} />
+          <TextBoxL
+            label="내용"
+            content={text}
+            onChange={(e) => setText(e.target.value)}
+          />
           <SubmitButtonM text="작성 완료" />
         </Form>
       </Wrapper>
     </Container>
   );
 }
-const Container = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 40px 0;
-  ${({ theme }) => theme.media.mobile} {
-    margin: 0;
-  }
-`;
-
-const Wrapper = styled.div`
-  max-width: 1150px;
-  width: 100%;
-  padding: 70px 100px;
-  background-color: ${({ theme }) => theme.colors.white};
-  ${({ theme }) => theme.media.tablet} {
-    padding: 50px 50px;
-  }
-  ${({ theme }) => theme.media.mobile} {
-    padding: 40px 20px 60px 20px;
-  }
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-`;
 
 export default SuggestionEditor;

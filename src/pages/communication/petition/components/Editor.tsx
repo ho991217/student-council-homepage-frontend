@@ -9,6 +9,7 @@ import TextBoxL from 'components/editor/input/TextBoxL';
 import SubmitButtonM from 'components/editor/button/SubmitButtonM';
 import { TagsInput } from 'react-tag-input-component';
 import { faSmileWink } from '@fortawesome/free-regular-svg-icons';
+import FileBoxS from 'components/editor/input/FileBoxS';
 
 const TagBoxLabel = styled.label`
   display: flex;
@@ -42,6 +43,7 @@ function Editor() {
   const [tagList, setTagList] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [files, setFiles] = useState<File[]>([]);
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
   const formData = new FormData();
@@ -55,7 +57,7 @@ function Editor() {
           Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
       });
-      console.log(data)
+      console.log(data);
       setOriginalTags(data);
     } catch (e) {
       console.log(e);
@@ -79,10 +81,10 @@ function Editor() {
           'Content-Type': 'application/json',
         },
         data: tag,
-      })
-      getTags()
+      });
+      getTags();
       setTagResult((prev) => [...prev, data.id]);
-      console.log(data)
+      console.log(data);
     } catch (e) {
       console.log(e);
     }
@@ -96,46 +98,44 @@ function Editor() {
       return;
     }
     if (content.length < 9) {
-      setErrorMsg('내용을 입력해주세요.');
+      setErrorMsg('9자 이상의 내용을 입력해주세요.');
       setIsOpen(true);
       return;
     }
-    console.log(`☆☆☆☆${JSON.stringify}`)
     tagObjectResult.forEach((tag) => {
-      registerTags(tag)
-    })
+      registerTags(tag);
+    });
 
-    // formData.append('title', title);
-    // formData.append('body', content);
-    // tagResult.forEach((tag) => formData.append('tagIds', tag));
+    formData.append('title', title);
+    formData.append('body', content);
+    tagResult.forEach((tag) => formData.append('tagIds', tag));
+    files.forEach((file) => formData.append('files', file));
 
-    // try {
-    //   const res = await axios({
-    //     method: 'post',
-    //     url: '/post/petition',
-    //     headers: {
-    //       Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //     data: formData,
-    //   });
-    //   console.log(res);
-    //   // navigate(`/board-petition/board?id=${res.data.id}`);
-    // } catch (e) {
-    //   console.log(e);
-    //   const err = e as ErrorProps;
-    //   if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
-    //     setErrorMsg(err.response.data.message);
-    //     setIsOpen(true);
-    //   }
-    // }
+    try {
+      const res = await axios({
+        method: 'post',
+        url: '/post/petition',
+        headers: {
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+          'Content-Type': 'multipart/form-data',
+        },
+        data: formData,
+      });
+
+      navigate(`/board-petition/board?id=${res.data.id}`);
+    } catch (e) {
+      const err = e as ErrorProps;
+      if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
+        setErrorMsg(err.response.data.message);
+        setIsOpen(true);
+      }
+    }
   };
   const handleEnterTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const tag = tagList[tagList.length - 1];
     const findIndex = (data: string) =>
       originalTags.findIndex((originTag) => originTag.name === data);
     if (e.key === 'Enter') {
-      console.log(findIndex(tag));
       setTagNameResult((prev) => [...prev, tagList[tagList.length - 1]]);
 
       if (findIndex(tag) === -1) {
@@ -144,34 +144,23 @@ function Editor() {
         setTagResult((prev) => [...prev, findIndex(tag)]);
       }
     }
-    const allObjectTags = new Set(tagObject)
-    
+    const allObjectTags = new Set(tagObject);
+
     const allTags = new Set(tagNameResult);
     const realTags = new Set(tagList);
     const objectIntersect = [...allObjectTags].filter((data) =>
       realTags.has(data),
     );
 
-    objectIntersect.forEach(tag => {
-      setTagObjectResult(prev => [...prev, {"name" : tag}])
-    })
+    objectIntersect.forEach((tag) => {
+      setTagObjectResult((prev) => [...prev, { name: tag }]);
+    });
     return true;
   };
 
   useEffect(() => {
     getTags();
   }, []);
-
-  useEffect(() => {
-    // console.log(`------------------`)
-    console.log(`tagList : ${tagList}`);
-    console.log(`tagNameResult : ${tagNameResult}`);
-    console.log(`tagObject : ${JSON.stringify(tagObject)}`);
-    console.log(`tagResult : ${tagResult}`);
-    console.log(`tagObjectResult : ${JSON.stringify(tagObjectResult)}`);
-    console.log(`originTags: ${JSON.stringify(originalTags)}`)
-    // console.log(`${tagList.length} !== ${tagNameResult.length}`)
-  }, [tagList, tagNameResult, onSubmitHandler, getTags, registerTags]);
 
   return (
     <Container>
@@ -185,8 +174,8 @@ function Editor() {
           />
           <TextBoxL
             label="청원 내용"
-            htmlStr={content}
-            setHtmlStr={setContent}
+            content={content}
+            onChange={(e) => setContent(e.target.value)}
           />
           <TagBoxLabel>태그</TagBoxLabel>
           <TagsInput
@@ -196,6 +185,7 @@ function Editor() {
             placeHolder="태그들을 입력해주세요"
             onKeyUp={handleEnterTag}
           />
+          <FileBoxS setter={setFiles} multiple />
           <SubmitButtonM text="작성 완료" />
         </Form>
         {isOpen && (

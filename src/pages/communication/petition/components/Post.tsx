@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import ReactModal from 'react-modal';
+import FileDownloader from 'components/post/FileDownloader';
+import parse from 'html-react-parser';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
-import parse from 'html-react-parser';
 import SideNav from 'components/nav/SideNav';
 import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
-import { GiCancel } from 'react-icons/gi';
 import PetitionChart from './PetitionChart';
 
 const TARGET_AGREEMENT = 150;
@@ -93,6 +93,10 @@ const Contents = styled.div`
   width: 100%;
   margin-top: 15px;
   margin-bottom: 45px;
+  > a {
+    color: ${({ theme }) => theme.colors.accent};
+    text-decoration: underline;
+  }
 `;
 
 const ButtonContainer = styled.div`
@@ -317,7 +321,32 @@ interface PostProps {
   statisticList: [];
   tags: [];
   agreeCount: number;
+  files?: fileType[];
 }
+
+export type fileType = {
+  id: number;
+  originalName: string;
+  url: string;
+};
+
+export const generateHyperlink = (body: string) => {
+  const token = body.split(/['"\n\t\r ]/);
+
+  const result = [] as string[];
+
+  token.forEach((t) => {
+    let newMarkup = t;
+    if (t.startsWith('http') || t.startsWith('https')) {
+      newMarkup = `<a href='${t}'>${t}</a>`;
+    } else if (t.startsWith('www')) {
+      newMarkup = `<a href='https://${t}'>${t}</a>`;
+    }
+    result.push(newMarkup);
+  });
+
+  return result.join(' ');
+};
 
 function Post() {
   const [searchParams] = useSearchParams();
@@ -407,7 +436,8 @@ function Post() {
           Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
       });
-      setPost(data);
+
+      setPost({ ...data, body: generateHyperlink(data.body) });
       setLikeCount(data.likes);
     } catch {
       navigate(-1);
@@ -511,7 +541,7 @@ function Post() {
           <Hashtag>#</Hashtag>
           <HSeparator bold />
           <Header>{`[ ${
-            post?.status === 'ACTIVE' ? '진행중' : '마감'
+            post.status === 'ACTIVE' ? '진행중' : '마감'
           }  ]`}</Header>
           <Title>{post?.title}</Title>
           <Etc>
@@ -523,10 +553,11 @@ function Post() {
           </Etc>
           <HSeparator />
           <Contents>
-            {parse(post?.body)}
+            {parse(post.body)}
             <ButtonContainer>
               <AgreeButton onClick={handleSubmit}>동의하기</AgreeButton>
             </ButtonContainer>
+            {post.files && <FileDownloader files={post.files} />}
             <ChartContainer>
               <ChartTitle>
                 청원 동의 {post.agreeCount}명
