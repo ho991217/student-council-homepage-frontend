@@ -95,7 +95,7 @@ function Editor() {
       setIsOpen(true);
       return;
     }
-    if (content.length === 0) {
+    if (content.length < 9) {
       setErrorMsg('내용을 입력해주세요.');
       setIsOpen(true);
       return;
