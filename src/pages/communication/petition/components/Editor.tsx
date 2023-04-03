@@ -96,46 +96,43 @@ function Editor() {
       return;
     }
     if (content.length < 9) {
-      setErrorMsg('내용을 입력해주세요.');
+      setErrorMsg('9자 이상의 내용을 입력해주세요.');
       setIsOpen(true);
       return;
     }
-    console.log(`☆☆☆☆${JSON.stringify}`);
     tagObjectResult.forEach((tag) => {
       registerTags(tag);
     });
 
-    // formData.append('title', title);
-    // formData.append('body', content);
-    // tagResult.forEach((tag) => formData.append('tagIds', tag));
+    formData.append('title', title);
+    formData.append('body', content);
+    tagResult.forEach((tag) => formData.append('tagIds', tag));
 
-    // try {
-    //   const res = await axios({
-    //     method: 'post',
-    //     url: '/post/petition',
-    //     headers: {
-    //       Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //     data: formData,
-    //   });
-    //   console.log(res);
-    //   // navigate(`/board-petition/board?id=${res.data.id}`);
-    // } catch (e) {
-    //   console.log(e);
-    //   const err = e as ErrorProps;
-    //   if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
-    //     setErrorMsg(err.response.data.message);
-    //     setIsOpen(true);
-    //   }
-    // }
+    try {
+      const res = await axios({
+        method: 'post',
+        url: '/post/petition',
+        headers: {
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+          'Content-Type': 'multipart/form-data',
+        },
+        data: formData,
+      });
+
+      navigate(`/board-petition/board?id=${res.data.id}`);
+    } catch (e) {
+      const err = e as ErrorProps;
+      if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
+        setErrorMsg(err.response.data.message);
+        setIsOpen(true);
+      }
+    }
   };
   const handleEnterTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const tag = tagList[tagList.length - 1];
     const findIndex = (data: string) =>
       originalTags.findIndex((originTag) => originTag.name === data);
     if (e.key === 'Enter') {
-      console.log(findIndex(tag));
       setTagNameResult((prev) => [...prev, tagList[tagList.length - 1]]);
 
       if (findIndex(tag) === -1) {
