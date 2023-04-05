@@ -46,7 +46,7 @@ import InputStudentInfos from 'pages/sign-up/components/info/InputStudentInfos';
 import QnA from 'pages/voc/qna/QnA';
 import MyVoice from 'pages/voc/my-voice/MyVoice';
 import QnAEditor from 'pages/voc/qna/QnAEditor';
-import QnaDetail from 'pages/voc/qna/QnaDetail';
+import QnADetail from 'pages/voc/qna/QnADetail';
 import MyVoiceDetail from 'pages/voc/my-voice/MyVoiceDetail';
 
 function Router() {
@@ -184,7 +184,7 @@ function Router() {
         <Route path="/voc" element={<GlobalBanner title="총학생회 VOC" />}>
           <Route path="qna">
             <Route path="boards" element={<QnA />} />
-            <Route path="board" element={<QnaDetail />} />
+            <Route path="board" element={<QnADetail />} />
             <Route path="editor" element={<QnAEditor />} />
           </Route>
           <Route path="my-voice">
