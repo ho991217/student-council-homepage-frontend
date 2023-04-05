@@ -10,6 +10,20 @@ const Wrapper = styled.div`
 `;
 
 const Input = styled.input`
+  ${({ theme }) => theme.media.mobile} {
+    width: 190px;
+    height: 30px;
+    margin-right: 3px;
+    ::placeholder {
+      padding-left: 3px!important;
+    }
+    border: 1px solid ${({ theme }) => theme.colors.gray400};
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    :focus {
+      outline: none;
+    }
+  }
   width: 250px;
   height: 30px;
   margin-right: 5px;
@@ -19,6 +33,10 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
+  ${({ theme }) => theme.media.mobile} {
+    width: 50px;
+    height: 30px;
+  }
   all: unset;
   background-color: ${({ theme }) => theme.colors.accent};
   color: ${({ theme }) => theme.colors.white};

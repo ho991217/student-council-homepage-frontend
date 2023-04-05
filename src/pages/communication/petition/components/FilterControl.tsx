@@ -11,7 +11,7 @@ const Container = styled.div`
     width: 100vw;
     height: 50px;
     overflow: scroll;
-    justify-content: flex-start;
+    justify-content: center;
   }
   margin: 20px 0px;
   display: flex;

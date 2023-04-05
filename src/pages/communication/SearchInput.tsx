@@ -4,39 +4,50 @@ import styled from 'styled-components';
 import qs from 'qs';
 
 const Wrapper = styled.div`
-  width: 100%;
   display: flex;
   justify-content: right;
   margin-bottom: 12px;
 `;
 
 const Input = styled.input`
-  width: 190px;
+  ${({ theme }) => theme.media.mobile} {
+    width: 190px;
+    height: 30px;
+    margin-right: 3px;
+    ::placeholder {
+      padding-left: 3px!important;
+    }
+  }
+  width: 250px;
   height: 30px;
-  margin-right: 3px;
+  margin-right: 5px;
   ::placeholder {
-    padding-left: 3px;
+    padding-left: 5px;
   }
   border: 1px solid ${({ theme }) => theme.colors.gray400};
-  -webkit-appearance: none;
-  -webkit-border-radius: 0;
-  :focus {
-    outline: none;
-  }
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    :focus {
+      outline: none;
+    }
 `;
 
 const Button = styled.button`
+  ${({ theme }) => theme.media.mobile} {
+    width: 50px;
+    height: 30px;
+  }
   all: unset;
   background-color: ${({ theme }) => theme.colors.accent};
   color: ${({ theme }) => theme.colors.white};
   text-align: center;
   border-radius: 5px;
-  width: 50px;
+  width: 65px;
   height: 30px;
   cursor: pointer;
 `;
 
-function MobileTopBar() {
+function SearchInput() {
   const [searchWord, setSearchWord] = useState<string>('');
   const params = useSearchParams();
   const navigate = useNavigate();
@@ -80,4 +91,4 @@ function MobileTopBar() {
   );
 }
 
-export default MobileTopBar
+export default SearchInput;

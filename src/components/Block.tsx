@@ -10,10 +10,10 @@ const Container = styled.div<{hasSideNav?: boolean}>`
   }
   ${({ theme }) => theme.media.tablet} {
     padding: 70px 120px 60px 120px;
-    margin-top: 30px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 20px 20px 60px 20px;
+    width: 100%;
+    padding: 50px 20px 60px 20px;
   }
   background-color: ${({ theme }) => theme.colors.white};
 `;
