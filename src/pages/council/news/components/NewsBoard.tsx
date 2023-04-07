@@ -126,7 +126,7 @@ function NewsBoard({
               <Content>
                 <Link to={`/news?id=${post.id}`}>{post.title}</Link>
               </Content>
-              <Content>{post.createdDate}</Content>
+              <Content>{post.createdAt}</Content>
               <Content>
                 <a
                   target="_blank"

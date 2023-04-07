@@ -2,6 +2,7 @@ export interface NewsProps {
   id: number;
   title: string;
   createdDate: string;
+  createdAt: string;
   files: FileProps[];
   views: number;
 }
