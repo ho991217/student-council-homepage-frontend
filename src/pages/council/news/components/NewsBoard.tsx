@@ -126,7 +126,10 @@ function NewsBoard({
               <Content>
                 <Link to={`/news?id=${post.id}`}>{post.title}</Link>
               </Content>
-              <Content>{post.createdAt}</Content>
+              <Content>
+                {post.createdAt.substring(0,4)}년 {post.createdAt.substring(5, 7)}월{' '}
+                {post.createdAt.substring(8,10)}일
+              </Content>
               <Content>
                 <a
                   target="_blank"
