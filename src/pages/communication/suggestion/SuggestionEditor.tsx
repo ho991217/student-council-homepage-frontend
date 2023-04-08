@@ -59,7 +59,7 @@ function SuggestionEditor() {
       setErrorMsg('제목을 입력해주세요.');
       setIsOpen(true);
     } else if (text.length < 9) {
-      setErrorMsg('내용을 입력해주세요.');
+      setErrorMsg('9자 이상의 내용을 입력해주세요.');
       setIsOpen(true);
     } else {
       const formData = new FormData();
