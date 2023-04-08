@@ -129,7 +129,10 @@ function NewsBoard({
               <Content>
                 <Link to={`/news?id=${post.id}`}>{post.title}</Link>
               </Content>
-              <Content>{post.createdDate}</Content>
+              <Content>
+                {post.createdAt.substring(0,4)}년 {post.createdAt.substring(5, 7)}월{' '}
+                {post.createdAt.substring(8,10)}일
+              </Content>
             </Row>
           ))}
           {isAdmin && (
