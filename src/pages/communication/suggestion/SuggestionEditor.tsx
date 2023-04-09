@@ -140,7 +140,7 @@ function SuggestionEditor() {
             content={text}
             onChange={(e) => setText(e.target.value)}
           />
-          <FileBoxS setter={setFiles} multiple />
+          <FileBoxS setter={setFiles} accept="image/*" multiple />
           <SubmitButtonM text="작성 완료" />
         </Form>
       </Wrapper>

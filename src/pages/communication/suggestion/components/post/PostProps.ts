@@ -2,7 +2,7 @@ export interface PostProps {
   author: string;
   body: string;
   createdAt: string;
-  files: [];
+  files: {id:string, url:string}[];
   id: number;
   mine: boolean;
   tag: [];

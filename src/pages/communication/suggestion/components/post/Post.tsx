@@ -405,6 +405,8 @@ function Post() {
         });
     }
   };
+  console.log(post?.files);
+
   return (
     <Container>
       <SideNav margin="50px 0" />
@@ -423,7 +425,12 @@ function Post() {
 
         <Contents>
           <Text>{parse(post?.body ?? '')}</Text>
-          {post?.files && <FileDownloader files={post?.files} />}
+          <div>
+            {post?.files.map((file) => (
+              <img key = {file.id} src = {file.url} alt ="" style={{ width: "200px", height: "200px" }}/>
+            ))}
+          </div>
+          {/* {post?.files && <FileDownloader files={post?.files} />} */}
           <Like
             liked={post?.liked}
             onClick={post?.liked ? deleteLike : postLike}
