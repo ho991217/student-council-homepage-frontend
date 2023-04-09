@@ -48,18 +48,14 @@ function GlobalBanner({ title }: { title: string }) {
     }
   }, []);
   return (
-    <div>
-      {bannerVisibility && (
-        <>
-          <Container>
-            <Banner>
-              <Title>{title}</Title>
-            </Banner>
-          </Container>
-          <Outlet />
-        </>
-      )}
-    </div>
+    <>
+      <Container>
+        <Banner>
+          <Title>{title}</Title>
+        </Banner>
+      </Container>
+      <Outlet />
+    </>
   );
 }
 

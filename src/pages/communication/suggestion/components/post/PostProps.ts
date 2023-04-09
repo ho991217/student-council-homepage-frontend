@@ -2,7 +2,7 @@ export interface PostProps {
   author: string;
   body: string;
   createdAt: string;
-  files: [];
+  files: {id:string, url:string}[];
   id: number;
   mine: boolean;
   tag: [];
@@ -17,4 +17,6 @@ export interface CommentProps {
   text: string;
   length: number;
   mine: boolean;
+  author: string;
+  authorMajor: string;
 }

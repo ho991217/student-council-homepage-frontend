@@ -123,8 +123,7 @@ const MobilePageInfo = styled.div`
   display: flex;
   font-size: ${({ theme }) => theme.fonts.size.base};
   background-color: ${({ theme }) => theme.colors.gray020};
-  padding: 10px;
-  margin: 0 30px;
+  padding: 10px 40px;
   user-select: none;
 `;
 
@@ -138,7 +137,7 @@ const MobileArrowSvg = styled.svg`
 const MobileSearch = styled.div`
   display: flex;
   margin-bottom: 10px;
-  margin: 30px 30px 15px 30px;
+  margin: 10px 30px;
 `;
 
 const MobileSelect = styled.select`

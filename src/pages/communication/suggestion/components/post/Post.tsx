@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import FileDownloader from 'components/post/FileDownloader';
 import SideNav from 'components/nav/SideNav';
 import axios from 'axios';
 import parse from 'html-react-parser';
@@ -11,32 +12,29 @@ import { CommentProps, PostProps } from './PostProps';
 const Container = styled.div`
   width: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
+  background-color: ${({ theme }) => theme.colors.white};
+  align-items: flex-start;
+  ${({ theme }) => theme.media.desktop} {
+    padding-left: 50px;
+  }
   background-color: ${({ theme }) => theme.colors.gray040};
-  gap: 30px;
 `;
 
 const Wrapper = styled.div`
+  max-width: 1280px;
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    width: calc(100% - 310px);
-    max-width: 1440px;
-    padding: 30px 30px 60px 30px;
-    margin-top: 40px;
-    margin-bottom: 100px;
+    padding: 40px 50px;
+    margin: 40px 30px;
   }
   ${({ theme }) => theme.media.tablet} {
-    padding: 50px 80px 60px 80px;
+    padding: 40px 50px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 50px 20px 60px 20px;
+    padding: 40px 20px;
   }
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
@@ -63,9 +61,7 @@ const Button = styled.button.attrs({ type: 'button' })`
   padding: 5px 10px;
 `;
 
-const Header = styled.div`
-  align-self: flex-start;
-`;
+const Header = styled.div``;
 
 const Date = styled.div`
   color: ${({ theme }) => theme.colors.gray500};
@@ -409,9 +405,11 @@ function Post() {
         });
     }
   };
+  console.log(post?.files);
+
   return (
     <Container>
-      <SideNav />
+      <SideNav margin="50px 0" />
       <Wrapper>
         {post?.mine === true && (
           <Button onClick={handleDeletePost}>삭제</Button>
@@ -427,6 +425,12 @@ function Post() {
 
         <Contents>
           <Text>{parse(post?.body ?? '')}</Text>
+          <div>
+            {post?.files.map((file) => (
+              <img key = {file.id} src = {file.url} alt ="" style={{ width: "200px", height: "200px" }}/>
+            ))}
+          </div>
+          {/* {post?.files && <FileDownloader files={post?.files} />} */}
           <Like
             liked={post?.liked}
             onClick={post?.liked ? deleteLike : postLike}
@@ -459,7 +463,7 @@ function Post() {
             <Comment key={comment.id}>
               <CommentTopContainer>
                 <CommentInfo>
-                  <CommentAuthor>익명 {index + 1}</CommentAuthor>
+                  <CommentAuthor>{comment.authorMajor} {' '} {comment.author}</CommentAuthor>
                   <VSeparator />
                   <CommentDate>{comment.createdAt}</CommentDate>
                 </CommentInfo>

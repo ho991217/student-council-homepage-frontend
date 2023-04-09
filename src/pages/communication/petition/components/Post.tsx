@@ -18,23 +18,23 @@ const Container = styled.div`
   align-items: flex-start;
   justify-content: center;
   background-color: ${({ theme }) => theme.colors.gray040};
-  gap: 30px;
+  ${({ theme }) => theme.media.desktop} {
+    padding: 0 50px;
+  }
 `;
 
 const Wrapper = styled.div`
+  max-width: 1280px;
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    width: calc(100% - 310px);
-    max-width: 1440px;
-    padding: 30px 30px 60px 30px;
-    margin-top: 40px;
-    margin-bottom: 100px;
+    margin: 40px 0px;
+    padding: 30px 50px;
   }
   ${({ theme }) => theme.media.tablet} {
-    padding: 50px 80px 60px 80px;
+    padding: 30px 50px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 50px 20px 60px 20px;
+    padding: 30px 20px;
   }
   display: flex;
   position: relative;
@@ -398,7 +398,7 @@ function Post() {
         setAdminAnswer('');
       });
       getCurrentPost(postId);
-    } catch (error) {
+    } catch ( error ) {
       const { data } = error as any;
       setError((prev) => ({
         ...prev,
@@ -516,7 +516,7 @@ function Post() {
   };
   return (
     <Container>
-      <SideNav />
+      <SideNav margin="50px 30px 0 0" />
       <ReactModal
         isOpen={modalState.open}
         contentLabel="Example Modal"
