@@ -15,7 +15,6 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: flex-start;
   background-color: white;
-  gap: 30px;
 `
 const Container = styled.div`
   background-color: ${(props) => props.theme.colors.white};
@@ -65,7 +64,7 @@ function PetitionBoard(): JSX.Element {
 
   return (
     <Wrapper>
-      <SideNav margin="40px 0 0 0" />
+      <SideNav margin="120px 0 0 0" />
       <Container>
         <FilterControl />
         <Board posts={board} pagingInfo={pagingInfo} currentPage={page} />
