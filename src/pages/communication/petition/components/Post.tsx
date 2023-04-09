@@ -15,11 +15,13 @@ const TARGET_AGREEMENT = 150;
 const Container = styled.div`
   width: 100%;
   display: flex;
-  align-items: flex-start;
   justify-content: center;
+  background-color: ${({ theme }) => theme.colors.white};
+  align-items: flex-start;
+  background-color: ${({ theme }) => theme.colors.white};
   background-color: ${({ theme }) => theme.colors.gray040};
   ${({ theme }) => theme.media.desktop} {
-    padding: 0 50px;
+    padding-left: 50px;
   }
 `;
 
@@ -27,20 +29,15 @@ const Wrapper = styled.div`
   max-width: 1280px;
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    margin: 40px 0px;
-    padding: 30px 50px;
+    padding: 40px 50px;
+    margin: 40px 30px;
   }
   ${({ theme }) => theme.media.tablet} {
-    padding: 30px 50px;
+    padding: 40px 50px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 30px 20px;
+    padding: 40px 20px;
   }
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
@@ -516,7 +513,7 @@ function Post() {
   };
   return (
     <Container>
-      <SideNav margin="50px 30px 0 0" />
+      <SideNav margin="40px 0" />
       <ReactModal
         isOpen={modalState.open}
         contentLabel="Example Modal"
@@ -538,7 +535,7 @@ function Post() {
               <input type="button" value="삭제" onClick={handleDelete} />
             </AdminPanel>
           )}
-          <Hashtag>#</Hashtag>
+          {/* <Hashtag>#</Hashtag> */}
           <HSeparator bold />
           <Header>{`[ ${
             post.status === 'ACTIVE' ? '진행중' : '마감'

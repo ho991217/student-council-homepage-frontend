@@ -10,15 +10,15 @@ const Container = styled.div`
   background-repeat: no-repeat;
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    background-size: 100% 250px
+    background-size: 100% 250px;
     height: 250px;
   }
   ${({ theme }) => theme.media.tablet} {
-    background-size: 100% 200px
+    background-size: 100% 200px;
     height: 200px;
   }
   ${({ theme }) => theme.media.mobile} {
-      background-size: 100% 150px
+    background-size: 100% 150px;
     height: 150px;
   }
 `;

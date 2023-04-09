@@ -12,7 +12,6 @@ import { CommentProps, PostProps } from './PostProps';
 const Container = styled.div`
   width: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
   background-color: ${({ theme }) => theme.colors.white};
   align-items: flex-start;
@@ -409,7 +408,7 @@ function Post() {
 
   return (
     <Container>
-      <SideNav margin="50px 0" />
+      <SideNav margin="40px 0" />
       <Wrapper>
         {post?.mine === true && (
           <Button onClick={handleDeletePost}>삭제</Button>
