@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import FileDownloader from 'components/post/FileDownloader';
 import SideNav from 'components/nav/SideNav';
 import axios from 'axios';
 import parse from 'html-react-parser';
@@ -422,6 +423,7 @@ function Post() {
 
         <Contents>
           <Text>{parse(post?.body ?? '')}</Text>
+          {post?.files && <FileDownloader files={post?.files} />}
           <Like
             liked={post?.liked}
             onClick={post?.liked ? deleteLike : postLike}

@@ -48,6 +48,7 @@ function SuggestionEditor() {
   const [category, setCategory] = useState<string>('');
   const [categoryList, setCategoryList] = useState<string[]>(['']);
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
+  const [files, setFiles] = useState<File[]>([]);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -70,6 +71,8 @@ function SuggestionEditor() {
       } else {
         formData.append('category', category);
       }
+
+      files.forEach((file) => formData.append('files', file));
 
       axios({
         url: '/post/general-forum',
@@ -137,6 +140,7 @@ function SuggestionEditor() {
             content={text}
             onChange={(e) => setText(e.target.value)}
           />
+          <FileBoxS setter={setFiles} multiple />
           <SubmitButtonM text="작성 완료" />
         </Form>
       </Wrapper>
