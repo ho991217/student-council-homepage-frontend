@@ -17,4 +17,6 @@ export interface CommentProps {
   text: string;
   length: number;
   mine: boolean;
+  author: string;
+  authorMajor: string;
 }
