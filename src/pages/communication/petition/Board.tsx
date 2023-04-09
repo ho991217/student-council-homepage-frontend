@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { PagingProps } from 'components/PageControl';
 import { PostProps } from './PostProps';
+import SearchInput from '../SearchInput';
 
 const Container = styled.div`
   width: 100%;
@@ -13,16 +14,16 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   max-width: 1290px;
-  width: 90%;
+  width: 100%;
 
   ${({ theme }) => theme.media.desktop} {
-    padding: 30px 0px 10px 0px;
+    padding: 0px 50px 10px 50px;
   }
   ${({ theme }) => theme.media.tablet} {
-    padding: 30px 50px 10px 50px;
+    padding: 0px 50px 10px 50px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 30px 20px 20px 10px;
+    padding: 30px 10px 20px 10px;
   }
   display: flex;
   flex-direction: column;
@@ -34,9 +35,19 @@ const BoardsContainer = styled.div`
   width: 100%;
 `;
 
-const PageInfo = styled.div`
+const TopContainer = styled.div`
   width: 100%;
   display: flex;
+  align-items: flex-end;
+  justify-content: end;
+`;
+
+const PageInfo = styled.div`
+  ${({ theme }) => theme.media.desktop} {
+    display: flex;
+  }
+  display: none;
+  width: 100%;
   align-items: flex-end;
   margin-bottom: 10px;
 `;
@@ -112,8 +123,8 @@ const PostTitle = styled.div`
 `;
 
 const PostStatus = styled.p`
-  color: #204A80;
-`
+  color: #204a80;
+`;
 
 interface BoardProps {
   posts: PostProps[];
@@ -132,11 +143,14 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
     <Container>
       <Wrapper>
         <BoardsContainer>
-          <PageInfo>
-            Total <PointText>{pagingInfo.totalElements}건,</PointText>{' '}
-            {currentPage}/
-            {Math.ceil(pagingInfo.totalElements / pagingInfo.size)}
-          </PageInfo>
+          <TopContainer>
+            <PageInfo>
+              Total <PointText>{pagingInfo.totalElements}건,</PointText>{' '}
+              {currentPage}/
+              {Math.ceil(pagingInfo.totalElements / pagingInfo.size)}
+            </PageInfo>
+            <SearchInput />
+          </TopContainer>
           <BoardHead>
             <Row>
               <div>번호</div>
@@ -150,11 +164,11 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
             <Link key={post.id} to={`/board-petition/board?id=${post.id}`}>
               <Row>
                 <div>{index + 1 + (pagingInfo.page - 1) * pagingInfo.size}</div>
-                <PostStatus>{post.status === 'ACTIVE' ? "[진행중]" : "[마감]"}</PostStatus>
+                <PostStatus>
+                  {post.status === 'ACTIVE' ? '[진행중]' : '[마감]'}
+                </PostStatus>
                 <PostTitle>{post.title}</PostTitle>
-                <AgreeCountWrapper>
-                  {post.agreeCount}
-                </AgreeCountWrapper>
+                <AgreeCountWrapper>{post.agreeCount}</AgreeCountWrapper>
               </Row>
             </Link>
           ))}
