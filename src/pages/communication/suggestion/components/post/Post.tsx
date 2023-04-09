@@ -454,7 +454,7 @@ function Post() {
             <Comment key={comment.id}>
               <CommentTopContainer>
                 <CommentInfo>
-                  <CommentAuthor>익명 {index + 1}</CommentAuthor>
+                  <CommentAuthor>{comment.authorMajor} {' '} {comment.author}</CommentAuthor>
                   <VSeparator />
                   <CommentDate>{comment.createdAt}</CommentDate>
                 </CommentInfo>

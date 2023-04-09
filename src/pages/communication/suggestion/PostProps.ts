@@ -1,5 +1,6 @@
 export interface PostProps {
   commentCount: number;
+  author: string;
   id: number;
   views: number;
   title: string;
