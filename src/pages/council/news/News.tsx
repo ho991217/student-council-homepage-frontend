@@ -244,7 +244,7 @@ function News() {
     <Container>
       <SideNav />
       <Contents>
-        <Desktop>
+        <Desktop>   
           <TopContainer>
             <Wrapper>
               <PageInfo>

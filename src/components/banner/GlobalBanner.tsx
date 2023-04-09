@@ -4,21 +4,21 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 const Container = styled.div`
-  display: 'flex';
+  display: flex;
   background-image: url(${BannerImg});
   background-position: center;
   background-repeat: no-repeat;
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    'background-size: 100% 250px
+    background-size: 100% 250px
     height: 250px;
   }
   ${({ theme }) => theme.media.tablet} {
-    'background-size: 100% 200px
+    background-size: 100% 200px
     height: 200px;
   }
   ${({ theme }) => theme.media.mobile} {
-    'background-size: 100% 150px
+      background-size: 100% 150px
     height: 150px;
   }
 `;
@@ -27,7 +27,7 @@ const Banner = styled.div`
   width: 100%;
   height: 100%;
   color: ${({ theme }) => theme.colors.white};
-  display: 'flex';
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -36,7 +36,6 @@ const Banner = styled.div`
 const Title = styled.h1`
   font-size: ${({ theme }) => theme.fonts.size.x3xl};
   font-weight: ${({ theme }) => theme.fonts.weight.bold};
-
   margin-bottom: 12px;
 `;
 
@@ -44,7 +43,6 @@ function GlobalBanner({ title }: { title: string }) {
   const location = useLocation().pathname;
   const [bannerVisibility, setBannerVisibility] = useState(false);
   useEffect(() => {
-    console.log(location.indexOf('boards'));
     if (location.indexOf('boards') > 0) {
       setBannerVisibility(true);
     }
