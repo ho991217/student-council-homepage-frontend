@@ -20,7 +20,7 @@ function News({ news }: { news: RecentNewsType[] }): JSX.Element {
     <Wrapper>
       {news.map((news) => (
         <P key={news.id}>
-          <Link to={`post?id=${news.id}`}>{news.title}</Link>
+          <Link to={`/council-news/post?id=${news.id}`}>{news.title}</Link>
         </P>
       ))}
     </Wrapper>
