@@ -17,6 +17,7 @@ const Container = styled.div`
     padding-left: 50px;
   }
 `;
+
 const Wrapper = styled.div`
   max-width: 1280px;
   width: 100%;
@@ -141,9 +142,6 @@ function Detail() {
       const { data } = await axios({
         method: 'get',
         url: `/post/news/${searchParams.get('id')}`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       });
       setDetail(data);
     } catch (error) {
@@ -212,28 +210,27 @@ function Detail() {
                 ))}
             </ImageContainer>
 
-              <Download>
-                <FolderIcon>
-                  <IoIosFolder size="35" />
-                </FolderIcon>
-                <Data>
-                  <Name>{detail?.files[0].originalName}</Name>
-                </Data>
-                <DownloadIcon>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={detail?.files[0].url}
-                  >
-                    <FiDownload size="15" color="76787A" />
-                  </a>
-                </DownloadIcon>
-              </Download>
-            </>
-          )}
-        </ContentWrapper>
-      </Wrapper>
-    </Container>
+            <Download>
+              <FolderIcon>
+                <IoIosFolder size="35" />
+              </FolderIcon>
+              <Data>
+                <Name>{detail?.files[0].originalName}</Name>
+              </Data>
+              <DownloadIcon>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={detail?.files[0].url}
+                >
+                  <FiDownload size="15" color="76787A" />
+                </a>
+              </DownloadIcon>
+            </Download>
+          </>
+        )}
+      </ContentWrapper>
+    </Wrapper>
   );
 }
 

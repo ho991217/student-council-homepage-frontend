@@ -42,17 +42,6 @@ const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
-const Hashtag = styled.div`
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.white};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 5px 15px;
-  margin: 0px 5px;
-  border-radius: 25px;
-`;
-
 const HSeparator = styled.div<{ bold?: boolean }>`
   width: 100%;
   height: ${({ bold }) => (bold ? '2px' : '1px')};

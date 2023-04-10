@@ -6,9 +6,7 @@ import TagSelectM from 'components/editor/TagSelectM';
 import FileBoxS from 'components/editor/input/FileBoxS';
 import Modal from 'components/modal/Modal';
 import { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useLogin } from 'hooks/UseLogin';
 import styled from 'styled-components';
 import { getCategories } from './functions/GetCategories';
 
@@ -48,7 +46,7 @@ function SuggestionEditor() {
   const [errorMsg, setErrorMsg] = useState('');
   const [category, setCategory] = useState<string>('');
   const [categoryList, setCategoryList] = useState<string[]>(['']);
-  const { getAccessToken } = useLogin();
+  const [files, setFiles] = useState<File[]>([]);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();

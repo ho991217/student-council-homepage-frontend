@@ -124,9 +124,6 @@ function Detail() {
       const { data } = await axios({
         method: 'get',
         url: `/post/news/${searchParams.get('id')}`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       });
       setDetail(data);
     } catch (error) {
@@ -136,7 +133,6 @@ function Detail() {
   useEffect(() => {
     getCurrentPost();
   }, []);
-
 
   const handleDelete = (id: number) => {
     axios
@@ -186,11 +182,11 @@ function Detail() {
           <>
             {detail?.files
               .filter((file) => {
-                return(
+                return (
                   file.url.endsWith('png') ||
                   file.url.endsWith('jpg') ||
                   file.url.endsWith('jpeg')
-                )
+                );
               })
               .map((img: FileProps, index: number) => (
                 <Image
