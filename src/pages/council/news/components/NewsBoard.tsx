@@ -120,7 +120,7 @@ function NewsBoard({
           {board.map((post, index) => (
             <Row key={post.id}>
               <Content>
-                {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                {index + 1 + (pagingInfo.page) * pagingInfo.size}
               </Content>
               <Content>
                 <Link to={`post?id=${post.id}`}>{post.title}</Link>
