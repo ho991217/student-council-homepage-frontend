@@ -20,14 +20,6 @@ const Container = styled.div`
   gap: 30px;
 `;
 
-const TopContainer = styled.div`
-  width: 100%;
-  display: flex;
-  align-divs: center;
-  justify-content: center;
-  padding-top: 30px;
-`;
-
 const Contents = styled.div`
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
@@ -36,10 +28,20 @@ const Contents = styled.div`
   max-width: 1300px;
 `
 
+const TopContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-divs: center;
+  justify-content: center;
+  padding-top: 30px;
+`;
+
+
 const Wrapper = styled.div`
   max-width: 1190px;
   width: 100%;
   padding: 35px 60px;
+  margin: 0 50px;
   background-color: ${({ theme }) => theme.colors.gray020};
 `;
 
@@ -241,7 +243,7 @@ function News() {
     <Container>
       <SideNav />
       <Contents>
-        <Desktop>
+        <Desktop>   
           <TopContainer>
             <Wrapper>
               <PageInfo>

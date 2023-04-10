@@ -13,6 +13,7 @@ function RuleEditor() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [form, setForm] = useState<FormData>();
+  const [files, setFiles] = useState<File[]>([]); // [File
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const [isOpen, setIsOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -33,6 +34,7 @@ function RuleEditor() {
     Array.from(e.target.files).forEach((f) => formData.append('files', f));
     formData.append('text', content);
     formData.append('title', title);
+    files.forEach((f) => formData.append('files', f));
     setForm(formData);
   };
 
@@ -95,10 +97,10 @@ function RuleEditor() {
               />
               <TextBoxL
                 label="회칙 내용"
-                htmlStr={content}
-                setHtmlStr={setContent}
+                content={content}
+                onChange={(e) => setContent(e.target.value)}
               />
-              <FileBoxS label="첨부파일" onChange={handleChange} multiple />
+              <FileBoxS setter={setFiles} multiple />
               <SubmitButtonM text="작성 완료" />
             </Form>
           </Wrapper>

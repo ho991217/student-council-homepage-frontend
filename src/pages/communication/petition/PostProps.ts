@@ -5,6 +5,7 @@ export interface PostProps {
   commentCount: number;
   blind: boolean;
   postHits: number;
+  agreeCount: number;
 }
 
 export interface Comment {

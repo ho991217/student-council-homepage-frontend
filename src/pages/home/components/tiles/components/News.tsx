@@ -38,7 +38,7 @@ function News(): JSX.Element {
     <Wrapper>
       {news.map((news) => (
         <P key={news.id}>
-          <Link to={`/news?id=${news.id}`}>{news.title}</Link>
+          <Link to={`post?id=${news.id}`}>{news.title}</Link>
         </P>
       ))}
     </Wrapper>

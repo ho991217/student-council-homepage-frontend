@@ -3,93 +3,14 @@ import SubmitButtonM from 'components/editor/button/SubmitButtonM';
 import TextBoxS from 'components/editor/input/TextBoxS';
 import TextBoxL from 'components/editor/input/TextBoxL';
 import TagSelectM from 'components/editor/TagSelectM';
+import FileBoxS from 'components/editor/input/FileBoxS';
+import Modal from 'components/modal/Modal';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { getCategories } from './functions/GetCategories';
 
-function SuggestionEditor() {
-  const [title, setTitle] = useState<string>('');
-  const [text, setText] = useState<string>('');
-  const [category, setCategory] = useState<string>('');
-  const [categoryList, setCategoryList] = useState<string[]>(['']);
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
-
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
-
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (window.confirm('게시글 작성을 완료하시겠습니까?')) {
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('body', text);
-      if (category === '') {
-        formData.append('category', '기타');
-      } else {
-        formData.append('category', category);
-      }
-
-      axios({
-        url: '/post/general-forum',
-        method: 'post',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
-        data: formData,
-      })
-        .then((res) => {
-          if (res.data.successful) navigate('/board-suggestion/boards?page=1');
-          navigate('/board-suggestion/boards')
-        })
-        .catch(
-          ({
-            response: {
-              data: { message },
-            },
-          }) =>
-            // 에러 처리
-            alert(message),
-        );
-    }
-  };
-
-  useEffect(() => {
-    getCategories(cookies['X-AUTH-TOKEN']).then((res) => {
-      setCategoryList(res);
-    });
-  }, []);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-  return (
-    <Container>
-      <Wrapper>
-        <Form onSubmit={onSubmitHandler}>
-          <TagSelectM
-            label="카테고리"
-            selectedTag={category}
-            tagList={categoryList}
-            onChange={({ currentTarget }) => setCategory(currentTarget.value)}
-          />
-          <TextBoxS
-            label="제목"
-            placeholder="제목을 입력해주세요."
-            value={title}
-            onChange={({ currentTarget }) => setTitle(currentTarget.value)}
-          />
-          <TextBoxL label="내용" htmlStr={text} setHtmlStr={setText} />
-          <SubmitButtonM text="작성 완료" />
-        </Form>
-      </Wrapper>
-    </Container>
-  );
-}
 const Container = styled.div`
   width: 100%;
   display: flex;
@@ -118,5 +39,113 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
 `;
+
+function SuggestionEditor() {
+  const [title, setTitle] = useState<string>('');
+  const [text, setText] = useState<string>('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [category, setCategory] = useState<string>('');
+  const [categoryList, setCategoryList] = useState<string[]>(['']);
+  const [cookies] = useCookies(['X-AUTH-TOKEN']);
+  const [files, setFiles] = useState<File[]>([]);
+
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (title.length === 0) {
+      setErrorMsg('제목을 입력해주세요.');
+      setIsOpen(true);
+    } else if (text.length < 9) {
+      setErrorMsg('9자 이상의 내용을 입력해주세요.');
+      setIsOpen(true);
+    } else {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('body', text);
+      if (category === '') {
+        formData.append('category', '기타');
+      } else {
+        formData.append('category', category);
+      }
+
+      files.forEach((file) => formData.append('files', file));
+
+      axios({
+        url: '/post/general-forum',
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+        },
+        data: formData,
+      })
+        .then((res) => {
+          if (res.data.successful) navigate('/board-suggestion/boards?page=1');
+          navigate('/board-suggestion/boards');
+        })
+        .catch(
+          ({
+            response: {
+              data: { message },
+            },
+          }) =>
+            // 에러 처리
+            alert(message),
+        );
+    }
+  };
+
+  useEffect(() => {
+    getCategories(cookies['X-AUTH-TOKEN']).then((res) => {
+      setCategoryList(res);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return (
+    <Container>
+      <Wrapper>
+        {isOpen && (
+          <Modal
+            title="게시글 등록 실패"
+            contents={errorMsg}
+            onClose={() => {
+              setIsOpen(false);
+              setErrorMsg('');
+            }}
+          />
+        )}
+        <Form onSubmit={onSubmitHandler}>
+          <TagSelectM
+            label="카테고리"
+            selectedTag={category}
+            tagList={categoryList}
+            onChange={({ currentTarget }) => setCategory(currentTarget.value)}
+          />
+          <TextBoxS
+            label="제목"
+            placeholder="제목을 입력해주세요."
+            value={title}
+            onChange={({ currentTarget }) => setTitle(currentTarget.value)}
+          />
+          <TextBoxL
+            label="내용"
+            content={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          <FileBoxS setter={setFiles} accept="image/*" multiple />
+          <SubmitButtonM text="작성 완료" />
+        </Form>
+      </Wrapper>
+    </Container>
+  );
+}
 
 export default SuggestionEditor;

@@ -31,35 +31,17 @@ const NavItem = styled.li<{ isLocated: boolean }>`
   border-bottom: 1px solid ${(props) => props.theme.colors.gray300};
 `;
 const MenuInfo = [
-  { title: '인사말', category: '/greeting', path: '/greeting', id: 0 },
+  { title: '인사말', category: '/greeting', path:'/greeting', id: 0 },
+  { title: '공약', category: '/pledge', path: '/pledge', id: 0 },
   { title: '조직도', category: '/organization', path: '/organization', id: 0 },
   { title: '오시는길', category: '/location', path: '/location', id: 0 },
-  {
-    title: '총학소식',
-    category: '/council-news',
-    path: '/council-news',
-    id: 1,
-  },
-  { title: '공약', category: '/pledge', path: '/pledge', id: 1 },
-  {
-    title: '청원게시판',
-    category: '/board-petition',
-    path: '/board-petition/boards',
-    id: 2,
-  },
-  {
-    title: '문의 및 건의사항',
-    category: '/board-suggestion',
-    path: '/board-suggestion/boards',
-    id: 2,
-  },
-  { title: 'Q&A', category: '/voc/qna', path: '/voc/qna/boards', id: 3 },
-  {
-    title: 'My voice',
-    category: '/voc/my-voice',
-    path: '/voc/my-voice/boards',
-    id: 3,
-  },
+  { title: '총학소식', category: '/council-news', path: '/council-news', id: 1 },
+  { title: '회칙', category: '/rules', path: '/rules', id: 1 },
+  { title: '회의록', category: '/conference', path: '/conference', id: 2 },
+  { title: '청원게시판', category: '/board-petition', path: '/board-petition/boards', id: 3 },
+  { title: '자유게시판', category: '/board-suggestion', path: '/board-suggestion/boards', id: 3 },
+  { title: 'Q&A', category: '/qna', path: '/qna', id: 4 },
+  { title: 'My voice', category: '/my-voice', path: '/my-voice', id: 4 },
 ];
 
 interface ISideNav {
