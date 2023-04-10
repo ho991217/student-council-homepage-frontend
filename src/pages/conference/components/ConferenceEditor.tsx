@@ -17,6 +17,7 @@ function ConferenceEditor() {
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
   const [title, setTitle] = useState<string>('');
+  const [files, setFiles] = useState<File[]>([]); // [File
   const [form, setForm] = useState<FormData>();
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
@@ -44,6 +45,7 @@ function ConferenceEditor() {
     formData.append('round', round);
     formData.append('date', date.toISOString().split('T')[0]);
     formData.append('title', title);
+    files.forEach((f) => formData.append('files', f));
     setForm(formData);
   };
 
@@ -106,7 +108,7 @@ function ConferenceEditor() {
               onChange={onTitleHandler}
               placeholder="회의록명을 입력해주세요."
             />
-            <FileBoxS label="회의록 업로드" onChange={handleChange} />
+            <FileBoxS setter={setFiles} />
             <SubmitButtonM text="작성 완료" />
           </Form>
         </Wrapper>

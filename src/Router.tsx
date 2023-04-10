@@ -43,6 +43,15 @@ import Agreements from 'pages/sign-up/components/agreements/Agreements';
 import Header from 'pages/sign-up/components/Header';
 import StudentIdValidation from 'pages/sign-up/components/verification/StudentIdValidation';
 import InputStudentInfos from 'pages/sign-up/components/info/InputStudentInfos';
+import QnA from 'pages/voc/qna/QnA';
+import MyVoice from 'pages/voc/my-voice/MyVoice';
+import QnAEditor from 'pages/voc/qna/QnAEditor';
+import QnADetail from 'pages/voc/qna/QnADetail';
+import MyVoiceDetail from 'pages/voc/my-voice/MyVoiceDetail';
+import RentalLists from 'pages/rental/RentalLists';
+import RentalInfo from 'pages/rental/RentalInfo';
+import RentalNew from 'pages/rental/RentalNew';
+import Post from 'pages/council/news/components/post/Post';
 
 function Router() {
   const [{ isLoggedIn }, setLoginState] = useRecoilState(LoginStateAtom);
@@ -72,7 +81,7 @@ function Router() {
           </Route>
         </Route>
         <Route path="/password" element={<GlobalBanner title="비밀번호찾기" />}>
-          <Route path="" element={<Password />} />
+          <Route index element={<Password />} />
           <Route path="success" element={<PasswordSuccess />} />
         </Route>
         <Route
@@ -112,7 +121,8 @@ function Router() {
           }
         />
         <Route path="/council-news" element={<GlobalBanner title="총학소식" />}>
-          <Route path="" element={<News />} />
+          <Route index element={<News />} />
+          <Route path="post" element={<Post />} />
           <Route
             path="editor"
             element={isLoggedIn ? <NewsEditor /> : <Navigate to="/" />}
@@ -141,7 +151,7 @@ function Router() {
             )
           }
         >
-          <Route path="" element={<Conference />} />
+          <Route index element={<Conference />} />
           <Route path="editor" element={<ConferenceEditor />} />
         </Route>
 
@@ -188,16 +198,21 @@ function Router() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/admin" element={<Navigate to="/" />} />
         <Route path="/event" element={<Event />} />
-        <Route path="/rental" />
+        <Route path="/rental" element={<GlobalBanner title="대여물품" />}>
+          <Route index element={<Navigate to="/rental/lists?page=1" />} />
+          <Route path="lists" element={<RentalLists />} />
+          <Route path="info" element={<RentalInfo />} />
+          <Route path="new" element={<RentalNew />} />
+        </Route>
         <Route path="/voc">
           <Route path="qna">
-            <Route path="boards" element={<div>qna</div>} />
-            <Route path="board" element={<div>qna-detail</div>} />
-            <Route path="editor" element={<div>qna-editor</div>} />
+            <Route path="boards" element={<QnA />} />
+            <Route path="board" element={<QnADetail />} />
+            <Route path="editor" element={<QnAEditor />} />
           </Route>
           <Route path="my-voice">
-            <Route path="boards" element={<div>my-voice</div>} />
-            <Route path="board" element={<div>my-voice-board</div>} />
+            <Route path="boards" element={<MyVoice />} />
+            <Route path="board" element={<MyVoiceDetail />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

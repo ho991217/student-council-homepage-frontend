@@ -153,7 +153,10 @@ function ConferenceBoard({
                 {post.date.substring(0, 4)}년 {post.date.substring(5, 7)}월{' '}
                 {post.date.substring(8, 10)}일
               </div>
-              <div>{post.createdDate}</div>
+              <div>
+                {post.createdAt.substring(0,4)}년 {post.createdAt.substring(5, 7)}월{' '}
+                {post.createdAt.substring(8,10)}일
+              </div>
               <div>{post.title}</div>
               <div>
                 <a

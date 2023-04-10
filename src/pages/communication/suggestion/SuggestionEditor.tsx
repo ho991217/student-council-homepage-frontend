@@ -3,18 +3,52 @@ import SubmitButtonM from 'components/editor/button/SubmitButtonM';
 import TextBoxS from 'components/editor/input/TextBoxS';
 import TextBoxL from 'components/editor/input/TextBoxL';
 import TagSelectM from 'components/editor/TagSelectM';
+import FileBoxS from 'components/editor/input/FileBoxS';
+import Modal from 'components/modal/Modal';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { getCategories } from './functions/GetCategories';
 
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 40px 0;
+  ${({ theme }) => theme.media.mobile} {
+    margin: 0;
+  }
+`;
+
+const Wrapper = styled.div`
+  max-width: 1150px;
+  width: 100%;
+  padding: 70px 100px;
+  background-color: ${({ theme }) => theme.colors.white};
+  ${({ theme }) => theme.media.tablet} {
+    padding: 50px 50px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    padding: 40px 20px 60px 20px;
+  }
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
 function SuggestionEditor() {
   const [title, setTitle] = useState<string>('');
   const [text, setText] = useState<string>('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [category, setCategory] = useState<string>('');
   const [categoryList, setCategoryList] = useState<string[]>(['']);
   const [cookies] = useCookies(['X-AUTH-TOKEN']);
+  const [files, setFiles] = useState<File[]>([]);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -22,7 +56,13 @@ function SuggestionEditor() {
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (window.confirm('게시글 작성을 완료하시겠습니까?')) {
+    if (title.length === 0) {
+      setErrorMsg('제목을 입력해주세요.');
+      setIsOpen(true);
+    } else if (text.length < 9) {
+      setErrorMsg('9자 이상의 내용을 입력해주세요.');
+      setIsOpen(true);
+    } else {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('body', text);
@@ -31,6 +71,8 @@ function SuggestionEditor() {
       } else {
         formData.append('category', category);
       }
+
+      files.forEach((file) => formData.append('files', file));
 
       axios({
         url: '/post/general-forum',
@@ -70,6 +112,16 @@ function SuggestionEditor() {
   return (
     <Container>
       <Wrapper>
+        {isOpen && (
+          <Modal
+            title="게시글 등록 실패"
+            contents={errorMsg}
+            onClose={() => {
+              setIsOpen(false);
+              setErrorMsg('');
+            }}
+          />
+        )}
         <Form onSubmit={onSubmitHandler}>
           <TagSelectM
             label="카테고리"
@@ -83,40 +135,17 @@ function SuggestionEditor() {
             value={title}
             onChange={({ currentTarget }) => setTitle(currentTarget.value)}
           />
-          <TextBoxL label="내용" htmlStr={text} setHtmlStr={setText} />
+          <TextBoxL
+            label="내용"
+            content={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          <FileBoxS setter={setFiles} accept="image/*" multiple />
           <SubmitButtonM text="작성 완료" />
         </Form>
       </Wrapper>
     </Container>
   );
 }
-const Container = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 40px 0;
-  ${({ theme }) => theme.media.mobile} {
-    margin: 0;
-  }
-`;
-
-const Wrapper = styled.div`
-  max-width: 1150px;
-  width: 100%;
-  padding: 70px 100px;
-  background-color: ${({ theme }) => theme.colors.white};
-  ${({ theme }) => theme.media.tablet} {
-    padding: 50px 50px;
-  }
-  ${({ theme }) => theme.media.mobile} {
-    padding: 40px 20px 60px 20px;
-  }
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-`;
 
 export default SuggestionEditor;
