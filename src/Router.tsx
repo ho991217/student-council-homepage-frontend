@@ -45,6 +45,7 @@ import RentalLists from 'pages/rental/RentalLists';
 import RentalInfo from 'pages/rental/RentalInfo';
 import RentalNew from 'pages/rental/RentalNew';
 import { useLogin } from 'hooks/UseLogin';
+import AuthRoute from 'AuthRoute';
 
 function Router() {
   const { isLogin } = useLogin();
@@ -111,13 +112,19 @@ function Router() {
           <Route index element={<News />} />
           <Route
             path="editor"
-            element={isLogin() ? <NewsEditor /> : <Navigate to="/" />}
+            element={
+              <AuthRoute>
+                <NewsEditor />
+              </AuthRoute>
+            }
           />
         </Route>
         <Route
           path="/rules"
           element={
-            isLogin() ? <GlobalBanner title="회칙" /> : <Navigate to="/login" />
+            <AuthRoute>
+              <GlobalBanner title="회칙" />
+            </AuthRoute>
           }
         >
           <Route path="" element={<Rules />} />
@@ -126,11 +133,9 @@ function Router() {
         <Route
           path="/conference"
           element={
-            isLogin() ? (
+            <AuthRoute>
               <GlobalBanner title="회의록" />
-            ) : (
-              <Navigate to="/login" />
-            )
+            </AuthRoute>
           }
         >
           <Route index element={<Conference />} />
@@ -140,11 +145,9 @@ function Router() {
         <Route
           path="/board-petition"
           element={
-            isLogin() ? (
+            <AuthRoute>
               <GlobalBanner title="청원게시판" />
-            ) : (
-              <Navigate to="/login" />
-            )
+            </AuthRoute>
           }
         >
           <Route path="boards" element={<PetitionBoard />} />
@@ -155,11 +158,9 @@ function Router() {
         <Route
           path="/board-suggestion"
           element={
-            isLogin() ? (
+            <AuthRoute>
               <GlobalBanner title="자유게시판" />
-            ) : (
-              <Navigate to="/login" />
-            )
+            </AuthRoute>
           }
         >
           <Route path="boards" element={<SuggestionBoard />} />
