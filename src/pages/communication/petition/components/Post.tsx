@@ -14,24 +14,20 @@ import PetitionChart from './PetitionChart';
 const TARGET_AGREEMENT = 150;
 
 const Container = styled.div`
-  width: 100%;
   display: flex;
   justify-content: center;
-  background-color: ${({ theme }) => theme.colors.white};
-  align-items: flex-start;
-  background-color: ${({ theme }) => theme.colors.white};
+  gap: 30px;
   background-color: ${({ theme }) => theme.colors.gray040};
-  ${({ theme }) => theme.media.desktop} {
-    padding-left: 50px;
-  }
 `;
 
 const Wrapper = styled.div`
-  max-width: 1280px;
+  background-color: ${({ theme }) => theme.colors.white};
   width: 100%;
+  max-width: 1200px;
   ${({ theme }) => theme.media.desktop} {
+    width: calc(100% - 310px);
     padding: 40px 50px;
-    margin: 40px 30px;
+    margin: 40px 0;
   }
   ${({ theme }) => theme.media.tablet} {
     padding: 40px 50px;
@@ -39,7 +35,6 @@ const Wrapper = styled.div`
   ${({ theme }) => theme.media.mobile} {
     padding: 40px 20px;
   }
-  background-color: ${({ theme }) => theme.colors.white};
 `;
 
 const HSeparator = styled.div<{ bold?: boolean }>`
@@ -47,7 +42,7 @@ const HSeparator = styled.div<{ bold?: boolean }>`
   height: ${({ bold }) => (bold ? '2px' : '1px')};
   background-color: ${({ bold, theme }) =>
     bold ? theme.colors.gray600 : theme.colors.gray300};
-  margin: 20px 0px;
+  margin-bottom: 20px;
 `;
 
 const Header = styled.h2`
@@ -55,20 +50,22 @@ const Header = styled.h2`
   font-size: ${({ theme }) => theme.fonts.size.base};
   font-weight: ${({ theme }) => theme.fonts.weight.regular};
   margin: 15px 0px;
+  text-align: center;
 `;
 
 const Title = styled.h1`
   font-size: ${({ theme }) => theme.fonts.size.lg};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
   margin-bottom: 25px;
+  text-align: center;
 `;
 
 const Etc = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 750px;
   width: 100%;
+  padding: 0 10px;
   margin-bottom: 15px;
   * {
     color: ${({ theme }) => theme.colors.gray500};
@@ -76,7 +73,6 @@ const Etc = styled.div`
 `;
 
 const Contents = styled.div`
-  max-width: 1100px;
   width: 100%;
   margin-top: 15px;
   margin-bottom: 45px;
@@ -94,6 +90,7 @@ const ButtonContainer = styled.div`
 const AgreeButton = styled.button`
   ${({ theme }) => theme.media.mobile} {
     max-width: 90px;
+    height: 70px;
   }
   user-select: none;
   cursor: pointer;
@@ -468,7 +465,7 @@ function Post() {
   };
   return (
     <Container>
-      <SideNav margin="40px 0" />
+      <SideNav />
       <ReactModal
         isOpen={modalState.open}
         contentLabel="Example Modal"
@@ -497,11 +494,11 @@ function Post() {
           }  ]`}</Header>
           <Title>{post?.title}</Title>
           <Etc>
-            <div>등록일 : {post?.createdAt.slice(0, 10)}</div>
-            <div>
+            <span>등록일 : {post?.createdAt.slice(0, 10)}</span>
+            <span>
               청원 동의 인원 : {post.agreeCount} / {TARGET_AGREEMENT}
-            </div>
-            <div>청원 마감 : {post.expiresAt}</div>
+            </span>
+            <span>청원 마감 : {post.expiresAt}</span>
           </Etc>
           <HSeparator />
           <Contents>

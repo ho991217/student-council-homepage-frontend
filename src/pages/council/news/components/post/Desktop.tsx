@@ -212,7 +212,13 @@ function Detail() {
           <>
             <ImageContainer>
               {detail?.files
-                .filter((file) => file.url.endsWith('png' || 'jpg' || 'jpeg'))
+                .filter((file) => {
+                  return (
+                    file.url.endsWith('png') ||
+                    file.url.endsWith('jpg') ||
+                    file.url.endsWith('jpeg')
+                  );
+                })
                 .map((img: FileProps, index: number) => (
                   <Image
                     key={img.id}

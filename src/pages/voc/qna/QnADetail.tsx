@@ -87,18 +87,19 @@ const Wrapper = styled.div`
 `;
 
 const Container = styled.div`
-  max-width: 1250px;
-  background-color: ${(props) => props.theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.white};
   width: 100%;
-  padding: 40px 50px;
+  max-width: 1200px;
   ${({ theme }) => theme.media.desktop} {
-    min-height: 585px;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    width: calc(100% - 310px);
+    padding: 40px 50px;
+    margin: 40px 0;
   }
   ${({ theme }) => theme.media.tablet} {
-    min-height: 300px;
-    margin-top: 0;
+    padding: 40px 50px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    padding: 40px 20px;
   }
   position: relative;
 `;

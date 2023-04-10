@@ -12,14 +12,18 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  gap: 30px;
   background-color: white;
 `;
 
 const Container = styled.div`
-  background-color: ${(props) => props.theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.white};
   width: 100%;
-  max-width: 1280px;
-  position: relative;
+  max-width: 1200px;
+  ${({ theme }) => theme.media.desktop} {
+    width: calc(100% - 310px);
+    margin: 40px 0;
+  }
 `;
 
 const Select = styled.select`
@@ -53,25 +57,8 @@ const Input = styled.input`
 
 const Search = styled.div`
   display: flex;
-  justify-content: right;
-  position: absolute;
-  ${({ theme }) => theme.media.desktop} {
-    top: 120px;
-    right: 60px;
-  }
-  ${({ theme }) => theme.media.tablet} {
-    bottom: 0;
-    right: 50%;
-    transform: translateX(50%);
-  }
-
-  ${({ theme }) => theme.media.mobile} {
-    bottom: 0;
-    right: 50%;
-    transform: translateX(50%);
-  }
+  align-items: flex-end;
 `;
-
 const SearchButton = styled.button`
   all: unset;
   background-color: ${({ theme }) => theme.colors.accent};
@@ -82,7 +69,46 @@ const SearchButton = styled.button`
   height: 30px;
   cursor: pointer;
 `;
-function QnA(): JSX.Element {
+
+const InfoBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  max-width: 1290px;
+  width: 100%;
+  ${({ theme }) => theme.media.desktop} {
+    padding: 20px 50px 20px 50px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    padding: 10px 50px 10px 50px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    padding: 10px 10px 20px 10px;
+    flex-direction: column;
+  }
+  background-color: #f9f9f9;
+  padding: 0 58px;
+  border-radius: 10px;
+  margin-bottom: 28px;
+`;
+
+const PHead = styled.div`
+  width: 42px;
+  border-top: 4px solid #1d64aa;
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
+  font-size: ${({ theme }) => theme.fonts.size.lg};
+  padding-top: 4px;
+`;
+
+const PDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  font-weight: ${({ theme }) => theme.fonts.weight.regular};
+  font-size: ${({ theme }) => theme.fonts.size.sm};
+  gap: 10px;
+  margin: 11px 0;
+`;
+
+function QnA() {
   const [board, setBoard] = useState<PostProps[]>([]);
   const [boardsCount, setBoardsCount] = useState<number>(0);
   const [pagingInfo, setPagingInfo] = useState<PagingProps>({
@@ -147,35 +173,53 @@ function QnA(): JSX.Element {
   };
   return (
     <Wrapper>
-      <SideNav margin="50px 0 0 50px" />
+      <SideNav />
       <Container>
-        <Search>
-          <Select>
-            <option value="ALL">ALL</option>
-          </Select>
-          <ArrowSvg
-            width="7"
-            height="4"
-            viewBox="0 0 7 4"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M3.33366 4L0.446906 0.249999L6.22041 0.25L3.33366 4Z"
-              fill="#C4C4C4"
+        <InfoBox>
+          <div>
+            <PHead>Q&A</PHead>
+            <PDiv>
+              <p>욕설 및 인신공격성 글은 운영원칙에 따라 삭제합니다.</p>
+              <p>
+                등재된 글은 원칙적으로 삭제할 수 없음에 유념하여 작성하여 주시기
+                바랍니다.
+              </p>
+              <p>
+                작성된 내용 중 개인정보는{' '}
+                <span style={{ color: 'red' }}>블라인드(*)</span>로 처리됩니다.
+              </p>
+            </PDiv>
+          </div>
+          <Search>
+            <Select>
+              <option value="title">제목</option>
+              <option value="body">내용</option>
+              <option value="all">제목+내용</option>
+            </Select>
+            <ArrowSvg
+              width="7"
+              height="4"
+              viewBox="0 0 7 4"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3.33366 4L0.446906 0.249999L6.22041 0.25L3.33366 4Z"
+                fill="#C4C4C4"
+              />
+            </ArrowSvg>
+            <Input
+              type="text"
+              value={searchWord}
+              placeholder="검색어를 입력해 주세요."
+              onChange={onSearchWordHandler}
+              onKeyPress={handleKeyPress}
             />
-          </ArrowSvg>
-          <Input
-            type="text"
-            value={searchWord}
-            placeholder="검색어를 입력해 주세요."
-            onChange={onSearchWordHandler}
-            onKeyPress={handleKeyPress}
-          />
-          <SearchButton type="button" onClick={onSearchButtonHandler}>
-            검색
-          </SearchButton>
-        </Search>
+            <SearchButton type="button" onClick={onSearchButtonHandler}>
+              검색
+            </SearchButton>
+          </Search>
+        </InfoBox>
         <Board posts={board} pagingInfo={pagingInfo} currentPage={page} />
         <PageControl pagingInfo={pagingInfo} currentPage={page} />
       </Container>

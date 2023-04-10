@@ -4,7 +4,7 @@ const InfoBox = styled.div`
   max-width: 1290px;
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    padding: 10px 50px 10px 50px;
+    padding: 20px 50px 20px 50px;
   }
   ${({ theme }) => theme.media.tablet} {
     padding: 10px 50px 10px 50px;

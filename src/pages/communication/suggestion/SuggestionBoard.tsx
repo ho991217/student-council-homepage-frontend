@@ -13,7 +13,7 @@ import SideNav from 'components/nav/SideNav';
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  gap: 30px;
   background-color: white;
 `
 const Container = styled.div`
@@ -64,7 +64,7 @@ function PetitionBoard(): JSX.Element {
 
   return (
     <Wrapper>
-      <SideNav margin="120px 0 0 0" />
+      <SideNav />
       <Container>
         <FilterControl />
         <Board posts={board} pagingInfo={pagingInfo} currentPage={page} />

@@ -91,7 +91,7 @@ function Pledge() {
     <Wrapper>
       <SideNav/>
       <Block
-      title="인사말"
+      title="공약"
       hasSideNav
       contents={
         <>

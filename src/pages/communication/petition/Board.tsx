@@ -149,7 +149,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
           {board.map((post, index) => (
             <Link key={post.id} to={`/board-petition/board?id=${post.id}`}>
               <Row>
-                <div>{index + 1 + (pagingInfo.page - 1) * pagingInfo.size}</div>
+                <div>{index + 1 + pagingInfo.page * pagingInfo.size}</div>
                 <PostStatus>{post.status === 'ACTIVE' ? "[진행중]" : "[마감]"}</PostStatus>
                 <PostTitle>{post.title}</PostTitle>
                 <AgreeCountWrapper>

@@ -14,8 +14,14 @@ const Header = styled.div`
   align-items: flex-end;
   background-color: #f9f9f9;
   padding: 20px 50px;
-  margin: 20px 0 32px 0;
   border-radius: 15px;
+  ${({ theme }) => theme.media.desktop} {
+    margin-top: 30px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const HeadingContainer = styled.div`
