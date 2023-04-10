@@ -4,8 +4,8 @@ import TextBoxS from 'components/editor/input/TextBoxS';
 import TextBoxL from 'components/editor/input/TextBoxL';
 import TagSelectM from 'components/editor/TagSelectM';
 import FileBoxS from 'components/editor/input/FileBoxS';
-import Modal from 'components/modal/Modal';
 import { useEffect, useState } from 'react';
+import { useErrorModal } from 'hooks/UseErrorModal';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { getCategories } from './functions/GetCategories';
@@ -42,11 +42,10 @@ const Form = styled.form`
 function SuggestionEditor() {
   const [title, setTitle] = useState<string>('');
   const [text, setText] = useState<string>('');
-  const [isOpen, setIsOpen] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
   const [category, setCategory] = useState<string>('');
   const [categoryList, setCategoryList] = useState<string[]>(['']);
   const [files, setFiles] = useState<File[]>([]);
+  const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -54,12 +53,13 @@ function SuggestionEditor() {
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setErrorTitle('게시글 등록 실패');
     if (title.length === 0) {
-      setErrorMsg('제목을 입력해주세요.');
-      setIsOpen(true);
+      setErrorMessage('제목을 입력해주세요.');
+      open();
     } else if (text.length < 9) {
-      setErrorMsg('9자 이상의 내용을 입력해주세요.');
-      setIsOpen(true);
+      setErrorMessage('9자 이상의 내용을 입력해주세요.');
+      open();
     } else {
       const formData = new FormData();
       formData.append('title', title);
@@ -85,7 +85,9 @@ function SuggestionEditor() {
           navigate('/board-suggestion/boards');
         })
         .catch((e) => {
-          alert(e);
+          const error = e as any;
+          setErrorMessage(error.response.data.message[0]);
+          open();
         });
     }
   };
@@ -103,16 +105,7 @@ function SuggestionEditor() {
   return (
     <Container>
       <Wrapper>
-        {isOpen && (
-          <Modal
-            title="게시글 등록 실패"
-            contents={errorMsg}
-            onClose={() => {
-              setIsOpen(false);
-              setErrorMsg('');
-            }}
-          />
-        )}
+        {renderModal()}
         <Form onSubmit={onSubmitHandler}>
           <TagSelectM
             label="카테고리"

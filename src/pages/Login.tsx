@@ -1,5 +1,4 @@
 import CopyrightTerm from 'components/CopyrightTerm';
-import Modal from 'components/modal/Modal';
 import { Desktop } from 'hooks/MediaQueries';
 import { useLogin } from 'hooks/UseLogin';
 import { useEffect, useState } from 'react';
@@ -245,11 +244,11 @@ const SaveIdToggle = styled.div<{ saveId: boolean }>`
 `;
 
 function Login() {
-  const [id, setId] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [idMessage, setIdMessage] = useState<string>('');
-  const [isValidId, setIsValidId] = useState<boolean>(false);
-  const [saveId, setSaveId] = useState<boolean>(false);
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+  const [idMessage, setIdMessage] = useState('');
+  const [isValidId, setIsValidId] = useState(false);
+  const [saveId, setSaveId] = useState(false);
   const { setLogin } = useLogin();
   const navigate = useNavigate();
   const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
@@ -305,19 +304,6 @@ function Login() {
 
   return (
     <>
-      {/* {isOpen && (
-        <Modal
-          onClose={() => setIsOpen(false)}
-          title="로그인 실패!"
-          contents={loginErrorState.message}
-          accept={
-            loginErrorState.message === '없는 회원입니다.' ? '회원가입' : ''
-          }
-          onAccept={() => {
-            navigate('/sign-up/agreements');
-          }}
-        />
-      )} */}
       {renderModal()}
       <Wrapper>
         <Header>
