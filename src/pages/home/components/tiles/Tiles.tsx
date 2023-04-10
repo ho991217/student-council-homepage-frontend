@@ -1,4 +1,10 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import {
+  PetitonType,
+  RecentConferencesType,
+  RecentNewsType,
+} from 'pages/home/Home';
 import Tile from './Tile';
 import Schedule from './components/Schedule';
 import News from './components/News';
@@ -79,7 +85,17 @@ const SmallTile = styled.div`
   }
 `;
 
-function Tiles(): JSX.Element {
+export interface TilesProps {
+  popularPetitions: PetitonType[];
+  recentConferences: RecentConferencesType[];
+  recentNews: RecentNewsType[];
+}
+
+function Tiles({
+  popularPetitions,
+  recentConferences,
+  recentNews,
+}: TilesProps) {
   return (
     <Container>
       <BigTile>
@@ -90,7 +106,7 @@ function Tiles(): JSX.Element {
       <SmallTileContainer>
         <SmallTile>
           <Tile title="총학소식" linkTitle="더보기" to="/council-news">
-            <News />
+            <News news={recentNews} />
           </Tile>
         </SmallTile>
         <SmallTile>
@@ -99,12 +115,12 @@ function Tiles(): JSX.Element {
             linkTitle="더보기"
             to="/board-petition/boards?page=1"
           >
-            <Petition />
+            <Petition petition={popularPetitions} />
           </Tile>
         </SmallTile>
         <SmallTile>
           <Tile title="금주의 회의록" linkTitle="더보기" to="/conference">
-            <Proceeding />
+            <Proceeding conference={recentConferences} />
           </Tile>
         </SmallTile>
       </SmallTileContainer>

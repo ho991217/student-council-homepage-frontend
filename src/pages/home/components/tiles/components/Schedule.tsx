@@ -172,12 +172,11 @@ function Schedule(): JSX.Element {
   ]);
 
   const getMonthDetails = async (activeStartDate: Date): Promise<void> => {
-    const fromDate = dayjs(activeStartDate).format('YYYYMMDD');
-    const toDate = dayjs(activeStartDate).endOf('month').format('YYYYMMDD');
+    const fromDate = dayjs(activeStartDate).format('YYYY-MM-DD');
+    const toDate = dayjs(activeStartDate).endOf('month').format('YYYY-MM-DD');
     const config = {
       method: 'get',
-      url: `/schedule?from=${fromDate}&to=${toDate}`,
-      headers: {},
+      url: `/main/schedule?from=${fromDate}&to=${toDate}`,
     };
 
     axios(config)
