@@ -4,6 +4,7 @@ import { useToday } from 'hooks/UseToday';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useErrorModal } from 'hooks/UseErrorModal';
 import { useLogin } from 'hooks/UseLogin';
 import { Container } from './components/Board.style';
 import { H1, Hr, IRentalList } from './RentalLists';
@@ -156,6 +157,7 @@ function RentalNew() {
     body: '',
   });
   const navigate = useNavigate();
+  const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
 
   const getRentalList = async () => {
     const { data } = await axios({
@@ -205,7 +207,10 @@ function RentalNew() {
 
       navigate('/rental');
     } catch (e) {
-      console.log(e);
+      const error = e as any;
+
+      setErrorMessage(error.response.data.message[0]);
+      open();
     }
   };
 
@@ -215,13 +220,17 @@ function RentalNew() {
 
   useEffect(() => {
     getUserInfo().then((res) => {
-      console.log(res);
-      setUserInfo(res);
+      if (res !== null) {
+        setUserInfo(res);
+      } else {
+        navigate('/login');
+      }
     });
   }, []);
 
   return (
     <Container>
+      {renderModal()}
       <HeaderContainer>
         <Hr />
         <H1>대여물품 신청</H1>
