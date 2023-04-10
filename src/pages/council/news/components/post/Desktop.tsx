@@ -219,6 +219,7 @@ function Detail() {
                     role="presentation"
                     src={detail?.files[index].url}
                     alt={detail?.files[index].url}
+                    loading="lazy"
                   />
                 ))}
             </ImageContainer>

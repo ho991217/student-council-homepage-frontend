@@ -5,6 +5,7 @@ import { useCookies } from 'react-cookie';
 import ReactModal from 'react-modal';
 import styled from 'styled-components';
 import { PulseLoader } from 'react-spinners';
+import { useErrorModal } from 'hooks/UseErrorModal';
 
 const Container = styled.div`
   width: 100%;
@@ -15,111 +16,79 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-const CarouselContaier = styled.div`
-  display: flex;
+const Table = styled.table`
   width: 100%;
-  height: 500px;
-  align-items: center;
-  margin-bottom: 50px;
-  overflow-x: scroll;
+  max-width: 1200px;
+  padding: 1em;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
+  margin-top: 2rem;
+  margin-bottom: 4rem;
 `;
 
-const PicContainer = styled.div`
-  height: 100%;
-  border: 0.5px solid ${({ theme }) => theme.colors.gray200};
-  margin: 5px 10px;
-  position: relative;
-`;
+const Thead = styled.thead``;
 
-const CarouselImg = styled.img`
-  height: 100%;
-`;
+const Tbody = styled.tbody``;
 
-const IdContainer = styled.h1`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  opacity: 0;
-  font-size: ${({ theme }) => theme.fonts.size.xxl};
-  font-weight: ${({ theme }) => theme.fonts.weight.bold};
-  color: ${({ theme }) => theme.colors.red};
-  transition: all 0.15s ease-in-out;
-  :hover {
-    backdrop-filter: blur(3px);
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 1;
-    cursor: pointer;
-  }
-`;
-
-const InputContainer = styled.div`
+const Tr = styled.tr`
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray200};
   background-color: ${({ theme }) => theme.colors.gray040};
-  padding: 50px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
 `;
 
-const InputTitle = styled.h2`
-  font-size: ${({ theme }) => theme.fonts.size.lg};
-  font-weight: ${({ theme }) => theme.fonts.weight.medium};
-  color: ${({ theme }) => theme.colors.gray700};
-  margin-bottom: 10px;
+const Th = styled.th`
+  padding: 1em;
+  text-align: center;
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
 `;
 
-const FileUploadButton = styled.label`
+const Td = styled.td`
+  border: 1px solid ${({ theme }) => theme.colors.gray200};
+`;
+
+const Button = styled.input.attrs({ type: 'button' })`
   width: 100%;
-  height: 40px;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.gray020};
-  display: grid;
-  place-content: center;
-  border-radius: 5px;
+  height: 50px;
   cursor: pointer;
+  border: none;
+  outline: none;
+  background-color: ${({ theme }) => theme.colors.accent};
+  color: ${({ theme }) => theme.colors.white};
 `;
 
-const FileUploadInput = styled.input.attrs({
-  type: 'file',
-  accept: 'image/*',
-})`
-  display: none;
+const Image = styled.img`
+  width: 50%;
 `;
 
-const FileUploadErrorMessage = styled.span``;
+const ImageInput = styled.input.attrs({ type: 'file', accept: 'image/*' })`
+  /* width: 100%; */
+  padding: 10px;
+`;
 
-const modalStyle = {
-  overlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    backdropFilter: 'blur(1px)',
-  },
-  content: {
-    width: '7rem',
-    height: '7rem',
-    left: '50%',
-    top: '50%',
-    transform: 'translate(-50%,-50%)',
-    border: 'none',
-    boxShadow: '0px 4px 5px 2px rgba(0, 0, 0, 0.05)',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+const UrlInput = styled.input.attrs({ type: 'text' })`
+  min-height: 50px;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  padding: 10px;
+`;
+
+type CarouselImage = {
+  id: number;
+  url: string;
+  redirectUrl: string;
 };
 
-function Admin(): JSX.Element {
+function Admin() {
   const [currentImage, setCurrentImage] = useState<FormData>();
-  const [carouselImages, setCarouselImages] = useState([]);
-  const [errorMsg, setErrorMsg] = useState<string>('');
-  const [uploadState, setUploadState] = useState({
-    set: false,
-    done: false,
-  });
+  const [redirectUrl, setRedirectUrl] = useState('');
+  const [carouselImages, setCarouselImages] = useState<CarouselImage[]>([]);
+
+  const { renderModal, setErrorMessage, open } = useErrorModal();
 
   /** 파일이 변경되었을 때 호출되는 함수 */
   const onInputImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,36 +99,41 @@ function Admin(): JSX.Element {
       const formData = new FormData();
       formData.append('imageFile', uploadFile);
       setCurrentImage(formData);
-
-      await handleAddImage(formData);
-
-      setUploadState({ done: false, set: false });
     }
   };
 
   /** 이미지를 formData 에 담아서 서버로  전송하는 함수 */
-  const handleAddImage = async (currentImage: FormData) => {
-    setUploadState((prev) => ({ ...prev, set: true }));
+  const handleAddImage = async () => {
     if (currentImage) {
-      await axios({
-        url: '/carousel',
-        method: 'post',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: currentImage,
-      });
-      setErrorMsg('');
-      setUploadState((prev) => ({ ...prev, done: true }));
+      currentImage.append('redirectUrl', redirectUrl);
+      try {
+        await axios({
+          url: '/main/carousel',
+          method: 'post',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          data: currentImage,
+        });
+        const { data } = await getCarouselImages();
+
+        setCarouselImages(data);
+      } catch (e) {
+        const { response } = e as any;
+        console.log(response);
+        // setErrorMessage(response.data.message[0]);
+        open();
+      }
     } else {
-      setErrorMsg('사진을 먼저 업로드하세요.');
+      setErrorMessage('사진을 먼저 업로드하세요.');
+      open();
     }
   };
 
   /** 이미지 삭제를 관리하는 함수 */
   const handleDeletePic = async (id: number) => {
     await axios({
-      url: `/carousel/${id}`,
+      url: `/main/carousel/${id}`,
       method: 'delete',
     });
     const { data } = await getCarouselImages();
@@ -168,34 +142,55 @@ function Admin(): JSX.Element {
 
   useEffect(() => {
     getCarouselImages().then((res) => setCarouselImages(res.data));
-  }, [carouselImages]);
+  }, []);
 
   return (
-    <Container>
-      <ReactModal
-        isOpen={uploadState.set && !uploadState.done}
-        style={modalStyle}
-      >
-        <PulseLoader color="#9B88BF" />
-      </ReactModal>
-      <CarouselContaier>
-        {carouselImages.map(({ id, url }) => (
-          <PicContainer key={id} onClick={() => handleDeletePic(id)}>
-            <IdContainer>삭제</IdContainer>
-            <CarouselImg src={url} alt="이미지" />
-          </PicContainer>
-        ))}
-      </CarouselContaier>
-      <InputContainer>
-        <InputTitle>캐러셀 이미지 업로드</InputTitle>
-        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-        <FileUploadButton htmlFor="file-input">업로드</FileUploadButton>
-        <FileUploadInput id="file-input" onInput={onInputImage} />
-        {errorMsg && (
-          <FileUploadErrorMessage>{errorMsg}</FileUploadErrorMessage>
-        )}
-      </InputContainer>
-    </Container>
+    <>
+      {renderModal()}
+      <Container>
+        <Table>
+          <Thead>
+            <Tr>
+              <Th>이미지</Th>
+              <Th>Redirect Url</Th>
+              <Th>삭제</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {carouselImages.map((image: CarouselImage) => (
+              <Tr key={image.id}>
+                <Td>
+                  <Image src={image.url} alt="이미지" />
+                </Td>
+                <Td>{image.redirectUrl}</Td>
+                <Td>
+                  <Button
+                    onClick={() => handleDeletePic(image.id)}
+                    value="삭제"
+                  />
+                </Td>
+              </Tr>
+            ))}
+            <Tr>
+              <Td>
+                <ImageInput accept="image/*" onInput={onInputImage} />
+              </Td>
+              <Td>
+                <UrlInput
+                  type="text"
+                  placeholder="연결 url을 입력하세요."
+                  onChange={(e) => setRedirectUrl(e.target.value)}
+                  value={redirectUrl}
+                />
+              </Td>
+              <Td>
+                <Button value="등록" onClick={handleAddImage} />
+              </Td>
+            </Tr>
+          </Tbody>
+        </Table>
+      </Container>
+    </>
   );
 }
 

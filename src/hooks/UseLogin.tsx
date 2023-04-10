@@ -61,6 +61,10 @@ export const useLogin = () => {
     return user.studentId.length !== 0;
   };
 
+  const isAdmin = () => {
+    return user.admin;
+  };
+
   // eslint-disable-next-line consistent-return
   const reissueAccessToken = async () => {
     const refreshToken = cookies.get('refresh-token');
@@ -122,6 +126,7 @@ export const useLogin = () => {
     setLogin,
     setLogout,
     isLogin,
+    isAdmin,
     getAccessToken,
     reissueAccessToken,
     getUserInfo,

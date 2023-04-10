@@ -43,9 +43,10 @@ import Post from 'pages/council/news/components/post/Post';
 
 import { useLogin } from 'hooks/UseLogin';
 import AuthRoute from 'AuthRoute';
+import Admin from 'pages/Admin';
 
 function Router() {
-  const { isLogin } = useLogin();
+  const { isLogin, isAdmin } = useLogin();
 
   return (
     <BrowserRouter>
@@ -177,7 +178,10 @@ function Router() {
         <Route path="/who-made-this" element={<Makers />} />
         <Route path="/term" element={<Term />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/admin" element={<Navigate to="/" />} />
+        <Route
+          path="/admin"
+          element={isAdmin() ? <Admin /> : <Navigate to="/" />}
+        />
         <Route path="/rental" element={<GlobalBanner title="대여물품" />}>
           <Route index element={<Navigate to="/rental/lists?page=1" />} />
           <Route path="lists" element={<RentalLists />} />
