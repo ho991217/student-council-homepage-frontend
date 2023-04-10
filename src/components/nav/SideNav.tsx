@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { NavItems } from './NavItems';
 
-const Nav = styled.ul<{margin?: string}>`
+const Nav = styled.ul<{ margin?: string }>`
   width: 180px;
   font-size: 18px;
-  margin: ${props => props.margin};
+  margin: ${(props) => props.margin};
   ${({ theme }) => theme.media.mobile} {
     display: none;
   }
@@ -45,18 +45,18 @@ const MenuInfo = [
 ];
 
 interface ISideNav {
-    margin?: string;
+  margin?: string;
 }
 
 SideNav.defaultProps = {
-    margin: '40px 0 0 0'
-}
+  margin: '40px 0 0 0',
+};
 
-function SideNav({ margin } : ISideNav) {
+function SideNav({ margin }: ISideNav) {
   const location = useLocation();
   const menuIndex = MenuInfo.findIndex((menu) => {
-    return location.pathname.indexOf(menu.category) === 0
-  })
+    return location.pathname.indexOf(menu.category) === 0;
+  });
   const menuList = MenuInfo.filter(
     (menu) => menu.id === MenuInfo[menuIndex].id,
   );
@@ -65,9 +65,9 @@ function SideNav({ margin } : ISideNav) {
       <Hr />
       {menuList.map((item) => (
         <Link key={item.path} to={item.path}>
-            <NavItem isLocated={location.pathname.indexOf(item.category) === 0}>
+          <NavItem isLocated={location.pathname.indexOf(item.category) === 0}>
             {item.title}
-            </NavItem>
+          </NavItem>
         </Link>
       ))}
     </Nav>
