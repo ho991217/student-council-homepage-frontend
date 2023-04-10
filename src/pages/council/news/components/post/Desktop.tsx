@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import axios from 'axios';
+import SideNav from 'components/nav/SideNav';
 import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
@@ -8,15 +9,27 @@ import { IoIosFolder } from 'react-icons/io';
 
 import { NewsProps, DetailProps, FileProps } from '../../NewsProps';
 
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  ${({ theme }) => theme.media.desktop} {
+    padding-left: 50px;
+  }
+`;
 const Wrapper = styled.div`
   max-width: 1280px;
   width: 100%;
-  margin: 40px 0px;
-  padding: 30px 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+  ${({ theme }) => theme.media.desktop} {
+    padding: 40px 50px;
+    margin: 40px 30px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    padding: 40px 50px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    padding: 40px 20px;
+  }
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
@@ -124,18 +137,22 @@ function Detail() {
       setNextList(board.slice(detailId - 2, detailId + 1));
     }
   }, [searchParams, board]);
-
-  useEffect(() => {
-    axios
-      .get(`/post/news/${searchParams.get('id')}`)
-      .then((response) => {
-        const result = response.data.data;
-        setDetail(result);
-      })
-      .catch((error) => {
-        // 에러 핸들링
-        console.log(error);
+  const getCurrentPost = async () => {
+    try {
+      const { data } = await axios({
+        method: 'get',
+        url: `/post/news/${searchParams.get('id')}`,
+        headers: {
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+        },
       });
+      setDetail(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getCurrentPost();
   }, []);
 
   const handleDelete = (id: number) => {
@@ -156,71 +173,80 @@ function Detail() {
 
   // 게시글 인덱스, 다음글 리스트 노출 추후에 수정
   return (
-    <Wrapper>
-      <Head isAdmin={isAdmin}>
-        <div>제목</div>
-        <div>{detail?.title}</div>
-        <div>{detail?.createdAt.slice(0, 10)}</div>
-        {isAdmin && detail && (
-          <div>
-            <Svg
-              width="20"
-              height="20"
-              viewBox="0 0 100 100"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              onClick={() => handleDelete(Number(searchParams.get('id')))}
-            >
-              <path
-                d="M12.5 31.25L18.3086 86.4277C18.4297 87.5798 18.9732 88.6461 19.8341 89.4212C20.6949 90.1962 21.8123 90.6251 22.9707 90.625H77.0293C78.1877 90.6251 79.3051 90.1962 80.1659 89.4212C81.0268 88.6461 81.5703 87.5798 81.6914 86.4277L87.5 31.25H12.5ZM60.9375 73.7227L50 62.7852L39.0625 73.7227L34.0898 68.75L45.0273 57.8125L34.0898 46.875L39.0625 41.9023L50 52.8398L60.9375 41.9023L65.9102 46.875L54.9727 57.8125L65.9102 68.75L60.9375 73.7227Z"
-                fill="black"
-              />
-              <path
-                d="M91.4062 9.375H8.59375C7.29933 9.375 6.25 10.4243 6.25 11.7188V22.6562C6.25 23.9507 7.29933 25 8.59375 25H91.4062C92.7007 25 93.75 23.9507 93.75 22.6562V11.7188C93.75 10.4243 92.7007 9.375 91.4062 9.375Z"
-                fill="black"
-              />
-            </Svg>
-          </div>
-        )}
-      </Head>
-      <ContentWrapper>
-        <Content>{detail?.body}</Content>
-        {detail?.files[0] && (
-          <>
-            <ImageContainer>
-              {detail?.files
-                .filter((file) => file.url.endsWith('png' || 'jpg' || 'jpeg'))
-                .map((img: FileProps, index: number) => (
-                  <Image
-                    key={img.id}
-                    role="presentation"
-                    src={detail?.files[index].url}
-                    alt={detail?.files[index].url}
-                  />
-                ))}
-            </ImageContainer>
+    <Container>
+      <SideNav />
+      <Wrapper>
+        <Head isAdmin={isAdmin}>
+          <div>제목</div>
+          <div>{detail?.title}</div>
+          <div>{detail?.createdAt.slice(0, 10)}</div>
+          {isAdmin && detail && (
+            <div>
+              <Svg
+                width="20"
+                height="20"
+                viewBox="0 0 100 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                onClick={() => handleDelete(Number(searchParams.get('id')))}
+              >
+                <path
+                  d="M12.5 31.25L18.3086 86.4277C18.4297 87.5798 18.9732 88.6461 19.8341 89.4212C20.6949 90.1962 21.8123 90.6251 22.9707 90.625H77.0293C78.1877 90.6251 79.3051 90.1962 80.1659 89.4212C81.0268 88.6461 81.5703 87.5798 81.6914 86.4277L87.5 31.25H12.5ZM60.9375 73.7227L50 62.7852L39.0625 73.7227L34.0898 68.75L45.0273 57.8125L34.0898 46.875L39.0625 41.9023L50 52.8398L60.9375 41.9023L65.9102 46.875L54.9727 57.8125L65.9102 68.75L60.9375 73.7227Z"
+                  fill="black"
+                />
+                <path
+                  d="M91.4062 9.375H8.59375C7.29933 9.375 6.25 10.4243 6.25 11.7188V22.6562C6.25 23.9507 7.29933 25 8.59375 25H91.4062C92.7007 25 93.75 23.9507 93.75 22.6562V11.7188C93.75 10.4243 92.7007 9.375 91.4062 9.375Z"
+                  fill="black"
+                />
+              </Svg>
+            </div>
+          )}
+        </Head>
+        <ContentWrapper>
+          <Content>{detail?.body}</Content>
+          {detail?.files[0] && (
+            <>
+              <ImageContainer>
+                {detail?.files
+                  .filter((file) => {
+                    return (
+                      file.url.endsWith('png') ||
+                      file.url.endsWith('jpg') ||
+                      file.url.endsWith('jpeg')
+                    );
+                  })
+                  .map((img: FileProps, index: number) => (
+                    <Image
+                      key={img.id}
+                      role="presentation"
+                      src={detail?.files[index].url}
+                      alt={detail?.files[index].url}
+                    />
+                  ))}
+              </ImageContainer>
 
-            <Download>
-              <FolderIcon>
-                <IoIosFolder size="35" />
-              </FolderIcon>
-              <Data>
-                <Name>{detail?.files[0].originName}</Name>
-              </Data>
-              <DownloadIcon>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={detail?.files[0].url}
-                >
-                  <FiDownload size="15" color="76787A" />
-                </a>
-              </DownloadIcon>
-            </Download>
-          </>
-        )}
-      </ContentWrapper>
-    </Wrapper>
+              <Download>
+                <FolderIcon>
+                  <IoIosFolder size="35" />
+                </FolderIcon>
+                <Data>
+                  <Name>{detail?.files[0].originalName}</Name>
+                </Data>
+                <DownloadIcon>
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={detail?.files[0].url}
+                  >
+                    <FiDownload size="15" color="76787A" />
+                  </a>
+                </DownloadIcon>
+              </Download>
+            </>
+          )}
+        </ContentWrapper>
+      </Wrapper>
+    </Container>
   );
 }
 

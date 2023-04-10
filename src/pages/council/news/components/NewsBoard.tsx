@@ -124,7 +124,7 @@ function NewsBoard({
                 {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
               </Content>
               <Content>
-                <Link to={`/news?id=${post.id}`}>{post.title}</Link>
+                <Link to={`post?id=${post.id}`}>{post.title}</Link>
               </Content>
               <Content>
                 {post.createdAt.substring(0,4)}년 {post.createdAt.substring(5, 7)}월{' '}
