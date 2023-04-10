@@ -8,15 +8,21 @@ export interface NewsProps {
 }
 
 export interface DetailProps {
-  id: number;
-  title: string;
-  body: string;
-  createdAt: string;
-  files: FileProps[];
+  author : string;
+  body : string;
+  createdAt : string;
+  files : FileProps[];
+  id : number;
+  liked : boolean;
+  likes : number;
+  mine : boolean;
+  tag : [] ;
+  title : string ;
+  views : number;
 }
 
 export interface FileProps {
   id: number;
   url: string;
-  originName: string;
+  originalName: string;
 }

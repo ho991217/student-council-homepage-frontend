@@ -1,6 +1,5 @@
 export interface PostProps {
   commentCount: number;
-  author: string;
   id: number;
   views: number;
   title: string;
@@ -8,4 +7,6 @@ export interface PostProps {
   status: string;
   likes: number;
   comments: number;
+  createdAt: string;
+  author: string;
 }

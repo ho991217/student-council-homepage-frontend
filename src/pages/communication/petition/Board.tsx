@@ -22,7 +22,7 @@ const Wrapper = styled.div`
     padding: 30px 50px 10px 50px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 30px 20px 20px 10px;
+    padding: 0px 20px 20px 10px;
   }
   display: flex;
   flex-direction: column;

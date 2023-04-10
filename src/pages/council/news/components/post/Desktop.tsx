@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import axios from 'axios';
+import SideNav from 'components/nav/SideNav';
 import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { FiDownload } from 'react-icons/fi';
@@ -8,15 +9,27 @@ import { useRecoilValue } from 'recoil';
 import { userInfo } from 'atoms/UserInfo';
 import { NewsProps, DetailProps, FileProps } from '../../NewsProps';
 
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  ${({ theme }) => theme.media.desktop} {
+    padding-left: 50px;
+  }
+`;
 const Wrapper = styled.div`
   max-width: 1280px;
   width: 100%;
-  margin: 40px 0px;
-  padding: 30px 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+  ${({ theme }) => theme.media.desktop} {
+    padding: 40px 50px;
+    margin: 40px 30px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    padding: 40px 50px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    padding: 40px 20px;
+  }
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
@@ -123,18 +136,22 @@ function Detail() {
       setNextList(board.slice(detailId - 2, detailId + 1));
     }
   }, [searchParams, board]);
-
-  useEffect(() => {
-    axios
-      .get(`/post/news/${searchParams.get('id')}`)
-      .then((response) => {
-        const result = response.data.data;
-        setDetail(result);
-      })
-      .catch((error) => {
-        // 에러 핸들링
-        console.log(error);
+  const getCurrentPost = async () => {
+    try {
+      const { data } = await axios({
+        method: 'get',
+        url: `/post/news/${searchParams.get('id')}`,
+        headers: {
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+        },
       });
+      setDetail(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getCurrentPost();
   }, []);
 
   const handleDelete = (id: number) => {
@@ -195,27 +212,28 @@ function Detail() {
                 ))}
             </ImageContainer>
 
-            <Download>
-              <FolderIcon>
-                <IoIosFolder size="35" />
-              </FolderIcon>
-              <Data>
-                <Name>{detail?.files[0].originName}</Name>
-              </Data>
-              <DownloadIcon>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={detail?.files[0].url}
-                >
-                  <FiDownload size="15" color="76787A" />
-                </a>
-              </DownloadIcon>
-            </Download>
-          </>
-        )}
-      </ContentWrapper>
-    </Wrapper>
+              <Download>
+                <FolderIcon>
+                  <IoIosFolder size="35" />
+                </FolderIcon>
+                <Data>
+                  <Name>{detail?.files[0].originalName}</Name>
+                </Data>
+                <DownloadIcon>
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={detail?.files[0].url}
+                  >
+                    <FiDownload size="15" color="76787A" />
+                  </a>
+                </DownloadIcon>
+              </Download>
+            </>
+          )}
+        </ContentWrapper>
+      </Wrapper>
+    </Container>
   );
 }
 

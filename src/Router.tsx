@@ -28,7 +28,6 @@ import SuggestionPost from 'pages/communication/suggestion/components/post/Post'
 import SuggestionEditor from 'pages/communication/suggestion/SuggestionEditor';
 
 import NotFound from 'pages/NotFound';
-import NewsPost from 'pages/council/news/components/post/Post';
 import GlobalBanner from 'components/banner/GlobalBanner';
 import Gnb from 'components/nav/Gnb';
 import Footer from 'components/footer/Footer';
@@ -41,11 +40,17 @@ import Agreements from 'pages/sign-up/components/agreements/Agreements';
 import Header from 'pages/sign-up/components/Header';
 import StudentIdValidation from 'pages/sign-up/components/verification/StudentIdValidation';
 import InputStudentInfos from 'pages/sign-up/components/info/InputStudentInfos';
+import QnA from 'pages/voc/qna/QnA';
+import MyVoice from 'pages/voc/my-voice/MyVoice';
+import QnAEditor from 'pages/voc/qna/QnAEditor';
+import QnADetail from 'pages/voc/qna/QnADetail';
+import MyVoiceDetail from 'pages/voc/my-voice/MyVoiceDetail';
 import RentalLists from 'pages/rental/RentalLists';
 import RentalInfo from 'pages/rental/RentalInfo';
 import RentalNew from 'pages/rental/RentalNew';
 import { useLogin } from 'hooks/UseLogin';
 import AuthRoute from 'AuthRoute';
+import Post from 'pages/council/news/components/post/Post';
 
 function Router() {
   const { isLogin } = useLogin();
@@ -110,6 +115,7 @@ function Router() {
         />
         <Route path="/council-news" element={<GlobalBanner title="총학소식" />}>
           <Route index element={<News />} />
+          <Route path="post" element={<Post />} />
           <Route
             path="editor"
             element={
@@ -188,13 +194,13 @@ function Router() {
         </Route>
         <Route path="/voc">
           <Route path="qna">
-            <Route path="boards" element={<div>qna</div>} />
-            <Route path="board" element={<div>qna-detail</div>} />
-            <Route path="editor" element={<div>qna-editor</div>} />
+            <Route path="boards" element={<QnA />} />
+            <Route path="board" element={<QnADetail />} />
+            <Route path="editor" element={<QnAEditor />} />
           </Route>
           <Route path="my-voice">
-            <Route path="boards" element={<div>my-voice</div>} />
-            <Route path="board" element={<div>my-voice-board</div>} />
+            <Route path="boards" element={<MyVoice />} />
+            <Route path="board" element={<MyVoiceDetail />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

@@ -149,7 +149,7 @@ function NewsEditor() {
         .then((response) => {
           if (carouselUpload) {
             const form = carouselForm;
-            form?.append('redirectUrl', `/news?id=${response.data.data.id}`);
+            form?.append('redirectUrl', `post?id=${response.data.data.id}`);
             axios({
               method: 'post',
               url: '/carousel',

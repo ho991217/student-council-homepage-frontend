@@ -60,7 +60,7 @@ function SuggestionEditor() {
       setErrorMsg('제목을 입력해주세요.');
       setIsOpen(true);
     } else if (text.length < 9) {
-      setErrorMsg('내용을 입력해주세요.');
+      setErrorMsg('9자 이상의 내용을 입력해주세요.');
       setIsOpen(true);
     } else {
       const formData = new FormData();
@@ -71,6 +71,8 @@ function SuggestionEditor() {
       } else {
         formData.append('category', category);
       }
+
+      files.forEach((file) => formData.append('files', file));
 
       axios({
         url: '/post/general-forum',
@@ -131,6 +133,7 @@ function SuggestionEditor() {
             content={text}
             onChange={(e) => setText(e.target.value)}
           />
+          <FileBoxS setter={setFiles} accept="image/*" multiple />
           <SubmitButtonM text="작성 완료" />
         </Form>
       </Wrapper>

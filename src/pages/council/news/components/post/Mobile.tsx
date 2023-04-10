@@ -119,18 +119,24 @@ function Detail() {
     }
   }, [searchParams, board]);
 
-  useEffect(() => {
-    axios
-      .get(`/post/news/${searchParams.get('id')}`)
-      .then((response) => {
-        const result = response.data.data;
-        setDetail(result);
-      })
-      .catch((error) => {
-        // 에러 핸들링
-        console.log(error);
+  const getCurrentPost = async () => {
+    try {
+      const { data } = await axios({
+        method: 'get',
+        url: `/post/news/${searchParams.get('id')}`,
+        headers: {
+          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+        },
       });
+      setDetail(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getCurrentPost();
   }, []);
+
 
   const handleDelete = (id: number) => {
     axios
@@ -179,7 +185,13 @@ function Detail() {
         {detail?.files[0] && (
           <>
             {detail?.files
-              .filter((file) => file.url.endsWith('png' || 'jpg' || 'jpeg'))
+              .filter((file) => {
+                return(
+                  file.url.endsWith('png') ||
+                  file.url.endsWith('jpg') ||
+                  file.url.endsWith('jpeg')
+                )
+              })
               .map((img: FileProps, index: number) => (
                 <Image
                   key={img.id}
@@ -193,7 +205,7 @@ function Detail() {
                 <IoIosFolder size="30" />
               </FolderIcon>
               <Data>
-                <Name>{detail?.files[0].originName}</Name>
+                <Name>{detail?.files[0].originalName}</Name>
               </Data>
               <DownloadIcon>
                 <a
