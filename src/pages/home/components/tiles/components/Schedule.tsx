@@ -181,7 +181,7 @@ function Schedule(): JSX.Element {
 
     axios(config)
       .then(({ data }) => {
-        setCurMonthDetails(data.data);
+        setCurMonthDetails(data);
       })
       .catch((error) => {
         // TODO:에러 처리

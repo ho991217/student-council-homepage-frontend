@@ -1,8 +1,5 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
-import { NewsProps } from 'pages/home/components/tiles/TileProps';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { RecentNewsType } from 'pages/home/Home';
 
 const Wrapper = styled.div`
