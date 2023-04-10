@@ -46,6 +46,7 @@ import InputStudentInfos from 'pages/sign-up/components/info/InputStudentInfos';
 import RentalLists from 'pages/rental/RentalLists';
 import RentalInfo from 'pages/rental/RentalInfo';
 import RentalNew from 'pages/rental/RentalNew';
+import Post from 'pages/council/news/components/post/Post';
 
 function Router() {
   const [{ isLoggedIn }, setLoginState] = useRecoilState(LoginStateAtom);
@@ -116,6 +117,7 @@ function Router() {
         />
         <Route path="/council-news" element={<GlobalBanner title="총학소식" />}>
           <Route index element={<News />} />
+          <Route path="post" element={<Post />} />
           <Route
             path="editor"
             element={isLoggedIn ? <NewsEditor /> : <Navigate to="/" />}
