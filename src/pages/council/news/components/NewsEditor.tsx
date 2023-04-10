@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
-import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { PropagateLoader } from 'react-spinners';
-import Modal from 'components/modal/Modal';
 import SubmitButtonM from 'components/editor/button/SubmitButtonM';
+import { useErrorModal } from 'hooks/UseErrorModal';
 
 const Container = styled.div`
   margin: 40px 0;
@@ -79,15 +77,10 @@ const Textarea = styled.textarea`
 function NewsEditor() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [errorMsg, setErrorMsg] = useState<string>('');
   const [form, setForm] = useState<FormData>();
   const [carouselForm, setCarouselForm] = useState<FormData>();
-  const [postState, setPostState] = useState({
-    sent: false,
-    success: false,
-  });
   const [carouselUpload, setCarouselUpload] = useState(false);
+  const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
   const navigate = useNavigate();
 
   const onContentHandler = (event: React.FormEvent<HTMLTextAreaElement>) => {
@@ -121,21 +114,17 @@ function NewsEditor() {
 
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setErrorTitle('소식 등록 실패');
     if (title === '') {
-      setErrorMsg('소식명을 입력해주세요');
-      setIsOpen(true);
+      setErrorMessage('소식명을 입력해주세요');
+      open();
     } else if (content === '') {
-      setErrorMsg('소식 내용을 입력해주세요');
-      setIsOpen(true);
+      setErrorMessage('소식 내용을 입력해주세요');
+      open();
     } else if (form === undefined) {
-      setErrorMsg('사진을 첨부해주세요');
-      setIsOpen(true);
+      setErrorMessage('사진을 첨부해주세요');
+      open();
     } else {
-      setPostState((prev) => ({
-        ...prev,
-        sent: true,
-      }));
       const config = {
         method: 'post',
         url: '/post/news',
@@ -159,28 +148,18 @@ function NewsEditor() {
               },
             });
           }
-          setPostState((prev) => ({
-            ...prev,
-            success: response.data.successful,
-          }));
           navigate('/council-news');
         })
         .catch((error) => {
-          setErrorMsg(error.response.data.message);
-          setIsOpen(true);
+          setErrorMessage(error.response.data.message);
+          open();
         });
     }
   };
 
   return (
     <>
-      {isOpen && (
-        <Modal
-          onClose={() => setIsOpen(false)}
-          title="소식 등록 실패"
-          contents={errorMsg}
-        />
-      )}
+      {renderModal()}
       <Container>
         <InnerContainer>
           <Wrapper>

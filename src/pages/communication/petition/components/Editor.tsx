@@ -1,14 +1,13 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import Modal from 'components/modal/Modal';
 import TextBoxS from 'components/editor/input/TextBoxS';
 import TextBoxL from 'components/editor/input/TextBoxL';
 import SubmitButtonM from 'components/editor/button/SubmitButtonM';
 import { TagsInput } from 'react-tag-input-component';
 import FileBoxS from 'components/editor/input/FileBoxS';
+import { useErrorModal } from 'hooks/UseErrorModal';
 
 const TagBoxLabel = styled.label`
   display: flex;
@@ -36,11 +35,10 @@ function Editor() {
   const [tagNameResult, setTagNameResult] = useState<any[]>([]);
   const [tagResult, setTagResult] = useState<any[]>([]);
   const [tagList, setTagList] = useState<string[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const navigate = useNavigate();
   const formData = new FormData();
+  const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
 
   const getTags = async () => {
     try {
@@ -50,7 +48,9 @@ function Editor() {
       });
       setOriginalTags(data);
     } catch (e) {
-      console.log(e);
+      const error = e as any;
+      setErrorMessage(error.response.data.message[0]);
+      open();
     }
   };
 
@@ -74,20 +74,22 @@ function Editor() {
       getTags();
       setTagResult((prev) => [...prev, data.id]);
     } catch (e) {
-      console.log(e);
+      const error = e as any;
+      setErrorMessage(error.response.data.message[0]);
+      open();
     }
   };
 
   const onSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
+    setErrorTitle('청원 등록 실패');
     if (title.length === 0) {
-      setErrorMsg('제목을 입력해주세요.');
-      setIsOpen(true);
-      return;
+      setErrorMessage('제목을 입력해주세요.');
+      open();
     }
     if (content.length < 9) {
-      setErrorMsg('9자 이상의 내용을 입력해주세요.');
-      setIsOpen(true);
+      setErrorMessage('9자 이상의 내용을 입력해주세요.');
+      open();
       return;
     }
     tagObjectResult.forEach((tag) => {
@@ -113,8 +115,8 @@ function Editor() {
     } catch (e) {
       const err = e as ErrorProps;
       if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
-        setErrorMsg(err.response.data.message);
-        setIsOpen(true);
+        setErrorMessage(err.response.data.message);
+        open();
       }
     }
   };
@@ -150,6 +152,7 @@ function Editor() {
 
   return (
     <Container>
+      {renderModal()}
       <Wrapper>
         <Form onSubmit={onSubmitHandler}>
           <TextBoxS
@@ -174,16 +177,6 @@ function Editor() {
           <FileBoxS setter={setFiles} multiple />
           <SubmitButtonM text="작성 완료" />
         </Form>
-        {isOpen && (
-          <Modal
-            title="청원 등록 실패"
-            contents={errorMsg}
-            onClose={() => {
-              setIsOpen(false);
-              setErrorMsg('');
-            }}
-          />
-        )}
       </Wrapper>
     </Container>
   );

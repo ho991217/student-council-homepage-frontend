@@ -1,10 +1,10 @@
 import CopyrightTerm from 'components/CopyrightTerm';
-import Modal from 'components/modal/Modal';
 import { Desktop } from 'hooks/MediaQueries';
 import { useLogin } from 'hooks/UseLogin';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useErrorModal } from 'hooks/UseErrorModal';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -243,31 +243,15 @@ const SaveIdToggle = styled.div<{ saveId: boolean }>`
   transition: background-color 0.2s ease-in-out, left 0.2s ease-in-out; ;
 `;
 
-interface LoginErrorProps {
-  response: {
-    data: {
-      code: string;
-      message: [string];
-      status: string;
-      timestamp: string;
-      trackingId: string;
-    };
-  };
-}
-
 function Login() {
-  const [id, setId] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [password, setPassword] = useState<string>('');
-  const [idMessage, setIdMessage] = useState<string>('');
-  const [isValidId, setIsValidId] = useState<boolean>(false);
-  const [saveId, setSaveId] = useState<boolean>(false);
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+  const [idMessage, setIdMessage] = useState('');
+  const [isValidId, setIsValidId] = useState(false);
+  const [saveId, setSaveId] = useState(false);
   const { setLogin } = useLogin();
   const navigate = useNavigate();
-  const [loginErrorState, setLoginErrorState] = useState({
-    error: false,
-    message: '',
-  });
+  const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
 
   const validateDankookEmail = (email: string) => {
     const regex = /^[0-9]{8}$/;
@@ -282,11 +266,9 @@ function Login() {
     if (successful) {
       navigate('/');
     } else {
-      setLoginErrorState({
-        error: true,
-        message,
-      });
-      setIsOpen(true);
+      setErrorTitle('로그인 실패');
+      setErrorMessage(message);
+      open();
     }
   };
 
@@ -322,19 +304,7 @@ function Login() {
 
   return (
     <>
-      {isOpen && (
-        <Modal
-          onClose={() => setIsOpen(false)}
-          title="로그인 실패!"
-          contents={loginErrorState.message}
-          accept={
-            loginErrorState.message === '없는 회원입니다.' ? '회원가입' : ''
-          }
-          onAccept={() => {
-            navigate('/sign-up/agreements');
-          }}
-        />
-      )}
+      {renderModal()}
       <Wrapper>
         <Header>
           단국대학생 <HeaderPoint>로그인</HeaderPoint>

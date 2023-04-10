@@ -1,25 +1,23 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import 'react-datepicker/dist/react-datepicker.css';
-import Modal from 'components/modal/Modal';
 import SubmitButtonM from 'components/editor/button/SubmitButtonM';
 import TextBoxS from 'components/editor/input/TextBoxS';
 import DatePickerM from 'components/editor/DatePickerM';
 import FileBoxS from 'components/editor/input/FileBoxS';
 import NumBoxS from 'components/editor/input/NumBoxS';
+import { useErrorModal } from 'hooks/UseErrorModal';
 
 function ConferenceEditor() {
   const [round, setRound] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [errorMsg, setErrorMsg] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
   const [title, setTitle] = useState<string>('');
   const [files, setFiles] = useState<File[]>([]); // [File
   const [form, setForm] = useState<FormData>();
   const navigate = useNavigate();
+  const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
 
   const onRoundHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const {
@@ -37,18 +35,19 @@ function ConferenceEditor() {
 
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorTitle('회의록 등록 실패');
     if (round === '') {
-      setErrorMsg('회차를 입력해주세요');
-      setIsOpen(true);
+      setErrorMessage('회차를 입력해주세요');
+      open();
     } else if (title === '') {
-      setErrorMsg('회의록명을 입력해주세요');
-      setIsOpen(true);
+      setErrorMessage('회의록명을 입력해주세요');
+      open();
     } else if (date === undefined) {
-      setErrorMsg('날짜를 입력해주세요');
-      setIsOpen(true);
+      setErrorMessage('날짜를 입력해주세요');
+      open();
     } else if (form === undefined) {
-      setErrorMsg('파일을 선택해주세요');
-      setIsOpen(true);
+      setErrorMessage('파일을 선택해주세요');
+      open();
     } else {
       const config = {
         method: 'post',
@@ -64,13 +63,13 @@ function ConferenceEditor() {
           if (data.successful) {
             navigate('/conference');
           } else {
-            setErrorMsg(data.message);
-            setIsOpen(true);
+            setErrorMessage(data.message);
+            open();
           }
         })
         .catch(({ response }) => {
-          setErrorMsg(response.data.message);
-          setIsOpen(true);
+          setErrorMessage(response.data.message);
+          open();
         });
     }
   };
@@ -98,13 +97,7 @@ function ConferenceEditor() {
           </Form>
         </Wrapper>
       </InnerContainer>
-      {isOpen && (
-        <Modal
-          title="회의록 작성 실패"
-          contents={errorMsg}
-          onClose={() => setIsOpen(false)}
-        />
-      )}
+      {renderModal()}
     </Container>
   );
 }

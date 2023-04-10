@@ -1,112 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Modal from 'components/modal/Modal';
 import TextBoxS from 'components/editor/input/TextBoxS';
 import TextBoxL from 'components/editor/input/TextBoxL';
 import FileBoxS from 'components/editor/input/FileBoxS';
 import SubmitButtonM from 'components/editor/button/SubmitButtonM';
-
-function RuleEditor() {
-  const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-  const [form, setForm] = useState<FormData>();
-  const [files, setFiles] = useState<File[]>([]); // [File
-  const [isOpen, setIsOpen] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-  const navigate = useNavigate();
-
-  const onTitleHandler = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setTitle(value);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) {
-      return;
-    }
-    const formData = new FormData();
-    Array.from(e.target.files).forEach((f) => formData.append('files', f));
-    formData.append('text', content);
-    formData.append('title', title);
-    files.forEach((f) => formData.append('files', f));
-    setForm(formData);
-  };
-
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (title === '') {
-      setErrorMsg('제목을 입력해주세요');
-      setIsOpen(true);
-    } else if (content === '') {
-      setErrorMsg('내용을 입력해주세요');
-      setIsOpen(true);
-    } else if (form === undefined) {
-      setErrorMsg('파일을 첨부해주세요');
-      setIsOpen(true);
-    } else {
-      const config = {
-        method: 'post',
-        url: '/rule',
-        data: form,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      };
-
-      axios(config)
-        .then((response) => {
-          if (response.data.successful) {
-            navigate('/rules');
-          } else {
-            setErrorMsg(response.data.message);
-            setIsOpen(true);
-          }
-        })
-        .catch((error) => {
-          setErrorMsg(error.response.data.message);
-          setIsOpen(true);
-        });
-    }
-  };
-
-  return (
-    <>
-      {isOpen && (
-        <Modal
-          title="등록 실패"
-          contents={errorMsg}
-          onClose={() => setIsOpen(false)}
-        />
-      )}
-      <Container>
-        <InnerContainer>
-          <Wrapper>
-            <Form onSubmit={onSubmitHandler}>
-              <TextBoxS
-                label="회칙명"
-                value={title}
-                onChange={onTitleHandler}
-                placeholder="회칙명을 입력해주세요."
-              />
-              <TextBoxL
-                label="회칙 내용"
-                content={content}
-                onChange={(e) => setContent(e.target.value)}
-              />
-              <FileBoxS setter={setFiles} multiple />
-              <SubmitButtonM text="작성 완료" />
-            </Form>
-          </Wrapper>
-        </InnerContainer>
-      </Container>
-    </>
-  );
-}
+import { useErrorModal } from 'hooks/UseErrorModal';
 
 const Container = styled.div`
   margin: 40px 0;
@@ -139,5 +39,87 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
 `;
+
+function RuleEditor() {
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+  const [form, setForm] = useState<FormData>();
+  const [files, setFiles] = useState<File[]>([]);
+  const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
+  const navigate = useNavigate();
+
+  const onTitleHandler = (event: React.FormEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { value },
+    } = event;
+    setTitle(value);
+  };
+
+  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setErrorTitle('회칙 등록 실패');
+
+    if (title === '') {
+      setErrorMessage('제목을 입력해주세요');
+      open();
+    } else if (content === '') {
+      setErrorMessage('내용을 입력해주세요');
+      open();
+    } else if (form === undefined) {
+      setErrorMessage('파일을 첨부해주세요');
+      open();
+    } else {
+      const config = {
+        method: 'post',
+        url: '/rule',
+        data: form,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+
+      axios(config)
+        .then((response) => {
+          if (response.data.successful) {
+            navigate('/rules');
+          } else {
+            setErrorMessage(response.data.message);
+            open();
+          }
+        })
+        .catch((error) => {
+          setErrorMessage(error.response.data.message);
+          open();
+        });
+    }
+  };
+
+  return (
+    <>
+      {renderModal()}
+      <Container>
+        <InnerContainer>
+          <Wrapper>
+            <Form onSubmit={onSubmitHandler}>
+              <TextBoxS
+                label="회칙명"
+                value={title}
+                onChange={onTitleHandler}
+                placeholder="회칙명을 입력해주세요."
+              />
+              <TextBoxL
+                label="회칙 내용"
+                content={content}
+                onChange={(e) => setContent(e.target.value)}
+              />
+              <FileBoxS setter={setFiles} multiple />
+              <SubmitButtonM text="작성 완료" />
+            </Form>
+          </Wrapper>
+        </InnerContainer>
+      </Container>
+    </>
+  );
+}
 
 export default RuleEditor;
