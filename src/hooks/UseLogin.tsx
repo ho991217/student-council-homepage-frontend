@@ -3,6 +3,14 @@ import axios from 'axios';
 import { Cookies } from 'react-cookie';
 import { useRecoilState } from 'recoil';
 
+/**
+ *
+ * @returns {object} user
+ * @returns {function} setLogin
+ * @returns {function} setAuthHeader
+ * @returns {function} setLogout
+ * @returns {function} setRefreshToken
+ */
 export const useLogin = () => {
   const cookies = new Cookies();
   const [user, setUser] = useRecoilState(userInfo);
@@ -22,11 +30,12 @@ export const useLogin = () => {
         },
       });
 
-      const { accessToken, refreshToken, ...user } = data;
+      const { accessToken, refreshToken } = data;
       cookies.set('access-token', accessToken);
       cookies.set('refresh-token', refreshToken);
       setAuthHeader(accessToken);
-      setUser(user);
+      // setUser(user);
+      setUser(await getUserInfo());
 
       return { successful: true, message: '' };
     } catch (e) {

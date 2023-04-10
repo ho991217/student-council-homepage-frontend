@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import axios from 'axios';
-import SideNav from 'components/nav/SideNav';
 import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { FiDownload } from 'react-icons/fi';
 import { IoIosFolder } from 'react-icons/io';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'atoms/UserInfo';
+import { useErrorModal } from 'hooks/UseErrorModal';
+import { useLogin } from 'hooks/UseLogin';
 import { NewsProps, DetailProps, FileProps } from '../../NewsProps';
 
 const Container = styled.div`
@@ -114,6 +115,8 @@ function Detail() {
   const [detail, setDetail] = useState<DetailProps>();
   const [, setNextList] = useState<NewsProps[]>();
   const { admin } = useRecoilValue(userInfo);
+  const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
+  const { getAccessToken } = useLogin();
 
   useEffect(() => {
     axios
@@ -124,7 +127,9 @@ function Detail() {
       })
       .catch((error) => {
         // 에러 핸들링
-        console.log(error);
+        setErrorTitle('게시글 불러오기 실패');
+        setErrorMessage(error.response.data.message[0]);
+        open();
       });
   }, []);
 
@@ -142,10 +147,16 @@ function Detail() {
       const { data } = await axios({
         method: 'get',
         url: `/post/news/${searchParams.get('id')}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
       });
       setDetail(data);
     } catch (error) {
-      console.log(error);
+      const e = error as any;
+      setErrorMessage(e.response.data.message[0]);
+      open();
     }
   };
   useEffect(() => {
@@ -160,13 +171,15 @@ function Detail() {
       })
       .catch((error) => {
         // 에러 핸들링
-        console.log(error);
+        setErrorMessage(error.response.data.message[0]);
+        open();
       });
   };
 
   // 게시글 인덱스, 다음글 리스트 노출 추후에 수정
   return (
     <Wrapper>
+      {renderModal()}
       <Head isAdmin={admin}>
         <div>제목</div>
         <div>{detail?.title}</div>

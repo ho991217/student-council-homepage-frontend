@@ -1,10 +1,10 @@
 import { useLogin } from 'hooks/UseLogin';
 import { Navigate } from 'react-router-dom';
 
-function AuthRoute(Component: any) {
+function AuthRoute({ children }: { children: JSX.Element }) {
   const { isLogin } = useLogin();
 
-  return isLogin() ? <Component /> : <Navigate to="/login" />;
+  return isLogin() ? children : <Navigate to="/login" />;
 }
 
 export default AuthRoute;
