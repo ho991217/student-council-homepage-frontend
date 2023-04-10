@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 import BannerImg from 'static/images/global-banner/globalBannerBackground.png';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const Container = styled.div`
+  display: flex;
   background-image: url(${BannerImg});
   background-position: center;
   background-repeat: no-repeat;
@@ -34,11 +36,17 @@ const Banner = styled.div`
 const Title = styled.h1`
   font-size: ${({ theme }) => theme.fonts.size.x3xl};
   font-weight: ${({ theme }) => theme.fonts.weight.bold};
-
   margin-bottom: 12px;
 `;
 
 function GlobalBanner({ title }: { title: string }) {
+  const location = useLocation().pathname;
+  const [bannerVisibility, setBannerVisibility] = useState(false);
+  useEffect(() => {
+    if (location.indexOf('boards') > 0) {
+      setBannerVisibility(true);
+    }
+  }, []);
   return (
     <>
       <Container>
