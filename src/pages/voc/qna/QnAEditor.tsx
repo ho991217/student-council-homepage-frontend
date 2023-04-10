@@ -63,7 +63,11 @@ function QnAEditor() {
             value={title}
             onChange={({ currentTarget }) => setTitle(currentTarget.value)}
           />
-          <TextBoxLL label="내용" htmlStr={text} setHtmlStr={setText} />
+          <TextBoxLL
+            label="내용"
+            onChange={(e) => setText(e.target.value)}
+            content={text}
+          />
           <MenuBox>
             <Link to="/voc/qna/boards">
               <Button>취소</Button>
