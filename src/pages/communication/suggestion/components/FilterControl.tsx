@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import qs from 'qs';
-import { useCookies } from 'react-cookie';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getCategories } from '../functions/GetCategories';
@@ -53,7 +52,6 @@ const Hashtag = styled(Link)<{ $cur: boolean }>`
 function FilterControl() {
   const [categoryList, setCategoryList] = useState<[]>();
   const params = useSearchParams();
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
 
   const generateParams = (tag: string) => {
     if (tag === '전체') {
@@ -63,7 +61,7 @@ function FilterControl() {
   };
 
   useEffect(() => {
-    getCategories(cookies['X-AUTH-TOKEN']).then((res) => setCategoryList(res));
+    getCategories().then((res) => setCategoryList(res));
   }, []);
 
   return (

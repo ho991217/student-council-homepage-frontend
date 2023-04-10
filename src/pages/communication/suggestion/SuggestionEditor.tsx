@@ -6,7 +6,6 @@ import TagSelectM from 'components/editor/TagSelectM';
 import FileBoxS from 'components/editor/input/FileBoxS';
 import Modal from 'components/modal/Modal';
 import { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { getCategories } from './functions/GetCategories';
@@ -47,7 +46,6 @@ function SuggestionEditor() {
   const [errorMsg, setErrorMsg] = useState('');
   const [category, setCategory] = useState<string>('');
   const [categoryList, setCategoryList] = useState<string[]>(['']);
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const [files, setFiles] = useState<File[]>([]);
 
   const { pathname } = useLocation();
@@ -79,7 +77,6 @@ function SuggestionEditor() {
         method: 'post',
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
         data: formData,
       })
@@ -87,20 +84,14 @@ function SuggestionEditor() {
           if (res.data.successful) navigate('/board-suggestion/boards?page=1');
           navigate('/board-suggestion/boards');
         })
-        .catch(
-          ({
-            response: {
-              data: { message },
-            },
-          }) =>
-            // 에러 처리
-            alert(message),
-        );
+        .catch((e) => {
+          alert(e);
+        });
     }
   };
 
   useEffect(() => {
-    getCategories(cookies['X-AUTH-TOKEN']).then((res) => {
+    getCategories().then((res) => {
       setCategoryList(res);
     });
   }, []);

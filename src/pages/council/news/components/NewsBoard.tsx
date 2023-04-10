@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useCookies } from 'react-cookie';
-
-import { NewsProps } from '../NewsProps';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
 import { PagingProps } from '../PagingProps';
+import { NewsProps } from '../NewsProps';
 
 const Container = styled.div`
   width: 100%;
@@ -99,8 +99,7 @@ function NewsBoard({
   currentPage,
 }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<NewsProps[]>([]);
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  const [isAdmin] = useState<boolean>(cookies.isAdmin === 'true');
+  const { admin } = useRecoilValue(userInfo);
 
   useEffect(() => {
     setBoard(posts);
@@ -148,7 +147,7 @@ function NewsBoard({
               </Content>
             </Row>
           ))}
-          {isAdmin && (
+          {admin && (
             <Link to="/council-news/editor">
               <Button type="button">작성</Button>
             </Link>

@@ -64,7 +64,7 @@ const MenuLink = styled(Link)`
   height: 100%;
 `;
 
-function Gnb(): JSX.Element {
+function Gnb() {
   const [open, setOpen] = useState<boolean[]>(
     Array.from({ length: NavItems.length }, () => false),
   );

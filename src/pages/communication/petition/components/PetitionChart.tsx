@@ -6,8 +6,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { useSearchParams } from 'react-router-dom';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { Context } from 'chartjs-plugin-datalabels';
+import ChartDataLabels, { Context } from 'chartjs-plugin-datalabels';
 
 const Container = styled.div`
   display: flex;
@@ -59,7 +58,6 @@ interface ChartDataProps {
 }
 
 export default function PetitionChart({ dataUpdate }: { dataUpdate: boolean }) {
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const [searchParams] = useSearchParams();
   const [chartData, setChartData] = useState({
     department: [''],
@@ -72,9 +70,6 @@ export default function PetitionChart({ dataUpdate }: { dataUpdate: boolean }) {
       const { data } = await axios({
         method: 'get',
         url: `/post/petition/${postid}`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       });
       setChartData((prev) => ({
         ...prev,
@@ -151,8 +146,6 @@ export default function PetitionChart({ dataUpdate }: { dataUpdate: boolean }) {
     getChartData(postId);
   }, [dataUpdate]);
 
-  const chartRef = useRef<ChartJS>(null);
-
   const plugins = [
     {
       id: 'centerText',
@@ -187,7 +180,7 @@ export default function PetitionChart({ dataUpdate }: { dataUpdate: boolean }) {
   ];
   return (
     <Container>
-      <Doughnut data={data} plugins={plugins}  />
+      <Doughnut data={data} plugins={plugins} />
       <TextContainer>
         <Title>
           {chartData.totalAgree === 0

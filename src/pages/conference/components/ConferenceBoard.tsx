@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
-import { useState } from 'react';
 import axios from 'axios';
 
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
 import { ConferenceProps } from './ConferenceProps';
 
 const Container = styled.div`
@@ -108,20 +108,15 @@ function ConferenceBoard({
   totalBoards,
   currentPage,
 }: BoardProps): JSX.Element {
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
+  const { admin } = useRecoilValue(userInfo);
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/conference/${id}`, {
-        headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-        },
-      })
-      .then(function (response) {
+      .delete(`/conference/${id}`, {})
+      .then(() => {
         window.location.replace('/conference');
       })
-      .catch(function (error) {
+      .catch((error) => {
         // 에러 핸들링
         console.log(error);
       });
@@ -136,18 +131,18 @@ function ConferenceBoard({
             {Math.ceil(totalBoards / 6)}
           </PageInfo>
           <BoardHead>
-            <Row isAdmin={isAdmin}>
+            <Row isAdmin={admin}>
               <div>회차</div>
               <div>개최일자</div>
               <div>등록일자</div>
               <div>회의록</div>
               <div>보기</div>
-              {isAdmin && <div>삭제</div>}
+              {admin && <div>삭제</div>}
             </Row>
           </BoardHead>
 
           {posts.map((post) => (
-            <Row key={post.id} isAdmin={isAdmin}>
+            <Row key={post.id} isAdmin={admin}>
               <div>{post.round}차</div>
               <div>
                 {post.date.substring(0, 4)}년 {post.date.substring(5, 7)}월{' '}
@@ -174,7 +169,7 @@ function ConferenceBoard({
                   </Svg>
                 </a>
               </div>
-              {isAdmin && (
+              {admin && (
                 <div>
                   <Svg
                     width="20"
@@ -197,7 +192,7 @@ function ConferenceBoard({
               )}
             </Row>
           ))}
-          {isAdmin && (
+          {admin && (
             <Link to="/conference/editor">
               <Button type="button">작성</Button>
             </Link>

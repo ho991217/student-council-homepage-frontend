@@ -19,7 +19,6 @@ function ConferenceEditor() {
   const [title, setTitle] = useState<string>('');
   const [files, setFiles] = useState<File[]>([]); // [File
   const [form, setForm] = useState<FormData>();
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
 
   const onRoundHandler = (event: React.FormEvent<HTMLInputElement>) => {
@@ -34,19 +33,6 @@ function ConferenceEditor() {
       currentTarget: { value },
     } = event;
     setTitle(value);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) {
-      return;
-    }
-    const formData = new FormData();
-    formData.append('files', e.target.files[0]);
-    formData.append('round', round);
-    formData.append('date', date.toISOString().split('T')[0]);
-    formData.append('title', title);
-    files.forEach((f) => formData.append('files', f));
-    setForm(formData);
   };
 
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
@@ -70,7 +56,6 @@ function ConferenceEditor() {
         data: form,
         headers: {
           'Content-Type': 'multipart/form-data',
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
       };
 

@@ -8,7 +8,6 @@ import TextBoxS from 'components/editor/input/TextBoxS';
 import TextBoxL from 'components/editor/input/TextBoxL';
 import SubmitButtonM from 'components/editor/button/SubmitButtonM';
 import { TagsInput } from 'react-tag-input-component';
-import { faSmileWink } from '@fortawesome/free-regular-svg-icons';
 import FileBoxS from 'components/editor/input/FileBoxS';
 
 const TagBoxLabel = styled.label`
@@ -29,22 +28,17 @@ interface ErrorProps {
 }
 
 function Editor() {
-  const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [originalTags, setOriginalTags] = useState<any[]>([]);
-  const [check, setCheckTag] = useState<any[]>([]);
   const [tagObject, setTagObject] = useState<any[]>([]);
   const [tagObjectResult, setTagObjectResult] = useState<any[]>([]);
-  const [tagListToObject, setTagListToObject] = useState<any[]>([]);
-  const [isTagFind, setIsTagFind] = useState<boolean>();
   const [tagNameResult, setTagNameResult] = useState<any[]>([]);
   const [tagResult, setTagResult] = useState<any[]>([]);
   const [tagList, setTagList] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [files, setFiles] = useState<File[]>([]);
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
   const formData = new FormData();
 
@@ -53,11 +47,7 @@ function Editor() {
       const { data } = await axios({
         method: 'get',
         url: `/post/tag`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       });
-      console.log(data);
       setOriginalTags(data);
     } catch (e) {
       console.log(e);
@@ -77,14 +67,12 @@ function Editor() {
         method: 'post',
         url: '/post/tag',
         headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
           'Content-Type': 'application/json',
         },
         data: tag,
       });
       getTags();
       setTagResult((prev) => [...prev, data.id]);
-      console.log(data);
     } catch (e) {
       console.log(e);
     }
@@ -116,7 +104,6 @@ function Editor() {
         method: 'post',
         url: '/post/petition',
         headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
           'Content-Type': 'multipart/form-data',
         },
         data: formData,
@@ -146,7 +133,6 @@ function Editor() {
     }
     const allObjectTags = new Set(tagObject);
 
-    const allTags = new Set(tagNameResult);
     const realTags = new Set(tagList);
     const objectIntersect = [...allObjectTags].filter((data) =>
       realTags.has(data),

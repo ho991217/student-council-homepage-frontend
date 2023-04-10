@@ -88,7 +88,6 @@ function NewsEditor() {
     success: false,
   });
   const [carouselUpload, setCarouselUpload] = useState(false);
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
 
   const onContentHandler = (event: React.FormEvent<HTMLTextAreaElement>) => {
@@ -143,7 +142,6 @@ function NewsEditor() {
         data: form,
         headers: {
           'Content-Type': 'multipart/form-data',
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
       };
 
@@ -157,7 +155,6 @@ function NewsEditor() {
               url: '/carousel',
               data: form,
               headers: {
-                'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
                 'Content-Type': 'multipart/form-data',
               },
             });
@@ -222,7 +219,7 @@ function NewsEditor() {
                   style={{ marginTop: 10 }}
                 />
               </Label>
-              <SubmitButtonM text='작성 완료'/>
+              <SubmitButtonM text="작성 완료" />
             </Form>
           </Wrapper>
         </InnerContainer>
