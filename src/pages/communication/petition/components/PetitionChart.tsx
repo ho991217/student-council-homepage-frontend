@@ -6,8 +6,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { useSearchParams } from 'react-router-dom';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { Context } from 'chartjs-plugin-datalabels';
+import ChartDataLabels, { Context } from 'chartjs-plugin-datalabels';
 
 const Container = styled.div`
   display: flex;
@@ -151,8 +150,6 @@ export default function PetitionChart({ dataUpdate }: { dataUpdate: boolean }) {
     getChartData(postId);
   }, [dataUpdate]);
 
-  const chartRef = useRef<ChartJS>(null);
-
   const plugins = [
     {
       id: 'centerText',
@@ -187,7 +184,7 @@ export default function PetitionChart({ dataUpdate }: { dataUpdate: boolean }) {
   ];
   return (
     <Container>
-      <Doughnut data={data} plugins={plugins}  />
+      <Doughnut data={data} plugins={plugins} />
       <TextContainer>
         <Title>
           {chartData.totalAgree === 0

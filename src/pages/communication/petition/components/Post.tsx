@@ -353,7 +353,6 @@ function Post() {
   const [post, setPost] = useState<PostProps>();
   const [postId, setPostId] = useState<number>(0);
   const [likeCount, setLikeCount] = useState<number>(0);
-  const [comment, setComment] = useState<string>('동의합니다.');
   const [adminAnswer, setAdminAnswer] = useState<string>();
   const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const [dataUpdate, setDataUpdate] = useState(false);
@@ -479,27 +478,6 @@ function Post() {
       postAgree();
     }
     setModalState((prev) => ({ ...prev, open: false }));
-  };
-  const postLike = async () => {
-    await axios({
-      url: `/post/general-forum/like/${postId}`,
-      method: 'post',
-      headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-      },
-    });
-    getCurrentPost(postId);
-  };
-
-  const deleteLike = async () => {
-    await axios({
-      url: `/post/general-forum/like/${postId}`,
-      method: 'delete',
-      headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-      },
-    });
-    getCurrentPost(postId);
   };
 
   useEffect(() => {
