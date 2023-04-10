@@ -35,10 +35,8 @@ import Footer from 'components/footer/Footer';
 import Makers from 'components/footer/sub-routes/Makers';
 import Term from 'components/footer/sub-routes/Term';
 import PrivacyPolicy from 'components/footer/sub-routes/PrivacyPolicy';
-import { LoginStateAtom } from 'atoms/LoginState';
 import Success from 'pages/sign-up/components/Succes';
 import PasswordSuccess from 'pages/password/components/Succes';
-import Event from 'pages/event/Event';
 import Agreements from 'pages/sign-up/components/agreements/Agreements';
 import Header from 'pages/sign-up/components/Header';
 import StudentIdValidation from 'pages/sign-up/components/verification/StudentIdValidation';
@@ -46,16 +44,11 @@ import InputStudentInfos from 'pages/sign-up/components/info/InputStudentInfos';
 import RentalLists from 'pages/rental/RentalLists';
 import RentalInfo from 'pages/rental/RentalInfo';
 import RentalNew from 'pages/rental/RentalNew';
+import { useLogin } from 'hooks/UseLogin';
 
 function Router() {
-  const [{ isLoggedIn }, setLoginState] = useRecoilState(LoginStateAtom);
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  useEffect(() => {
-    setLoginState({
-      isLoggedIn: !!cookies['X-AUTH-TOKEN'],
-    });
-  }, []);
-  if (isLoggedIn === undefined) return <div>로딩중...</div>;
+  const { isLogin } = useLogin();
+
   return (
     <BrowserRouter>
       <Gnb />
@@ -64,7 +57,7 @@ function Router() {
         <Route path="/" element={<Home />} />
         <Route
           path="/login"
-          element={isLoggedIn ? <Navigate to="/" /> : <Login />}
+          element={isLogin() ? <Navigate to="/" /> : <Login />}
         />
         <Route path="/sign-up" element={<GlobalBanner title="회원가입" />}>
           <Route path="" element={<SignUp />}>
@@ -118,17 +111,13 @@ function Router() {
           <Route index element={<News />} />
           <Route
             path="editor"
-            element={isLoggedIn ? <NewsEditor /> : <Navigate to="/" />}
+            element={isLogin() ? <NewsEditor /> : <Navigate to="/" />}
           />
         </Route>
         <Route
           path="/rules"
           element={
-            isLoggedIn ? (
-              <GlobalBanner title="회칙" />
-            ) : (
-              <Navigate to="/login" />
-            )
+            isLogin() ? <GlobalBanner title="회칙" /> : <Navigate to="/login" />
           }
         >
           <Route path="" element={<Rules />} />
@@ -137,7 +126,7 @@ function Router() {
         <Route
           path="/conference"
           element={
-            isLoggedIn ? (
+            isLogin() ? (
               <GlobalBanner title="회의록" />
             ) : (
               <Navigate to="/login" />
@@ -151,7 +140,7 @@ function Router() {
         <Route
           path="/board-petition"
           element={
-            isLoggedIn ? (
+            isLogin() ? (
               <GlobalBanner title="청원게시판" />
             ) : (
               <Navigate to="/login" />
@@ -166,7 +155,7 @@ function Router() {
         <Route
           path="/board-suggestion"
           element={
-            isLoggedIn ? (
+            isLogin() ? (
               <GlobalBanner title="자유게시판" />
             ) : (
               <Navigate to="/login" />
@@ -190,7 +179,6 @@ function Router() {
         <Route path="/term" element={<Term />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/admin" element={<Navigate to="/" />} />
-        <Route path="/event" element={<Event />} />
         <Route path="/rental" element={<GlobalBanner title="대여물품" />}>
           <Route index element={<Navigate to="/rental/lists?page=1" />} />
           <Route path="lists" element={<RentalLists />} />

@@ -2,10 +2,10 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
 import { FiDownload } from 'react-icons/fi';
 import { IoIosFolder } from 'react-icons/io';
-
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
 import { NewsProps, DetailProps, FileProps } from '../../NewsProps';
 
 const Wrapper = styled.div`
@@ -99,8 +99,7 @@ function Detail() {
   const [board, setBoard] = useState<NewsProps[]>([]);
   const [detail, setDetail] = useState<DetailProps>();
   const [, setNextList] = useState<NewsProps[]>();
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  const [isAdmin] = useState<boolean>(cookies.isAdmin === 'true');
+  const { admin } = useRecoilValue(userInfo);
 
   useEffect(() => {
     axios
@@ -140,11 +139,7 @@ function Detail() {
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/post/news/${id}`, {
-        headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-        },
-      })
+      .delete(`/post/news/${id}`)
       .then(() => {
         window.location.replace('/council-news');
       })
@@ -157,11 +152,11 @@ function Detail() {
   // 게시글 인덱스, 다음글 리스트 노출 추후에 수정
   return (
     <Wrapper>
-      <Head isAdmin={isAdmin}>
+      <Head isAdmin={admin}>
         <div>제목</div>
         <div>{detail?.title}</div>
         <div>{detail?.createdAt.slice(0, 10)}</div>
-        {isAdmin && detail && (
+        {admin && detail && (
           <div>
             <Svg
               width="20"

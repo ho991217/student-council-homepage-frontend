@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useCookies } from 'react-cookie';
-
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
 import { RuleProps } from './RuleProps';
 import { PagingProps } from './PageControl';
 
 const Container = styled.div`
   width: 100%;
   display: flex;
-  align-divs: center;
+  align-items: center;
   justify-content: center;
 `;
 
@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   padding: 30px 50px;
   display: flex;
   flex-direction: column;
-  align-divs: center;
+  align-items: center;
   justify-content: center;
 `;
 
@@ -99,8 +99,7 @@ function RulesBoard({
   currentPage,
 }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<RuleProps[]>([]);
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
+  const { admin } = useRecoilValue(userInfo);
 
   useEffect(() => {
     setBoard(posts);
@@ -149,7 +148,7 @@ function RulesBoard({
               </Content>
             </Row>
           ))}
-          {isAdmin && (
+          {admin && (
             <Link to="/rule/editor">
               <Button type="button">작성</Button>
             </Link>

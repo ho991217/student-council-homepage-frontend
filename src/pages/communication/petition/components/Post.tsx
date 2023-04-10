@@ -5,9 +5,10 @@ import ReactModal from 'react-modal';
 import FileDownloader from 'components/post/FileDownloader';
 import parse from 'html-react-parser';
 import axios from 'axios';
-import { useCookies } from 'react-cookie';
 import SideNav from 'components/nav/SideNav';
 import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
 import PetitionChart from './PetitionChart';
 
 const TARGET_AGREEMENT = 150;
@@ -351,10 +352,10 @@ export const generateHyperlink = (body: string) => {
 function Post() {
   const [searchParams] = useSearchParams();
   const [post, setPost] = useState<PostProps>();
-  const [postId, setPostId] = useState<number>(0);
-  const [likeCount, setLikeCount] = useState<number>(0);
+  const [postId, setPostId] = useState(0);
+  const [likeCount, setLikeCount] = useState(0);
+  const user = useRecoilValue(userInfo);
   const [adminAnswer, setAdminAnswer] = useState<string>();
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const [dataUpdate, setDataUpdate] = useState(false);
   const [error, setError] = useState({
     isOpen: false,
@@ -389,7 +390,6 @@ function Post() {
         method: 'post',
         url: `/post/petition/reply/${postId}`,
         headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
           'Content-Type': 'application/json',
         },
         data: { answer: adminAnswer },
@@ -397,8 +397,8 @@ function Post() {
         setAdminAnswer('');
       });
       getCurrentPost(postId);
-    } catch ({ response }) {
-      const { data } = response as any;
+    } catch (e) {
+      const { data } = e as any;
       setError((prev) => ({
         ...prev,
         isOpen: true,
@@ -411,9 +411,6 @@ function Post() {
     axios({
       url: `/post/petition/agree/${postId}`,
       method: 'post',
-      headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-      },
       data: '',
     })
       .then((res) => {
@@ -431,9 +428,6 @@ function Post() {
       const { data } = await axios({
         method: 'get',
         url: `/post/petition/${postid}`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       });
 
       setPost({ ...data, body: generateHyperlink(data.body) });
@@ -448,9 +442,6 @@ function Post() {
       await axios({
         method: 'patch',
         url: `/post/petition/blind/${postId}`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       });
       getCurrentPost(postId);
     } catch (err) {
@@ -463,9 +454,6 @@ function Post() {
       await axios({
         method: 'delete',
         url: `/post/petition/${postId}`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       });
       getCurrentPost(postId);
     } catch (err) {
@@ -510,7 +498,7 @@ function Post() {
 
       {post && (
         <Wrapper>
-          {cookies.isAdmin === 'true' && (
+          {user.admin && (
             <AdminPanel>
               <input type="button" value="블라인드" onClick={handleBlind} />
               <input type="button" value="삭제" onClick={handleDelete} />
@@ -601,7 +589,7 @@ function Post() {
             )}
           </Contents>
 
-          {cookies.isAdmin === 'true' && (
+          {user.admin && (
             <AnswerForm onSubmit={handleAnswerSubmit}>
               <AnswerInput
                 placeholder="답변 내용을 입력해주세요"

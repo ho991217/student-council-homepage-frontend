@@ -115,7 +115,6 @@ const modalStyle = {
 function Admin(): JSX.Element {
   const [currentImage, setCurrentImage] = useState<FormData>();
   const [carouselImages, setCarouselImages] = useState([]);
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [uploadState, setUploadState] = useState({
     set: false,
@@ -147,7 +146,6 @@ function Admin(): JSX.Element {
         method: 'post',
         headers: {
           'Content-Type': 'multipart/form-data',
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
         data: currentImage,
       });
@@ -163,9 +161,6 @@ function Admin(): JSX.Element {
     await axios({
       url: `/carousel/${id}`,
       method: 'delete',
-      headers: {
-        'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-      },
     });
     const { data } = await getCarouselImages();
     setCarouselImages(data);

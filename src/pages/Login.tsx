@@ -1,13 +1,9 @@
-import { LoginStateAtom } from 'atoms/LoginState';
-import axios from 'axios';
-import GlobalBanner from 'components/banner/GlobalBanner';
 import CopyrightTerm from 'components/CopyrightTerm';
 import Modal from 'components/modal/Modal';
 import { Desktop } from 'hooks/MediaQueries';
+import { useLogin } from 'hooks/UseLogin';
 import { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
 import { Link, useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -266,8 +262,7 @@ function Login() {
   const [idMessage, setIdMessage] = useState<string>('');
   const [isValidId, setIsValidId] = useState<boolean>(false);
   const [saveId, setSaveId] = useState<boolean>(false);
-  const [, setLoginState] = useRecoilState(LoginStateAtom);
-  const [, setCookie] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
+  const { setLogin } = useLogin();
   const navigate = useNavigate();
   const [loginErrorState, setLoginErrorState] = useState({
     error: false,
@@ -279,35 +274,20 @@ function Login() {
     return regex.test(email);
   };
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = JSON.stringify({ studentId: id, password });
 
-    const config = {
-      method: 'post',
-      url: '/user/login',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data,
-    };
+    const { successful, message } = await setLogin(id, password);
 
-    axios(config)
-      .then((response) => {
-        const { accessToken } = response.data;
-        setCookie('X-AUTH-TOKEN', accessToken);
-        setLoginState({
-          isLoggedIn: true,
-        });
-        navigate('/');
-      })
-      .catch(({ response }: LoginErrorProps) => {
-        setLoginErrorState({
-          error: true,
-          message: response.data.message[0],
-        });
-        setIsOpen(true);
+    if (successful) {
+      navigate('/');
+    } else {
+      setLoginErrorState({
+        error: true,
+        message,
       });
+      setIsOpen(true);
+    }
   };
 
   const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -14,7 +14,6 @@ function RuleEditor() {
   const [content, setContent] = useState<string>('');
   const [form, setForm] = useState<FormData>();
   const [files, setFiles] = useState<File[]>([]); // [File
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const [isOpen, setIsOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
@@ -56,7 +55,6 @@ function RuleEditor() {
         data: form,
         headers: {
           'Content-Type': 'multipart/form-data',
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
         },
       };
 

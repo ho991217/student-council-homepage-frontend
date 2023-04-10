@@ -58,7 +58,6 @@ interface ChartDataProps {
 }
 
 export default function PetitionChart({ dataUpdate }: { dataUpdate: boolean }) {
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const [searchParams] = useSearchParams();
   const [chartData, setChartData] = useState({
     department: [''],
@@ -71,9 +70,6 @@ export default function PetitionChart({ dataUpdate }: { dataUpdate: boolean }) {
       const { data } = await axios({
         method: 'get',
         url: `/post/petition/${postid}`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       });
       setChartData((prev) => ({
         ...prev,

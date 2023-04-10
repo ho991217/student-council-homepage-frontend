@@ -6,6 +6,8 @@ import SideNav from 'components/nav/SideNav';
 import axios from 'axios';
 import parse from 'html-react-parser';
 import { generateHyperlink } from 'pages/communication/petition/components/Post';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
 import { CommentProps, PostProps } from './PostProps';
 
 const Container = styled.div`
@@ -268,9 +270,9 @@ function Post() {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [commentId, setCommentId] = useState<number>();
   const [searchParams] = useSearchParams();
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const navigate = useNavigate();
   const postId = searchParams.get('id');
+  const user = useRecoilValue(userInfo);
 
   useEffect(() => {
     getPost();
@@ -281,9 +283,6 @@ function Post() {
     axios({
       url: `/post/general-forum/${postId}`,
       method: 'get',
-      headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-      },
     })
       .then(({ data }) => {
         setPost({ ...data, body: generateHyperlink(data.body) });
@@ -298,9 +297,6 @@ function Post() {
     axios({
       url: `post/general-forum/comment/${postId}`,
       method: 'get',
-      headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-      },
     }).then((res) => {
       setCommentList(res.data.content);
     });
@@ -314,7 +310,6 @@ function Post() {
         : `/post/general-forum/comment/${postId}`,
       method: isEdit ? 'PATCH' : 'post',
       headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         'Content-Type': 'application/json',
       },
       data: isEdit ? { text: editComment } : { text: comment },
@@ -336,9 +331,6 @@ function Post() {
     await axios({
       url: `/post/general-forum/like/${postId}`,
       method: 'post',
-      headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-      },
     }).then((res) => {
       getPost();
     });
@@ -348,9 +340,6 @@ function Post() {
     await axios({
       url: `/post/general-forum/like/${postId}`,
       method: 'delete',
-      headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-      },
     }).then((res) => {
       getPost();
     });
@@ -361,9 +350,6 @@ function Post() {
       axios({
         url: `/post/general-forum/${postId}`,
         method: 'delete',
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       })
         .then((res) => {
           navigate('/board-suggestion/boards');
@@ -390,9 +376,7 @@ function Post() {
       axios({
         url: `/post/general-forum/comment/${item}`,
         method: 'delete',
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
+
         data: { id: item },
       })
         .then((res) => {
@@ -411,7 +395,7 @@ function Post() {
         {post?.mine === true && (
           <Button onClick={handleDeletePost}>삭제</Button>
         )}
-        {cookies.isAdmin === 'false' && post?.mine && (
+        {user.admin && post?.mine && (
           <Button onClick={handleDeletePost}>삭제</Button>
         )}
         <Header>

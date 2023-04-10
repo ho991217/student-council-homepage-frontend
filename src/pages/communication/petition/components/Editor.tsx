@@ -39,7 +39,6 @@ function Editor() {
   const [isOpen, setIsOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [files, setFiles] = useState<File[]>([]);
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
   const formData = new FormData();
 
@@ -48,9 +47,6 @@ function Editor() {
       const { data } = await axios({
         method: 'get',
         url: `/post/tag`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       });
       setOriginalTags(data);
     } catch (e) {
@@ -71,7 +67,6 @@ function Editor() {
         method: 'post',
         url: '/post/tag',
         headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
           'Content-Type': 'application/json',
         },
         data: tag,
@@ -109,7 +104,6 @@ function Editor() {
         method: 'post',
         url: '/post/petition',
         headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
           'Content-Type': 'multipart/form-data',
         },
         data: formData,
