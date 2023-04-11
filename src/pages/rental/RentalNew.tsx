@@ -289,6 +289,7 @@ function RentalNew() {
               <Option value="INDIVIDUAL">개인</Option>
               <Option value="DEPARTMENT_STUDENT_COUNCIL">단과대 학생회</Option>
               <Option value="MAJOR_STUDENT_COUNCIL">과(학부) 학생회</Option>
+              <Option value="CLUB">동아리</Option>
             </Select>
           </Tile>
         </Row>
