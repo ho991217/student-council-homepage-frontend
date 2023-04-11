@@ -49,16 +49,13 @@ function QnADetail() {
     <Wrapper>
       <SideNav />
       <Container>
-        <QnAP>Q&A</QnAP>
         <Hr bold />
-        <Status>
-          {'[ '}
-          {postDetail.status === 'WAITING' ? '답변 전' : '답변 완료'}
-          {' ]'}
-        </Status>
+        <Header>{`[ ${
+          postDetail.status === 'ANSWERED' ? '답변 완료' : '답변 전'
+        }  ]`}</Header>
         <Title>{postDetail.title}</Title>
         <Author>{postDetail.author}</Author>
-        <Date>{postDetail.createdAt}</Date>
+        <Date>{postDetail.createdAt.substring(0, 10)}</Date>
         <Hr />
         <Text>{postDetail.body}</Text>
         <Button>
@@ -67,7 +64,7 @@ function QnADetail() {
         {postDetail.status === 'ANSWERED' && (
           <>
             <Hr />
-            <ReplyTitle>총학생회 답변</ReplyTitle>
+            <Header>총학생회 답변</Header>
             <Text>{postDetail.body}</Text>
           </>
         )}
@@ -80,6 +77,7 @@ export default QnADetail;
 
 const Wrapper = styled.div`
   width: 100%;
+  min-height: 600px;
   display: flex;
   justify-content: center;
   background-color: ${({ theme }) => theme.colors.gray040};
@@ -104,11 +102,12 @@ const Container = styled.div`
   position: relative;
 `;
 
-const QnAP = styled.p`
-  font-size: ${({ theme }) => theme.fonts.size.lg};
+const Header = styled.h2`
   color: ${({ theme }) => theme.colors.secondary};
-  font-weight: ${({ theme }) => theme.fonts.weight.bold};
-  margin-bottom: 40px;
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  font-weight: ${({ theme }) => theme.fonts.weight.regular};
+  margin: 15px 0px;
+  text-align: center;
 `;
 
 const Button = styled.button`
@@ -157,10 +156,9 @@ const Date = styled.div`
 `;
 
 const Title = styled.h1`
-  width: 100%;
-  padding: 10px 5px 15px 5px;
   font-size: ${({ theme }) => theme.fonts.size.lg};
-  font-weight: ${({ theme }) => theme.fonts.weight.bold};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
+  margin-bottom: 25px;
   text-align: center;
 `;
 
