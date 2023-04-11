@@ -1,5 +1,5 @@
 ---
-name: "✅ Feature request"
+name: Feature request
 about: 신규 기능에 대해서 설명해주세요.
 title: "[FEATURE]"
 labels: feature

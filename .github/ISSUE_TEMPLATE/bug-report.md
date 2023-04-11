@@ -2,7 +2,7 @@
 name: Bug report
 about: 발생한 버그에 대해서 설명해주세요
 title: "[BUG]"
-labels: bug, feature
+labels: bug
 assignees: ''
 
 ---
