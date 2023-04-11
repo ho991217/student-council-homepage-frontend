@@ -13,9 +13,9 @@ import SideNav from 'components/nav/SideNav';
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  gap: 30px;
   background-color: white;
-`
+`;
 const Container = styled.div`
   background-color: ${(props) => props.theme.colors.white};
   width: 100%;
@@ -23,7 +23,7 @@ const Container = styled.div`
     width: calc(100% - 310px);
   }
   max-width: 1200px;
-`
+`;
 function PetitionBoard() {
   const [board, setBoard] = useState<PostProps[]>([]);
   const [boardsCount, setBoardsCount] = useState<number>(0);
@@ -46,10 +46,8 @@ function PetitionBoard() {
     if (!page) page = '1';
     const { data } = await axios({
       method: 'get',
-      url: `/post/petition?page=${
-        Number(page) - 1
-      }&size=6&sort=id,desc`,
-    })
+      url: `/post/petition?page=${Number(page) - 1}&size=6&sort=id,desc`,
+    });
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);
     setPagingInfo(data);
@@ -62,7 +60,7 @@ function PetitionBoard() {
 
   return (
     <Wrapper>
-      <SideNav margin="120px 0 0 0"/>
+      <SideNav />
       <Container>
         <FilterControl />
         <Board posts={board} pagingInfo={pagingInfo} currentPage={page} />

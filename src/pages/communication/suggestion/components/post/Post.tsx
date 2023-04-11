@@ -15,20 +15,19 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  background-color: ${({ theme }) => theme.colors.white};
-  align-items: flex-start;
-  ${({ theme }) => theme.media.desktop} {
-    padding-left: 50px;
-  }
+  gap: 30px;
   background-color: ${({ theme }) => theme.colors.gray040};
 `;
 
 const Wrapper = styled.div`
-  max-width: 1280px;
+  background-color: ${(props) => props.theme.colors.white};
   width: 100%;
+  max-width: 1200px;
+  box-sizing: border-box;
   ${({ theme }) => theme.media.desktop} {
+    width: calc(100% - 310px);
     padding: 40px 50px;
-    margin: 40px 30px;
+    margin: 40px 0;
   }
   ${({ theme }) => theme.media.tablet} {
     padding: 40px 50px;
@@ -36,7 +35,6 @@ const Wrapper = styled.div`
   ${({ theme }) => theme.media.mobile} {
     padding: 40px 20px;
   }
-  background-color: ${({ theme }) => theme.colors.white};
 `;
 
 const Hr = styled.div<{ bold?: boolean }>`
@@ -410,7 +408,12 @@ function Post() {
           <Text>{parse(post?.body ?? '')}</Text>
           <div>
             {post?.files.map((file) => (
-              <img key = {file.id} src = {file.url} alt ="" style={{ width: "200px", height: "200px" }}/>
+              <img
+                key={file.id}
+                src={file.url}
+                alt=""
+                style={{ width: '200px', height: '200px' }}
+              />
             ))}
           </div>
           {/* {post?.files && <FileDownloader files={post?.files} />} */}
@@ -446,7 +449,9 @@ function Post() {
             <Comment key={comment.id}>
               <CommentTopContainer>
                 <CommentInfo>
-                  <CommentAuthor>{comment.authorMajor} {' '} {comment.author}</CommentAuthor>
+                  <CommentAuthor>
+                    {comment.authorMajor} {comment.author}
+                  </CommentAuthor>
                   <VSeparator />
                   <CommentDate>{comment.createdAt}</CommentDate>
                 </CommentInfo>

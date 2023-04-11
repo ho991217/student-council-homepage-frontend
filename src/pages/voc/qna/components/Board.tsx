@@ -12,17 +12,16 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 30px;
 `;
 
 const Wrapper = styled.div`
   max-width: 1290px;
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    padding: 20px 50px 10px 50px;
+    padding: 0px 50px 0px 0px;
   }
   ${({ theme }) => theme.media.tablet} {
-    padding: 0px 50px 10px 50px;
+    padding: 0px 50px 0px 0px;
   }
   ${({ theme }) => theme.media.mobile} {
     padding: 30px 10px 20px 10px;
@@ -109,7 +108,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
         <BoardsContainer>
           <Desktop>
             <>
-              <TopBar />
               <BoardHead>
                 <Row>
                   <div>번호</div>
@@ -123,7 +121,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               {board.map((post, index) => (
                 <Row key={post.id}>
                   <div>
-                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                    {index + 1 + pagingInfo.page * pagingInfo.size}
                   </div>
                   <LinkDiv>
                     {post.status === '정지' ? (
@@ -154,7 +152,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
           </Desktop>
           <Tablet>
             <>
-              <TopBar />
               <BoardHead>
                 <Row>
                   <div>번호</div>
@@ -168,7 +165,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               {board.map((post, index) => (
                 <Row key={post.id}>
                   <div>
-                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                    {index + 1 + pagingInfo.page * pagingInfo.size}
                   </div>
                   <LinkDiv>
                     {post.status === '정지' ? (
@@ -199,7 +196,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
           </Tablet>
           <Mobile>
             <>
-              <TopBar />
               <BoardHead>
                 <Row>
                   <div>번호</div>
@@ -211,7 +207,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               {board.map((post, index) => (
                 <Row key={post.id}>
                   <div>
-                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                    {index + 1 + pagingInfo.page * pagingInfo.size}
                   </div>
                   <LinkDiv>
                     {post.status === '정지' ? (

@@ -55,11 +55,16 @@ const MenuInfo = [
     path: '/board-suggestion/boards',
     id: 3,
   },
-  { title: 'Q&A', category: '/voc/qna', path: '/voc/qna', id: 4 },
+  { 
+    title: 'Q&A', 
+    category: '/voc/qna', 
+    path: '/voc/qna/boards',
+    id: 4 
+  },
   {
     title: 'My voice',
     category: '/voc/my-voice',
-    path: '/voc/my-voice',
+    path: '/voc/my-voice/boards',
     id: 4,
   },
 ];
