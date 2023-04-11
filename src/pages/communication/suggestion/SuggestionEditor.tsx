@@ -170,6 +170,12 @@ function SuggestionEditor() {
   };
 
   useEffect(() => {
+    tagObjectResult.forEach((tag) => {
+      registerTags(tag);
+    });
+  }, [tagObjectResult]);
+  
+  useEffect(() => {
     if (tagList.length > 0) {
       formData.append('title', title);
       formData.append('body', text);

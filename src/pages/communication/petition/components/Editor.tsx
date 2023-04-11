@@ -141,8 +141,7 @@ function Editor() {
       setTagResult((prev) => [...prev, data.id]);
     } catch (e) {
       const error = e as any;
-      setErrorMessage(error.response.data.message[0]);
-      open();
+      console.log(e)
     }
   };
 
@@ -160,10 +159,6 @@ function Editor() {
       return;
     }
 
-    tagObjectResult.forEach((tag) => {
-      registerTags(tag);
-    });
-
     const tagNameList = originalTags.map((item) => {
       return item.name;
     });
@@ -180,6 +175,10 @@ function Editor() {
       setTagObjectResult((prev) => [...prev, { name: tag }]);
     });
 
+    tagObjectResult.forEach((tag) => {
+      registerTags(tag);
+    });
+
     if (tagList.length === 0) {
       formData.append('title', title);
       formData.append('body', content);
@@ -190,11 +189,18 @@ function Editor() {
   };
 
   useEffect(() => {
+    tagObjectResult.forEach((tag) => {
+      registerTags(tag);
+    });
+  }, [tagObjectResult]);
+  
+  useEffect(() => {
     if (tagList.length > 0) {
       formData.append('title', title);
       formData.append('body', content);
       formData.append('tagIds', JSON.stringify(tagResult).slice(1, -1));
       files.forEach((file) => formData.append('files', file));
+      console.log(JSON.stringify(tagResult).slice(1, -1))
       handlePost();
     }
   }, [tagResult]);
