@@ -7,26 +7,27 @@ import SideNav from 'components/nav/SideNav';
 import axios from 'axios';
 import parse from 'html-react-parser';
 import { generateHyperlink } from 'pages/communication/petition/components/Post';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
 import { CommentProps, PostProps } from './PostProps';
 
 const Container = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  background-color: ${({ theme }) => theme.colors.white};
-  align-items: flex-start;
-  ${({ theme }) => theme.media.desktop} {
-    padding-left: 50px;
-  }
+  gap: 30px;
   background-color: ${({ theme }) => theme.colors.gray040};
 `;
 
 const Wrapper = styled.div`
-  max-width: 1280px;
+  background-color: ${(props) => props.theme.colors.white};
   width: 100%;
+  max-width: 1200px;
+  box-sizing: border-box;
   ${({ theme }) => theme.media.desktop} {
+    width: calc(100% - 310px);
     padding: 40px 50px;
-    margin: 40px 30px;
+    margin: 40px 0;
   }
   ${({ theme }) => theme.media.tablet} {
     padding: 40px 50px;
@@ -34,7 +35,6 @@ const Wrapper = styled.div`
   ${({ theme }) => theme.media.mobile} {
     padding: 40px 20px;
   }
-  background-color: ${({ theme }) => theme.colors.white};
 `;
 
 const Hr = styled.div<{ bold?: boolean }>`
@@ -268,9 +268,9 @@ function Post() {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [commentId, setCommentId] = useState<number>();
   const [searchParams] = useSearchParams();
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const navigate = useNavigate();
   const postId = searchParams.get('id');
+  const user = useRecoilValue(userInfo);
 
   useEffect(() => {
     getPost();
@@ -281,9 +281,6 @@ function Post() {
     axios({
       url: `/post/general-forum/${postId}`,
       method: 'get',
-      headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-      },
     })
       .then(({ data }) => {
         setPost({ ...data, body: generateHyperlink(data.body) });
@@ -298,9 +295,6 @@ function Post() {
     axios({
       url: `post/general-forum/comment/${postId}`,
       method: 'get',
-      headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-      },
     }).then((res) => {
       setCommentList(res.data.content);
     });
@@ -314,7 +308,6 @@ function Post() {
         : `/post/general-forum/comment/${postId}`,
       method: isEdit ? 'PATCH' : 'post',
       headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         'Content-Type': 'application/json',
       },
       data: isEdit ? { text: editComment } : { text: comment },
@@ -336,9 +329,6 @@ function Post() {
     await axios({
       url: `/post/general-forum/like/${postId}`,
       method: 'post',
-      headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-      },
     }).then((res) => {
       getPost();
     });
@@ -348,9 +338,6 @@ function Post() {
     await axios({
       url: `/post/general-forum/like/${postId}`,
       method: 'delete',
-      headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-      },
     }).then((res) => {
       getPost();
     });
@@ -361,9 +348,6 @@ function Post() {
       axios({
         url: `/post/general-forum/${postId}`,
         method: 'delete',
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       })
         .then((res) => {
           navigate('/board-suggestion/boards');
@@ -390,9 +374,7 @@ function Post() {
       axios({
         url: `/post/general-forum/comment/${item}`,
         method: 'delete',
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
+
         data: { id: item },
       })
         .then((res) => {
@@ -413,7 +395,7 @@ function Post() {
         {post?.mine === true && (
           <Button onClick={handleDeletePost}>삭제</Button>
         )}
-        {cookies.isAdmin === 'false' && post?.mine && (
+        {user.admin && post?.mine && (
           <Button onClick={handleDeletePost}>삭제</Button>
         )}
         <Header>
@@ -426,7 +408,12 @@ function Post() {
           <Text>{parse(post?.body ?? '')}</Text>
           <div>
             {post?.files.map((file) => (
-              <img key = {file.id} src = {file.url} alt ="" style={{ width: "200px", height: "200px" }}/>
+              <img
+                key={file.id}
+                src={file.url}
+                alt=""
+                style={{ width: '200px', height: '200px' }}
+              />
             ))}
           </div>
           {/* {post?.files && <FileDownloader files={post?.files} />} */}
@@ -462,7 +449,9 @@ function Post() {
             <Comment key={comment.id}>
               <CommentTopContainer>
                 <CommentInfo>
-                  <CommentAuthor>{comment.authorMajor} {' '} {comment.author}</CommentAuthor>
+                  <CommentAuthor>
+                    {comment.authorMajor} {comment.author}
+                  </CommentAuthor>
                   <VSeparator />
                   <CommentDate>{comment.createdAt}</CommentDate>
                 </CommentInfo>

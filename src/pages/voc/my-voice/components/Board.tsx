@@ -3,7 +3,6 @@ import { PagingProps } from 'components/PageControl';
 import { Link } from 'react-router-dom';
 import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 import styled from 'styled-components';
-import TopBar from './TopBar';
 // import { PagingProps } from "components/PageControl";
 import { PostProps } from '../../qna/PostProps';
 
@@ -19,10 +18,10 @@ const Wrapper = styled.div`
   max-width: 1290px;
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    padding: 30px 50px 10px 50px;
+    padding: 10px 50px 10px 0px;
   }
   ${({ theme }) => theme.media.tablet} {
-    padding: 30px 50px 10px 50px;
+    padding: 30px 50px 10px 0px;
   }
   ${({ theme }) => theme.media.mobile} {
     padding: 30px 10px 20px 10px;
@@ -94,7 +93,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
         <BoardsContainer>
           <Desktop>
             <>
-              <TopBar />
               <BoardHead>
                 <Row>
                   <div>번호</div>
@@ -107,7 +105,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               {board.map((post, index) => (
                 <Row key={post.id}>
                   <div>
-                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                    {index + 1 + pagingInfo.page * pagingInfo.size}
                   </div>
                   <div>{post.createdAt}</div>
                   <LinkDiv>
@@ -134,7 +132,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
           </Desktop>
           <Tablet>
             <>
-              <TopBar />
               <BoardHead>
                 <Row>
                   <div>번호</div>
@@ -147,7 +144,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               {board.map((post, index) => (
                 <Row key={post.id}>
                   <div>
-                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                    {index + 1 + pagingInfo.page * pagingInfo.size}
                   </div>
                   <div>{post.createdAt}</div>
                   <LinkDiv>
@@ -174,7 +171,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
           </Tablet>
           <Mobile>
             <>
-              <TopBar />
               <BoardHead>
                 <Row>
                   <div>번호</div>
@@ -186,7 +182,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               {board.map((post, index) => (
                 <Row key={post.id}>
                   <div>
-                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                    {index + 1 + pagingInfo.page * pagingInfo.size}
                   </div>
 
                   <div>{post.createdAt}</div>
@@ -199,7 +195,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                         관리자에 의해 삭제된 게시물입니다.
                       </Link>
                     ) : (
-                      <Link to={`/voc/qna/board?id=${post.id}`}>
+                      <Link to={`/voc/my-voice/board?id=${post.id}`}>
                         {post.title}
                       </Link>
                     )}

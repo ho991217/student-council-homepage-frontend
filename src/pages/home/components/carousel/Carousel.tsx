@@ -96,7 +96,6 @@ function Carousel({ images }: { images: Array<ImageProps> }): JSX.Element {
               index={index}
               cur={currentSlide}
               size={images.length}
-              alt={obj.alt}
               redirectUrl={obj.redirectUrl}
             />
           ))}

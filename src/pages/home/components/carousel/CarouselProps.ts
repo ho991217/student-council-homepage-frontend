@@ -1,7 +1,6 @@
 export interface ImageProps {
   url: string;
   id: string;
-  alt: string;
   redirectUrl?: string;
 }
 

@@ -6,6 +6,7 @@ import { useCookies } from 'react-cookie';
 import PageControl from 'components/PageControl';
 import axios from 'axios';
 import SideNav from 'components/nav/SideNav';
+import { BiSearch } from 'react-icons/bi';
 import { PagingProps } from 'components/PageControl';
 import Board from './components/Board';
 import { PostProps } from '../qna/PostProps';
@@ -14,14 +15,20 @@ const Wrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  gap: 30px;
   background-color: white;
 `;
 
 const Container = styled.div`
   background-color: ${(props) => props.theme.colors.white};
   width: 100%;
-  max-width: 1280px;
-  position: relative;
+  max-width: 1200px;
+  ${({ theme }) => theme.media.desktop} {
+    margin-top: 40px;
+    width: calc(100% - 310px);
+  }
+  display: flex;
+  flex-direction: column;
 `;
 
 const Input = styled.input`
@@ -41,27 +48,11 @@ const Input = styled.input`
 `;
 
 const Search = styled.div`
+  width: 100%;
   display: flex;
-  justify-content: right;
-  position: absolute;
-  ${({ theme }) => theme.media.desktop} {
-    top: 130px;
-    right: 10em;
-  }
-  ${({ theme }) => theme.media.tablet} {
-    bottom: -20px;
-    right: 50%;
-    transform: translateX(50%);
-  }
-
-  ${({ theme }) => theme.media.mobile} {
-    width: 100vw;
-    bottom: 0;
-    right: 50%;
-    transform: translateX(50%);
-    margin-right: 20px;
-    margin-left: 20px;
-  }
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const SearchButton = styled.button`
@@ -147,43 +138,52 @@ function MyVoice() {
   }, [searchParams, boardsCount]);
   return (
     <Wrapper>
-      <SideNav margin="50px 0 0 50px" />
+      <SideNav />
       <Container>
-        <Search>
-          <Select>
-            <option value="title">제목</option>
-            <option value="body">내용</option>
-            <option value="all">제목+내용</option>
-          </Select>
-          <ArrowSvg
-            width="7"
-            height="4"
-            viewBox="0 0 7 4"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M3.33366 4L0.446906 0.249999L6.22041 0.25L3.33366 4Z"
-              fill="#C4C4C4"
-            />
-          </ArrowSvg>
-          <Input
-            type="text"
-            value={searchWord}
-            placeholder="검색어를 입력해 주세요."
-            onChange={onSearchWordHandler}
-            onKeyPress={handleKeyPress}
-          />
-          <SearchButton type="button" onClick={onSearchButtonHandler}>
-            검색
-          </SearchButton>
-          {isSearched && (
-            <ResultDiv>
-              <Blue>•&nbsp;</Blue>총 <Blue>{boardsCount}</Blue>건이
-              검색되었습니다.
-            </ResultDiv>
-          )}
-        </Search>
+        <InfoBox>
+          <LeftDiv>
+            <BiSearchIcon />
+            <p>검색어로 찾기</p>
+          </LeftDiv>
+          <Search>
+            <div>
+              <Select>
+                <option value="title">제목</option>
+                <option value="body">내용</option>
+                <option value="all">제목+내용</option>
+              </Select>
+              <ArrowSvg
+                width="7"
+                height="4"
+                viewBox="0 0 7 4"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3.33366 4L0.446906 0.249999L6.22041 0.25L3.33366 4Z"
+                  fill="#C4C4C4"
+                />
+              </ArrowSvg>
+              <Input
+                type="text"
+                value={searchWord}
+                placeholder="검색어를 입력해 주세요."
+                onChange={onSearchWordHandler}
+                onKeyPress={handleKeyPress}
+              />
+              <SearchButton type="button" onClick={onSearchButtonHandler}>
+                검색
+              </SearchButton>
+            </div>
+            {isSearched && (
+              <ResultDiv>
+                <Blue>•&nbsp;</Blue>총 <Blue>{boardsCount}</Blue>건이
+                검색되었습니다.
+              </ResultDiv>
+            )}
+          </Search>
+        </InfoBox>
+
         <Board posts={board} pagingInfo={pagingInfo} currentPage={page} />
         <PageControl pagingInfo={pagingInfo} currentPage={page} />
       </Container>
@@ -228,4 +228,40 @@ const ArrowSvg = styled.svg`
   align-self: center;
   width: 12px;
   height: 12px;
+`;
+
+const InfoBox = styled.div`
+  max-width: 1290px;
+  height: 200px;
+  width: 100%;
+  ${({ theme }) => theme.media.tablet} {
+    display: none;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    display: none;
+  }
+  background-color: #f9f9f9;
+  border: 1px solid #808080;
+  margin-bottom: 28px;
+  display: flex;
+  justify-content: flex-start;
+`;
+
+const LeftDiv = styled.div`
+  width: 25%;
+  height: 100%;
+  border-right: 1px solid #000000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const BiSearchIcon = styled(BiSearch)`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #d4d4d4;
+  padding: 5px;
+  margin-bottom: 10px;
 `;

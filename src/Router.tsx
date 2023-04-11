@@ -1,14 +1,9 @@
-import { useEffect } from 'react';
-import { useCookies } from 'react-cookie';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-
 import Home from 'pages/home/Home';
 import Greeting from 'pages/council-info/Greeting';
 import Organization from 'pages/council-info/Organization';
 import Location from 'pages/council-info/location/Location';
 import Rules from 'pages/rules/Rules';
-import RulesPost from 'pages/rules/components/post/Post';
 import Conference from 'pages/conference/Conference';
 import InquiryBoard from 'pages/communication/InquiryBoard';
 import Login from 'pages/Login';
@@ -16,31 +11,24 @@ import SignUp from 'pages/sign-up/SignUp';
 import Password from 'pages/password/Password';
 import Pledge from 'pages/council/Pledge';
 import ConferenceEditor from 'pages/conference/components/ConferenceEditor';
-import RuleEditor from 'pages/rules/components/RuleEditor';
 import NewsEditor from 'pages/council/news/components/NewsEditor';
 import PetitionBoard from 'pages/communication/petition/components/PetitionBoard';
 import PetitionPost from 'pages/communication/petition/components/Post';
 import PetitionEditor from 'pages/communication/petition/components/Editor';
 import News from 'pages/council/news/News';
-import Admin from 'pages/Admin';
 import SuggestionBoard from 'pages/communication/suggestion/SuggestionBoard';
 import SuggestionPost from 'pages/communication/suggestion/components/post/Post';
 import SuggestionEditor from 'pages/communication/suggestion/SuggestionEditor';
-
 import NotFound from 'pages/NotFound';
-import NewsPost from 'pages/council/news/components/post/Post';
 import GlobalBanner from 'components/banner/GlobalBanner';
 import Gnb from 'components/nav/Gnb';
 import Footer from 'components/footer/Footer';
 import Makers from 'components/footer/sub-routes/Makers';
 import Term from 'components/footer/sub-routes/Term';
 import PrivacyPolicy from 'components/footer/sub-routes/PrivacyPolicy';
-import { LoginStateAtom } from 'atoms/LoginState';
 import Success from 'pages/sign-up/components/Succes';
 import PasswordSuccess from 'pages/password/components/Succes';
-import Event from 'pages/event/Event';
 import Agreements from 'pages/sign-up/components/agreements/Agreements';
-import Header from 'pages/sign-up/components/Header';
 import StudentIdValidation from 'pages/sign-up/components/verification/StudentIdValidation';
 import InputStudentInfos from 'pages/sign-up/components/info/InputStudentInfos';
 import QnA from 'pages/voc/qna/QnA';
@@ -53,15 +41,13 @@ import RentalInfo from 'pages/rental/RentalInfo';
 import RentalNew from 'pages/rental/RentalNew';
 import Post from 'pages/council/news/components/post/Post';
 
+import { useLogin } from 'hooks/UseLogin';
+import AuthRoute from 'AuthRoute';
+import Admin from 'pages/Admin';
+
 function Router() {
-  const [{ isLoggedIn }, setLoginState] = useRecoilState(LoginStateAtom);
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  useEffect(() => {
-    setLoginState({
-      isLoggedIn: !!cookies['X-AUTH-TOKEN'],
-    });
-  }, []);
-  if (isLoggedIn === undefined) return <div>로딩중...</div>;
+  const { isLogin, isAdmin } = useLogin();
+
   return (
     <BrowserRouter>
       <Gnb />
@@ -70,7 +56,7 @@ function Router() {
         <Route path="/" element={<Home />} />
         <Route
           path="/login"
-          element={isLoggedIn ? <Navigate to="/" /> : <Login />}
+          element={isLogin() ? <Navigate to="/" /> : <Login />}
         />
         <Route path="/sign-up" element={<GlobalBanner title="회원가입" />}>
           <Route path="" element={<SignUp />}>
@@ -125,17 +111,19 @@ function Router() {
           <Route path="post" element={<Post />} />
           <Route
             path="editor"
-            element={isLoggedIn ? <NewsEditor /> : <Navigate to="/" />}
+            element={
+              <AuthRoute>
+                <NewsEditor />
+              </AuthRoute>
+            }
           />
         </Route>
         <Route
           path="/rules"
           element={
-            isLoggedIn ? (
+            <AuthRoute>
               <GlobalBanner title="회칙" />
-            ) : (
-              <Navigate to="/login" />
-            )
+            </AuthRoute>
           }
         >
           <Route path="" element={<Rules />} />
@@ -144,11 +132,9 @@ function Router() {
         <Route
           path="/conference"
           element={
-            isLoggedIn ? (
+            <AuthRoute>
               <GlobalBanner title="회의록" />
-            ) : (
-              <Navigate to="/login" />
-            )
+            </AuthRoute>
           }
         >
           <Route index element={<Conference />} />
@@ -158,11 +144,9 @@ function Router() {
         <Route
           path="/board-petition"
           element={
-            isLoggedIn ? (
+            <AuthRoute>
               <GlobalBanner title="청원게시판" />
-            ) : (
-              <Navigate to="/login" />
-            )
+            </AuthRoute>
           }
         >
           <Route path="boards" element={<PetitionBoard />} />
@@ -173,11 +157,9 @@ function Router() {
         <Route
           path="/board-suggestion"
           element={
-            isLoggedIn ? (
+            <AuthRoute>
               <GlobalBanner title="자유게시판" />
-            ) : (
-              <Navigate to="/login" />
-            )
+            </AuthRoute>
           }
         >
           <Route path="boards" element={<SuggestionBoard />} />
@@ -196,8 +178,10 @@ function Router() {
         <Route path="/who-made-this" element={<Makers />} />
         <Route path="/term" element={<Term />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/admin" element={<Navigate to="/" />} />
-        <Route path="/event" element={<Event />} />
+        <Route
+          path="/admin"
+          element={isAdmin() ? <Admin /> : <Navigate to="/" />}
+        />
         <Route path="/rental" element={<GlobalBanner title="대여물품" />}>
           <Route index element={<Navigate to="/rental/lists?page=1" />} />
           <Route path="lists" element={<RentalLists />} />

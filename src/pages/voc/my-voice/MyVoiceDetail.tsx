@@ -47,7 +47,7 @@ function MyVoiceDetail() {
     <Wrapper>
       <SideNav />
       <Container>
-        <QnAP>Q&A</QnAP>
+        <QnAP>My Voice</QnAP>
         <Hr bold />
         <Status>
           {'[ '}
@@ -77,28 +77,29 @@ function MyVoiceDetail() {
 export default MyVoiceDetail;
 
 const Wrapper = styled.div`
-  width: 100%;
   display: flex;
   justify-content: center;
-  background-color: ${({ theme }) => theme.colors.gray040};
   gap: 30px;
+  background-color: ${({ theme }) => theme.colors.gray040};
 `;
 
 const Container = styled.div`
-  max-width: 1250px;
-  background-color: ${(props) => props.theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.white};
   width: 100%;
-  padding: 40px 50px;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
   ${({ theme }) => theme.media.desktop} {
-    min-height: 585px;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    width: calc(100% - 310px);
+    padding: 40px 50px;
+    margin: 40px 0;
   }
   ${({ theme }) => theme.media.tablet} {
-    min-height: 300px;
-    margin-top: 0;
+    padding: 40px 50px;
   }
-  position: relative;
+  ${({ theme }) => theme.media.mobile} {
+    padding: 40px 20px;
+  }
 `;
 
 const QnAP = styled.p`
@@ -119,22 +120,7 @@ const Button = styled.button`
   border: 1px solid ${({ theme }) => theme.colors.primary};
   cursor: pointer;
   border-radius: 5px;
-  position: absolute;
-  ${({ theme }) => theme.media.desktop} {
-    bottom: 50px;
-    right: 40px;
-  }
-  ${({ theme }) => theme.media.tablet} {
-    bottom: 30px;
-    right: 40px;
-  }
-  ${({ theme }) => theme.media.mobile} {
-    bottom: 30px;
-    right: 40px;
-  }
-
-  bottom: 0;
-  right: 0;
+  align-self: flex-end;
 `;
 
 const Hr = styled.div<{ bold?: boolean }>`

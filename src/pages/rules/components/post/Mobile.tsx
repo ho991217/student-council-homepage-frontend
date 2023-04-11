@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import axios from 'axios';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
 import { FiDownload } from 'react-icons/fi';
 import { IoIosFolder } from 'react-icons/io';
-
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
 import { RuleProps, DetailProps } from '../RuleProps';
 
 const Wrapper = styled.div`
@@ -67,35 +67,6 @@ const DownloadIcon = styled.div`
   cursor: pointer;
 `;
 
-const NextList = styled.div`
-  width: 100%;
-  border-top: 1px solid ${({ theme }) => theme.colors.gray100};
-`;
-
-const Row = styled.div`
-  width: 100%;
-  height: 60px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
-  :last-child {
-    border-bottom: none;
-  }
-  display: grid;
-  grid-template-columns: 0.5fr 2fr;
-`;
-
-const Id = styled.div`
-  margin: 16px auto;
-`;
-
-const Infos = styled.div`
-  margin: 10px 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-`;
-
-const Info = styled.div``;
-
 const Svg = styled.svg`
   margin: 16px auto;
   width: 13px;
@@ -108,8 +79,7 @@ function Detail() {
   const [board, setBoard] = useState<RuleProps[]>([]);
   const [detail, setDetail] = useState<DetailProps>();
   const [nextList, setNextList] = useState<RuleProps[]>();
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
+  const { admin } = useRecoilValue(userInfo);
 
   useEffect(() => {
     axios
@@ -136,11 +106,7 @@ function Detail() {
 
   useEffect(() => {
     axios
-      .get(`/rule/${searchParams.get('id')}`, {
-        headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-        },
-      })
+      .get(`/rule/${searchParams.get('id')}`)
       .then(function (response) {
         const result = response.data.data;
         setDetail(result);
@@ -153,11 +119,7 @@ function Detail() {
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/rule/${id}`, {
-        headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-        },
-      })
+      .delete(`/rule/${id}`)
       .then(function (response) {
         window.location.replace('/conference');
       })
@@ -170,12 +132,12 @@ function Detail() {
   // 다음글 리스트 노출 추후에 수정
   return (
     <Wrapper>
-      <Head isAdmin={isAdmin}>
+      <Head isAdmin={admin}>
         <HeadContent>
           <div>{detail?.title}</div>
           <div>{detail?.createDate}</div>
         </HeadContent>
-        {isAdmin && detail && (
+        {admin && detail && (
           <div>
             <Svg
               width="20"
@@ -214,19 +176,6 @@ function Detail() {
           </a>
         </DownloadIcon>
       </Content>
-      {/* <NextList>
-        {nextList?.map((post) => (
-          <Row key={post.id}>
-            <Id>{post?.id}</Id>
-            <Infos>
-              <Info>
-                <Link to={`/rule?id=${post.id}`}>{post?.title}</Link>
-              </Info>
-              <Info>{post?.createDate}</Info>
-            </Infos>
-          </Row>
-        ))}
-      </NextList> */}
     </Wrapper>
   );
 }

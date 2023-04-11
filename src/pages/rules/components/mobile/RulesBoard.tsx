@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useCookies } from 'react-cookie';
-
-import { RuleProps } from '../RuleProps';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
 import { PagingProps } from '../PageControl';
+import { RuleProps } from '../RuleProps';
 
 const Container = styled.div`
   width: 100%;
   display: flex;
-  align-divs: center;
+  align-items: center;
   justify-content: center;
 `;
 
@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   padding: 20px 10px;
   display: flex;
   flex-direction: column;
-  align-divs: center;
+  align-items: center;
   justify-content: center;
 `;
 
@@ -103,8 +103,7 @@ function RulesBoard({
   currentPage,
 }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<RuleProps[]>([]);
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
+  const { admin } = useRecoilValue(userInfo);
 
   useEffect(() => {
     setBoard(posts);
@@ -124,7 +123,7 @@ function RulesBoard({
           {board.map((post, index) => (
             <Row key={post.id}>
               <Content>
-                {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                {index + 1 + pagingInfo.page * pagingInfo.size}
               </Content>
               <Content>
                 <Link to={`/rule?id=${post.id}`}>{post.title}</Link>
@@ -132,7 +131,7 @@ function RulesBoard({
               <Content>{post.userName}</Content>
             </Row>
           ))}
-          {isAdmin && (
+          {admin && (
             <Link to="/rule/editor">
               <Button type="button">작성</Button>
             </Link>

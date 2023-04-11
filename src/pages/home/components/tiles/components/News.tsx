@@ -1,8 +1,6 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
-import { NewsProps } from 'pages/home/components/tiles/TileProps';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { RecentNewsType } from 'pages/home/Home';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -17,28 +15,12 @@ const P = styled.p`
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
-// TODO: detail 내용 동적으로 바꾸기
-function News(): JSX.Element {
-  const [news, setNews] = useState<NewsProps[]>([]);
-
-  useEffect(() => {
-    axios
-      .get('/main')
-      .then(function (response) {
-        const result = response.data.data;
-        setNews(result.recentNews.slice(0, 4));
-      })
-      .catch(function (error) {
-        // 에러 핸들링
-        console.log(error);
-      });
-  }, []);
-
+function News({ news }: { news: RecentNewsType[] }): JSX.Element {
   return (
     <Wrapper>
       {news.map((news) => (
         <P key={news.id}>
-          <Link to={`post?id=${news.id}`}>{news.title}</Link>
+          <Link to={`/council-news/post?id=${news.id}`}>{news.title}</Link>
         </P>
       ))}
     </Wrapper>

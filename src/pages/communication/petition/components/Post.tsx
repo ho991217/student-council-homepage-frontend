@@ -5,32 +5,29 @@ import ReactModal from 'react-modal';
 import FileDownloader from 'components/post/FileDownloader';
 import parse from 'html-react-parser';
 import axios from 'axios';
-import { useCookies } from 'react-cookie';
 import SideNav from 'components/nav/SideNav';
 import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
 import PetitionChart from './PetitionChart';
 
 const TARGET_AGREEMENT = 150;
 
 const Container = styled.div`
-  width: 100%;
   display: flex;
   justify-content: center;
-  background-color: ${({ theme }) => theme.colors.white};
-  align-items: flex-start;
-  background-color: ${({ theme }) => theme.colors.white};
+  gap: 30px;
   background-color: ${({ theme }) => theme.colors.gray040};
-  ${({ theme }) => theme.media.desktop} {
-    padding-left: 50px;
-  }
 `;
 
 const Wrapper = styled.div`
-  max-width: 1280px;
+  background-color: ${({ theme }) => theme.colors.white};
   width: 100%;
+  max-width: 1200px;
   ${({ theme }) => theme.media.desktop} {
+    width: calc(100% - 310px);
     padding: 40px 50px;
-    margin: 40px 30px;
+    margin: 40px 0;
   }
   ${({ theme }) => theme.media.tablet} {
     padding: 40px 50px;
@@ -38,18 +35,6 @@ const Wrapper = styled.div`
   ${({ theme }) => theme.media.mobile} {
     padding: 40px 20px;
   }
-  background-color: ${({ theme }) => theme.colors.white};
-`;
-
-const Hashtag = styled.div`
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.white};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 5px 15px;
-  margin: 0px 5px;
-  border-radius: 25px;
 `;
 
 const HSeparator = styled.div<{ bold?: boolean }>`
@@ -57,7 +42,7 @@ const HSeparator = styled.div<{ bold?: boolean }>`
   height: ${({ bold }) => (bold ? '2px' : '1px')};
   background-color: ${({ bold, theme }) =>
     bold ? theme.colors.gray600 : theme.colors.gray300};
-  margin: 20px 0px;
+  margin-bottom: 20px;
 `;
 
 const Header = styled.h2`
@@ -65,20 +50,22 @@ const Header = styled.h2`
   font-size: ${({ theme }) => theme.fonts.size.base};
   font-weight: ${({ theme }) => theme.fonts.weight.regular};
   margin: 15px 0px;
+  text-align: center;
 `;
 
 const Title = styled.h1`
   font-size: ${({ theme }) => theme.fonts.size.lg};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
   margin-bottom: 25px;
+  text-align: center;
 `;
 
 const Etc = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 750px;
   width: 100%;
+  padding: 0 10px;
   margin-bottom: 15px;
   * {
     color: ${({ theme }) => theme.colors.gray500};
@@ -86,7 +73,6 @@ const Etc = styled.div`
 `;
 
 const Contents = styled.div`
-  max-width: 1100px;
   width: 100%;
   margin-top: 15px;
   margin-bottom: 45px;
@@ -104,6 +90,7 @@ const ButtonContainer = styled.div`
 const AgreeButton = styled.button`
   ${({ theme }) => theme.media.mobile} {
     max-width: 90px;
+    height: 70px;
   }
   user-select: none;
   cursor: pointer;
@@ -348,11 +335,10 @@ export const generateHyperlink = (body: string) => {
 function Post() {
   const [searchParams] = useSearchParams();
   const [post, setPost] = useState<PostProps>();
-  const [postId, setPostId] = useState<number>(0);
-  const [likeCount, setLikeCount] = useState<number>(0);
-  const [comment, setComment] = useState<string>('동의합니다.');
+  const [postId, setPostId] = useState(0);
+  const [likeCount, setLikeCount] = useState(0);
+  const user = useRecoilValue(userInfo);
   const [adminAnswer, setAdminAnswer] = useState<string>();
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
   const [dataUpdate, setDataUpdate] = useState(false);
   const [error, setError] = useState({
     isOpen: false,
@@ -387,7 +373,6 @@ function Post() {
         method: 'post',
         url: `/post/petition/reply/${postId}`,
         headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
           'Content-Type': 'application/json',
         },
         data: { answer: adminAnswer },
@@ -395,8 +380,8 @@ function Post() {
         setAdminAnswer('');
       });
       getCurrentPost(postId);
-    } catch ( error ) {
-      const { data } = error as any;
+    } catch (e) {
+      const { data } = e as any;
       setError((prev) => ({
         ...prev,
         isOpen: true,
@@ -409,9 +394,6 @@ function Post() {
     axios({
       url: `/post/petition/agree/${postId}`,
       method: 'post',
-      headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-      },
       data: '',
     })
       .then((res) => {
@@ -429,9 +411,6 @@ function Post() {
       const { data } = await axios({
         method: 'get',
         url: `/post/petition/${postid}`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       });
 
       setPost({ ...data, body: generateHyperlink(data.body) });
@@ -447,9 +426,6 @@ function Post() {
       await axios({
         method: 'patch',
         url: `/post/petition/blind/${postId}`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       });
       getCurrentPost(postId);
     } catch (err) {
@@ -462,9 +438,6 @@ function Post() {
       await axios({
         method: 'delete',
         url: `/post/petition/${postId}`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       });
       getCurrentPost(postId);
     } catch (err) {
@@ -477,27 +450,6 @@ function Post() {
       postAgree();
     }
     setModalState((prev) => ({ ...prev, open: false }));
-  };
-  const postLike = async () => {
-    await axios({
-      url: `/post/general-forum/like/${postId}`,
-      method: 'post',
-      headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-      },
-    });
-    getCurrentPost(postId);
-  };
-
-  const deleteLike = async () => {
-    await axios({
-      url: `/post/general-forum/like/${postId}`,
-      method: 'delete',
-      headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-      },
-    });
-    getCurrentPost(postId);
   };
 
   useEffect(() => {
@@ -514,7 +466,7 @@ function Post() {
   };
   return (
     <Container>
-      <SideNav margin="40px 0" />
+      <SideNav />
       <ReactModal
         isOpen={modalState.open}
         contentLabel="Example Modal"
@@ -530,7 +482,7 @@ function Post() {
 
       {post && (
         <Wrapper>
-          {cookies.isAdmin === 'true' && (
+          {user.admin && (
             <AdminPanel>
               <input type="button" value="블라인드" onClick={handleBlind} />
               <input type="button" value="삭제" onClick={handleDelete} />
@@ -543,11 +495,11 @@ function Post() {
           }  ]`}</Header>
           <Title>{post?.title}</Title>
           <Etc>
-            <div>등록일 : {post?.createdAt.slice(0, 10)}</div>
-            <div>
+            <span>등록일 : {post?.createdAt.slice(0, 10)}</span>
+            <span>
               청원 동의 인원 : {post.agreeCount} / {TARGET_AGREEMENT}
-            </div>
-            <div>청원 마감 : {post.expiresAt}</div>
+            </span>
+            <span>청원 마감 : {post.expiresAt}</span>
           </Etc>
           <HSeparator />
           <Contents>
@@ -621,7 +573,7 @@ function Post() {
             )}
           </Contents>
 
-          {cookies.isAdmin === 'true' && (
+          {user.admin && (
             <AnswerForm onSubmit={handleAnswerSubmit}>
               <AnswerInput
                 placeholder="답변 내용을 입력해주세요"

@@ -97,11 +97,11 @@ const Wrapper = styled.div`
   width: 100%;
   padding: 0 50px;
   background-color: ${({ theme }) => theme.colors.gray040};
-  ${({ theme }) => theme.media.tablet} {
+  ${({ theme }) => theme.media.mobile} {
     padding: 0;
   }
-  ${({ theme }) => theme.media.mobile} {
-    padding: 40px 20px 60px 20px;
+  ${({ theme }) => theme.media.tablet} {
+    padding: 0;
   }
   display: flex;
   gap: 30px;
@@ -111,10 +111,12 @@ const Wrapper = styled.div`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+  width: 100%;
   background-color: ${({ theme }) => theme.colors.white};
-  padding: 70px 92px;
+  padding: 40px 20px;
   ${({ theme }) => theme.media.desktop} {
     margin-top: 40px;
+  padding: 70px 92px;
   }
 `;
 

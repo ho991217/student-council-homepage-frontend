@@ -1,15 +1,13 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import Modal from 'components/modal/Modal';
 import TextBoxS from 'components/editor/input/TextBoxS';
 import TextBoxL from 'components/editor/input/TextBoxL';
 import SubmitButtonM from 'components/editor/button/SubmitButtonM';
 import { TagsInput } from 'react-tag-input-component';
-import { faSmileWink } from '@fortawesome/free-regular-svg-icons';
 import FileBoxS from 'components/editor/input/FileBoxS';
+import { useErrorModal } from 'hooks/UseErrorModal';
 
 const Container = styled.div`
   width: 100%;
@@ -61,17 +59,19 @@ interface Tags {
   name: string;
 }
 
+interface TagObject {
+  name: string;
+}
+
 function Editor() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [originalTags, setOriginalTags] = useState<Tags[]>([]);
-  const [tagObjectResult, setTagObjectResult] = useState<any[]>([]);
+  const [tagObjectResult, setTagObjectResult] = useState<TagObject[]>([]);
   const [tagResult, setTagResult] = useState<number[]>([]);
   const [tagList, setTagList] = useState<string[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
   const [files, setFiles] = useState<File[]>([]);
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
+  const { renderModal, setErrorMessage, open, setErrorTitle } = useErrorModal();
   const navigate = useNavigate();
   const formData = new FormData();
 
@@ -82,24 +82,17 @@ function Editor() {
     setTitle(value);
   };
 
-  const preventEnterSubmit = (e: React.KeyboardEvent<HTMLFormElement>) => {
-    if (e.code === 'Enter') {
-      console.log('enter')
-    }
-  };
-
   const getTags = async () => {
     try {
       const { data } = await axios({
         method: 'get',
         url: `/post/tag`,
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-        },
       });
       setOriginalTags(data);
     } catch (e) {
-      console.log(e);
+      const error = e as any;
+      setErrorMessage(error.response.data.message[0]);
+      open();
     }
   };
 
@@ -111,17 +104,59 @@ function Editor() {
     return originalTags.findIndex((originTag) => originTag.name === data);
   };
 
+  const handlePost = async () => {
+    try {
+      const res = await axios({
+        method: 'post',
+        url: '/post/petition',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: formData,
+      });
+      console.log(res);
+      navigate(`/board-petition/board?id=${res.data.id}`);
+    } catch (e) {
+      console.log(e);
+      const err = e as ErrorProps;
+      if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
+        setErrorTitle('청원 등록 실패');
+        setErrorMessage(err.response.data.message);
+        open();
+      }
+    }
+  };
+
+  const registerTags = async (tag: object) => {
+    try {
+      const { data } = await axios({
+        method: 'post',
+        url: '/post/tag',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: tag,
+      });
+      getTags();
+      setTagResult((prev) => [...prev, data.id]);
+    } catch (e) {
+      const error = e as any;
+      setErrorMessage(error.response.data.message[0]);
+      open();
+    }
+  };
+
   const onSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
-    
+    setErrorTitle('게시글 등록 실패');
     if (title.length === 0) {
-      setErrorMsg('제목을 입력해주세요.');
-      setIsOpen(true);
+      setErrorMessage('제목을 입력해주세요.');
+      open();
       return;
     }
     if (content.length < 9) {
-      setErrorMsg('9자 이상의 내용을 입력해주세요.');
-      setIsOpen(true);
+      setErrorMessage('9자 이상의 내용을 입력해주세요.');
+      open();
       return;
     }
 
@@ -149,70 +184,26 @@ function Editor() {
       formData.append('title', title);
       formData.append('body', content);
       formData.delete('tagIds');
+      files.forEach((file) => formData.append('files', file));
       handlePost();
     }
   };
-
-  const registerTags = async (tag: object) => {
-    try {
-      const { data } = await axios({
-        method: 'post',
-        url: '/post/tag',
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-          'Content-Type': 'application/json',
-        },
-        data: tag,
-      });
-      getTags();
-      setTagResult((prev) => [...prev, data.id]);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const handlePost = async () => {
-    try {
-      const res = await axios({
-        method: 'post',
-        url: '/post/petition',
-        headers: {
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
-          'Content-Type': 'multipart/form-data',
-        },
-        data: formData,
-      });
-      console.log(res);
-      navigate(`/board-petition/board?id=${res.data.id}`);
-    } catch (e) {
-      console.log(e);
-      const err = e as ErrorProps;
-      if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
-        setErrorMsg(err.response.data.message);
-        setIsOpen(true);
-      }
-    }
-  };
-
-  useEffect(() => {
-    tagObjectResult.forEach((tag) => {
-      registerTags(tag);
-    });
-  }, [tagObjectResult]);
 
   useEffect(() => {
     if (tagList.length > 0) {
       formData.append('title', title);
       formData.append('body', content);
       formData.append('tagIds', JSON.stringify(tagResult).slice(1, -1));
+      files.forEach((file) => formData.append('files', file));
       handlePost();
     }
   }, [tagResult]);
 
   return (
     <Container>
+      {renderModal()}
       <Wrapper>
-        <Form onSubmit={onSubmitHandler} onKeyDown={(e) => preventEnterSubmit}>
+        <Form onSubmit={onSubmitHandler}>
           <TextBoxS
             label="청원 제목"
             value={title}
@@ -234,20 +225,9 @@ function Editor() {
           <FileBoxS setter={setFiles} multiple />
           <SubmitButtonM text="작성 완료" />
         </Form>
-        {isOpen && (
-          <Modal
-            title="청원 등록 실패"
-            contents={errorMsg}
-            onClose={() => {
-              setIsOpen(false);
-              setErrorMsg('');
-            }}
-          />
-        )}
       </Wrapper>
     </Container>
   );
 }
 
 export default Editor;
- 

@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
-import { useMyInfo } from 'hooks/UseMyInfo';
 import { useToday } from 'hooks/UseToday';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useErrorModal } from 'hooks/UseErrorModal';
+import { useLogin } from 'hooks/UseLogin';
 import { Container } from './components/Board.style';
 import { H1, Hr, IRentalList } from './RentalLists';
 
@@ -136,7 +137,15 @@ const parseISODate = (day: string, time: string) => {
 };
 
 function RentalNew() {
-  const [myInfo] = useMyInfo();
+  const { getUserInfo } = useLogin();
+  const [userInfo, setUserInfo] = useState<User>({
+    username: '',
+    nickname: '',
+    studentId: '',
+    major: '',
+    department: '',
+    admin: false,
+  });
   const today = useToday('yyyy-MM-dd');
   const [rentalList, setRentalList] = useState<IRentalList>([]);
   const [item, setItem] = useState<IItem>({
@@ -147,8 +156,8 @@ function RentalNew() {
     title: '',
     body: '',
   });
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
   const navigate = useNavigate();
+  const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
 
   const getRentalList = async () => {
     const { data } = await axios({
@@ -180,12 +189,11 @@ function RentalNew() {
       return;
     }
     try {
-      const { data } = await axios({
+      await axios({
         method: 'post',
         url: '/rental',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
         },
         data: {
           itemId,
@@ -196,10 +204,13 @@ function RentalNew() {
           body,
         },
       });
-      console.log(data);
+
       navigate('/rental');
     } catch (e) {
-      console.log(e);
+      const error = e as any;
+
+      setErrorMessage(error.response.data.message[0]);
+      open();
     }
   };
 
@@ -208,11 +219,18 @@ function RentalNew() {
   }, []);
 
   useEffect(() => {
-    console.log(item);
-  }, [item]);
+    getUserInfo().then((res) => {
+      if (res !== null) {
+        setUserInfo(res);
+      } else {
+        navigate('/login');
+      }
+    });
+  }, []);
 
   return (
     <Container>
+      {renderModal()}
       <HeaderContainer>
         <Hr />
         <H1>대여물품 신청</H1>
@@ -221,11 +239,11 @@ function RentalNew() {
         <Row portion="1fr 1fr 2fr">
           <Tile>
             <Label>신청자</Label>
-            <TextInput value={myInfo.studentName} readOnly />
+            <TextInput value={userInfo.username} readOnly />
           </Tile>
           <Tile>
             <Label>학과</Label>
-            <TextInput value={myInfo.major} readOnly />
+            <TextInput value={userInfo.major} readOnly />
           </Tile>
           <Tile>
             <Label>신청일자</Label>

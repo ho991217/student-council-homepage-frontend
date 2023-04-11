@@ -224,8 +224,9 @@ function News() {
     if (!page) page = '1';
     const { data } = await axios({
       method: 'get',
-      url: `/post/news?page=${Number(page) - 1}&size=6`,
+      url: `/post/news?sort=createdAt,desc&page=${Number(page) - 1}&size=6`,
     });
+    console.log(data);
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);
     setPagingInfo(data);
