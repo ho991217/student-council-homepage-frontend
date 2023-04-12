@@ -404,8 +404,9 @@ function Post() {
   return (
     <Container>
       <SideNav margin="40px 0" />
+      {post && (
       <Wrapper>
-        {post?.mine === true && (
+        {post.mine === true && (
           <Button onClick={handleDeletePost}>삭제</Button>
         )}
         {user.admin && post?.mine && (
@@ -559,7 +560,7 @@ function Post() {
             </CommentForm>
           )}
         </CommentWrapper> */}
-      </Wrapper>
+      </Wrapper>)}
     </Container>
   );
 }
