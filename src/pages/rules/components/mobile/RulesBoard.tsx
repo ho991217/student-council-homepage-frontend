@@ -132,7 +132,7 @@ function RulesBoard({
             </Row>
           ))}
           {admin && (
-            <Link to="/rule/editor">
+            <Link to="/rules/editor">
               <Button type="button">작성</Button>
             </Link>
           )}

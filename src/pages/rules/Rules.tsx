@@ -5,14 +5,14 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { PagingProps } from 'components/PageControl';
 import qs from 'qs';
-
 import { RuleProps } from 'pages/rules/components/RuleProps';
-
 import PageControl from 'pages/rules/components/PageControl';
 import RulesBoard from 'pages/rules/components/RulesBoard';
 import MobileRulesBoard from 'pages/rules/components/mobile/RulesBoard';
 import GlobalBanner from 'components/banner/GlobalBanner';
 import SideNav from 'components/nav/SideNav';
+import { useLogin } from 'hooks/UseLogin';
+
 
 const Container = styled.div`
   background-color: ${(props) => props.theme.colors.white};
@@ -182,6 +182,7 @@ function Rules() {
   const [page, setPage] = useState(1);
   const [searchParams] = useSearchParams();
   const [searchWord, setSearchWord] = useState<string>('');
+  const { getAccessToken } = useLogin(); 
   const [pagingInfo, setPagingInfo] = useState<PagingProps>({
     first: true,
     hasNext: false,
@@ -191,6 +192,7 @@ function Rules() {
     totalElements: 0,
     totalPages: 1,
   });
+
 
   const onSearchWordHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const {
@@ -223,14 +225,24 @@ function Rules() {
   const getPosts = async () => {
     let { page } = qs.parse(searchParams.toString());
 
-    if (!page) page = '1';
-    const { data } = await axios({
-      method: 'get',
-      url: `/rule?page=${Number(page) - 1}&size=6&sort=createDate,desc`,
-    });
-    setBoardsCount(data.totalElements);
-    setBoard([...data.content]);
-    setPagingInfo(data);
+    if (!page) page = '0';
+    try {
+      const { data } = await axios({
+        method: 'get',
+        url: `/post/rule?bodySize=50&page=${page}&size=20`,
+        headers: {
+          'Content-Type': 'application/json',
+          // Authorization: `Bearer ${getAccessToken()}`,
+        }
+      });
+      console.log(data)
+      setBoardsCount(data.totalElements);
+      setBoard([...data.content]);
+      setPagingInfo(data);  
+    } catch (error) {
+      console.log(error)
+    }
+
   };
 
   useEffect(() => {
@@ -240,6 +252,10 @@ function Rules() {
       getPosts();
     }
   }, [searchParams, boardsCount]);
+
+  useEffect(() => {
+    getPosts()
+  },[])
 
   return (
     <Container>
