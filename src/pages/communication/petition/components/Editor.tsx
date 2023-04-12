@@ -5,7 +5,6 @@ import axios from 'axios';
 import TextBoxS from 'components/editor/input/TextBoxS';
 import TextBoxL from 'components/editor/input/TextBoxL';
 import SubmitButtonM from 'components/editor/button/SubmitButtonM';
-import { TagsInput } from 'react-tag-input-component';
 import FileBoxS from 'components/editor/input/FileBoxS';
 import { useErrorModal } from 'hooks/UseErrorModal';
 
@@ -19,7 +18,6 @@ const Container = styled.div`
     margin: 0;
   }
 `;
-
 const Wrapper = styled.div`
   max-width: 1150px;
   width: 100%;
@@ -32,7 +30,6 @@ const Wrapper = styled.div`
     padding: 40px 20px 60px 20px;
   }
 `;
-
 const Form = styled.form`
   display: flex;
   flex-direction: column;
@@ -44,6 +41,46 @@ const TagBoxLabel = styled.label`
   font-size: ${({ theme }) => theme.fonts.size.md};
   user-select: none;
   margin-bottom: 15px;
+`;
+const TagsContainer = styled.ul`
+  display: flex;
+  gap: 5px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  &::-webkit-scrollbar {
+    height: 8px; 
+  }
+  &::-webkit-scrollbar-thumb {
+    width: 1px;
+    border-radius: 10px;
+    background-color: ${({ theme }) => theme.colors.primary};
+  }
+  &::-webkit-scrollbar-track {
+    width: 1px;
+    background-color: ${({ theme }) => theme.colors.gray040};
+  }
+`;
+const TagLabel = styled.label.attrs({ className: 'tagLabel' })`
+  background-color: ${({ theme }) => theme.colors.gray020};
+  padding: 5px 10px;
+  border-radius: 3px;
+  white-space: nowrap;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    cursor: pointer;
+  }
+  &.selected {
+    background-color: ${({ theme }) => theme.colors.primary};
+    color: white;
+  }
+`;
+const TagInput = styled.input.attrs({type: 'checkBox',})`
+  display: none;
 `;
 interface ErrorProps {
   response: {
@@ -59,17 +96,11 @@ interface Tags {
   name: string;
 }
 
-interface TagObject {
-  name: string;
-}
-
 function Editor() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [originalTags, setOriginalTags] = useState<Tags[]>([]);
-  const [tagObjectResult, setTagObjectResult] = useState<TagObject[]>([]);
   const [tagResult, setTagResult] = useState<number[]>([]);
-  const [tagList, setTagList] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const { renderModal, setErrorMessage, open, setErrorTitle } = useErrorModal();
   const navigate = useNavigate();
@@ -100,10 +131,6 @@ function Editor() {
     getTags();
   }, []);
 
-  const findIndex = (data: string) => {
-    return originalTags.findIndex((originTag) => originTag.name === data);
-  };
-
   const handlePost = async () => {
     try {
       const res = await axios({
@@ -114,7 +141,6 @@ function Editor() {
         },
         data: formData,
       });
-      console.log(res);
       navigate(`/board-petition/board?id=${res.data.id}`);
     } catch (e) {
       console.log(e);
@@ -124,24 +150,6 @@ function Editor() {
         setErrorMessage(err.response.data.message);
         open();
       }
-    }
-  };
-
-  const registerTags = async (tag: object) => {
-    try {
-      const { data } = await axios({
-        method: 'post',
-        url: '/post/tag',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: tag,
-      });
-      getTags();
-      setTagResult((prev) => [...prev, data.id]);
-    } catch (e) {
-      const error = e as any;
-      console.log(e)
     }
   };
 
@@ -159,51 +167,31 @@ function Editor() {
       return;
     }
 
-    const tagNameList = originalTags.map((item) => {
-      return item.name;
-    });
-    const originalSet = new Set(tagNameList);
-    const tagListSet = new Set(tagList);
-    const tagsIntersect = [...tagListSet].filter((data) =>
-      originalSet.has(data),
-    );
-    const newTags = [...tagListSet].filter((data) => !originalSet.has(data));
-    tagsIntersect.forEach((tag) => {
-      setTagResult((prev) => [...prev, originalTags[findIndex(tag)].id]);
-    });
-    newTags.forEach((tag) => {
-      setTagObjectResult((prev) => [...prev, { name: tag }]);
-    });
-
-    tagObjectResult.forEach((tag) => {
-      registerTags(tag);
-    });
-
-    if (tagList.length === 0) {
+    if (tagResult.length === 0) {
       formData.append('title', title);
       formData.append('body', content);
       formData.delete('tagIds');
       files.forEach((file) => formData.append('files', file));
       handlePost();
-    }
-  };
-
-  useEffect(() => {
-    tagObjectResult.forEach((tag) => {
-      registerTags(tag);
-    });
-  }, [tagObjectResult]);
-  
-  useEffect(() => {
-    if (tagList.length > 0) {
+    } else {
       formData.append('title', title);
       formData.append('body', content);
       formData.append('tagIds', JSON.stringify(tagResult).slice(1, -1));
       files.forEach((file) => formData.append('files', file));
-      console.log(JSON.stringify(tagResult).slice(1, -1))
       handlePost();
     }
-  }, [tagResult]);
+  };
+
+  const selectTag = (tagId: number, event: { target: HTMLInputElement }) => {
+    const isSelected = event.target.parentElement?.classList.contains('selected')
+    if (!isSelected) {
+      setTagResult((prev) => [...prev, tagId]);
+      event.target.parentElement?.classList.add('selected');
+    } else {
+      setTagResult(tagResult.filter((item) => item !== tagId));
+      event.target.parentElement?.classList.remove('selected');
+    }
+  };
 
   return (
     <Container>
@@ -221,14 +209,24 @@ function Editor() {
             content={content}
             onChange={(e) => setContent(e.target.value)}
           />
-          <TagBoxLabel>태그</TagBoxLabel>
-          <TagsInput
-            value={tagList}
-            onChange={setTagList}
-            name="tagListInput"
-            placeHolder="태그들을 입력해주세요"
-          />
           <FileBoxS setter={setFiles} multiple />
+          <TagBoxLabel>태그</TagBoxLabel>
+          <TagsContainer>
+            {originalTags.map((tag) => {
+              return (
+                <TagLabel key={tag.id} htmlFor={tag.name}>
+                  <TagInput
+                    id={tag.name}
+                    type="checkBox"
+                    name={tag.name}
+                    onChange={(event) => selectTag(tag.id, event)}
+                    checked={false}
+                  />
+                  #{tag.name}
+                </TagLabel>
+              );
+            })}
+          </TagsContainer>
           <SubmitButtonM text="작성 완료" />
         </Form>
       </Wrapper>

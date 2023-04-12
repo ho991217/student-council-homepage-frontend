@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import { useErrorModal } from 'hooks/UseErrorModal';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { TagsInput } from 'react-tag-input-component';
 
 const Container = styled.div`
   width: 100%;
@@ -43,13 +42,48 @@ const TagBoxLabel = styled.label`
   user-select: none;
   margin-bottom: 15px;
 `;
-
+const TagsContainer = styled.ul`
+  display: flex;
+  gap: 5px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    width: 1px;
+    border-radius: 10px;
+    background-color: ${({ theme }) => theme.colors.primary};
+  }
+  &::-webkit-scrollbar-track {
+    width: 1px;
+    background-color: ${({ theme }) => theme.colors.gray040};
+  }
+`;
+const TagLabel = styled.label.attrs({ className: 'tagLabel' })`
+  background-color: ${({ theme }) => theme.colors.gray020};
+  padding: 5px 10px;
+  border-radius: 3px;
+  white-space: nowrap;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    cursor: pointer;
+  }
+  &.selected {
+    background-color: ${({ theme }) => theme.colors.primary};
+    color: white;
+  }
+`;
+const TagInput = styled.input.attrs({ type: 'checkBox' })`
+  display: none;
+`;
 interface Tags {
   id: number;
-  name: string;
-}
-
-interface TagObject {
   name: string;
 }
 
@@ -57,9 +91,7 @@ function SuggestionEditor() {
   const [title, setTitle] = useState<string>('');
   const [text, setText] = useState<string>('');
   const [originalTags, setOriginalTags] = useState<Tags[]>([]);
-  const [tagObjectResult, setTagObjectResult] = useState<TagObject[]>([]);
   const [tagResult, setTagResult] = useState<number[]>([]);
-  const [tagList, setTagList] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
   const formData = new FormData();
@@ -84,10 +116,6 @@ function SuggestionEditor() {
     getTags();
   }, []);
 
-  const findIndex = (data: string) => {
-    return originalTags.findIndex((originTag) => originTag.name === data);
-  };
-
   const handlePost = async () => {
     try {
       const res = await axios({
@@ -105,25 +133,6 @@ function SuggestionEditor() {
     }
   };
 
-  const registerTags = async (tag: object) => {
-    try {
-      const { data } = await axios({
-        method: 'post',
-        url: '/post/tag',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data: tag,
-      });
-      getTags();
-      setTagResult((prev) => [...prev, data.id]);
-    } catch (e) {
-      const error = e as any;
-      setErrorMessage(error.response.data.message[0]);
-      open();
-    }
-  };
-
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -134,60 +143,36 @@ function SuggestionEditor() {
     } else if (text.length < 9) {
       setErrorMessage('9자 이상의 내용을 입력해주세요.');
       open();
-    } else {
+    }
+    if (tagResult.length === 0) {
       formData.append('title', title);
       formData.append('body', text);
       files.forEach((file) => formData.append('files', file));
-
-      tagObjectResult.forEach((tag) => {
-        registerTags(tag);
-      });
-
-      const tagNameList = originalTags.map((item) => {
-        return item.name;
-      });
-      const originalSet = new Set(tagNameList);
-      const tagListSet = new Set(tagList);
-      const tagsIntersect = [...tagListSet].filter((data) =>
-        originalSet.has(data),
-      );
-      const newTags = [...tagListSet].filter((data) => !originalSet.has(data));
-      tagsIntersect.forEach((tag) => {
-        setTagResult((prev) => [...prev, originalTags[findIndex(tag)].id]);
-      });
-      newTags.forEach((tag) => {
-        setTagObjectResult((prev) => [...prev, { name: tag }]);
-      });
-
-      if (tagList.length === 0) {
-        formData.append('title', title);
-        formData.append('body', text);
-        formData.delete('tagIds');
-        files.forEach((file) => formData.append('files', file));
-        handlePost();
-      }
-    }
-  };
-
-  useEffect(() => {
-    tagObjectResult.forEach((tag) => {
-      registerTags(tag);
-    });
-  }, [tagObjectResult]);
-  
-  useEffect(() => {
-    if (tagList.length > 0) {
+      handlePost();
+    } else {
       formData.append('title', title);
       formData.append('body', text);
       formData.append('tagIds', JSON.stringify(tagResult).slice(1, -1));
       files.forEach((file) => formData.append('files', file));
       handlePost();
     }
-  }, [tagResult]);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+
+  const selectTag = (tagId: number, event: { target: HTMLInputElement }) => {
+    const isSelected =
+      event.target.parentElement?.classList.contains('selected');
+    if (!isSelected) {
+      setTagResult((prev) => [...prev, tagId]);
+      event.target.parentElement?.classList.add('selected');
+    } else {
+      setTagResult(tagResult.filter((item) => item !== tagId));
+      event.target.parentElement?.classList.remove('selected');
+    }
+  };
 
   return (
     <Container>
@@ -205,14 +190,24 @@ function SuggestionEditor() {
             content={text}
             onChange={(e) => setText(e.target.value)}
           />
-          <TagBoxLabel>태그</TagBoxLabel>
-          <TagsInput
-            value={tagList}
-            onChange={setTagList}
-            name="tagListInput"
-            placeHolder="태그들을 입력해주세요"
-          />
           <FileBoxS setter={setFiles} accept="image/*" multiple />
+          <TagBoxLabel>태그</TagBoxLabel>
+          <TagsContainer>
+            {originalTags.map((tag) => {
+              return (
+                <TagLabel key={tag.id} htmlFor={tag.name}>
+                  <TagInput
+                    id={tag.name}
+                    type="checkBox"
+                    name={tag.name}
+                    onChange={(event) => selectTag(tag.id, event)}
+                    checked={false}
+                  />
+                  #{tag.name}
+                </TagLabel>
+              );
+            })}
+          </TagsContainer>
           <SubmitButtonM text="작성 완료" />
         </Form>
       </Wrapper>
