@@ -20,9 +20,30 @@ const HeaderContainer = styled.div`
 `;
 export type RentalInfoList = {
   id: number;
-  name: string;
-  remaining: number;
+  lender: string;
+  rentalStart: string;
+  rentalEnd: string;
+  title: string;
+  userClass: string;
+
 }[];
+
+function ConvertUserClass(type : string) {
+  let ConvertedClass;
+  if (type === "INDIVIDUAL") {
+    ConvertedClass = "개인";
+  } else if (type === "DEPARTMENT_STUDENT_COUNCIL") {
+    ConvertedClass = "단과대학생회";
+  } else if (type === "MAJOR_STUDENT_COUNCIL"){
+    ConvertedClass = "과(학부) 학생회";
+  } else if (type === "CLUB") {
+    ConvertedClass = "동아리";
+  } else {
+    ConvertedClass = "기타"
+  }
+
+  return <BoardComponents.Col>{ConvertedClass}</BoardComponents.Col>;
+}
 
 function RentalInfo() {
   const [searchParams] = useSearchParams();
@@ -42,17 +63,19 @@ function RentalInfo() {
 
   const getRentalInfoLists = async (id: number) => {
     let { page } = qs.parse(searchParams.toString());
+    const { name } = qs.parse(searchParams.toString());
     
     if (!page) page = '1';
     const {
       data: { content, ...options },
     } = await axios({
       method: 'get',
-      url: `/rental/item?sort=name&page=${Number(page) - 1}&size=6`,
+      url: `/rental/${Number(id)}?&page=${Number(page) - 1}&size=6`,
       headers: {
         'Content-Type': 'application/json',
       },
     });
+
     setProductInfo(content);
     setPagingInfo(options);
   };
@@ -63,16 +86,11 @@ function RentalInfo() {
   }, [page]);
 
   useEffect(() => {
-    // const { id, name } = qs.parse(searchParams.toString());
-    const { id } = qs.parse(searchParams.toString());
-
     setPage(Number(searchParams.get('page')) || 1);
   }, [searchParams]);
 
   useEffect(() => {
-    // const { id, name } = qs.parse(searchParams.toString());
     const { name } = qs.parse(searchParams.toString());
-
 
     if (typeof name === 'string') setitemName({ name });
   }, [searchParams]);  
@@ -94,10 +112,13 @@ function RentalInfo() {
 
         {productInfo.map((el) => (
           <BoardComponents.Item key={el.id}>
-          <BoardComponents.Col>{el.id}</BoardComponents.Col>
-          <BoardComponents.Col>{el.name}</BoardComponents.Col>
-          <BoardComponents.Col>{el.remaining}</BoardComponents.Col>
-          <BoardComponents.Col>{el.remaining}</BoardComponents.Col>
+          <BoardComponents.Col>{el.title}</BoardComponents.Col>
+          <BoardComponents.Col>{el.rentalStart.substring(0,4)}년 {el.rentalStart.substring(5,7)}월{' '} {el.rentalStart.substring(8,10)}일
+           {" ~ "} 
+           {el.rentalEnd.substring(0,4)}년 {el.rentalStart.substring(5,7)}월{' '} {el.rentalStart.substring(8,10)}일</BoardComponents.Col>
+           {ConvertUserClass(el.userClass)}
+          {/* <BoardComponents.Col>{el.userClass}</BoardComponents.Col> */}
+          <BoardComponents.Col>{el.lender}</BoardComponents.Col>
         </BoardComponents.Item>
         ))}
       </BoardComponents.BoardContainer>
