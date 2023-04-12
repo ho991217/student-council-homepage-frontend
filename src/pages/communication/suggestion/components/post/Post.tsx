@@ -95,6 +95,12 @@ const Text = styled.div`
   line-height: ${({ theme }) => theme.fonts.size.xl};
 `;
 
+const TagContainer = styled.div`
+  display: flex;
+  padding-bottom: 5px;
+  gap: 10px;
+`;
+
 const HashTag = styled.div`
   max-width: 130px;
   height: 22px;
@@ -103,10 +109,16 @@ const HashTag = styled.div`
   align-items: center;
   background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.white};
-  font-size: ${({ theme }) => theme.fonts.size.xs};
+  font-size: ${({ theme }) => theme.fonts.size.sm};
   border-radius: 12px;
   ${({ theme }) => theme.media.mobile} {
     max-width: 90px;
+  }
+  padding: 10px;
+  span {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 `;
 
@@ -285,6 +297,7 @@ function Post() {
       .then(({ data }) => {
         setPost({ ...data, body: generateHyperlink(data.body) });
         setLikeCount(data.likes);
+        console.log(data);
       })
       .catch((err) => {
         console.log(err);
@@ -417,6 +430,15 @@ function Post() {
             ))}
           </div>
           {/* {post?.files && <FileDownloader files={post?.files} />} */}
+          <TagContainer>
+          {post?.tag?.map((tag) => {
+            return (
+              <HashTag key={tag.id}>
+                <span>#{tag.name}</span>
+              </HashTag>
+            );
+          })}
+        </TagContainer>
           <Like
             liked={post?.liked}
             onClick={post?.liked ? deleteLike : postLike}
