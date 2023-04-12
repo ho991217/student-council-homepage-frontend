@@ -18,13 +18,13 @@ const Wrapper = styled.div`
   max-width: 1290px;
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    padding: 0px 50px 0px 0px;
+    padding: 0px 0px 0px 0px;
   }
   ${({ theme }) => theme.media.tablet} {
-    padding: 0px 50px 0px 0px;
+    padding: 0px 50px 0px 50px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 30px 10px 20px 10px;
+    padding: 0px 10px 20px 10px;
   }
   display: flex;
   flex-direction: column;
@@ -39,7 +39,7 @@ const BoardsContainer = styled.div`
 const BoardHead = styled.div`
   width: 100%;
   height: 70px;
-  border-top: 3px solid #434343;
+  border-top: 3px solid ${({ theme }) => theme.colors.gray100};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
 `;
 
@@ -120,9 +120,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               </BoardHead>
               {board.map((post, index) => (
                 <Row key={post.id}>
-                  <div>
-                    {index + 1 + pagingInfo.page * pagingInfo.size}
-                  </div>
+                  <div>{index + 1 + pagingInfo.page * pagingInfo.size}</div>
                   <LinkDiv>
                     {post.status === '정지' ? (
                       <Link
@@ -141,7 +139,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                     {post.status === 'WAITING' ? '답변 전' : '답변 완료'}
                   </div>
                   <div>{post.author}</div>
-                  <div>{post.createdAt}</div>
+                  <div>{post.createdAt.substring(0, 10)}</div>
                   <div>{post.views}</div>
                 </Row>
               ))}
@@ -164,9 +162,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               </BoardHead>
               {board.map((post, index) => (
                 <Row key={post.id}>
-                  <div>
-                    {index + 1 + pagingInfo.page * pagingInfo.size}
-                  </div>
+                  <div>{index + 1 + pagingInfo.page * pagingInfo.size}</div>
                   <LinkDiv>
                     {post.status === '정지' ? (
                       <Link
@@ -185,7 +181,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                     {post.status === 'WAITING' ? '답변 전' : '답변 완료'}
                   </div>
                   <div>{post.author}</div>
-                  <div>{post.createdAt}</div>
+                  <div>{post.createdAt.substring(0, 10)}</div>
                   <div>{post.views}</div>
                 </Row>
               ))}
@@ -206,9 +202,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               </BoardHead>
               {board.map((post, index) => (
                 <Row key={post.id}>
-                  <div>
-                    {index + 1 + pagingInfo.page * pagingInfo.size}
-                  </div>
+                  <div>{index + 1 + pagingInfo.page * pagingInfo.size}</div>
                   <LinkDiv>
                     {post.status === '정지' ? (
                       <Link
