@@ -21,10 +21,10 @@ const Wrapper = styled.div`
   max-width: 1290px;
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    padding: 30px 50px 10px 50px;
+    padding: 30px 50px 10px 20px;
   }
   ${({ theme }) => theme.media.tablet} {
-    padding: 30px 50px 10px 50px;
+    padding: 30px 50px 10px 20px;
   }
   ${({ theme }) => theme.media.mobile} {
     padding: 0px 10px 20px 10px;
@@ -101,7 +101,7 @@ const PageInfo = styled.div`
   width: 100%;
   display: flex;
   align-items: flex-end;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 `;
 
 const Button = styled.button`
@@ -138,12 +138,12 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
         <BoardsContainer>
           <Desktop>
             <>
-              <TopBar />
-              <PageInfo>
+            <PageInfo>
               Total <PointText>{pagingInfo.totalElements}건,</PointText>
               {currentPage}/
               {Math.ceil(pagingInfo.totalElements / pagingInfo.size)}
             </PageInfo>
+              <TopBar />
               <BoardHead>
                 <Row>
                   <div>닉네임</div>

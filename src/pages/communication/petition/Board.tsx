@@ -13,16 +13,16 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   max-width: 1290px;
-  width: 90%;
+  width: 100%;
 
   ${({ theme }) => theme.media.desktop} {
-    padding: 30px 0px 10px 0px;
+    padding: 30px 50px 10px 20px;
   }
   ${({ theme }) => theme.media.tablet} {
-    padding: 30px 50px 10px 50px;
+    padding: 30px 50px 10px 20px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 0px 20px 20px 10px;
+    padding: 0px 10px 20px 10px;
   }
   display: flex;
   flex-direction: column;
@@ -38,7 +38,7 @@ const PageInfo = styled.div`
   width: 100%;
   display: flex;
   align-items: flex-end;
-  margin-bottom: 10px;
+  margin-bottom: 42px;
 `;
 
 const BoardHead = styled.div`
