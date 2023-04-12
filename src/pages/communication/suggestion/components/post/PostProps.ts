@@ -5,7 +5,12 @@ export interface PostProps {
   files: {id:string, url:string}[];
   id: number;
   mine: boolean;
-  tag: [];
+  tag?: [
+    {
+      id: number;
+      name: string;
+    },
+  ];
   title: string;
   likes: number;
   liked: boolean;

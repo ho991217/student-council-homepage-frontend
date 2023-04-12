@@ -53,6 +53,34 @@ const Header = styled.h2`
   text-align: center;
 `;
 
+const TagContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding-bottom: 15px;
+  gap: 10px;
+`;
+
+const HashTag = styled.div`
+  max-width: 130px;
+  height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.fonts.size.sm};
+  border-radius: 12px;
+  ${({ theme }) => theme.media.mobile} {
+    max-width: 90px;
+  }
+  padding: 10px;
+  span {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+`;
+
 const Title = styled.h1`
   font-size: ${({ theme }) => theme.fonts.size.lg};
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
@@ -303,7 +331,12 @@ interface PostProps {
   liked: boolean;
   likes: number;
   statisticList: [];
-  tags: [];
+  tag: [
+    {
+      id: number;
+      name: string;
+    },
+  ];
   agreeCount: number;
   files?: fileType[];
 }
@@ -415,6 +448,7 @@ function Post() {
 
       setPost({ ...data, body: generateHyperlink(data.body) });
       setLikeCount(data.likes);
+      console.log(data);
     } catch {
       navigate(-1);
     }
@@ -487,7 +521,18 @@ function Post() {
               <input type="button" value="삭제" onClick={handleDelete} />
             </AdminPanel>
           )}
-          {/* <Hashtag>#</Hashtag> */}
+
+          {post.tag.length > 0 && (
+            <TagContainer>
+              {post.tag?.map((tag) => {
+                return (
+                  <HashTag key={tag.id}>
+                    <span>#{tag.name}</span>
+                  </HashTag>
+                );
+              })}
+            </TagContainer>
+          )}
           <HSeparator bold />
           <Header>{`[ ${
             post.status === 'ACTIVE' ? '진행중' : '마감'
