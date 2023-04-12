@@ -47,16 +47,13 @@ function MyVoiceDetail() {
     <Wrapper>
       <SideNav />
       <Container>
-        <QnAP>My Voice</QnAP>
         <Hr bold />
-        <Status>
-          {'[ '}
-          {postDetail.status === 'WAITING' ? '답변 전' : '답변 완료'}
-          {' ]'}
-        </Status>
+        <Header>{`[ ${
+          postDetail.status === 'ANSWERED' ? '답변 완료' : '답변 전'
+        }  ]`}</Header>
         <Title>{postDetail.title}</Title>
         <Author>{postDetail.author}</Author>
-        <Date>{postDetail.createdAt}</Date>
+        <Date>{postDetail.createdAt.substring(0, 10)}</Date>
         <Hr />
         <Text>{postDetail.body}</Text>
         <Button>
@@ -77,6 +74,7 @@ function MyVoiceDetail() {
 export default MyVoiceDetail;
 
 const Wrapper = styled.div`
+  min-height: 600px;
   display: flex;
   justify-content: center;
   gap: 30px;
@@ -100,13 +98,8 @@ const Container = styled.div`
   ${({ theme }) => theme.media.mobile} {
     padding: 40px 20px;
   }
-`;
 
-const QnAP = styled.p`
-  font-size: ${({ theme }) => theme.fonts.size.lg};
-  color: ${({ theme }) => theme.colors.secondary};
-  font-weight: ${({ theme }) => theme.fonts.weight.bold};
-  margin-bottom: 40px;
+  position: relative;
 `;
 
 const Button = styled.button`
@@ -120,7 +113,22 @@ const Button = styled.button`
   border: 1px solid ${({ theme }) => theme.colors.primary};
   cursor: pointer;
   border-radius: 5px;
-  align-self: flex-end;
+  position: absolute;
+  ${({ theme }) => theme.media.desktop} {
+    bottom: 50px;
+    right: 40px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    bottom: 30px;
+    right: 40px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    bottom: 30px;
+    right: 40px;
+  }
+
+  bottom: 0;
+  right: 0;
 `;
 
 const Hr = styled.div<{ bold?: boolean }>`
@@ -154,9 +162,12 @@ const Text = styled.div`
   line-height: ${({ theme }) => theme.fonts.size.xl};
 `;
 
-const Status = styled(Title)`
+const Header = styled.h2`
+  color: ${({ theme }) => theme.colors.secondary};
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  font-weight: ${({ theme }) => theme.fonts.weight.regular};
+  margin: 15px 0px;
   text-align: center;
-  color: #204a80;
 `;
 
 const Author = styled(Date)`

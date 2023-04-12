@@ -105,13 +105,14 @@ function RentalLists() {
   };
 
   const getRentalLists = async () => {
-    const { page } = qs.parse(searchParams.toString());
+    let { page } = qs.parse(searchParams.toString());
+    if (!page) page = '1';
 
     const {
       data: { content, ...options },
     } = await axios({
       method: 'get',
-      url: `/rental/item?page=${page}&size=6`,
+      url: `/rental/item?sort=name&page=${Number(page) - 1}&size=6`,
       headers: {
         'Content-Type': 'application/json',
       },

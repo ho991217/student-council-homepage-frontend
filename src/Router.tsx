@@ -192,15 +192,50 @@ function Router() {
           <Route path="info" element={<RentalInfo />} />
           <Route path="new" element={<RentalNew />} />
         </Route>
-        <Route path="/voc">
+        <Route path="/voc" element={<GlobalBanner title="총학생회 VOC" />}>
           <Route path="qna">
-            <Route path="boards" element={<QnA />} />
-            <Route path="board" element={<QnADetail />} />
-            <Route path="editor" element={<QnAEditor />} />
+            <Route
+              path="boards"
+              element={
+                <AuthRoute>
+                  <QnA />
+                </AuthRoute>
+              }
+            />
+            <Route
+              path="board"
+              element={
+                <AuthRoute>
+                  <QnADetail />
+                </AuthRoute>
+              }
+            />
+            <Route
+              path="editor"
+              element={
+                <AuthRoute>
+                  <QnAEditor />
+                </AuthRoute>
+              }
+            />
           </Route>
           <Route path="my-voice">
-            <Route path="boards" element={<MyVoice />} />
-            <Route path="board" element={<MyVoiceDetail />} />
+            <Route
+              path="boards"
+              element={
+                <AuthRoute>
+                  <MyVoice />
+                </AuthRoute>
+              }
+            />
+            <Route
+              path="board"
+              element={
+                <AuthRoute>
+                  <MyVoiceDetail />
+                </AuthRoute>
+              }
+            />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

@@ -90,7 +90,7 @@ function MyVoice() {
     if (!page) page = '1';
     const { data } = await axios({
       method: 'get',
-      url: `/post/voc/my`,
+      url: `/post/voc/my?sort=createdAt,desc&page=${Number(page) - 1}&size=6`,
       headers: {
         Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
       },
@@ -109,10 +109,14 @@ function MyVoice() {
 
   const onSearchButtonHandler = async () => {
     await axios
-      .get(`/post/voc/my?&query=${searchWord}&size=6`)
+      .get(
+        `/post/voc/my?query=${searchWord}&sort=createdAt,desc&page=${
+          Number(page) - 1
+        }&size=6`,
+      )
       .then(function (response) {
         const result = response.data;
-        setBoard(result.content.slice((page - 1) * 6, page * 6));
+        setBoard(result.content);
         setBoardsCount(result.totalElements);
         setPagingInfo(result);
         setIsSearched(true);
@@ -232,8 +236,9 @@ const ArrowSvg = styled.svg`
 
 const InfoBox = styled.div`
   max-width: 1290px;
-  height: 200px;
+  height: 150px;
   width: 100%;
+
   ${({ theme }) => theme.media.tablet} {
     display: none;
   }
@@ -241,16 +246,17 @@ const InfoBox = styled.div`
     display: none;
   }
   background-color: #f9f9f9;
-  border: 1px solid #808080;
-  margin-bottom: 28px;
+  border: 1px solid ${({ theme }) => theme.colors.gray100};
+  margin-bottom: 10px;
   display: flex;
   justify-content: flex-start;
+  border-radius: 10px;
 `;
 
 const LeftDiv = styled.div`
   width: 25%;
   height: 100%;
-  border-right: 1px solid #000000;
+  border-right: 1px solid ${({ theme }) => theme.colors.gray100};
   display: flex;
   flex-direction: column;
   justify-content: center;
