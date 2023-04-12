@@ -1,12 +1,9 @@
 import axios from 'axios';
 
-export const getCategories = async (token: string) => {
+export const getCategories = async () => {
   const { data } = await axios({
     method: 'get',
-    url: '/api/category',
-    headers: {
-      'X-AUTH-TOKEN': token,
-    },
+    url: '/post/tag',
   });
   return data.data;
 };

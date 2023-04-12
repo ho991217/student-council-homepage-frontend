@@ -11,10 +11,22 @@ import { NewsProps } from 'pages/council/news/NewsProps';
 import PageControl from 'pages/council/news/components/PageControl';
 import NewsBoard from 'pages/council/news/components/NewsBoard';
 import MobileNewsBoard from 'pages/council/news/components/mobile/NewsBoard';
+import SideNav from 'components/nav/SideNav';
 
 const Container = styled.div`
   background-color: ${(props) => props.theme.colors.white};
+  display: flex;
+  justify-content: center;
+  gap: 30px;
 `;
+
+const Contents = styled.div`
+  width: 100%;
+  ${({ theme }) => theme.media.desktop} {
+    width: calc(100% - 310px);
+  }
+  max-width: 1300px;
+`
 
 const TopContainer = styled.div`
   width: 100%;
@@ -23,6 +35,7 @@ const TopContainer = styled.div`
   justify-content: center;
   padding-top: 30px;
 `;
+
 
 const Wrapper = styled.div`
   max-width: 1190px;
@@ -186,7 +199,7 @@ function News() {
 
   const onSearchButtonHandler = async () => {
     await axios
-      .get(`/api/news?sort=createDate,desc&query=${searchWord}`)
+      .get(`/post/news?&query=${searchWord}`)
       .then(function (response) {
         const result = response.data;
         setBoard(result.content.slice((page - 1) * 6, page * 6));
@@ -211,8 +224,9 @@ function News() {
     if (!page) page = '1';
     const { data } = await axios({
       method: 'get',
-      url: `/api/news?page=${Number(page) - 1}&size=6&sort=createDate,desc`,
+      url: `/post/news?sort=createdAt,desc&page=${Number(page) - 1}&size=6`,
     });
+    // console.log(data);
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);
     setPagingInfo(data);
@@ -228,171 +242,174 @@ function News() {
 
   return (
     <Container>
-      <Desktop>
-        <TopContainer>
-          <Wrapper>
-            <PageInfo>
-              <Svg
-                width="12"
-                height="16"
-                viewBox="0 0 12 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M1.5 0C1.10218 0 0.720644 0.158035 0.43934 0.43934C0.158035 0.720644 0 1.10218 0 1.5V14.5C0 14.8978 0.158035 15.2794 0.43934 15.5607C0.720644 15.842 1.10218 16 1.5 16H10.5C10.8978 16 11.2794 15.842 11.5607 15.5607C11.842 15.2794 12 14.8978 12 14.5V1.5C12 1.10218 11.842 0.720644 11.5607 0.43934C11.2794 0.158035 10.8978 0 10.5 0H1.5ZM8.59 4.992L8.5 5H3.5C3.37505 5.00023 3.25455 4.95367 3.16222 4.86949C3.06988 4.78531 3.01241 4.66961 3.00112 4.54518C2.98984 4.42074 3.02554 4.29659 3.10122 4.19717C3.1769 4.09775 3.28705 4.03026 3.41 4.008L3.5 4H8.5C8.62495 3.99977 8.74545 4.04633 8.83778 4.13051C8.93012 4.21469 8.98759 4.33039 8.99888 4.45482C9.01017 4.57926 8.97446 4.70341 8.89878 4.80283C8.8231 4.90225 8.71295 4.96974 8.59 4.992ZM8.59 8.492L8.5 8.5H3.5C3.37505 8.50023 3.25455 8.45367 3.16222 8.36949C3.06988 8.28531 3.01241 8.16961 3.00112 8.04518C2.98984 7.92074 3.02554 7.79659 3.10122 7.69717C3.1769 7.59775 3.28705 7.53026 3.41 7.508L3.5 7.5H8.5C8.62495 7.49977 8.74545 7.54633 8.83778 7.63051C8.93012 7.71469 8.98759 7.83039 8.99888 7.95482C9.01017 8.07926 8.97446 8.20341 8.89878 8.30283C8.8231 8.40225 8.71295 8.46974 8.59 8.492ZM8.59 11.992L8.5 12H3.5C3.37505 12.0002 3.25455 11.9537 3.16222 11.8695C3.06988 11.7853 3.01241 11.6696 3.00112 11.5452C2.98984 11.4207 3.02554 11.2966 3.10122 11.1972C3.1769 11.0977 3.28705 11.0303 3.41 11.008L3.5 11H8.5C8.62495 10.9998 8.74545 11.0463 8.83778 11.1305C8.93012 11.2147 8.98759 11.3304 8.99888 11.4548C9.01017 11.5793 8.97446 11.7034 8.89878 11.8028C8.8231 11.9023 8.71295 11.9697 8.59 11.992Z"
-                  fill="#79C0D5"
+      <SideNav />
+      <Contents>
+        <Desktop>   
+          <TopContainer>
+            <Wrapper>
+              <PageInfo>
+                <Svg
+                  width="12"
+                  height="16"
+                  viewBox="0 0 12 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1.5 0C1.10218 0 0.720644 0.158035 0.43934 0.43934C0.158035 0.720644 0 1.10218 0 1.5V14.5C0 14.8978 0.158035 15.2794 0.43934 15.5607C0.720644 15.842 1.10218 16 1.5 16H10.5C10.8978 16 11.2794 15.842 11.5607 15.5607C11.842 15.2794 12 14.8978 12 14.5V1.5C12 1.10218 11.842 0.720644 11.5607 0.43934C11.2794 0.158035 10.8978 0 10.5 0H1.5ZM8.59 4.992L8.5 5H3.5C3.37505 5.00023 3.25455 4.95367 3.16222 4.86949C3.06988 4.78531 3.01241 4.66961 3.00112 4.54518C2.98984 4.42074 3.02554 4.29659 3.10122 4.19717C3.1769 4.09775 3.28705 4.03026 3.41 4.008L3.5 4H8.5C8.62495 3.99977 8.74545 4.04633 8.83778 4.13051C8.93012 4.21469 8.98759 4.33039 8.99888 4.45482C9.01017 4.57926 8.97446 4.70341 8.89878 4.80283C8.8231 4.90225 8.71295 4.96974 8.59 4.992ZM8.59 8.492L8.5 8.5H3.5C3.37505 8.50023 3.25455 8.45367 3.16222 8.36949C3.06988 8.28531 3.01241 8.16961 3.00112 8.04518C2.98984 7.92074 3.02554 7.79659 3.10122 7.69717C3.1769 7.59775 3.28705 7.53026 3.41 7.508L3.5 7.5H8.5C8.62495 7.49977 8.74545 7.54633 8.83778 7.63051C8.93012 7.71469 8.98759 7.83039 8.99888 7.95482C9.01017 8.07926 8.97446 8.20341 8.89878 8.30283C8.8231 8.40225 8.71295 8.46974 8.59 8.492ZM8.59 11.992L8.5 12H3.5C3.37505 12.0002 3.25455 11.9537 3.16222 11.8695C3.06988 11.7853 3.01241 11.6696 3.00112 11.5452C2.98984 11.4207 3.02554 11.2966 3.10122 11.1972C3.1769 11.0977 3.28705 11.0303 3.41 11.008L3.5 11H8.5C8.62495 10.9998 8.74545 11.0463 8.83778 11.1305C8.93012 11.2147 8.98759 11.3304 8.99888 11.4548C9.01017 11.5793 8.97446 11.7034 8.89878 11.8028C8.8231 11.9023 8.71295 11.9697 8.59 11.992Z"
+                    fill="#79C0D5"
+                  />
+                </Svg>
+                총 게시물 <PointText>{boardsCount}건</PointText>, 페이지{' '}
+                <PointText>{page}</PointText>/{' '}
+                {boardsCount < 1 ? 1 : Math.ceil(boardsCount / 6)}
+              </PageInfo>
+              <Search>
+                <Select>
+                  <option value="ALL">ALL</option>
+                </Select>
+                <ArrowSvg
+                  width="7"
+                  height="4"
+                  viewBox="0 0 7 4"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3.33366 4L0.446906 0.249999L6.22041 0.25L3.33366 4Z"
+                    fill="#C4C4C4"
+                  />
+                </ArrowSvg>
+                <Input
+                  type="text"
+                  value={searchWord}
+                  placeholder="검색어를 입력해 주세요."
+                  onChange={onSearchWordHandler}
+                  onKeyPress={handleKeyPress}
                 />
-              </Svg>
-              총 게시물 <PointText>{boardsCount}건</PointText>, 페이지{' '}
-              <PointText>{page}</PointText>/{' '}
-              {boardsCount < 1 ? 1 : Math.ceil(boardsCount / 6)}
-            </PageInfo>
-            <Search>
-              <Select>
-                <option value="ALL">ALL</option>
-              </Select>
-              <ArrowSvg
-                width="7"
-                height="4"
-                viewBox="0 0 7 4"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M3.33366 4L0.446906 0.249999L6.22041 0.25L3.33366 4Z"
-                  fill="#C4C4C4"
+                <Button type="button" onClick={onSearchButtonHandler}>
+                  검색
+                </Button>
+              </Search>
+            </Wrapper>
+          </TopContainer>
+        </Desktop>
+        <Tablet>
+          <TopContainer>
+            <Wrapper>
+              <PageInfo>
+                <Svg
+                  width="12"
+                  height="16"
+                  viewBox="0 0 12 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1.5 0C1.10218 0 0.720644 0.158035 0.43934 0.43934C0.158035 0.720644 0 1.10218 0 1.5V14.5C0 14.8978 0.158035 15.2794 0.43934 15.5607C0.720644 15.842 1.10218 16 1.5 16H10.5C10.8978 16 11.2794 15.842 11.5607 15.5607C11.842 15.2794 12 14.8978 12 14.5V1.5C12 1.10218 11.842 0.720644 11.5607 0.43934C11.2794 0.158035 10.8978 0 10.5 0H1.5ZM8.59 4.992L8.5 5H3.5C3.37505 5.00023 3.25455 4.95367 3.16222 4.86949C3.06988 4.78531 3.01241 4.66961 3.00112 4.54518C2.98984 4.42074 3.02554 4.29659 3.10122 4.19717C3.1769 4.09775 3.28705 4.03026 3.41 4.008L3.5 4H8.5C8.62495 3.99977 8.74545 4.04633 8.83778 4.13051C8.93012 4.21469 8.98759 4.33039 8.99888 4.45482C9.01017 4.57926 8.97446 4.70341 8.89878 4.80283C8.8231 4.90225 8.71295 4.96974 8.59 4.992ZM8.59 8.492L8.5 8.5H3.5C3.37505 8.50023 3.25455 8.45367 3.16222 8.36949C3.06988 8.28531 3.01241 8.16961 3.00112 8.04518C2.98984 7.92074 3.02554 7.79659 3.10122 7.69717C3.1769 7.59775 3.28705 7.53026 3.41 7.508L3.5 7.5H8.5C8.62495 7.49977 8.74545 7.54633 8.83778 7.63051C8.93012 7.71469 8.98759 7.83039 8.99888 7.95482C9.01017 8.07926 8.97446 8.20341 8.89878 8.30283C8.8231 8.40225 8.71295 8.46974 8.59 8.492ZM8.59 11.992L8.5 12H3.5C3.37505 12.0002 3.25455 11.9537 3.16222 11.8695C3.06988 11.7853 3.01241 11.6696 3.00112 11.5452C2.98984 11.4207 3.02554 11.2966 3.10122 11.1972C3.1769 11.0977 3.28705 11.0303 3.41 11.008L3.5 11H8.5C8.62495 10.9998 8.74545 11.0463 8.83778 11.1305C8.93012 11.2147 8.98759 11.3304 8.99888 11.4548C9.01017 11.5793 8.97446 11.7034 8.89878 11.8028C8.8231 11.9023 8.71295 11.9697 8.59 11.992Z"
+                    fill="#79C0D5"
+                  />
+                </Svg>
+                총 게시물 <PointText>{boardsCount}건</PointText>, 페이지{' '}
+                <PointText>{page}</PointText>/{' '}
+                {boardsCount < 1 ? 1 : Math.ceil(boardsCount / 6)}
+              </PageInfo>
+              <Search>
+                <Select>
+                  <option value="ALL">ALL</option>
+                </Select>
+                <ArrowSvg
+                  width="7"
+                  height="4"
+                  viewBox="0 0 7 4"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3.33366 4L0.446906 0.249999L6.22041 0.25L3.33366 4Z"
+                    fill="#C4C4C4"
+                  />
+                </ArrowSvg>
+                <Input
+                  type="text"
+                  value={searchWord}
+                  placeholder="검색어를 입력해 주세요."
+                  onChange={onSearchWordHandler}
+                  onKeyPress={handleKeyPress}
                 />
-              </ArrowSvg>
-              <Input
-                type="text"
-                value={searchWord}
-                placeholder="검색어를 입력해 주세요."
-                onChange={onSearchWordHandler}
-                onKeyPress={handleKeyPress}
-              />
-              <Button type="button" onClick={onSearchButtonHandler}>
-                검색
-              </Button>
-            </Search>
-          </Wrapper>
-        </TopContainer>
-      </Desktop>
-      <Tablet>
-        <TopContainer>
-          <Wrapper>
-            <PageInfo>
-              <Svg
-                width="12"
-                height="16"
-                viewBox="0 0 12 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M1.5 0C1.10218 0 0.720644 0.158035 0.43934 0.43934C0.158035 0.720644 0 1.10218 0 1.5V14.5C0 14.8978 0.158035 15.2794 0.43934 15.5607C0.720644 15.842 1.10218 16 1.5 16H10.5C10.8978 16 11.2794 15.842 11.5607 15.5607C11.842 15.2794 12 14.8978 12 14.5V1.5C12 1.10218 11.842 0.720644 11.5607 0.43934C11.2794 0.158035 10.8978 0 10.5 0H1.5ZM8.59 4.992L8.5 5H3.5C3.37505 5.00023 3.25455 4.95367 3.16222 4.86949C3.06988 4.78531 3.01241 4.66961 3.00112 4.54518C2.98984 4.42074 3.02554 4.29659 3.10122 4.19717C3.1769 4.09775 3.28705 4.03026 3.41 4.008L3.5 4H8.5C8.62495 3.99977 8.74545 4.04633 8.83778 4.13051C8.93012 4.21469 8.98759 4.33039 8.99888 4.45482C9.01017 4.57926 8.97446 4.70341 8.89878 4.80283C8.8231 4.90225 8.71295 4.96974 8.59 4.992ZM8.59 8.492L8.5 8.5H3.5C3.37505 8.50023 3.25455 8.45367 3.16222 8.36949C3.06988 8.28531 3.01241 8.16961 3.00112 8.04518C2.98984 7.92074 3.02554 7.79659 3.10122 7.69717C3.1769 7.59775 3.28705 7.53026 3.41 7.508L3.5 7.5H8.5C8.62495 7.49977 8.74545 7.54633 8.83778 7.63051C8.93012 7.71469 8.98759 7.83039 8.99888 7.95482C9.01017 8.07926 8.97446 8.20341 8.89878 8.30283C8.8231 8.40225 8.71295 8.46974 8.59 8.492ZM8.59 11.992L8.5 12H3.5C3.37505 12.0002 3.25455 11.9537 3.16222 11.8695C3.06988 11.7853 3.01241 11.6696 3.00112 11.5452C2.98984 11.4207 3.02554 11.2966 3.10122 11.1972C3.1769 11.0977 3.28705 11.0303 3.41 11.008L3.5 11H8.5C8.62495 10.9998 8.74545 11.0463 8.83778 11.1305C8.93012 11.2147 8.98759 11.3304 8.99888 11.4548C9.01017 11.5793 8.97446 11.7034 8.89878 11.8028C8.8231 11.9023 8.71295 11.9697 8.59 11.992Z"
-                  fill="#79C0D5"
+                <Button type="button" onClick={onSearchButtonHandler}>
+                  검색
+                </Button>
+              </Search>
+            </Wrapper>
+          </TopContainer>
+        </Tablet>
+        <Mobile>
+          <MobileContainer>
+            <MobileWrapper>
+              <MobileSearch>
+                <MobileSelect>
+                  <option value="ALL">ALL</option>
+                </MobileSelect>
+                <MobileArrowSvg
+                  width="7"
+                  height="4"
+                  viewBox="0 0 7 4"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3.33366 4L0.446906 0.249999L6.22041 0.25L3.33366 4Z"
+                    fill="#C4C4C4"
+                  />
+                </MobileArrowSvg>
+                <MobileInput
+                  type="text"
+                  value={searchWord}
+                  placeholder="검색어를 입력해 주세요."
+                  onChange={onSearchWordHandler}
+                  onKeyPress={handleKeyPress}
                 />
-              </Svg>
-              총 게시물 <PointText>{boardsCount}건</PointText>, 페이지{' '}
-              <PointText>{page}</PointText>/{' '}
-              {boardsCount < 1 ? 1 : Math.ceil(boardsCount / 6)}
-            </PageInfo>
-            <Search>
-              <Select>
-                <option value="ALL">ALL</option>
-              </Select>
-              <ArrowSvg
-                width="7"
-                height="4"
-                viewBox="0 0 7 4"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M3.33366 4L0.446906 0.249999L6.22041 0.25L3.33366 4Z"
-                  fill="#C4C4C4"
-                />
-              </ArrowSvg>
-              <Input
-                type="text"
-                value={searchWord}
-                placeholder="검색어를 입력해 주세요."
-                onChange={onSearchWordHandler}
-                onKeyPress={handleKeyPress}
-              />
-              <Button type="button" onClick={onSearchButtonHandler}>
-                검색
-              </Button>
-            </Search>
-          </Wrapper>
-        </TopContainer>
-      </Tablet>
-      <Mobile>
-        <MobileContainer>
-          <MobileWrapper>
-            <MobileSearch>
-              <MobileSelect>
-                <option value="ALL">ALL</option>
-              </MobileSelect>
-              <MobileArrowSvg
-                width="7"
-                height="4"
-                viewBox="0 0 7 4"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M3.33366 4L0.446906 0.249999L6.22041 0.25L3.33366 4Z"
-                  fill="#C4C4C4"
-                />
-              </MobileArrowSvg>
-              <MobileInput
-                type="text"
-                value={searchWord}
-                placeholder="검색어를 입력해 주세요."
-                onChange={onSearchWordHandler}
-                onKeyPress={handleKeyPress}
-              />
-              <Button type="button" onClick={onSearchButtonHandler}>
-                검색
-              </Button>
-            </MobileSearch>
-            <MobilePageInfo>
-              <Svg
-                width="12"
-                height="16"
-                viewBox="0 0 12 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M1.5 0C1.10218 0 0.720644 0.158035 0.43934 0.43934C0.158035 0.720644 0 1.10218 0 1.5V14.5C0 14.8978 0.158035 15.2794 0.43934 15.5607C0.720644 15.842 1.10218 16 1.5 16H10.5C10.8978 16 11.2794 15.842 11.5607 15.5607C11.842 15.2794 12 14.8978 12 14.5V1.5C12 1.10218 11.842 0.720644 11.5607 0.43934C11.2794 0.158035 10.8978 0 10.5 0H1.5ZM8.59 4.992L8.5 5H3.5C3.37505 5.00023 3.25455 4.95367 3.16222 4.86949C3.06988 4.78531 3.01241 4.66961 3.00112 4.54518C2.98984 4.42074 3.02554 4.29659 3.10122 4.19717C3.1769 4.09775 3.28705 4.03026 3.41 4.008L3.5 4H8.5C8.62495 3.99977 8.74545 4.04633 8.83778 4.13051C8.93012 4.21469 8.98759 4.33039 8.99888 4.45482C9.01017 4.57926 8.97446 4.70341 8.89878 4.80283C8.8231 4.90225 8.71295 4.96974 8.59 4.992ZM8.59 8.492L8.5 8.5H3.5C3.37505 8.50023 3.25455 8.45367 3.16222 8.36949C3.06988 8.28531 3.01241 8.16961 3.00112 8.04518C2.98984 7.92074 3.02554 7.79659 3.10122 7.69717C3.1769 7.59775 3.28705 7.53026 3.41 7.508L3.5 7.5H8.5C8.62495 7.49977 8.74545 7.54633 8.83778 7.63051C8.93012 7.71469 8.98759 7.83039 8.99888 7.95482C9.01017 8.07926 8.97446 8.20341 8.89878 8.30283C8.8231 8.40225 8.71295 8.46974 8.59 8.492ZM8.59 11.992L8.5 12H3.5C3.37505 12.0002 3.25455 11.9537 3.16222 11.8695C3.06988 11.7853 3.01241 11.6696 3.00112 11.5452C2.98984 11.4207 3.02554 11.2966 3.10122 11.1972C3.1769 11.0977 3.28705 11.0303 3.41 11.008L3.5 11H8.5C8.62495 10.9998 8.74545 11.0463 8.83778 11.1305C8.93012 11.2147 8.98759 11.3304 8.99888 11.4548C9.01017 11.5793 8.97446 11.7034 8.89878 11.8028C8.8231 11.9023 8.71295 11.9697 8.59 11.992Z"
-                  fill="#79C0D5"
-                />
-              </Svg>
-              총 게시물 <PointText>{boardsCount}건</PointText>, 페이지{' '}
-              <PointText>{page}</PointText>/ {Math.ceil(boardsCount / 6)}
-            </MobilePageInfo>
-          </MobileWrapper>
-        </MobileContainer>
-      </Mobile>
+                <Button type="button" onClick={onSearchButtonHandler}>
+                  검색
+                </Button>
+              </MobileSearch>
+              <MobilePageInfo>
+                <Svg
+                  width="12"
+                  height="16"
+                  viewBox="0 0 12 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M1.5 0C1.10218 0 0.720644 0.158035 0.43934 0.43934C0.158035 0.720644 0 1.10218 0 1.5V14.5C0 14.8978 0.158035 15.2794 0.43934 15.5607C0.720644 15.842 1.10218 16 1.5 16H10.5C10.8978 16 11.2794 15.842 11.5607 15.5607C11.842 15.2794 12 14.8978 12 14.5V1.5C12 1.10218 11.842 0.720644 11.5607 0.43934C11.2794 0.158035 10.8978 0 10.5 0H1.5ZM8.59 4.992L8.5 5H3.5C3.37505 5.00023 3.25455 4.95367 3.16222 4.86949C3.06988 4.78531 3.01241 4.66961 3.00112 4.54518C2.98984 4.42074 3.02554 4.29659 3.10122 4.19717C3.1769 4.09775 3.28705 4.03026 3.41 4.008L3.5 4H8.5C8.62495 3.99977 8.74545 4.04633 8.83778 4.13051C8.93012 4.21469 8.98759 4.33039 8.99888 4.45482C9.01017 4.57926 8.97446 4.70341 8.89878 4.80283C8.8231 4.90225 8.71295 4.96974 8.59 4.992ZM8.59 8.492L8.5 8.5H3.5C3.37505 8.50023 3.25455 8.45367 3.16222 8.36949C3.06988 8.28531 3.01241 8.16961 3.00112 8.04518C2.98984 7.92074 3.02554 7.79659 3.10122 7.69717C3.1769 7.59775 3.28705 7.53026 3.41 7.508L3.5 7.5H8.5C8.62495 7.49977 8.74545 7.54633 8.83778 7.63051C8.93012 7.71469 8.98759 7.83039 8.99888 7.95482C9.01017 8.07926 8.97446 8.20341 8.89878 8.30283C8.8231 8.40225 8.71295 8.46974 8.59 8.492ZM8.59 11.992L8.5 12H3.5C3.37505 12.0002 3.25455 11.9537 3.16222 11.8695C3.06988 11.7853 3.01241 11.6696 3.00112 11.5452C2.98984 11.4207 3.02554 11.2966 3.10122 11.1972C3.1769 11.0977 3.28705 11.0303 3.41 11.008L3.5 11H8.5C8.62495 10.9998 8.74545 11.0463 8.83778 11.1305C8.93012 11.2147 8.98759 11.3304 8.99888 11.4548C9.01017 11.5793 8.97446 11.7034 8.89878 11.8028C8.8231 11.9023 8.71295 11.9697 8.59 11.992Z"
+                    fill="#79C0D5"
+                  />
+                </Svg>
+                총 게시물 <PointText>{boardsCount}건</PointText>, 페이지{' '}
+                <PointText>{page}</PointText>/ {Math.ceil(boardsCount / 6)}
+              </MobilePageInfo>
+            </MobileWrapper>
+          </MobileContainer>
+        </Mobile>
 
-      <Desktop>
-        <NewsBoard posts={board} pagingInfo={pagingInfo} currentPage={page} />
-      </Desktop>
-      <Tablet>
-        <NewsBoard posts={board} pagingInfo={pagingInfo} currentPage={page} />
-      </Tablet>
-      <Mobile>
-        <MobileNewsBoard
-          posts={board}
-          pagingInfo={pagingInfo}
-          currentPage={page}
-        />
-      </Mobile>
+        <Desktop>
+          <NewsBoard posts={board} pagingInfo={pagingInfo} currentPage={page} />
+        </Desktop>
+        <Tablet>
+          <NewsBoard posts={board} pagingInfo={pagingInfo} currentPage={page} />
+        </Tablet>
+        <Mobile>
+          <MobileNewsBoard
+            posts={board}
+            pagingInfo={pagingInfo}
+            currentPage={page}
+          />
+        </Mobile>
 
-      <PageControl pagingInfo={pagingInfo} currentPage={page} />
+        <PageControl pagingInfo={pagingInfo} currentPage={page} />
+      </Contents>
     </Container>
   );
 }

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import Logo from 'components/Logo';
 import { Link } from 'react-router-dom';
+import FooterLogo from 'components/FooterLogo';
 
 const Wrapper = styled.footer`
   display: flex;
@@ -57,11 +57,11 @@ function Footer(): JSX.Element {
   return (
     <Wrapper>
       <Container>
-        <Logo />
+        <FooterLogo />
         <InnerContainer>
           <Span>
             {
-              ' 주소: 경기도 용인시 수지구 죽전동 1491 단국대학교 혜당관 406호 총학생회실 | 전화: 031)8005-2680~1 | 이메일: 54thplay@naver.com | 페이스북: @dkuplay54 | 인스타: @dku_play '
+              ' 주소: 경기도 용인시 수지구 죽전동 1491 단국대학교 혜당관 406호 총학생회실 | 전화: 031)8005-2680~1 | 이메일: dkudamda@gmail.com | 페이스북: 단국대학교 총학생회 | 인스타: @dku_damda '
             }
           </Span>
           <Policy>

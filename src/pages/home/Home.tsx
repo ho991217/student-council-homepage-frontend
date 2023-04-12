@@ -1,7 +1,7 @@
+import axios from 'axios';
 import Carousel from 'pages/home/components/carousel/Carousel';
 import { ImageProps } from 'pages/home/components/carousel/CarouselProps';
-import { getCarouselImages } from 'pages/home/components/carousel/getCarouselImages';
-import Tiles from 'pages/home/components/tiles/Tiles';
+import Tiles, { TilesProps } from 'pages/home/components/tiles/Tiles';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -13,20 +13,72 @@ const Wrapper = styled.div`
   justify-content: flex-start;
 `;
 
+export interface PetitonType {
+  d_day: number;
+  id: number;
+  petitionStatus: string;
+  title: string;
+}
+
+export interface RecentConferencesType {
+  id: number;
+  title: string;
+}
+
+export interface RecentNewsType {
+  id: number;
+  title: string;
+}
+
 function Home() {
   const [images, setImages] = useState<ImageProps[]>([]);
-  // 권장 해상도: 1920x530 (1440x530 영역 밖으로는 넘어가지 않는 것 권장)
+  const [petition, setPetition] = useState<PetitonType[]>([
+    {
+      d_day: 0,
+      id: 0,
+      petitionStatus: '',
+      title: '',
+    },
+  ]);
+  const [conference, setConference] = useState<RecentConferencesType[]>([
+    {
+      id: 0,
+      title: '',
+    },
+  ]);
+  const [news, setNews] = useState<RecentNewsType[]>([
+    {
+      id: 0,
+      title: '',
+    },
+  ]);
+
+  const getEveryInfo = async () => {
+    const { data } = await axios({
+      method: 'get',
+      url: '/main',
+    });
+
+    const { carousels, popularPetitions, recentConferences, recentNews } = data;
+
+    setImages(carousels);
+    setPetition(popularPetitions.slice(0, 4));
+    setConference(recentConferences.slice(0, 4));
+    setNews(recentNews.slice(0, 4));
+  };
 
   useEffect(() => {
-    getCarouselImages().then(({ data }) => {
-      setImages(data);
-    });
+    getEveryInfo();
   }, []);
 
   return (
     <Wrapper>
       <Carousel images={images} />
-      <Tiles />
+      <Tiles
+        popularPetitions={petition}
+        recentConferences={conference}
+        recentNews={news}
+      />
     </Wrapper>
   );
 }

@@ -1,8 +1,6 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
-import { ConferenceProps } from 'pages/home/components/tiles/TileProps';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { RecentConferencesType } from 'pages/home/Home';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -17,23 +15,11 @@ const P = styled.p`
   margin-bottom: 7px;
 `;
 
-// TODO: detail 내용 동적으로 바꾸기
-function Proceeding(): JSX.Element {
-  const [conference, setConference] = useState<ConferenceProps[]>([]);
-
-  useEffect(() => {
-    axios
-      .get('/api/main')
-      .then(function (response) {
-        const result = response.data.data;
-        setConference(result.recentConferences.slice(0, 4));
-      })
-      .catch(function (error) {
-        // 에러 핸들링
-        console.log(error);
-      });
-  }, []);
-
+function Proceeding({
+  conference,
+}: {
+  conference: RecentConferencesType[];
+}): JSX.Element {
   return (
     <Wrapper>
       {conference.map((conference) => (

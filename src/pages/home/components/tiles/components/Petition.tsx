@@ -1,8 +1,6 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
-import { PetitionProps } from 'pages/home/components/tiles/TileProps';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { PetitonType } from 'pages/home/Home';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -24,23 +22,7 @@ const Span = styled.span`
   font-weight: ${({ theme }) => theme.fonts.weight.medium};
 `;
 
-// TODO: detail 내용 동적으로 바꾸기
-function Petition(): JSX.Element {
-  const [petition, setPetition] = useState<PetitionProps[]>([]);
-
-  useEffect(() => {
-    axios
-      .get('/api/main')
-      .then(function (response) {
-        const result = response.data.data;
-        setPetition(result.popularPetitions.slice(0, 4));
-      })
-      .catch(function (error) {
-        // 에러 핸들링
-        console.log(error);
-      });
-  }, []);
-
+function Petition({ petition }: { petition: PetitonType[] }) {
   return (
     <Wrapper>
       {petition.map((petition) => (

@@ -5,22 +5,35 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { PagingProps } from 'components/PageControl';
 import qs from 'qs';
-
 import { RuleProps } from 'pages/rules/components/RuleProps';
-
 import PageControl from 'pages/rules/components/PageControl';
 import RulesBoard from 'pages/rules/components/RulesBoard';
 import MobileRulesBoard from 'pages/rules/components/mobile/RulesBoard';
 import GlobalBanner from 'components/banner/GlobalBanner';
+import SideNav from 'components/nav/SideNav';
+import { useLogin } from 'hooks/UseLogin';
+
 
 const Container = styled.div`
   background-color: ${(props) => props.theme.colors.white};
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 30px;
+`;
+
+const Contents = styled.div`
+  width: 100%;
+  ${({ theme }) => theme.media.desktop} {
+    width: calc(100% - 310px);
+  }
+  max-width: 1300px;
 `;
 
 const TopContainer = styled.div`
   width: 100%;
   display: flex;
-  align-items: center;
+  align-divs: center;
   justify-content: center;
   padding-top: 30px;
 `;
@@ -169,6 +182,7 @@ function Rules() {
   const [page, setPage] = useState(1);
   const [searchParams] = useSearchParams();
   const [searchWord, setSearchWord] = useState<string>('');
+  const { getAccessToken } = useLogin(); 
   const [pagingInfo, setPagingInfo] = useState<PagingProps>({
     first: true,
     hasNext: false,
@@ -179,6 +193,7 @@ function Rules() {
     totalPages: 1,
   });
 
+
   const onSearchWordHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
@@ -188,7 +203,7 @@ function Rules() {
 
   const onSearchButtonHandler = async () => {
     await axios
-      .get(`/api/rule?sort=createDate,desc&query=${searchWord}`)
+      .get(`/rule?sort=createDate,desc&query=${searchWord}`)
       .then((response) => {
         const result = response.data;
         setBoard(result.content.slice((page - 1) * 6, page * 6));
@@ -210,14 +225,24 @@ function Rules() {
   const getPosts = async () => {
     let { page } = qs.parse(searchParams.toString());
 
-    if (!page) page = '1';
-    const { data } = await axios({
-      method: 'get',
-      url: `/api/rule?page=${Number(page) - 1}&size=6&sort=createDate,desc`,
-    });
-    setBoardsCount(data.totalElements);
-    setBoard([...data.content]);
-    setPagingInfo(data);
+    if (!page) page = '0';
+    try {
+      const { data } = await axios({
+        method: 'get',
+        url: `/post/rule?bodySize=50&page=${page}&size=20`,
+        headers: {
+          'Content-Type': 'application/json',
+          // Authorization: `Bearer ${getAccessToken()}`,
+        }
+      })
+      // console.log(data)
+      setBoardsCount(data.totalElements);
+      setBoard([...data.content]);
+      setPagingInfo(data);  
+    } catch (error) {
+      console.log(error)
+    }
+
   };
 
   useEffect(() => {
@@ -228,11 +253,15 @@ function Rules() {
     }
   }, [searchParams, boardsCount]);
 
+  useEffect(() => {
+    getPosts()
+  },[])
+
   return (
     <Container>
-      <Desktop>
-        <>
-          <GlobalBanner title="회칙 및 세칙" detail="회칙 및 세칙 입니다." />
+      <SideNav />
+      <Contents>
+        <Desktop>
           <TopContainer>
             <Wrapper>
               <PageInfo>
@@ -281,11 +310,8 @@ function Rules() {
               </Search>
             </Wrapper>
           </TopContainer>
-        </>
-      </Desktop>
-      <Tablet>
-        <>
-          <GlobalBanner title="회칙 및 세칙" detail="회칙 및 세칙 입니다." />
+        </Desktop>
+        <Tablet>
           <TopContainer>
             <Wrapper>
               <PageInfo>
@@ -334,11 +360,8 @@ function Rules() {
               </Search>
             </Wrapper>
           </TopContainer>
-        </>
-      </Tablet>
-      <Mobile>
-        <>
-          <GlobalBanner title="회칙 및 세칙" detail="회칙 및 세칙 입니다." />
+        </Tablet>
+        <Mobile>
           <MobileContainer>
             <MobileWrapper>
               <MobileSearch>
@@ -386,24 +409,32 @@ function Rules() {
               </MobilePageInfo>
             </MobileWrapper>
           </MobileContainer>
-        </>
-      </Mobile>
+        </Mobile>
 
-      <Desktop>
-        <RulesBoard posts={board} pagingInfo={pagingInfo} currentPage={page} />
-      </Desktop>
-      <Tablet>
-        <RulesBoard posts={board} pagingInfo={pagingInfo} currentPage={page} />
-      </Tablet>
-      <Mobile>
-        <MobileRulesBoard
-          posts={board}
-          pagingInfo={pagingInfo}
-          currentPage={page}
-        />
-      </Mobile>
+        <Desktop>
+          <RulesBoard
+            posts={board}
+            pagingInfo={pagingInfo}
+            currentPage={page}
+          />
+        </Desktop>
+        <Tablet>
+          <RulesBoard
+            posts={board}
+            pagingInfo={pagingInfo}
+            currentPage={page}
+          />
+        </Tablet>
+        <Mobile>
+          <MobileRulesBoard
+            posts={board}
+            pagingInfo={pagingInfo}
+            currentPage={page}
+          />
+        </Mobile>
 
-      <PageControl pagingInfo={pagingInfo} currentPage={page} />
+        <PageControl pagingInfo={pagingInfo} currentPage={page} />
+      </Contents>
     </Container>
   );
 }

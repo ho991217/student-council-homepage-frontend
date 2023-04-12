@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useCookies } from 'react-cookie';
-
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
 import { RuleProps } from './RuleProps';
 import { PagingProps } from './PageControl';
 
 const Container = styled.div`
   width: 100%;
   display: flex;
-  align-divs: center;
+  align-items: center;
   justify-content: center;
 `;
 
@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   padding: 30px 50px;
   display: flex;
   flex-direction: column;
-  align-divs: center;
+  align-items: center;
   justify-content: center;
 `;
 
@@ -39,7 +39,7 @@ const Row = styled.div`
   width: 100%;
   height: 70px;
   display: grid;
-  grid-template-columns: 0.8fr 3fr 1.2fr 0.8fr 1fr 0.8fr;
+  grid-template-columns: 0.8fr 3fr 1.2fr 0.8fr 0.8fr;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
   text-align: center;
   div {
@@ -99,8 +99,7 @@ function RulesBoard({
   currentPage,
 }: BoardProps): JSX.Element {
   const [board, setBoard] = useState<RuleProps[]>([]);
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
+  const { admin } = useRecoilValue(userInfo);
 
   useEffect(() => {
     setBoard(posts);
@@ -114,7 +113,6 @@ function RulesBoard({
             <Row>
               <Title>번호</Title>
               <Title>제목</Title>
-              <Title>부서명</Title>
               <Title>조회수</Title>
               <Title>등록일</Title>
               <Title>첨부파일</Title>
@@ -123,19 +121,18 @@ function RulesBoard({
           {board.map((post, index) => (
             <Row key={post.id}>
               <Content>
-                {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                {index + pagingInfo.page  * pagingInfo.size}
               </Content>
               <Content>
-                <Link to={`/rule?id=${post.id}`}>{post.title}</Link>
+                <Link to={`/rules/detail?id=${post.id}`}>{post.title}</Link>
               </Content>
-              <Content>{post.userName}</Content>
-              <Content>{post.postHits}</Content>
-              <Content>{post.createDate}</Content>
+              <Content>{post.views}</Content>
+              <Content>{post.createdAt}</Content>
               <Content>
                 <a
                   target="_blank"
                   rel="noopener noreferrer"
-                  href={post?.fileList[0]?.url}
+                  href={post?.files[0]?.url}
                 >
                   <Svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -149,8 +146,8 @@ function RulesBoard({
               </Content>
             </Row>
           ))}
-          {isAdmin && (
-            <Link to="/rule/editor">
+          {admin && (
+            <Link to="/rules/editor">
               <Button type="button">작성</Button>
             </Link>
           )}

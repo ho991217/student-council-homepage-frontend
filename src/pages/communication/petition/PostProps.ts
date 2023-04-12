@@ -1,10 +1,11 @@
 export interface PostProps {
   id: number;
-  petitionStatus: string;
+  status: string;
   title: string;
   commentCount: number;
   blind: boolean;
   postHits: number;
+  agreeCount: number;
 }
 
 export interface Comment {

@@ -1,12 +1,13 @@
 import CouncilMap from 'pages/council-info/location/components/CouncilMap';
 import Block from 'components/Block';
 import styled from 'styled-components';
+import SideNav from 'components/nav/SideNav';
 
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
+  gap: 30px;
 `;
 
 const Container = styled.div``;
@@ -49,14 +50,15 @@ function Location() {
       key: 2,
     },
     { title: '전화', content: '031)8005-2680~1', key: 3 },
-    { title: '이메일', content: '54thplay@naver.com', key: 4 },
-    { title: '페이스북', content: '@dkuplay54', key: 5 },
-    { title: '인스타그램', content: '@dkuplay', key: 6 },
+    { title: '이메일', content: 'dkudamda@gmail.com', key: 4 },
+    { title: '인스타그램', content: '@dku_damda', key: 5 },
   ];
   return (
     <Wrapper>
+      <SideNav />
       <Block
         title="주소 / 연락처"
+        hasSideNav
         contents={
           <Container>
             <CouncilMap />

@@ -1,11 +1,14 @@
 import styled from 'styled-components';
 import axios from 'axios';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
+import { useLogin } from 'hooks/UseLogin';
+import { useLocation } from 'react-router-dom';
 import { FiDownload } from 'react-icons/fi';
 import { IoIosFolder } from 'react-icons/io';
 
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
 import { RuleProps, DetailProps } from '../RuleProps';
 
 const Wrapper = styled.div`
@@ -78,49 +81,6 @@ const DownloadIcon = styled.div`
   cursor: pointer;
 `;
 
-const NextList = styled.div`
-  width: 100%;
-`;
-
-const ListHead = styled.div`
-  width: 100%;
-  height: 70px;
-  border-top: 3px solid ${({ theme }) => theme.colors.gray900};
-  border-collapse: collapse;
-  font-weight: ${({ theme }) => theme.fonts.weight.bold};
-`;
-
-const Row = styled.div`
-  width: 100%;
-  height: 60px;
-  display: grid;
-  grid-template-columns: 0.8fr 5fr 1.2fr 1fr;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
-  text-align: center;
-  div {
-    display: flex;
-    place-content: center;
-    place-items: center;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
-  }
-`;
-
-const Title = styled.div`
-  border-right: 1px solid ${({ theme }) => theme.colors.gray100};
-  :last-child {
-    border-right: none;
-  }
-`;
-
-const Info = styled.div`
-  :nth-child(2) {
-    display: flex;
-    justify-content: left;
-    padding-left: 25px;
-    cursor: pointer;
-  }
-`;
-
 const Svg = styled.svg`
   width: 16px;
   height: 16px;
@@ -132,22 +92,30 @@ function Detail() {
   const [board, setBoard] = useState<RuleProps[]>([]);
   const [detail, setDetail] = useState<DetailProps>();
   const [nextList, setNextList] = useState<RuleProps[]>();
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
+  const { admin } = useRecoilValue(userInfo);
+  const { getAccessToken } = useLogin();
+
+  const getPost = async (id: number) => {
+    try {
+      const { data } = await axios({
+        method: 'get',
+        url: `/post/rule/${id}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      });
+      // console.log(data)
+      setDetail(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    axios
-      .get('/api/rule')
-      .then(function (response) {
-        const result = response.data;
-        setBoard(result.content);
-      })
-      .catch(function (error) {
-        // 에러 핸들링
-        console.log(error);
-      });
+    const ruleId = Number(searchParams.get('id'));
+    getPost(Number(ruleId));
   }, []);
-
   useEffect(() => {
     const detailId = Number(searchParams.get('id'));
 
@@ -158,30 +126,22 @@ function Detail() {
     }
   }, [searchParams, board]);
 
-  useEffect(() => {
-    axios
-      .get(`/api/rule/${searchParams.get('id')}`, {
-        headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-        },
-      })
-      .then(function (response) {
-        const result = response.data.data;
-        setDetail(result);
-      })
-      .catch(function (error) {
-        // 에러 핸들링
-        console.log(error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`/post/rule/${searchParams.get('id')}`)
+  //     .then(function (response) {
+  //       const result = response.data.data;
+  //       setDetail(result);
+  //     })
+  //     .catch(function (error) {
+  //       // 에러 핸들링
+  //       console.log(error);
+  //     });
+  // }, []);
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/api/rule/${id}`, {
-        headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-        },
-      })
+      .delete(`/rule/${id}`)
       .then(function (response) {
         window.location.replace('/rules');
       })
@@ -194,11 +154,11 @@ function Detail() {
   // 게시글 인덱스, 다음글 리스트 노출 추후에 수정
   return (
     <Wrapper>
-      <Head isAdmin={isAdmin}>
+      <Head isAdmin={admin}>
         <div>제목</div>
         <div>{detail?.title}</div>
-        <div>{detail?.createDate}</div>
-        {isAdmin && detail && (
+        <div>{detail?.createdAt}</div>
+        {admin && detail && (
           <div>
             <Svg
               width="20"
@@ -221,20 +181,20 @@ function Detail() {
         )}
       </Head>
       <ContentWrapper>
-        <Content>{detail?.text}</Content>
-        {detail?.fileList[0] && (
+        <Content>{detail?.body}</Content>
+        {detail?.files[0] && (
           <File>
             <FolderIcon>
               <IoIosFolder size="35" />
             </FolderIcon>
             <Data>
-              <Name>{detail?.fileList[0].originName}</Name>
+              <Name>{detail?.files[0].originalName}</Name>
             </Data>
             <DownloadIcon>
               <a
                 target="_blank"
                 rel="noopener noreferrer"
-                href={detail?.fileList[0].url}
+                href={detail?.files[0].url}
               >
                 <FiDownload size="15" color="76787A" />
               </a>

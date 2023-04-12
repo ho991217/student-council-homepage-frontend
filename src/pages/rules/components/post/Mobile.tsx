@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import axios from 'axios';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
 import { FiDownload } from 'react-icons/fi';
 import { IoIosFolder } from 'react-icons/io';
-
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
+import { useLogin } from 'hooks/UseLogin';
 import { RuleProps, DetailProps } from '../RuleProps';
 
 const Wrapper = styled.div`
@@ -67,35 +68,6 @@ const DownloadIcon = styled.div`
   cursor: pointer;
 `;
 
-const NextList = styled.div`
-  width: 100%;
-  border-top: 1px solid ${({ theme }) => theme.colors.gray100};
-`;
-
-const Row = styled.div`
-  width: 100%;
-  height: 60px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
-  :last-child {
-    border-bottom: none;
-  }
-  display: grid;
-  grid-template-columns: 0.5fr 2fr;
-`;
-
-const Id = styled.div`
-  margin: 16px auto;
-`;
-
-const Infos = styled.div`
-  margin: 10px 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-`;
-
-const Info = styled.div``;
-
 const Svg = styled.svg`
   margin: 16px auto;
   width: 13px;
@@ -108,56 +80,55 @@ function Detail() {
   const [board, setBoard] = useState<RuleProps[]>([]);
   const [detail, setDetail] = useState<DetailProps>();
   const [nextList, setNextList] = useState<RuleProps[]>();
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  const [isAdmin, setIsAdmin] = useState<boolean>(cookies.isAdmin === 'true');
+  const { admin } = useRecoilValue(userInfo);
+  const { getAccessToken } = useLogin();
 
-  useEffect(() => {
-    axios
-      .get('/api/rule')
-      .then(function (response) {
-        const result = response.data;
-        setBoard(result.content);
-      })
-      .catch(function (error) {
-        // 에러 핸들링
-        console.log(error);
-      });
-  }, []);
-
-  useEffect(() => {
-    const detailId = Number(searchParams.get('id'));
-
-    if (detailId === 1) {
-      setNextList(board.slice(detailId - 1, detailId + 2));
-    } else {
-      setNextList(board.slice(detailId - 2, detailId + 1));
-    }
-  }, [searchParams, board]);
-
-  useEffect(() => {
-    axios
-      .get(`/api/rule/${searchParams.get('id')}`, {
+  const getPost = async (id: number) => {
+    try {
+      const { data } = await axios({
+        method: 'get',
+        url: `/post/rule/${id}`,
         headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getAccessToken()}`,
         },
-      })
-      .then(function (response) {
-        const result = response.data.data;
-        setDetail(result);
-      })
-      .catch(function (error) {
-        // 에러 핸들링
-        console.log(error);
       });
+      // console.log(data)
+      setDetail(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    const ruleId = Number(searchParams.get('id'));
+    getPost(Number(ruleId));
   }, []);
+  // useEffect(() => {
+  //   const detailId = Number(searchParams.get('id'));
+
+  //   if (detailId === 1) {
+  //     setNextList(board.slice(detailId - 1, detailId + 2));
+  //   } else {
+  //     setNextList(board.slice(detailId - 2, detailId + 1));
+  //   }
+  // }, [searchParams, board]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`/rule/${searchParams.get('id')}`)
+  //     .then(function (response) {
+  //       const result = response.data.data;
+  //       setDetail(result);
+  //     })
+  //     .catch(function (error) {
+  //       // 에러 핸들링
+  //       console.log(error);
+  //     });
+  // }, []);
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/api/rule/${id}`, {
-        headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-        },
-      })
+      .delete(`/rule/${id}`)
       .then(function (response) {
         window.location.replace('/conference');
       })
@@ -170,12 +141,12 @@ function Detail() {
   // 다음글 리스트 노출 추후에 수정
   return (
     <Wrapper>
-      <Head isAdmin={isAdmin}>
+      <Head isAdmin={admin}>
         <HeadContent>
           <div>{detail?.title}</div>
-          <div>{detail?.createDate}</div>
+          <div>{detail?.createdAt}</div>
         </HeadContent>
-        {isAdmin && detail && (
+        {admin && detail && (
           <div>
             <Svg
               width="20"
@@ -202,31 +173,18 @@ function Detail() {
           <IoIosFolder size="30" />
         </FolderIcon>
         <Data>
-          <Name>{detail?.fileList[0].originName}</Name>
+          <Name>{detail?.files[0].originalName}</Name>
         </Data>
         <DownloadIcon>
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href={detail?.fileList[0].url}
+            href={detail?.files[0].url}
           >
             <FiDownload size="15" color="76787A" />
           </a>
         </DownloadIcon>
       </Content>
-      {/* <NextList>
-        {nextList?.map((post) => (
-          <Row key={post.id}>
-            <Id>{post?.id}</Id>
-            <Infos>
-              <Info>
-                <Link to={`/rule?id=${post.id}`}>{post?.title}</Link>
-              </Info>
-              <Info>{post?.createDate}</Info>
-            </Infos>
-          </Row>
-        ))}
-      </NextList> */}
     </Wrapper>
   );
 }

@@ -1,23 +1,28 @@
 export interface NewsProps {
   id: number;
   title: string;
-  userName: string;
-  postHits: number;
-  createDate: string;
-  fileList: FileProps[];
+  createdDate: string;
+  createdAt: string;
+  files: FileProps[];
+  views: number;
 }
 
 export interface DetailProps {
-  id: number;
-  title: string;
-  text: string;
-  createDate: string;
-  files: FileProps[];
-  postHits: number;
+  author : string;
+  body : string;
+  createdAt : string;
+  files : FileProps[];
+  id : number;
+  liked : boolean;
+  likes : number;
+  mine : boolean;
+  tag : [] ;
+  title : string ;
+  views : number;
 }
 
 export interface FileProps {
   id: number;
-  originName: string;
   url: string;
+  originalName: string;
 }

@@ -2,8 +2,9 @@ import { NavigationProps } from './NavigationProps';
 
 // TODO: 각 페이지 만들어지면 경로 수정v
 export const NavItems: NavigationProps[] = [
+
   {
-    title: '총학생회 정보',
+    title: '총학생회',
     path: '/',
     id: 1,
     subPath: [
@@ -13,14 +14,19 @@ export const NavItems: NavigationProps[] = [
         id: 1,
       },
       {
+        title: '공약',
+        path: '/pledge',
+        id: 2,
+      },
+      {
         title: '조직도',
         path: '/organization',
-        id: 2,
+        id: 3,
       },
       {
         title: '오시는길',
         path: '/location',
-        id: 3,
+        id: 4,
       },
     ],
   },
@@ -35,20 +41,20 @@ export const NavItems: NavigationProps[] = [
         id: 1,
       },
       {
-        title: '공약',
-        path: '/pledge',
+        title: '회칙',
+        path: '/rules',
         id: 2,
       },
     ],
   },
   {
-    title: '회칙',
-    path: '/rules',
+    title: '회의록',
+    path: '/conference',
     id: 3,
   },
   {
-    title: '회의록',
-    path: '/conference',
+    title: '대여물품',
+    path: '/rental/lists?page=1',
     id: 4,
   },
   {
@@ -66,10 +72,22 @@ export const NavItems: NavigationProps[] = [
         path: '/board-suggestion/boards?page=1',
         id: 2,
       },
+    ],
+  },
+  {
+    title: 'VOC',
+    path: '/',
+    id: 6,
+    subPath: [
       {
-        title: '소통 창구',
-        path: '/board-inquiry',
-        id: 3,
+        title: 'Q&A',
+        path: '/voc/qna/boards?page=1',
+        id: 1,
+      },
+      {
+        title: 'My Voice',
+        path: '/voc/my-voice/boards?page=1',
+        id: 2,
       },
     ],
   },

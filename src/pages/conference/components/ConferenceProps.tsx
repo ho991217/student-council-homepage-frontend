@@ -1,11 +1,12 @@
 export interface ConferenceProps {
   id: number;
-  round: number;
   title: string;
-  date: string;
-  createDate: string;
+  createdAt: string;
+  createdDate: string;
   files: FileProps[];
-  postHits: number;
+  views: number;
+  round: number;
+  date: string;
 }
 
 export interface FileProps {

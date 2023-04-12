@@ -2,10 +2,10 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
 import { FiDownload } from 'react-icons/fi';
 import { IoIosFolder } from 'react-icons/io';
-
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
 import { NewsProps, DetailProps, FileProps } from '../../NewsProps';
 
 const Wrapper = styled.div`
@@ -94,12 +94,11 @@ function Detail() {
   const [board, setBoard] = useState<NewsProps[]>([]);
   const [detail, setDetail] = useState<DetailProps>();
   const [, setNextList] = useState<NewsProps[]>();
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  const [isAdmin] = useState<boolean>(cookies.isAdmin === 'true');
+  const { admin } = useRecoilValue(userInfo);
 
   useEffect(() => {
     axios
-      .get('/api/news')
+      .get('/post/news')
       .then((response) => {
         const result = response.data;
         setBoard(result.content);
@@ -120,26 +119,24 @@ function Detail() {
     }
   }, [searchParams, board]);
 
-  useEffect(() => {
-    axios
-      .get(`/api/news/${searchParams.get('id')}`)
-      .then((response) => {
-        const result = response.data.data;
-        setDetail(result);
-      })
-      .catch((error) => {
-        // 에러 핸들링
-        console.log(error);
+  const getCurrentPost = async () => {
+    try {
+      const { data } = await axios({
+        method: 'get',
+        url: `/post/news/${searchParams.get('id')}`,
       });
+      setDetail(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getCurrentPost();
   }, []);
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/api/news/${id}`, {
-        headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-        },
-      })
+      .delete(`/post/news/${id}`)
       .then(() => {
         window.location.replace('/conference');
       })
@@ -152,12 +149,12 @@ function Detail() {
   // 다음글 리스트 노출 추후에 수정
   return (
     <Wrapper>
-      <Head isAdmin={isAdmin}>
+      <Head isAdmin={admin}>
         <HeadContent>
           <div>{detail?.title}</div>
-          <div>{detail?.createDate.slice(0, 10)}</div>
+          <div>{detail?.createdAt.slice(0, 10)}</div>
         </HeadContent>
-        {isAdmin && detail && (
+        {admin && detail && (
           <div>
             <Svg
               width="20"
@@ -180,11 +177,17 @@ function Detail() {
         )}
       </Head>
       <ContentWrapper>
-        <Content>{detail?.text}</Content>
+        <Content>{detail?.body}</Content>
         {detail?.files[0] && (
           <>
             {detail?.files
-              .filter((file) => file.url.endsWith('png' || 'jpg' || 'jpeg'))
+              .filter((file) => {
+                return (
+                  file.url.endsWith('png') ||
+                  file.url.endsWith('jpg') ||
+                  file.url.endsWith('jpeg')
+                );
+              })
               .map((img: FileProps, index: number) => (
                 <Image
                   key={img.id}
@@ -198,7 +201,7 @@ function Detail() {
                 <IoIosFolder size="30" />
               </FolderIcon>
               <Data>
-                <Name>{detail?.files[0].originName}</Name>
+                <Name>{detail?.files[0].originalName}</Name>
               </Data>
               <DownloadIcon>
                 <a

@@ -3,9 +3,9 @@ import { DefaultTheme } from 'styled-components';
 
 export const theme: DefaultTheme = {
   colors: {
-    primary: '#004898',
-    secondary: '#79C0D5',
-    accent: '#79C0D5',
+    primary: '#1D64AA',
+    secondary: '#004898',
+    accent: '#1D64AA',
     blur: '#F2F6F9',
     white: '#FFFFFF',
     gray020: '#F9F9F9',

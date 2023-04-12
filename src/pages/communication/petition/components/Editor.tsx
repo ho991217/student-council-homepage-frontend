@@ -1,136 +1,12 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import Modal from 'components/modal/Modal';
 import TextBoxS from 'components/editor/input/TextBoxS';
 import TextBoxL from 'components/editor/input/TextBoxL';
-import SelectBoxS from 'components/editor/input/SelectBoxS';
 import SubmitButtonM from 'components/editor/button/SubmitButtonM';
-import { getCategories } from '../functions/GetCategories';
-
-interface ErrorProps {
-  response: {
-    data: {
-      message: '1일 1회만 청원 등록이 가능합니다.';
-      successful: boolean;
-    };
-  };
-}
-
-function Editor(): JSX.Element {
-  const [categoryList, setCategoryList] = useState<string[]>(['category']);
-  const [category, setCategory] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [errorMsg, setErrorMsg] = useState<string>('');
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
-  const navigate = useNavigate();
-
-  const onCategoryHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setCategory(value);
-  };
-
-  const onTitleHandler = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setTitle(value);
-  };
-
-  const onSubmitHandler = async (e: FormEvent) => {
-    e.preventDefault();
-    if (category === '') {
-      setErrorMsg('카테고리를 선택해주세요.');
-      setIsOpen(true);
-      return;
-    }
-    if (title === '') {
-      setErrorMsg('제목을 입력해주세요.');
-      setIsOpen(true);
-      return;
-    }
-    if (content === '') {
-      setErrorMsg('내용을 입력해주세요.');
-      setIsOpen(true);
-      return;
-    }
-
-    const data = JSON.stringify({
-      category,
-      title,
-      text: content,
-    });
-
-    try {
-      const res = await axios({
-        method: 'post',
-        url: '/api/petition',
-        headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-          'Content-Type': 'application/json',
-        },
-        data,
-      });
-      navigate(`/board-petition/board?id=${res.data.data.id}`);
-    } catch (e) {
-      const err = e as ErrorProps;
-      if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
-        setErrorMsg(err.response.data.message);
-        setIsOpen(true);
-      }
-    }
-  };
-
-  useEffect(() => {
-    getCategories(cookies['X-AUTH-TOKEN']).then((res) => {
-      setCategoryList(res);
-    });
-  }, []);
-
-  return (
-    <Container>
-      <Wrapper>
-        <Form onSubmit={onSubmitHandler}>
-          <SelectBoxS
-            label="카테고리"
-            defaultMsg="카테고리를 선택해주세요."
-            value={category}
-            onChange={onCategoryHandler}
-            options={categoryList}
-          />
-          <TextBoxS
-            label="청원 제목"
-            value={title}
-            onChange={onTitleHandler}
-            placeholder="청원 제목을 입력해주세요."
-          />
-          <TextBoxL
-            label="청원 내용"
-            htmlStr={content}
-            setHtmlStr={setContent}
-          />
-          <SubmitButtonM text="작성 완료" />
-        </Form>
-        {isOpen && (
-          <Modal
-            title="청원 등록 실패"
-            contents={errorMsg}
-            onClose={() => {
-              setIsOpen(false);
-              setErrorMsg('');
-            }}
-          />
-        )}
-      </Wrapper>
-    </Container>
-  );
-}
+import FileBoxS from 'components/editor/input/FileBoxS';
+import { useErrorModal } from 'hooks/UseErrorModal';
 
 const Container = styled.div`
   width: 100%;
@@ -142,7 +18,6 @@ const Container = styled.div`
     margin: 0;
   }
 `;
-
 const Wrapper = styled.div`
   max-width: 1150px;
   width: 100%;
@@ -155,10 +30,208 @@ const Wrapper = styled.div`
     padding: 40px 20px 60px 20px;
   }
 `;
-
 const Form = styled.form`
   display: flex;
   flex-direction: column;
 `;
+const TagBoxLabel = styled.label`
+  display: flex;
+  flex-direction: column;
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
+  font-size: ${({ theme }) => theme.fonts.size.md};
+  user-select: none;
+  margin-bottom: 15px;
+`;
+const TagsContainer = styled.ul`
+  display: flex;
+  gap: 5px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  &::-webkit-scrollbar {
+    height: 8px; 
+  }
+  &::-webkit-scrollbar-thumb {
+    width: 1px;
+    border-radius: 10px;
+    background-color: ${({ theme }) => theme.colors.primary};
+  }
+  &::-webkit-scrollbar-track {
+    width: 1px;
+    background-color: ${({ theme }) => theme.colors.gray040};
+  }
+`;
+const TagLabel = styled.label.attrs({ className: 'tagLabel' })`
+  background-color: ${({ theme }) => theme.colors.gray020};
+  padding: 5px 10px;
+  border-radius: 3px;
+  white-space: nowrap;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    cursor: pointer;
+  }
+  &.selected {
+    background-color: ${({ theme }) => theme.colors.primary};
+    color: white;
+  }
+`;
+const TagInput = styled.input.attrs({type: 'checkBox',})`
+  display: none;
+`;
+interface ErrorProps {
+  response: {
+    data: {
+      message: '1일 1회만 청원 등록이 가능합니다.';
+      successful: boolean;
+    };
+  };
+}
+
+interface Tags {
+  id: number;
+  name: string;
+}
+
+function Editor() {
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [originalTags, setOriginalTags] = useState<Tags[]>([]);
+  const [tagResult, setTagResult] = useState<number[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
+  const { renderModal, setErrorMessage, open, setErrorTitle } = useErrorModal();
+  const navigate = useNavigate();
+  const formData = new FormData();
+
+  const onTitleHandler = (event: React.FormEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { value },
+    } = event;
+    setTitle(value);
+  };
+
+  const getTags = async () => {
+    try {
+      const { data } = await axios({
+        method: 'get',
+        url: `/post/tag`,
+      });
+      setOriginalTags(data);
+    } catch (e) {
+      const error = e as any;
+      setErrorMessage(error.response.data.message[0]);
+      open();
+    }
+  };
+
+  useEffect(() => {
+    getTags();
+  }, []);
+
+  const handlePost = async () => {
+    try {
+      const res = await axios({
+        method: 'post',
+        url: '/post/petition',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: formData,
+      });
+      navigate(`/board-petition/board?id=${res.data.id}`);
+    } catch (e) {
+      console.log(e);
+      const err = e as ErrorProps;
+      if (err.response.data.message === '1일 1회만 청원 등록이 가능합니다.') {
+        setErrorTitle('청원 등록 실패');
+        setErrorMessage(err.response.data.message);
+        open();
+      }
+    }
+  };
+
+  const onSubmitHandler = async (e: FormEvent) => {
+    e.preventDefault();
+    setErrorTitle('게시글 등록 실패');
+    if (title.length === 0) {
+      setErrorMessage('제목을 입력해주세요.');
+      open();
+      return;
+    }
+    if (content.length < 9) {
+      setErrorMessage('9자 이상의 내용을 입력해주세요.');
+      open();
+      return;
+    }
+
+    if (tagResult.length === 0) {
+      formData.append('title', title);
+      formData.append('body', content);
+      formData.delete('tagIds');
+      files.forEach((file) => formData.append('files', file));
+      handlePost();
+    } else {
+      formData.append('title', title);
+      formData.append('body', content);
+      formData.append('tagIds', JSON.stringify(tagResult).slice(1, -1));
+      files.forEach((file) => formData.append('files', file));
+      handlePost();
+    }
+  };
+
+  const selectTag = (tagId: number, event: { target: HTMLInputElement }) => {
+    const isSelected = event.target.parentElement?.classList.contains('selected')
+    if (!isSelected) {
+      setTagResult((prev) => [...prev, tagId]);
+      event.target.parentElement?.classList.add('selected');
+    } else {
+      setTagResult(tagResult.filter((item) => item !== tagId));
+      event.target.parentElement?.classList.remove('selected');
+    }
+  };
+
+  return (
+    <Container>
+      {renderModal()}
+      <Wrapper>
+        <Form onSubmit={onSubmitHandler}>
+          <TextBoxS
+            label="청원 제목"
+            value={title}
+            onChange={onTitleHandler}
+            placeholder="청원 제목을 입력해주세요."
+          />
+          <TextBoxL
+            label="청원 내용"
+            content={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
+          <FileBoxS setter={setFiles} multiple />
+          <TagBoxLabel>태그</TagBoxLabel>
+          <TagsContainer>
+            {originalTags.map((tag) => {
+              return (
+                <TagLabel key={tag.id} htmlFor={tag.name}>
+                  <TagInput
+                    id={tag.name}
+                    type="checkBox"
+                    name={tag.name}
+                    onChange={(event) => selectTag(tag.id, event)}
+                    checked={false}
+                  />
+                  #{tag.name}
+                </TagLabel>
+              );
+            })}
+          </TagsContainer>
+          <SubmitButtonM text="작성 완료" />
+        </Form>
+      </Wrapper>
+    </Container>
+  );
+}
 
 export default Editor;

@@ -31,11 +31,11 @@ const Container = styled.div`
   }
 `;
 
-const Hashtag = styled(Link)<{ cur: boolean }>`
-  background-color: ${({ cur, theme }) =>
-    cur ? theme.colors.accent : theme.colors.gray050};
-  color: ${({ cur, theme }) =>
-    cur ? theme.colors.white : theme.colors.gray700};
+const Hashtag = styled(Link)<{ $cur: boolean }>`
+  background-color: ${({ $cur, theme }) =>
+    $cur ? theme.colors.accent : theme.colors.gray050};
+  color: ${({ $cur, theme }) =>
+    $cur ? theme.colors.white : theme.colors.gray700};
   ${({ theme }) => theme.media.mobile} {
     min-width: 90px;
     min-height: 40px;
@@ -53,7 +53,6 @@ const Hashtag = styled(Link)<{ cur: boolean }>`
 function FilterControl() {
   const [categoryList, setCategoryList] = useState<[]>();
   const [params] = useSearchParams();
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
 
   const generateParams = (tag: string) => {
     if (tag === '전체') {
@@ -63,13 +62,12 @@ function FilterControl() {
   };
 
   useEffect(() => {
-    getCategories(cookies['X-AUTH-TOKEN']).then((res) => setCategoryList(res));
+    getCategories().then((res) => setCategoryList(res));
   }, []);
-
   return (
     <Container>
       <Hashtag
-        cur={!qs.parse(params.toString())?.filter}
+        $cur={!qs.parse(params.toString())?.filter}
         to={generateParams('전체')}
       >
         #전체
@@ -77,7 +75,7 @@ function FilterControl() {
       {categoryList?.map((tag) => (
         <Hashtag
           key={tag}
-          cur={tag === qs.parse(params.toString())?.filter}
+          $cur={tag === qs.parse(params.toString())?.filter}
           to={generateParams(tag)}
         >
           #{tag}

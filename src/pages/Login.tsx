@@ -1,14 +1,10 @@
-import { LoginStateAtom } from 'atoms/LoginState';
-import axios from 'axios';
-import GlobalBanner from 'components/banner/GlobalBanner';
 import CopyrightTerm from 'components/CopyrightTerm';
-import Modal from 'components/modal/Modal';
 import { Desktop } from 'hooks/MediaQueries';
+import { useLogin } from 'hooks/UseLogin';
 import { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
 import { Link, useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
+import { useErrorModal } from 'hooks/UseErrorModal';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -247,75 +243,33 @@ const SaveIdToggle = styled.div<{ saveId: boolean }>`
   transition: background-color 0.2s ease-in-out, left 0.2s ease-in-out; ;
 `;
 
-interface LoginErrorProps {
-  response: {
-    data: {
-      message: string;
-      successful: boolean;
-    };
-  };
-}
-
-function Login(): JSX.Element {
-  const [id, setId] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [password, setPassword] = useState<string>('');
-  const [idMessage, setIdMessage] = useState<string>('');
-  const [isValidId, setIsValidId] = useState<boolean>(false);
-  const [saveId, setSaveId] = useState<boolean>(false);
-  const [, setLoginState] = useRecoilState(LoginStateAtom);
-  const [, setCookie] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
+function Login() {
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+  const [idMessage, setIdMessage] = useState('');
+  const [isValidId, setIsValidId] = useState(false);
+  const [saveId, setSaveId] = useState(false);
+  const { setLogin } = useLogin();
   const navigate = useNavigate();
-  const [loginErrorState, setLoginErrorState] = useState({
-    error: false,
-    message: '',
-  });
+  const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
 
   const validateDankookEmail = (email: string) => {
     const regex = /^[0-9]{8}$/;
     return regex.test(email);
   };
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = JSON.stringify({ classId: id, password });
 
-    const config = {
-      method: 'post',
-      url: '/api/users/login',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data,
-    };
+    const { successful, message } = await setLogin(id, password);
 
-    axios(config)
-      .then((response) => {
-        const { accessToken, admin } = response.data.data;
-        setCookie('X-AUTH-TOKEN', accessToken);
-        setCookie('isAdmin', admin);
-        setLoginState({
-          isLoggedIn: true,
-          admin,
-        });
-        navigate('/');
-      })
-      .catch(({ response }: LoginErrorProps) => {
-        let message = '';
-
-        if (response.data.message === 'classId not found;') {
-          message = '가입되지 않은 학번입니다.';
-        } else if (response.data.message === 'Wrong pwd') {
-          message = '올바르지 않은 비밀번호 입니다.';
-        } else {
-          message = 'UNKNOWN ERROR';
-        }
-        setLoginErrorState({
-          error: true,
-          message,
-        });
-        setIsOpen(true);
-      });
+    if (successful) {
+      navigate('/');
+    } else {
+      setErrorTitle('로그인 실패');
+      setErrorMessage(message);
+      open();
+    }
   };
 
   const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -350,22 +304,7 @@ function Login(): JSX.Element {
 
   return (
     <>
-      <GlobalBanner title="로그인" detail="로그인 화면입니다." />
-      {isOpen && (
-        <Modal
-          onClose={() => setIsOpen(false)}
-          title="로그인 실패!"
-          contents={loginErrorState.message}
-          accept={
-            loginErrorState.message === '가입되지 않은 학번입니다.'
-              ? '회원가입'
-              : ''
-          }
-          onAccept={() => {
-            navigate('/sign-up');
-          }}
-        />
-      )}
+      {renderModal()}
       <Wrapper>
         <Header>
           단국대학생 <HeaderPoint>로그인</HeaderPoint>
@@ -408,7 +347,7 @@ function Login(): JSX.Element {
               아이디 저장
             </SaveId>
             <Extras>
-              <SignUpButton to="/sign-up">회원가입</SignUpButton>
+              <SignUpButton to="/sign-up/agreements">회원가입</SignUpButton>
               <Vseparator />
               <FindPasswordButton to="/password">
                 비밀번호 찾기

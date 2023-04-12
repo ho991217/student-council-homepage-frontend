@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Desktop, Mobile, Tablet } from 'hooks/MediaQueries';
 import styled from 'styled-components';
-import { FiEye } from 'react-icons/fi';
+import { FiThumbsUp } from 'react-icons/fi';
 
 import { PagingProps } from 'components/PageControl';
 import TopBar from './top-bar/TopBar';
@@ -21,13 +21,13 @@ const Wrapper = styled.div`
   max-width: 1290px;
   width: 100%;
   ${({ theme }) => theme.media.desktop} {
-    padding: 30px 50px 10px 50px;
+    padding: 30px 50px 10px 20px;
   }
   ${({ theme }) => theme.media.tablet} {
-    padding: 30px 50px 10px 50px;
+    padding: 30px 50px 10px 20px;
   }
   ${({ theme }) => theme.media.mobile} {
-    padding: 30px 10px 20px 10px;
+    padding: 0px 10px 20px 10px;
   }
   display: flex;
   flex-direction: column;
@@ -53,11 +53,11 @@ const Row = styled.div`
   place-items: center;
   ${({ theme }) => theme.media.desktop} {
     padding: 0px 50px;
-    grid-template-columns: 1fr 2fr 6fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 6fr 1fr 1fr;
   }
   ${({ theme }) => theme.media.tablet} {
     padding: 0px 50px;
-    grid-template-columns: 1fr 2fr 6fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 6fr 1fr 1fr;
   }
   ${({ theme }) => theme.media.mobile} {
     padding: 0px 5px;
@@ -77,7 +77,7 @@ const LinkDiv = styled.div`
   }
 `;
 
-const ViewIcon = styled.span`
+const Icon = styled.span`
   margin-right: 3px;
 `;
 
@@ -94,13 +94,14 @@ const PointText = styled.div`
 
 const BottomBar = styled.div`
   display: flex;
+  justify-content: flex-end;
 `;
 
 const PageInfo = styled.div`
   width: 100%;
   display: flex;
   align-items: flex-end;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 `;
 
 const Button = styled.button`
@@ -137,13 +138,16 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
         <BoardsContainer>
           <Desktop>
             <>
+            <PageInfo>
+              Total <PointText>{pagingInfo.totalElements}건,</PointText>
+              {currentPage}/
+              {Math.ceil(pagingInfo.totalElements / pagingInfo.size)}
+            </PageInfo>
               <TopBar />
               <BoardHead>
                 <Row>
-                  <div>번호</div>
-                  <div>분류</div>
+                  <div>닉네임</div>
                   <div>제목</div>
-                  <div>조회</div>
                   <div>댓글</div>
                   <div>좋아요</div>
                 </Row>
@@ -151,9 +155,9 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               {board.map((post, index) => (
                 <Row key={post.id}>
                   <div>
-                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                    {/* {index + 1 + (pagingInfo.page - 1) * pagingInfo.size} */}
+                    {post.author}
                   </div>
-                  <div>{post.category}</div>
                   <LinkDiv>
                     {post.status === '정지' ? (
                       <Link
@@ -169,12 +173,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                     )}
                   </LinkDiv>
                   <div>
-                    <ViewIcon>
-                      <FiEye />
-                    </ViewIcon>
-                    {post.postHits}
-                  </div>
-                  <div>
                     <Svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 48 48"
@@ -185,7 +183,12 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                     </Svg>
                     {post.commentCount}
                   </div>
-                  <div>{post.likeCount}</div>
+                  <div>
+                    <Icon>
+                      <FiThumbsUp />
+                    </Icon>
+                    {post.likes}
+                  </div>
                 </Row>
               ))}
             </>
@@ -195,19 +198,18 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               <TopBar />
               <BoardHead>
                 <Row>
-                  <div>번호</div>
-                  <div>분류</div>
+                  <div>닉네임</div>
                   <div>제목</div>
-                  <div>조회</div>
                   <div>댓글</div>
+                  <div>좋아요</div>
                 </Row>
               </BoardHead>
               {board.map((post, index) => (
                 <Row key={post.id}>
                   <div>
-                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                    {/* {index + 1 + (pagingInfo.page - 1) * pagingInfo.size} */}
+                    {post.author}
                   </div>
-                  <div>{post.category}</div>
                   <LinkDiv>
                     {post.status === '정지' ? (
                       <Link
@@ -223,12 +225,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                     )}
                   </LinkDiv>
                   <div>
-                    <ViewIcon>
-                      <FiEye />
-                    </ViewIcon>
-                    {post.postHits}
-                  </div>
-                  <div>
                     <Svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 48 48"
@@ -238,6 +234,12 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
                       <path d="M4 34V6.1Q4 5.4 4.65 4.7Q5.3 4 6 4H31.95Q32.7 4 33.35 4.675Q34 5.35 34 6.1V23.9Q34 24.6 33.35 25.3Q32.7 26 31.95 26H12ZM14.05 36Q13.35 36 12.675 35.3Q12 34.6 12 33.9V29H37V12H42Q42.7 12 43.35 12.7Q44 13.4 44 14.15V43.95L36.05 36ZM31 7H7V26.75L10.75 23H31ZM7 7V23V26.75Z" />
                     </Svg>
                     {post.commentCount}
+                  </div>
+                  <div>
+                    <Icon>
+                      <FiThumbsUp/>
+                    </Icon>
+                    {post.likes}
                   </div>
                 </Row>
               ))}
@@ -248,7 +250,7 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               <MobileTopBar />
               <BoardHead>
                 <Row>
-                  <div>번호</div>
+                  <div>닉네임</div>
                   <div>제목</div>
                   <div>댓글</div>
                 </Row>
@@ -256,7 +258,8 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
               {board.map((post, index) => (
                 <Row key={post.id}>
                   <div>
-                    {index + 1 + (pagingInfo.page - 1) * pagingInfo.size}
+                    {/* {index + 1 + (pagingInfo.page - 1) * pagingInfo.size} */}
+                    {post.author}
                   </div>
                   <LinkDiv>
                     {post.status === '정지' ? (
@@ -288,11 +291,6 @@ function Board({ posts, pagingInfo, currentPage }: BoardProps): JSX.Element {
             </>
           </Mobile>
           <BottomBar>
-            <PageInfo>
-              Total <PointText>{pagingInfo.totalElements}건,</PointText>
-              {currentPage}/
-              {Math.ceil(pagingInfo.totalElements / pagingInfo.size)}
-            </PageInfo>
             <Link to="/board-suggestion/editor">
               <Button type="button">작성</Button>
             </Link>

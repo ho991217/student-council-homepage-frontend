@@ -27,8 +27,10 @@ function Slide({
   redirectUrl,
 }: SlideProps): JSX.Element {
   const handleClick = () => {
-    if (redirectUrl) {
-      window.location.href = `${redirectUrl}`;
+    if (redirectUrl && !redirectUrl.includes('http')) {
+      window.location.replace(`https://${redirectUrl}`);
+    } else if (redirectUrl) {
+      window.location.replace(redirectUrl);
     }
   };
   return (

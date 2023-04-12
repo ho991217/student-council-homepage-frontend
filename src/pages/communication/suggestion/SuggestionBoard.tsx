@@ -8,11 +8,22 @@ import { PostProps } from 'pages/communication/suggestion/PostProps';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
+import SideNav from 'components/nav/SideNav';
 
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  background-color: white;
+`
 const Container = styled.div`
   background-color: ${(props) => props.theme.colors.white};
+  width: 100%;
+  ${({ theme }) => theme.media.desktop} {
+    width: calc(100% - 310px);
+  }
+  max-width: 1200px;
 `;
-
 function PetitionBoard(): JSX.Element {
   const [board, setBoard] = useState<PostProps[]>([]);
   const [boardsCount, setBoardsCount] = useState<number>(0);
@@ -37,11 +48,10 @@ function PetitionBoard(): JSX.Element {
 
     const { data } = await axios({
       method: 'get',
-      url: `/api/suggestion?page=${Number(page) - 1}&size=6&sort=id,desc`
+      url: `/post/general-forum?page=${Number(page) - 1}&size=6&sort=id,desc`
         .concat(filter ? `&category=${filter}` : '')
         .concat(query ? `&query=${query}` : ''),
     });
-
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);
     setPagingInfo(data);
@@ -53,11 +63,14 @@ function PetitionBoard(): JSX.Element {
   }, [searchParams, boardsCount]);
 
   return (
-    <Container>
-      <FilterControl />
-      <Board posts={board} pagingInfo={pagingInfo} currentPage={page} />
-      <PageControl pagingInfo={pagingInfo} currentPage={page} />
-    </Container>
+    <Wrapper>
+      <SideNav />
+      <Container>
+        <FilterControl />
+        <Board posts={board} pagingInfo={pagingInfo} currentPage={page} />
+        <PageControl pagingInfo={pagingInfo} currentPage={page} />
+      </Container>
+    </Wrapper>
   );
 }
 

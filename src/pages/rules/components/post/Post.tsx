@@ -11,7 +11,7 @@ const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.gray040};
 `;
 
-function Post() {
+function RulePost() {
   return (
     <Container>
       <Desktop>
@@ -27,4 +27,4 @@ function Post() {
   )
 }
 
-export default Post;
+export default RulePost;

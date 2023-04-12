@@ -2,21 +2,36 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
 import { FiDownload } from 'react-icons/fi';
 import { IoIosFolder } from 'react-icons/io';
-
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
+import { useErrorModal } from 'hooks/UseErrorModal';
+import { useLogin } from 'hooks/UseLogin';
 import { NewsProps, DetailProps, FileProps } from '../../NewsProps';
+
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  ${({ theme }) => theme.media.desktop} {
+    padding-left: 50px;
+  }
+`;
 
 const Wrapper = styled.div`
   max-width: 1280px;
   width: 100%;
-  margin: 40px 0px;
-  padding: 30px 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+  ${({ theme }) => theme.media.desktop} {
+    padding: 40px 50px;
+    margin: 40px 30px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    padding: 40px 50px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    padding: 40px 20px;
+  }
   background-color: ${({ theme }) => theme.colors.white};
 `;
 
@@ -99,19 +114,22 @@ function Detail() {
   const [board, setBoard] = useState<NewsProps[]>([]);
   const [detail, setDetail] = useState<DetailProps>();
   const [, setNextList] = useState<NewsProps[]>();
-  const [cookies] = useCookies(['X-AUTH-TOKEN', 'isAdmin']);
-  const [isAdmin] = useState<boolean>(cookies.isAdmin === 'true');
+  const { admin } = useRecoilValue(userInfo);
+  const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
+  const { getAccessToken } = useLogin();
 
   useEffect(() => {
     axios
-      .get('/api/news')
+      .get('/post/news')
       .then((response) => {
         const result = response.data;
         setBoard(result.content);
       })
       .catch((error) => {
         // 에러 핸들링
-        console.log(error);
+        setErrorTitle('게시글 불러오기 실패');
+        setErrorMessage(error.response.data.message[0]);
+        open();
       });
   }, []);
 
@@ -124,44 +142,49 @@ function Detail() {
       setNextList(board.slice(detailId - 2, detailId + 1));
     }
   }, [searchParams, board]);
-
-  useEffect(() => {
-    axios
-      .get(`/api/news/${searchParams.get('id')}`)
-      .then((response) => {
-        const result = response.data.data;
-        setDetail(result);
-      })
-      .catch((error) => {
-        // 에러 핸들링
-        console.log(error);
+  const getCurrentPost = async () => {
+    try {
+      const { data } = await axios({
+        method: 'get',
+        url: `/post/news/${searchParams.get('id')}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
       });
+      setDetail(data);
+    } catch (error) {
+      const e = error as any;
+      setErrorMessage(e.response.data.message[0]);
+      open();
+    }
+  };
+  useEffect(() => {
+    getCurrentPost();
   }, []);
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/api/news/${id}`, {
-        headers: {
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-        },
-      })
+      .delete(`/post/news/${id}`)
       .then(() => {
         window.location.replace('/council-news');
       })
       .catch((error) => {
         // 에러 핸들링
-        console.log(error);
+        setErrorMessage(error.response.data.message[0]);
+        open();
       });
   };
 
   // 게시글 인덱스, 다음글 리스트 노출 추후에 수정
   return (
     <Wrapper>
-      <Head isAdmin={isAdmin}>
+      {renderModal()}
+      <Head isAdmin={admin}>
         <div>제목</div>
         <div>{detail?.title}</div>
-        <div>{detail?.createDate.slice(0, 10)}</div>
-        {isAdmin && detail && (
+        <div>{detail?.createdAt.slice(0, 10)}</div>
+        {admin && detail && (
           <div>
             <Svg
               width="20"
@@ -184,18 +207,25 @@ function Detail() {
         )}
       </Head>
       <ContentWrapper>
-        <Content>{detail?.text}</Content>
+        <Content>{detail?.body}</Content>
         {detail?.files[0] && (
           <>
             <ImageContainer>
               {detail?.files
-                .filter((file) => file.url.endsWith('png' || 'jpg' || 'jpeg'))
+                .filter((file) => {
+                  return (
+                    file.url.endsWith('png') ||
+                    file.url.endsWith('jpg') ||
+                    file.url.endsWith('jpeg')
+                  );
+                })
                 .map((img: FileProps, index: number) => (
                   <Image
                     key={img.id}
                     role="presentation"
                     src={detail?.files[index].url}
                     alt={detail?.files[index].url}
+                    loading="lazy"
                   />
                 ))}
             </ImageContainer>
@@ -205,7 +235,7 @@ function Detail() {
                 <IoIosFolder size="35" />
               </FolderIcon>
               <Data>
-                <Name>{detail?.files[0].originName}</Name>
+                <Name>{detail?.files[0].originalName}</Name>
               </Data>
               <DownloadIcon>
                 <a

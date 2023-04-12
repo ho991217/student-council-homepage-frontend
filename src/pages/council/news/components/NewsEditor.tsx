@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
-import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { PropagateLoader } from 'react-spinners';
-import Modal from 'components/modal/Modal';
 import SubmitButtonM from 'components/editor/button/SubmitButtonM';
+import { useErrorModal } from 'hooks/UseErrorModal';
+import { useLogin } from 'hooks/UseLogin';
 
 const Container = styled.div`
   margin: 40px 0;
@@ -79,17 +78,12 @@ const Textarea = styled.textarea`
 function NewsEditor() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [errorMsg, setErrorMsg] = useState<string>('');
   const [form, setForm] = useState<FormData>();
   const [carouselForm, setCarouselForm] = useState<FormData>();
-  const [postState, setPostState] = useState({
-    sent: false,
-    success: false,
-  });
   const [carouselUpload, setCarouselUpload] = useState(false);
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
+  const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
   const navigate = useNavigate();
+  const { getAccessToken } = useLogin(); 
 
   const onContentHandler = (event: React.FormEvent<HTMLTextAreaElement>) => {
     const {
@@ -113,77 +107,72 @@ function NewsEditor() {
     const formData = new FormData();
     const form = new FormData();
     Array.from(e.target.files).forEach((f) => formData.append('files', f));
-    formData.append('text', content);
+    formData.append('body', content);
     formData.append('title', title);
 
     setForm(formData);
     setCarouselForm(form);
   };
 
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setErrorTitle('소식 등록 실패');
     if (title === '') {
-      setErrorMsg('소식명을 입력해주세요');
-      setIsOpen(true);
+      setErrorMessage('소식명을 입력해주세요');
+      open();
     } else if (content === '') {
-      setErrorMsg('소식 내용을 입력해주세요');
-      setIsOpen(true);
-    } else if (form === undefined) {
-      setErrorMsg('사진을 첨부해주세요');
-      setIsOpen(true);
-    } else {
-      setPostState((prev) => ({
-        ...prev,
-        sent: true,
-      }));
-      const config = {
-        method: 'post',
-        url: '/api/news',
-        data: form,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-        },
-      };
-
-      axios(config)
-        .then((response) => {
-          if (carouselUpload) {
-            const form = carouselForm;
-            form?.append('redirectUrl', `/news?id=${response.data.data.id}`);
-            axios({
-              method: 'post',
-              url: '/api/carousel',
-              data: form,
-              headers: {
-                'X-AUTH-TOKEN': cookies['X-AUTH-TOKEN'],
-                'Content-Type': 'multipart/form-data',
-              },
-            });
+      setErrorMessage('소식 내용을 입력해주세요');
+      open();
+    } 
+    // else if (form === undefined) {
+    //   setErrorMessage('사진을 첨부해주세요');
+    //   open();
+    // } 
+    else {
+      try {
+        const { data } = await axios({
+          method: 'post',
+          url: '/post/news',
+          data: form,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${getAccessToken()}`,
           }
-          setPostState((prev) => ({
-            ...prev,
-            success: response.data.successful,
-          }));
-          navigate('/council-news');
-        })
-        .catch((error) => {
-          setErrorMsg(error.response.data.message);
-          setIsOpen(true);
         });
-    }
+        // console.log(data)
+      }
+      catch(error) {
+        console.log(error)
+      }
+    };
+
+    //   axios(config)
+    //     .then((response) => {
+    //       if (carouselUpload) {
+    //         const form = carouselForm;
+    //         form?.append('redirectUrl', `post?id=${response.data.data.id}`);
+    //         axios({
+    //           method: 'post',
+    //           url: '/carousel',
+    //           data: form,
+    //           headers: {
+    //             'Content-Type': 'multipart/form-data',
+    //           },
+    //         });
+    //       }
+    //       navigate('/council-news');
+    //     })
+        // .catch((error) => {
+        //   console.log(error)
+        //   // setErrorMessage(error.response.data.message);
+        //   // open();
+        // });
+    // }
   };
 
   return (
     <>
-      {isOpen && (
-        <Modal
-          onClose={() => setIsOpen(false)}
-          title="소식 등록 실패"
-          contents={errorMsg}
-        />
-      )}
+      {renderModal()}
       <Container>
         <InnerContainer>
           <Wrapper>
@@ -207,14 +196,14 @@ function NewsEditor() {
               </Label>
               <Label htmlFor="file">
                 첨부파일
-                <form>
+                {/* <form> */}
                   <input
                     checked={carouselUpload}
                     onChange={() => setCarouselUpload((prev) => !prev)}
                     type="checkbox"
                   />
                   캐러셀 업로드
-                </form>
+                {/* </form> */}
                 <input
                   type="file"
                   multiple
@@ -222,7 +211,7 @@ function NewsEditor() {
                   style={{ marginTop: 10 }}
                 />
               </Label>
-              <SubmitButtonM text='작성 완료'/>
+              <SubmitButtonM text="작성 완료" />
             </Form>
           </Wrapper>
         </InnerContainer>
