@@ -234,8 +234,8 @@ function Rules() {
           'Content-Type': 'application/json',
           // Authorization: `Bearer ${getAccessToken()}`,
         }
-      });
-      console.log(data)
+      })
+      // console.log(data)
       setBoardsCount(data.totalElements);
       setBoard([...data.content]);
       setPagingInfo(data);  

@@ -45,6 +45,7 @@ import { useLogin } from 'hooks/UseLogin';
 import AuthRoute from 'AuthRoute';
 import Admin from 'pages/Admin';
 import RuleEditor from 'pages/rules/components/RuleEditor';
+import RulePost from 'pages/rules/components/post/Post';
 
 function Router() {
   const { isLogin, isAdmin } = useLogin();
@@ -129,6 +130,7 @@ function Router() {
         >
           <Route path="" element={<Rules />} />
           <Route path="editor" element={<RuleEditor />} />
+          <Route path="detail" element={<RulePost />} />
         </Route>
 
         <Route

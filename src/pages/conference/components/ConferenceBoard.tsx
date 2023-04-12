@@ -112,7 +112,7 @@ function ConferenceBoard({
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/conference/${id}`, {})
+      .delete(`/post/conference/${id}`, {})
       .then(() => {
         window.location.replace('/conference');
       })

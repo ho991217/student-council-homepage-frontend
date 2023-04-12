@@ -6,6 +6,7 @@ import { FiDownload } from 'react-icons/fi';
 import { IoIosFolder } from 'react-icons/io';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'atoms/UserInfo';
+import { useLogin } from 'hooks/UseLogin';
 import { RuleProps, DetailProps } from '../RuleProps';
 
 const Wrapper = styled.div`
@@ -80,42 +81,50 @@ function Detail() {
   const [detail, setDetail] = useState<DetailProps>();
   const [nextList, setNextList] = useState<RuleProps[]>();
   const { admin } = useRecoilValue(userInfo);
+  const { getAccessToken } = useLogin();
 
-  useEffect(() => {
-    axios
-      .get('/rule')
-      .then(function (response) {
-        const result = response.data;
-        setBoard(result.content);
-      })
-      .catch(function (error) {
-        // 에러 핸들링
-        console.log(error);
+  const getPost = async (id: number) => {
+    try {
+      const { data } = await axios({
+        method: 'get',
+        url: `/post/rule/${id}`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
       });
-  }, []);
-
-  useEffect(() => {
-    const detailId = Number(searchParams.get('id'));
-
-    if (detailId === 1) {
-      setNextList(board.slice(detailId - 1, detailId + 2));
-    } else {
-      setNextList(board.slice(detailId - 2, detailId + 1));
+      // console.log(data)
+      setDetail(data);
+    } catch (error) {
+      console.log(error);
     }
-  }, [searchParams, board]);
-
+  };
   useEffect(() => {
-    axios
-      .get(`/rule/${searchParams.get('id')}`)
-      .then(function (response) {
-        const result = response.data.data;
-        setDetail(result);
-      })
-      .catch(function (error) {
-        // 에러 핸들링
-        console.log(error);
-      });
+    const ruleId = Number(searchParams.get('id'));
+    getPost(Number(ruleId));
   }, []);
+  // useEffect(() => {
+  //   const detailId = Number(searchParams.get('id'));
+
+  //   if (detailId === 1) {
+  //     setNextList(board.slice(detailId - 1, detailId + 2));
+  //   } else {
+  //     setNextList(board.slice(detailId - 2, detailId + 1));
+  //   }
+  // }, [searchParams, board]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`/rule/${searchParams.get('id')}`)
+  //     .then(function (response) {
+  //       const result = response.data.data;
+  //       setDetail(result);
+  //     })
+  //     .catch(function (error) {
+  //       // 에러 핸들링
+  //       console.log(error);
+  //     });
+  // }, []);
 
   const handleDelete = (id: number) => {
     axios
@@ -135,7 +144,7 @@ function Detail() {
       <Head isAdmin={admin}>
         <HeadContent>
           <div>{detail?.title}</div>
-          <div>{detail?.createDate}</div>
+          <div>{detail?.createdAt}</div>
         </HeadContent>
         {admin && detail && (
           <div>
@@ -164,13 +173,13 @@ function Detail() {
           <IoIosFolder size="30" />
         </FolderIcon>
         <Data>
-          <Name>{detail?.fileList[0].originName}</Name>
+          <Name>{detail?.files[0].originalName}</Name>
         </Data>
         <DownloadIcon>
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href={detail?.fileList[0].url}
+            href={detail?.files[0].url}
           >
             <FiDownload size="15" color="76787A" />
           </a>

@@ -1,22 +1,34 @@
 export interface RuleProps {
-  id: number;
-  title: string;
-  userName: string;
-  postHits: number;
-  createDate: string;
-  fileList: FileProps[];
+  author : string;
+  blinded : boolean;
+  body : string;
+  commentCount : number;
+  createdAt : string;
+  department : string;
+  files : FileProps[];
+  id : number;
+  likes : number;
+  tag : [];
+  title : string;
+  views : number;
 }
 
 export interface DetailProps {
-  id: number;
-  title: string;
-  text: string;
-  createDate: string;
-  fileList: FileProps[];
-  postHits: number;
+  author : string;
+  blinded : boolean;
+  body : string;
+  createdAt : string;
+  files : FileProps[];
+  id : number;
+  liked : boolean;
+  likes : number;
+  mine : boolean;
+  tag : [];
+  title : string;
+  views : number;
 }
 
 export interface FileProps {
-  originName: string;
+  originalName: string;
   url: string;
 }
