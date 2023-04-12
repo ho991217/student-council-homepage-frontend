@@ -24,6 +24,7 @@ const Container = styled.div`
     width: calc(100% - 310px);
     margin: 40px 0;
   }
+  position: relative;
 `;
 
 const Select = styled.select`
@@ -39,11 +40,20 @@ const Select = styled.select`
 `;
 
 const ArrowSvg = styled.svg`
+  margin-top: 83px;
   margin-left: -18px;
   margin-right: 10px;
   align-self: center;
   width: 12px;
   height: 12px;
+
+  ${({ theme }) => theme.media.tablet} {
+    margin-top: 0;
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    margin-top: 0;
+  }
 `;
 
 const Input = styled.input`
@@ -58,6 +68,19 @@ const Input = styled.input`
 const Search = styled.div`
   display: flex;
   align-items: flex-end;
+  ${({ theme }) => theme.media.tablet} {
+    position: absolute;
+    bottom: 10px;
+    right: 50%;
+    transform: translateX(50%);
+  }
+
+  ${({ theme }) => theme.media.mobile} {
+    position: absolute;
+    bottom: 10px;
+    right: 50%;
+    transform: translateX(50%);
+  }
 `;
 const SearchButton = styled.button`
   all: unset;
@@ -73,22 +96,22 @@ const SearchButton = styled.button`
 const InfoBox = styled.div`
   display: flex;
   justify-content: space-between;
-  max-width: 1290px;
-  width: 100%;
+  max-width: 1200px;
   ${({ theme }) => theme.media.desktop} {
     padding: 20px 50px 20px 50px;
+    margin-bottom: 28px;
   }
   ${({ theme }) => theme.media.tablet} {
     padding: 10px 50px 10px 50px;
+    margin: 20px 50px;
   }
   ${({ theme }) => theme.media.mobile} {
     padding: 10px 10px 20px 10px;
-    flex-direction: column;
+    margin: 10px 10px;
   }
   background-color: #f9f9f9;
   padding: 0 58px;
   border-radius: 10px;
-  margin-bottom: 28px;
 `;
 
 const PHead = styled.div`
@@ -129,7 +152,7 @@ function QnA() {
     if (!page) page = '1';
     const { data } = await axios({
       method: 'get',
-      url: `/post/voc?page=${Number(page) - 1}`,
+      url: `/post/voc?sort=createdAt,desc&page=${Number(page) - 1}&size=6`,
     });
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);
