@@ -135,7 +135,7 @@ function NewsBoard({
             </Row>
           ))}
           {admin && (
-            <Link to="/news/editor">
+            <Link to="/council-news/editor">
               <Button type="button">작성</Button>
             </Link>
           )}

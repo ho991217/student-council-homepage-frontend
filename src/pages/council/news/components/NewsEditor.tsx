@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import SubmitButtonM from 'components/editor/button/SubmitButtonM';
 import { useErrorModal } from 'hooks/UseErrorModal';
+import { useLogin } from 'hooks/UseLogin';
 
 const Container = styled.div`
   margin: 40px 0;
@@ -82,6 +83,7 @@ function NewsEditor() {
   const [carouselUpload, setCarouselUpload] = useState(false);
   const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
   const navigate = useNavigate();
+  const { getAccessToken } = useLogin(); 
 
   const onContentHandler = (event: React.FormEvent<HTMLTextAreaElement>) => {
     const {
@@ -105,14 +107,14 @@ function NewsEditor() {
     const formData = new FormData();
     const form = new FormData();
     Array.from(e.target.files).forEach((f) => formData.append('files', f));
-    formData.append('text', content);
+    formData.append('body', content);
     formData.append('title', title);
 
     setForm(formData);
     setCarouselForm(form);
   };
 
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorTitle('소식 등록 실패');
     if (title === '') {
@@ -121,40 +123,51 @@ function NewsEditor() {
     } else if (content === '') {
       setErrorMessage('소식 내용을 입력해주세요');
       open();
-    } else if (form === undefined) {
-      setErrorMessage('사진을 첨부해주세요');
-      open();
-    } else {
-      const config = {
-        method: 'post',
-        url: '/post/news',
-        data: form,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      };
-
-      axios(config)
-        .then((response) => {
-          if (carouselUpload) {
-            const form = carouselForm;
-            form?.append('redirectUrl', `post?id=${response.data.data.id}`);
-            axios({
-              method: 'post',
-              url: '/carousel',
-              data: form,
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            });
+    } 
+    // else if (form === undefined) {
+    //   setErrorMessage('사진을 첨부해주세요');
+    //   open();
+    // } 
+    else {
+      try {
+        const { data } = await axios({
+          method: 'post',
+          url: '/post/news',
+          data: form,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${getAccessToken()}`,
           }
-          navigate('/council-news');
-        })
-        .catch((error) => {
-          setErrorMessage(error.response.data.message);
-          open();
         });
-    }
+        // console.log(data)
+      }
+      catch(error) {
+        console.log(error)
+      }
+    };
+
+    //   axios(config)
+    //     .then((response) => {
+    //       if (carouselUpload) {
+    //         const form = carouselForm;
+    //         form?.append('redirectUrl', `post?id=${response.data.data.id}`);
+    //         axios({
+    //           method: 'post',
+    //           url: '/carousel',
+    //           data: form,
+    //           headers: {
+    //             'Content-Type': 'multipart/form-data',
+    //           },
+    //         });
+    //       }
+    //       navigate('/council-news');
+    //     })
+        // .catch((error) => {
+        //   console.log(error)
+        //   // setErrorMessage(error.response.data.message);
+        //   // open();
+        // });
+    // }
   };
 
   return (
@@ -183,14 +196,14 @@ function NewsEditor() {
               </Label>
               <Label htmlFor="file">
                 첨부파일
-                <form>
+                {/* <form> */}
                   <input
                     checked={carouselUpload}
                     onChange={() => setCarouselUpload((prev) => !prev)}
                     type="checkbox"
                   />
                   캐러셀 업로드
-                </form>
+                {/* </form> */}
                 <input
                   type="file"
                   multiple

@@ -226,7 +226,7 @@ function News() {
       method: 'get',
       url: `/post/news?sort=createdAt,desc&page=${Number(page) - 1}&size=6`,
     });
-    console.log(data);
+    // console.log(data);
     setBoardsCount(data.totalElements);
     setBoard([...data.content]);
     setPagingInfo(data);
