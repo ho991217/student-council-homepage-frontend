@@ -57,15 +57,17 @@ function RuleEditor() {
 
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrorTitle('회칙 등록 실패');
 
     if (title === '') {
+      setErrorTitle('회칙 등록 실패');
       setErrorMessage('제목을 입력해주세요');
       open();
     } else if (content === '') {
+      setErrorTitle('회칙 등록 실패');
       setErrorMessage('내용을 입력해주세요');
       open();
     } else if (form === undefined) {
+      setErrorTitle('회칙 등록 실패');
       setErrorMessage('파일을 첨부해주세요');
       open();
     } else {
