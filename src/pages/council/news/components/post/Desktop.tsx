@@ -7,17 +7,7 @@ import { IoIosFolder } from 'react-icons/io';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'atoms/UserInfo';
 import { useErrorModal } from 'hooks/UseErrorModal';
-import { useLogin } from 'hooks/UseLogin';
 import { NewsProps, DetailProps, FileProps } from '../../NewsProps';
-
-const Container = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  ${({ theme }) => theme.media.desktop} {
-    padding-left: 50px;
-  }
-`;
 
 const Wrapper = styled.div`
   max-width: 1280px;
@@ -111,46 +101,32 @@ const ImageContainer = styled.div`
 
 function Detail() {
   const [searchParams] = useSearchParams();
-  const [board, setBoard] = useState<NewsProps[]>([]);
+  const [board] = useState<NewsProps[]>([]);
   const [detail, setDetail] = useState<DetailProps>();
-  const [, setNextList] = useState<NewsProps[]>();
+  const [, setNextList] = useState<NewsProps[]>([]);
   const { admin } = useRecoilValue(userInfo);
-  const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
-  const { getAccessToken } = useLogin();
+  const { renderModal, setErrorMessage, open } = useErrorModal();
 
   useEffect(() => {
-    axios
-      .get('/post/news')
-      .then((response) => {
-        const result = response.data;
-        setBoard(result.content);
-      })
-      .catch((error) => {
-        // 에러 핸들링
-        setErrorTitle('게시글 불러오기 실패');
-        setErrorMessage(error.response.data.message[0]);
-        open();
-      });
+    getCurrentPost();
   }, []);
 
   useEffect(() => {
     const detailId = Number(searchParams.get('id'));
-
-    if (detailId === 1) {
-      setNextList(board.slice(detailId - 1, detailId + 2));
-    } else {
-      setNextList(board.slice(detailId - 2, detailId + 1));
+    if (board) {
+      if (detailId === 1) {
+        setNextList(board.slice(detailId - 1, detailId + 2));
+      } else {
+        setNextList(board.slice(detailId - 2, detailId + 1));
+      }
     }
   }, [searchParams, board]);
+
   const getCurrentPost = async () => {
     try {
       const { data } = await axios({
         method: 'get',
         url: `/post/news/${searchParams.get('id')}`,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
       });
       setDetail(data);
     } catch (error) {
