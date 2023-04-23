@@ -28,7 +28,7 @@ function QnADetail() {
     answer: '',
   });
   const [id, setId] = useState<number>(1);
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
+  const [cookies] = useCookies(['access-token']);
   const [isReplyed, setisReplyed] = useState<boolean>(true);
   const [adminAnswer, setAdminAnswer] = useState<string>();
   const user = useRecoilValue(userInfo);
@@ -41,7 +41,7 @@ function QnADetail() {
       method: 'get',
       url: `/post/voc/${Number(id)}`,
       headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+        Authorization: `Bearer ${cookies['access-token']}`,
       },
     });
     console.log(data);
