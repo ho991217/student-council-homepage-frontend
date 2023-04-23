@@ -11,7 +11,7 @@ import { useRecoilValue } from 'recoil';
 import { userInfo } from 'atoms/UserInfo';
 import PetitionChart from './PetitionChart';
 
-const TARGET_AGREEMENT = 150;
+const TARGET_AGREEMENT = 50;
 
 const Container = styled.div`
   display: flex;
