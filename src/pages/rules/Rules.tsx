@@ -229,7 +229,7 @@ function Rules() {
     try {
       const { data } = await axios({
         method: 'get',
-        url: `/post/rule?bodySize=50&page=${page}&size=20`,
+        url: `/post/rule?sort=createdAt,desc&bodySize=50&page=${page}&size=20`,
         headers: {
           'Content-Type': 'application/json',
           // Authorization: `Bearer ${getAccessToken()}`,
