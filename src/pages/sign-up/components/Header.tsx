@@ -49,6 +49,11 @@ const Li = styled.li<{ current: boolean }>`
   margin: 0 1rem;
   padding: 0.5rem 0;
   display: flex;
+  gap: 5px;
+  flex-direction: column;
+  ${({ theme }) => theme.media.desktop} {
+    flex-direction: row;
+  }
 `;
 
 const Badge = styled.div<{ current: boolean }>`

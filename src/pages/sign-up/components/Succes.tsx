@@ -39,6 +39,10 @@ const Button = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  ${({ theme }) => theme.media.mobile} {
+    width: 100px;
+  }
 `;
 
 const ButtonContainer = styled.div`
