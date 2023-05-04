@@ -121,7 +121,7 @@ function RulesBoard({
           {board.map((post, index) => (
             <Row key={post.id}>
               <Content>
-                {index + pagingInfo.page  * pagingInfo.size}
+                {index + pagingInfo.page  * pagingInfo.size + 1}
               </Content>
               <Content>
                 <Link to={`/rules/detail?id=${post.id}`}>{post.title}</Link>
