@@ -103,7 +103,7 @@ const Etc = styled.div`
 const Contents = styled.div`
   width: 100%;
   margin-top: 15px;
-  margin-bottom: 45px;
+  line-height: 1.4em;
   > a {
     color: ${({ theme }) => theme.colors.accent};
     text-decoration: underline;
@@ -113,6 +113,7 @@ const Contents = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
+  margin: 50px 0;
 `;
 
 const AgreeButton = styled.button`
