@@ -9,9 +9,19 @@ import Message from '../Message';
 const Container = styled.div`
   margin-top: 50px;
   margin-bottom: 100px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 `;
 
-const Form = styled.form``;
+const Form = styled.form`
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 15px;
+  ${({ theme }) => theme.media.desktop} {
+    width: 540px;
+  }
+`;
 
 const Seg = styled.section`
   margin-bottom: 30px;
@@ -20,7 +30,7 @@ const Seg = styled.section`
 const Input = styled.input`
   all: unset;
   box-sizing: border-box;
-  width: 540px;
+  width: 100%;
   height: 60px;
   margin: 5px 0;
   border-radius: 2px;

@@ -40,13 +40,23 @@ const Form = styled.form`
   flex-direction: column;
 `;
 
+const Label = styled.label`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 50px;
+  font-weight: ${({ theme }) => theme.fonts.weight.bold};
+  font-size: ${({ theme }) => theme.fonts.size.md};
+  user-select: none;
+`;
+
 function RuleEditor() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
-  const [form, setForm] = useState<FormData>();
   const [files, setFiles] = useState<File[]>([]);
+  const [form, setForm] = useState<FormData>();
   const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
   const navigate = useNavigate();
+  const formData = new FormData();
 
   const onTitleHandler = (event: React.FormEvent<HTMLInputElement>) => {
     const {
@@ -54,24 +64,41 @@ function RuleEditor() {
     } = event;
     setTitle(value);
   };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) {
+      return;
+    }
+    Array.from(e.target.files).forEach( f => {
+      console.log(formData.getAll('files'));
+      formData.append('files', f);
+    });
+    formData.append('body', content);
+    formData.append('title', title);
+    setForm(formData);
+  };
 
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrorTitle('회칙 등록 실패');
+    formData.append('body', content);
+    formData.append('title', title);
+    setForm(formData);
 
     if (title === '') {
+      setErrorTitle('회칙 등록 실패');
       setErrorMessage('제목을 입력해주세요');
       open();
     } else if (content === '') {
+      setErrorTitle('회칙 등록 실패');
       setErrorMessage('내용을 입력해주세요');
       open();
-    } else if (form === undefined) {
+    } else if (files === undefined) {
+      setErrorTitle('회칙 등록 실패');
       setErrorMessage('파일을 첨부해주세요');
       open();
     } else {
       const config = {
         method: 'post',
-        url: '/rule',
+        url: '/post/rule',
         data: form,
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -80,12 +107,8 @@ function RuleEditor() {
 
       axios(config)
         .then((response) => {
-          if (response.data.successful) {
-            navigate('/rules');
-          } else {
-            setErrorMessage(response.data.message);
-            open();
-          }
+          console.log(response);
+          navigate('/rules');
         })
         .catch((error) => {
           setErrorMessage(error.response.data.message);
@@ -112,7 +135,16 @@ function RuleEditor() {
                 content={content}
                 onChange={(e) => setContent(e.target.value)}
               />
-              <FileBoxS setter={setFiles} multiple />
+              {/* <FileBoxS setter={setFiles} multiple /> */}
+              <Label htmlFor="file">
+                첨부파일
+                <input
+                  type="file"
+                  multiple
+                  onChange={handleChange}
+                  style={{ marginTop: 10 }}
+                />
+              </Label>
               <SubmitButtonM text="작성 완료" />
             </Form>
           </Wrapper>

@@ -141,7 +141,7 @@ function Detail() {
 
   const handleDelete = (id: number) => {
     axios
-      .delete(`/rule/${id}`)
+      .delete(`/post/rule/${id}`)
       .then(function (response) {
         window.location.replace('/rules');
       })
@@ -182,25 +182,25 @@ function Detail() {
       </Head>
       <ContentWrapper>
         <Content>{detail?.body}</Content>
-        {detail?.files[0] && (
-          <File>
+        {detail?.files.map( item => { return (
+            <File key={item.originalName}>
             <FolderIcon>
               <IoIosFolder size="35" />
             </FolderIcon>
             <Data>
-              <Name>{detail?.files[0].originalName}</Name>
+              <Name>{item.originalName}</Name>
             </Data>
             <DownloadIcon>
               <a
                 target="_blank"
                 rel="noopener noreferrer"
-                href={detail?.files[0].url}
+                href={item.url}
               >
                 <FiDownload size="15" color="76787A" />
               </a>
             </DownloadIcon>
           </File>
-        )}
+          ) })}
       </ContentWrapper>
 
       {/* <NextList>

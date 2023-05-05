@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -83,7 +83,9 @@ function NewsEditor() {
   const [carouselUpload, setCarouselUpload] = useState(false);
   const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
   const navigate = useNavigate();
-  const { getAccessToken } = useLogin(); 
+  const { getAccessToken } = useLogin();
+  const formData = new FormData();
+  const carouselFormData = new FormData();
 
   const onContentHandler = (event: React.FormEvent<HTMLTextAreaElement>) => {
     const {
@@ -104,18 +106,25 @@ function NewsEditor() {
       return;
     }
 
-    const formData = new FormData();
-    const form = new FormData();
-    Array.from(e.target.files).forEach((f) => formData.append('files', f));
+    Array.from(e.target.files).forEach((f, index) => {
+      if (index === 0) {
+        carouselFormData.append('imageFile', f);
+        carouselFormData.append('redirectUrl', `redirect.com/redirectPath`);
+      }
+      console.log(formData.getAll('files'));
+      formData.append('files', f);
+    });
     formData.append('body', content);
     formData.append('title', title);
-
     setForm(formData);
-    setCarouselForm(form);
+    setCarouselForm(carouselFormData);
   };
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    formData.append('body', content);
+    formData.append('title', title);
+    setForm(formData);
     setErrorTitle('소식 등록 실패');
     if (title === '') {
       setErrorMessage('소식명을 입력해주세요');
@@ -123,12 +132,10 @@ function NewsEditor() {
     } else if (content === '') {
       setErrorMessage('소식 내용을 입력해주세요');
       open();
-    } 
-    // else if (form === undefined) {
-    //   setErrorMessage('사진을 첨부해주세요');
-    //   open();
-    // } 
-    else {
+    } else if (form === undefined) {
+      setErrorMessage('사진을 첨부해주세요');
+      open();
+    } else {
       try {
         const { data } = await axios({
           method: 'post',
@@ -137,39 +144,33 @@ function NewsEditor() {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${getAccessToken()}`,
-          }
+          },
         });
-        // console.log(data)
+        navigate('/council-news')
+      } catch (error) {
+        console.log(error);
       }
-      catch(error) {
-        console.log(error)
+    }
+    if (carouselUpload) {
+      try {
+        const { data } = await axios({
+          method: 'post',
+          url: '/main/carousel',
+          data: carouselForm,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${getAccessToken()}`,
+          },
+        });
+        navigate('/council-news');
+        console.log(data);
+      } catch (error: any) {
+        console.log(error);
+        setErrorMessage(error.response.data.message);
+        open();
       }
-    };
-
-    //   axios(config)
-    //     .then((response) => {
-    //       if (carouselUpload) {
-    //         const form = carouselForm;
-    //         form?.append('redirectUrl', `post?id=${response.data.data.id}`);
-    //         axios({
-    //           method: 'post',
-    //           url: '/carousel',
-    //           data: form,
-    //           headers: {
-    //             'Content-Type': 'multipart/form-data',
-    //           },
-    //         });
-    //       }
-    //       navigate('/council-news');
-    //     })
-        // .catch((error) => {
-        //   console.log(error)
-        //   // setErrorMessage(error.response.data.message);
-        //   // open();
-        // });
-    // }
+    }
   };
-
   return (
     <>
       {renderModal()}
@@ -194,25 +195,42 @@ function NewsEditor() {
                   onChange={onContentHandler}
                 />
               </Label>
-              <Label htmlFor="file">
+              {/* <Label htmlFor="file">
                 첨부파일
-                {/* <form> */}
-                  <input
-                    checked={carouselUpload}
-                    onChange={() => setCarouselUpload((prev) => !prev)}
-                    type="checkbox"
-                  />
-                  캐러셀 업로드
-                {/* </form> */}
+                <form>
+                <input
+                  checked={carouselUpload}
+                  onChange={() => setCarouselUpload((prev) => !prev)}
+                  type="checkbox"
+                />
+                캐러셀 업로드
+                </form>
                 <input
                   type="file"
                   multiple
                   onChange={handleChange}
                   style={{ marginTop: 10 }}
                 />
-              </Label>
+              </Label> */}
               <SubmitButtonM text="작성 완료" />
             </Form>
+            <Label htmlFor="file">
+              첨부파일
+              <form>
+                <input
+                  checked={carouselUpload}
+                  onChange={() => setCarouselUpload((prev) => !prev)}
+                  type="checkbox"
+                />
+                캐러셀 업로드
+              </form>
+              <input
+                type="file"
+                multiple
+                onChange={handleChange}
+                style={{ marginTop: 10 }}
+              />
+            </Label>
           </Wrapper>
         </InnerContainer>
       </Container>

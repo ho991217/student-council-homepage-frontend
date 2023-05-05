@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'atoms/UserInfo';
 import axios from 'axios';
 import qs from 'qs';
 import { PostProps } from './PostProps';
@@ -13,6 +15,7 @@ interface PostDetailProps {
   createdAt: string;
   body: string;
   status: string;
+  answer: string;
 }
 function QnADetail() {
   const [searchParams] = useSearchParams();
@@ -22,10 +25,14 @@ function QnADetail() {
     createdAt: '',
     body: '',
     status: '',
+    answer: '',
   });
   const [id, setId] = useState<number>(1);
-  const [cookies] = useCookies(['X-AUTH-TOKEN']);
+  const [cookies] = useCookies(['access-token']);
   const [isReplyed, setisReplyed] = useState<boolean>(true);
+  const [adminAnswer, setAdminAnswer] = useState<string>();
+  const user = useRecoilValue(userInfo);
+
   const getPost = async () => {
     let { id } = qs.parse(searchParams.toString());
     console.log(id);
@@ -34,11 +41,29 @@ function QnADetail() {
       method: 'get',
       url: `/post/voc/${Number(id)}`,
       headers: {
-        Authorization: `Bearer ${cookies['X-AUTH-TOKEN']}`,
+        Authorization: `Bearer ${cookies['access-token']}`,
       },
     });
     console.log(data);
     setPostDetail(data);
+  };
+
+  const handleAnswerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      await axios({
+        method: 'post',
+        url: `/post/voc/reply/${Number(id)}`,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data: { answer: adminAnswer },
+      }).then((res) => {
+        setAdminAnswer('');
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   useEffect(() => {
@@ -65,8 +90,18 @@ function QnADetail() {
           <>
             <Hr />
             <Header>총학생회 답변</Header>
-            <Text>{postDetail.body}</Text>
+            <Text>{postDetail.answer}</Text>
           </>
+        )}
+        {user.admin && (
+          <AnswerForm onSubmit={handleAnswerSubmit}>
+            <AnswerInput
+              placeholder="답변 내용을 입력해주세요"
+              value={adminAnswer}
+              onChange={(e) => setAdminAnswer(e.currentTarget.value)}
+            />
+            <AnswerSubmit value="답변하기" />
+          </AnswerForm>
         )}
       </Container>
     </Wrapper>
@@ -181,4 +216,48 @@ const Author = styled(Date)`
 const ReplyTitle = styled(Title)`
   padding-top: 40px;
   padding-bottom: 40px;
+`;
+
+const AnswerInput = styled.textarea`
+  all: unset;
+  flex-grow: 1;
+  height: 100%;
+  background-color: ${({ theme }) => theme.colors.gray100};
+  margin-right: 10px;
+  border-radius: 5px;
+  padding: 20px;
+  box-sizing: border-box;
+  color: ${({ theme }) => theme.colors.gray600};
+`;
+
+const AnswerSubmit = styled.input.attrs({ type: 'submit' })`
+  all: unset;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  width: 160px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  font-size: ${({ theme }) => theme.fonts.size.base};
+  font-weight: ${({ theme }) => theme.fonts.weight.medium};
+  cursor: pointer;
+`;
+
+const AnswerForm = styled.form`
+  width: 100%;
+  ${({ theme }) => theme.media.desktop} {
+    height: 200px;
+  }
+  ${({ theme }) => theme.media.tablet} {
+    height: 200px;
+  }
+  ${({ theme }) => theme.media.mobile} {
+    height: 120px;
+  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 50px;
 `;

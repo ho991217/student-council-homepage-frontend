@@ -11,8 +11,11 @@ const Container = styled.div`
   border-radius: 3px;
   border: 2px solid #e6e6e6;
   padding-top: 1.5rem;
-  width: 800px;
   margin-bottom: 1rem;
+  width: 95%;
+  ${({ theme }) => theme.media.desktop} {
+    width: 800px;
+  }
 `;
 
 const HeaderContainer = styled.div`

@@ -27,8 +27,12 @@ const Form = styled.form`
   align-items: center;
   justify-content: center;
   margin-top: 60px;
-  max-width: 540px;
   width: 100%;
+  max-width: 540px;
+  ${({ theme }) => theme.media.mobile} {
+    box-sizing: border-box;
+    padding: 0 15px;
+  }
 `;
 
 const Input = styled.input`
