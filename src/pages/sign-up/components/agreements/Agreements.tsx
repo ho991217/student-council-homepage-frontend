@@ -7,20 +7,25 @@ import TermBlock from './TermBlock';
 
 const Container = styled.div`
   width: 100%;
-  max-width: 1400px;
-  margin: 100px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: 30px 0;
+  ${({ theme }) => theme.media.desktop} {
+    margin: 100px 0;
+  }
 `;
 
 const TitleContainer = styled.div`
-  width: 800px;
+  width: 95%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  ${({ theme }) => theme.media.desktop} {
+    width: 800px;
+  }
 `;
 
 const Title = styled.h1`
@@ -41,7 +46,10 @@ const AgreeAll = styled.label`
 
 const NextBtn = styled.button`
   all: unset;
-  width: 350px;
+  width: 95%;
+  ${({ theme }) => theme.media.desktop} {
+    width: 350px;
+  }
   height: 40px;
   background-color: ${({ theme }) => theme.colors.secondary};
   display: flex;

@@ -146,7 +146,7 @@ function NewsEditor() {
             Authorization: `Bearer ${getAccessToken()}`,
           },
         });
-        console.log(data);
+        navigate('/council-news')
       } catch (error) {
         console.log(error);
       }
