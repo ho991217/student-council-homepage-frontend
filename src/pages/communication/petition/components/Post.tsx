@@ -348,7 +348,7 @@ export type fileType = {
 };
 
 export const generateHyperlink = (body: string) => {
-  const token = body.split(/['"\n\t\r ]/);
+  const token = body.split(' ');
 
   const result = [] as string[];
 
@@ -446,7 +446,10 @@ function Post() {
         url: `/post/petition/${postid}`,
       });
 
-      setPost({ ...data, body: generateHyperlink(data.body.replaceAll('\r\n','<br>')) });
+      setPost({
+        ...data,
+        body: generateHyperlink(data.body.replaceAll('\r\n', '<br>')),
+      });
       setLikeCount(data.likes);
     } catch {
       navigate(-1);
@@ -546,7 +549,13 @@ function Post() {
           </Etc>
           <HSeparator />
           <Contents>
-            {parse(post.body)}
+            {post.body.split('<br>').map((line) => {
+              return (
+                <>
+                  {parse(generateHyperlink(line))} <br />
+                </>
+              );
+            })}
             <ButtonContainer>
               <AgreeButton onClick={handleSubmit}>동의하기</AgreeButton>
             </ButtonContainer>

@@ -418,10 +418,12 @@ function Post() {
         <Hr bold />
 
         <Contents>
-          <Text>{post.body.split('<br>').map( line => {
-            return (<>
-            </> )
-          })}</Text>
+          <Text>
+            {post.body.split('<br>').map( line => {
+              return (
+                <>{parse(generateHyperlink(line))} <br/></> 
+              )})}
+          </Text>
           <div>
             {post?.files.map((file) => (
               <img
