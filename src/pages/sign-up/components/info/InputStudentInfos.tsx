@@ -40,6 +40,9 @@ const Input = styled.input`
   ::placeholder {
     color: ${({ theme }) => theme.colors.gray300};
   }
+  ${({ theme }) => theme.media.mobile} {
+    width: 90%;
+  }
 `;
 
 const Label = styled.label`
@@ -51,12 +54,15 @@ const Label = styled.label`
 `;
 
 const TelContainer = styled.div`
-  width: 540px;
+  width: 100%;
   height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 5px 0;
+  ${({ theme }) => theme.media.desktop} {
+    width: 540px;
+  }
 `;
 
 const TelButton = styled.button`
@@ -71,6 +77,9 @@ const TelButton = styled.button`
   text-align: center;
   :disabled {
     background-color: ${({ theme }) => theme.colors.gray200};
+  }
+  ${({ theme }) => theme.media.mobile} {
+    width: 100px;
   }
 `;
 
