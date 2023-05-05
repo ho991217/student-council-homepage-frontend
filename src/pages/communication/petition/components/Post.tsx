@@ -446,9 +446,8 @@ function Post() {
         url: `/post/petition/${postid}`,
       });
 
-      setPost({ ...data, body: generateHyperlink(data.body) });
+      setPost({ ...data, body: generateHyperlink(data.body.replaceAll('\r\n','<br>')) });
       setLikeCount(data.likes);
-      console.log(data);
     } catch {
       navigate(-1);
     }

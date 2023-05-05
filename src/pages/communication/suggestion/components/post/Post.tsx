@@ -295,9 +295,8 @@ function Post() {
       method: 'get',
     })
       .then(({ data }) => {
-        setPost({ ...data, body: generateHyperlink(data.body) });
+        setPost({ ...data, body: data.body.replaceAll('\r\n','<br>') });
         setLikeCount(data.likes);
-        console.log(data);
       })
       .catch((err) => {
         console.log(err);
@@ -419,7 +418,10 @@ function Post() {
         <Hr bold />
 
         <Contents>
-          <Text>{parse(post?.body ?? '')}</Text>
+          <Text>{post.body.split('<br>').map( line => {
+            return (<>
+            </> )
+          })}</Text>
           <div>
             {post?.files.map((file) => (
               <img
