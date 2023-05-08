@@ -356,9 +356,9 @@ export const generateHyperlink = (body: string) => {
   token.forEach((t) => {
     let newMarkup = t;
     if (t.startsWith('http') || t.startsWith('https')) {
-      newMarkup = `<a href='${t}'>${t}</a>`;
+      newMarkup = `<a href='${t}' target="_blank">${t}</a>`;
     } else if (t.startsWith('www')) {
-      newMarkup = `<a href='https://${t}'>${t}</a>`;
+      newMarkup = `<a href='https://${t}' target="_blank">${t}</a>`;
     }
     result.push(newMarkup);
   });
