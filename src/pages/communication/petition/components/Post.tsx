@@ -103,7 +103,7 @@ const Etc = styled.div`
 const Contents = styled.div`
   width: 100%;
   margin-top: 15px;
-  margin-bottom: 45px;
+  line-height: 1.4em;
   > a {
     color: ${({ theme }) => theme.colors.accent};
     text-decoration: underline;
@@ -113,6 +113,7 @@ const Contents = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
+  margin: 50px 0;
 `;
 
 const AgreeButton = styled.button`
@@ -348,16 +349,16 @@ export type fileType = {
 };
 
 export const generateHyperlink = (body: string) => {
-  const token = body.split(/['"\n\t\r ]/);
+  const token = body.split(' ');
 
   const result = [] as string[];
 
   token.forEach((t) => {
     let newMarkup = t;
     if (t.startsWith('http') || t.startsWith('https')) {
-      newMarkup = `<a href='${t}'>${t}</a>`;
+      newMarkup = `<a href='${t}' target="_blank">${t}</a>`;
     } else if (t.startsWith('www')) {
-      newMarkup = `<a href='https://${t}'>${t}</a>`;
+      newMarkup = `<a href='https://${t}' target="_blank">${t}</a>`;
     }
     result.push(newMarkup);
   });
@@ -446,9 +447,11 @@ function Post() {
         url: `/post/petition/${postid}`,
       });
 
-      setPost({ ...data, body: generateHyperlink(data.body) });
+      setPost({
+        ...data,
+        body: generateHyperlink(data.body.replaceAll('\r\n', '<br>')),
+      });
       setLikeCount(data.likes);
-      console.log(data);
     } catch {
       navigate(-1);
     }
@@ -547,7 +550,13 @@ function Post() {
           </Etc>
           <HSeparator />
           <Contents>
-            {parse(post.body)}
+            {post.body.split('<br>').map((line) => {
+              return (
+                <>
+                  {parse(generateHyperlink(line))} <br />
+                </>
+              );
+            })}
             <ButtonContainer>
               <AgreeButton onClick={handleSubmit}>동의하기</AgreeButton>
             </ButtonContainer>

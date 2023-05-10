@@ -7,6 +7,8 @@ import { IoIosFolder } from 'react-icons/io';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'atoms/UserInfo';
 import { useErrorModal } from 'hooks/UseErrorModal';
+import parse from 'html-react-parser';
+import { generateHyperlink } from 'pages/communication/petition/components/Post';
 import { NewsProps, DetailProps, FileProps } from '../../NewsProps';
 
 const Wrapper = styled.div`
@@ -50,6 +52,10 @@ const ContentWrapper = styled.div`
 const Content = styled.div`
   white-space: pre-wrap;
   line-height: ${({ theme }) => theme.fonts.size.xl};
+  > a {
+    color: ${({ theme }) => theme.colors.accent};
+    text-decoration: underline;
+  }
 `;
 
 const Download = styled.div`
@@ -128,7 +134,7 @@ function Detail() {
         method: 'get',
         url: `/post/news/${searchParams.get('id')}`,
       });
-      setDetail(data);
+      setDetail({ ...data, body: data.body.replaceAll('\r\n', '<br>') });
     } catch (error) {
       const e = error as any;
       setErrorMessage(e.response.data.message[0]);
@@ -183,7 +189,15 @@ function Detail() {
         )}
       </Head>
       <ContentWrapper>
-        <Content>{detail?.body}</Content>
+        <Content>
+          {detail?.body.split('<br>').map((line) => {
+            return (
+              <>
+                {parse(generateHyperlink(line))} <br />
+              </>
+            );
+          })}
+        </Content>
         {detail?.files[0] && (
           <>
             <ImageContainer>

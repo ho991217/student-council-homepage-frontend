@@ -5,6 +5,8 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'atoms/UserInfo';
+import parse from 'html-react-parser';
+import { generateHyperlink } from 'pages/communication/petition/components/Post';
 import axios from 'axios';
 import qs from 'qs';
 import { PostProps } from './PostProps';
@@ -45,7 +47,7 @@ function QnADetail() {
       },
     });
     console.log(data);
-    setPostDetail(data);
+    setPostDetail({ ...data, body: data.body.replaceAll('\r\n', '<br>') });
   };
 
   const handleAnswerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -82,7 +84,15 @@ function QnADetail() {
         <Author>{postDetail.author}</Author>
         <Date>{postDetail.createdAt.substring(0, 10)}</Date>
         <Hr />
-        <Text>{postDetail.body}</Text>
+        <Text>
+          {postDetail.body.split('<br>').map((line) => {
+            return (
+              <>
+                {parse(generateHyperlink(line))} <br />
+              </>
+            );
+          })}
+        </Text>
         <Button>
           <Link to="/voc/qna/boards">목록</Link>
         </Button>
@@ -202,6 +212,10 @@ const Text = styled.div`
   margin-bottom: 60px;
   white-space: pre-wrap;
   line-height: ${({ theme }) => theme.fonts.size.xl};
+  > a {
+    color: ${({ theme }) => theme.colors.accent};
+    text-decoration: underline;
+  }
 `;
 
 const Status = styled(Title)`
