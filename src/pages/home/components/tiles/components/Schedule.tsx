@@ -199,7 +199,7 @@ function Schedule(): JSX.Element {
         maxDetail="month"
         minDetail="month"
         onActiveStartDateChange={({ activeStartDate }) =>
-          getMonthDetails(activeStartDate)
+          getMonthDetails(activeStartDate ?? new Date())
         }
         // eslint-disable-next-line react/no-unstable-nested-components
         tileContent={({ date }) => (

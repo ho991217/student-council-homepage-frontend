@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import qs, { ParsedQs } from 'qs';
 import { AgreementDocs } from './AgreementDocs';
 import { Term } from './AgreementType';
 import TermBlock from './TermBlock';
@@ -69,7 +70,17 @@ const NextBtn = styled.button`
 function Agreements() {
   const [isAllAgreed, setIsAllAgreed] = useState(false);
   const [terms, setTerms] = useState<Term[]>(AgreementDocs);
+  const [redirectUri, setRedirectUri] = useState<ParsedQs | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    setRedirectUri(
+      qs.parse(location.search, {
+        ignoreQueryPrefix: true,
+      }),
+    );
+  }, []);
 
   useEffect(() => {
     if (isAllAgreed) {
@@ -135,7 +146,11 @@ function Agreements() {
       <NextBtn
         disabled={!isAllAgreed}
         onClick={() => {
-          navigate('/sign-up/verification');
+          navigate(
+            `/sign-up/verification${
+              redirectUri?.redirect ? `?redirect=${redirectUri.redirect}` : ''
+            }`,
+          );
         }}
       >
         동의 완료

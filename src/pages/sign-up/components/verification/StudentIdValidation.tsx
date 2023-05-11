@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import qs, { ParsedQs } from 'qs';
 import { useRecoilState } from 'recoil';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoSrc from 'static/images/logos/emb.png';
 import { StudentInfoAtom } from './StudentInfoAtom';
@@ -96,7 +97,17 @@ function StudentIdValidation() {
   const [password, setPassword] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [info, setInfo] = useRecoilState(StudentInfoAtom);
+  const [redirectUri, setRedirectUri] = useState<ParsedQs | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    setRedirectUri(
+      qs.parse(location.search, {
+        ignoreQueryPrefix: true,
+      }),
+    );
+  }, []);
 
   useEffect(() => {
     if (id.length === 8 && password.length > 0) {
@@ -121,7 +132,11 @@ function StudentIdValidation() {
     })
       .then(({ data }) => {
         setInfo(data);
-        navigate('/sign-up/info');
+        navigate(
+          `/sign-up/info${
+            redirectUri?.redirect ? `?redirect=${redirectUri.redirect}` : ''
+          }`,
+        );
       })
       .catch(({ response }) => {
         setError(response.data.message[0]);
