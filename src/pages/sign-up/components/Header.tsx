@@ -71,45 +71,70 @@ const Badge = styled.div<{ current: boolean }>`
   margin-right: 0.6rem;
 `;
 
-const stages = [
+const signUpStages = [
   { id: 0, title: '이용약관 동의' },
   { id: 1, title: '학생 인증' },
   { id: 2, title: '회원 정보 입력' },
   { id: 3, title: '가입 완료' },
 ];
 
+const passwordStages = [
+  { id: 0, title: '휴대전화 인증' },
+  { id: 1, title: '비밀번호 재설정' },
+  { id: 2, title: '재설정 완료' },
+];
+
+interface StageProps {
+  id: number;
+  title: string
+}
+
+
 function Header() {
+  let stageType: StageProps[] = []
+  let title = ""
   const [stage, setStage] = useState(0);
   const location = useLocation();
-
+  console.log(location)
+  if ( location.pathname.split("/")[1] === "sign-up") {
+    stageType = signUpStages
+    title = "회원가입"
+  } else {
+    stageType = passwordStages
+    title = "비밀번호 찾기"
+  }
   useEffect(() => {
     const path = location.pathname.split('/')[2];
-    if (path === 'agreements') {
-      setStage(0);
-    } else if (path === 'verification') {
-      setStage(1);
-    } else if (path === 'info') {
-      setStage(2);
-    } else if (path === 'success') {
-      setStage(3);
-    } else {
-      setStage(0);
-    }
+      if (path === 'agreements') {
+        setStage(0);
+      } else if (path === 'verification') {
+        if (title === "회원가입") setStage(1) 
+          else setStage(0); 
+      } else if (path === 'info') {
+        if (title === "회원가입") setStage(2) 
+          else setStage(1); 
+      } else if (path === 'success') {
+        if (title === "회원가입") setStage(3) 
+          else setStage(2); 
+      } else {
+        setStage(0);
+      }
+
   }, [location.pathname]);
 
   return (
     <Container>
       <HeaderContainer>
-        단국대학교 <em>총학생회 회원가입</em>
+        단국대학교 총학생회 <em>{title}</em>
       </HeaderContainer>
       <Ol>
-        {stages.map(({ id, title }) => (
+        { stageType.map(({ id, title }) => (
           <>
             <Li key={id} current={id === stage}>
               <Badge current={id === stage}>0{id + 1}</Badge>
               {title}
             </Li>
-            {id !== stages.length - 1 && (
+            {id !== stageType.length - 1 && (
               <Ellipsis>
                 <div />
                 <div />
