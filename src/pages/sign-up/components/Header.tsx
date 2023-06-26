@@ -95,7 +95,6 @@ function Header() {
   let title = ""
   const [stage, setStage] = useState(0);
   const location = useLocation();
-  console.log(location)
   if ( location.pathname.split("/")[1] === "sign-up") {
     stageType = signUpStages
     title = "회원가입"
