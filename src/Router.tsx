@@ -46,6 +46,8 @@ import AuthRoute from 'AuthRoute';
 import Admin from 'pages/Admin';
 import RuleEditor from 'pages/rules/components/RuleEditor';
 import RulePost from 'pages/rules/components/post/Post';
+import PasswordVerification from 'pages/password/components/PasswordVerification';
+import PasswordInfo from 'pages/password/components/PasswordInfo';
 
 function Router() {
   const { isLogin, isAdmin } = useLogin();
@@ -68,9 +70,15 @@ function Router() {
             <Route path="success" element={<Success />} />
           </Route>
         </Route>
-        <Route path="/password" element={<GlobalBanner title="비밀번호찾기" />}>
-          <Route index element={<Password />} />
-          <Route path="success" element={<PasswordSuccess />} />
+        <Route
+          path="/password"
+          element={<GlobalBanner title="비밀번호 찾기" />}
+        >
+          <Route path="" element={<Password />}>
+            <Route path="verification" element={<PasswordVerification />} />
+            <Route path="info" element={<PasswordInfo />} />
+            <Route path="success" element={<PasswordSuccess />} />
+          </Route>
         </Route>
         <Route
           path="/greeting"
