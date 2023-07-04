@@ -27,7 +27,7 @@ function Conference(): JSX.Element {
     page: 1,
     size: 6,
     totalElements: 0,
-    totalPages: 1,    
+    totalPages: 1,
   });
   // useEffect(() => {
   //   axios
@@ -51,13 +51,20 @@ function Conference(): JSX.Element {
     let { page } = qs.parse(searchParams.toString());
 
     if (!page) page = '1';
-    const { data } = await axios({
+    const config = {
       method: 'get',
       url: `/post/conference?sort=date,desc&page=${Number(page) - 1}&size=6`,
-    });
-    setBoardsCount(data.totalElements);
-    setBoard([...data.content]);
-    setPagingInfo(data);
+    };
+    await axios(config).then(({ data }) => {
+      setBoardsCount(data.totalElements);
+      setBoard([...data.content]);
+      setPagingInfo(data);
+    })
+    .catch((error)=>{
+      console.log(error)
+
+    })
+    ;
   };
 
   useEffect(() => {
