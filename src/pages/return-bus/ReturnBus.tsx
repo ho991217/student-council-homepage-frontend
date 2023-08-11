@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 import BannerImgPC from 'static/images/global-banner/returnBusBannerPC.png';
 import BannerImgMobile from 'static/images/global-banner/returnBusBannerMobile.jpg';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useLogin } from 'hooks/UseLogin';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ReactModal from 'react-modal';
+import ReturnBusTicket, { TicketInfoProps } from './ReturnBusTicket';
 
 const Header = styled.div`
   display: flex;
@@ -60,7 +62,7 @@ const Notice = styled.div`
   width: 1040px;
   height: 134px;
   background-color: #232323;
-  border-radius: 30px;
+  border-radius: 10px;
   box-sizing: border-box;
   text-align: center;
   display: flex;
@@ -97,7 +99,7 @@ const TicketInfo = styled.div`
   width: 353px;
   height: 134px;
   background-color: #232323;
-  border-radius: 30px;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -134,11 +136,12 @@ const HaveTicketTitle = styled.p`
   }
 `;
 
-const HaveTicketDesc = styled.p`
-  color: #848586;
+const HaveTicketDesc = styled.p<{ active?: boolean }>`
+  color: ${(props) => (props.active ? '#006AFF' : '#848586')};
   ${({ theme }) => theme.media.mobile} {
     font-size: 12px;
   }
+  cursor: ${(props) => (props.active ? 'pointer' : 'default')};
 `;
 
 const Board = styled.div`
@@ -365,6 +368,27 @@ const CancleTimeInput = styled(CancleTextInput)`
 const ErrorMsg = styled.p`
   color: red;
 `;
+
+
+const modalStyle = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    zIndex: '9999', 
+  },
+  content: {
+    maxWidth: '850px',
+    width: '80vw',
+    height: 'fit-content',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%,-50%)',
+    border: 'none',
+    boxShadow: '0px 4px 5px 2px rgba(0, 0, 0, 0.05)',
+    padding: '0',
+    borderRadius: 'none',
+    backgroundColor: 'transparent',
+  },
+};
 interface BusInfoProps {
   destination: string;
   id: number;
@@ -378,6 +402,14 @@ interface BusInfoProps {
 export default function ReturnBus() {
   const { getAccessToken } = useLogin();
   const [busInfo, setBusInfo] = useState<BusInfoProps[]>([]);
+  const [showTicket, setShowTicket] = useState(false);
+  const [userTicketInfo, setUserTicketInfo] = useState<TicketInfoProps>({
+    hasTicket: false,
+    destination: '',
+    id: 0,
+    label: '',
+    path: [''],
+  });
   const [animation, setAnimation] = useState<boolean>(false);
   const [userCancleTicketInfo, setUserCancleTicketInfo] = useState({
     depositor: '',
@@ -405,6 +437,10 @@ export default function ReturnBus() {
   });
   const navigate = useNavigate();
   const [modalState, setModalState] = useState(false);
+  const [modalOpen, setModalOpen] = useState({
+    content: <div />,
+    open: false,
+  });
 
   const getBusInfo = async () => {
     try {
@@ -427,6 +463,20 @@ export default function ReturnBus() {
   useEffect(() => {
     getBusInfo();
   }, []);
+
+  useEffect(() => {
+    busInfo.forEach((item) => {
+      if (item.status !== 'NONE') {
+        setUserTicketInfo({
+          hasTicket: true,
+          destination: item.destination,
+          id: item.id,
+          path: item.path,
+          label: item.label,
+        });
+      }
+    });
+  }, [busInfo]);
 
   const handleModalState = (state: boolean) => {
     setModalState((prev) => !prev);
@@ -453,13 +503,14 @@ export default function ReturnBus() {
         error: { isError: false, message: '' },
       });
       getBusInfo();
-    } catch (error: any) {
+    } catch (error) {
+      const errorResponse = (error as AxiosError<{ message: string }>).response;
       setRegisterTicketInfo((prev) => {
         return {
           ...prev,
           try: false,
           fail: true,
-          error: { isError: true, message: error.response.data.message },
+          error: { isError: true, message: errorResponse!.data?.message },
         };
       });
     }
@@ -515,6 +566,13 @@ export default function ReturnBus() {
     }
   };
 
+  const handleShowTicket = () => {
+    setModalOpen({
+      open: true,
+      content: <ReturnBusTicket ticketInfo={userTicketInfo}/>,
+    });
+  };
+
   return (
     <>
       <Header />
@@ -541,7 +599,18 @@ export default function ReturnBus() {
                 ) : (
                   <>
                     <HaveTicketTitle>승차권 유무</HaveTicketTitle>
-                    <HaveTicketDesc>승차권이 없습니다.</HaveTicketDesc>
+                    {userTicketInfo.hasTicket ? (
+                      <HaveTicketDesc
+                        active
+                        onClick={() => {
+                          handleShowTicket();
+                        }}
+                      >
+                        승차권이 있습니다.
+                      </HaveTicketDesc>
+                    ) : (
+                      <HaveTicketDesc>승차권이 없습니다.</HaveTicketDesc>
+                    )}
                   </>
                 )}
               </TicketInfoDesc>
@@ -898,6 +967,18 @@ export default function ReturnBus() {
           </ModalContainer>
         </Overlay>
       )}
+      <ReactModal
+        isOpen={modalOpen.open}
+        contentLabel="Example Modal"
+        style={modalStyle}
+        ariaHideApp={false}
+        onRequestClose={() =>
+          setModalOpen((prev) => ({ ...prev, open: false }))
+        }
+        shouldCloseOnOverlayClick
+      >
+        {modalOpen.content}
+      </ReactModal>
     </>
   );
 }
