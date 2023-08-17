@@ -48,6 +48,7 @@ import RuleEditor from 'pages/rules/components/RuleEditor';
 import RulePost from 'pages/rules/components/post/Post';
 import PasswordVerification from 'pages/password/components/PasswordVerification';
 import PasswordInfo from 'pages/password/components/PasswordInfo';
+import ReturnBus from 'pages/return-bus/ReturnBus';
 
 function Router() {
   const { isLogin, isAdmin } = useLogin();
@@ -246,6 +247,7 @@ function Router() {
             />
           </Route>
         </Route>
+        <Route path="return-bus" element={<ReturnBus/>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
