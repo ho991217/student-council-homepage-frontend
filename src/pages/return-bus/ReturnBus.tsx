@@ -179,7 +179,7 @@ const BoardRow = styled.div`
   font-size: 18px;
   margin-bottom: 14px;
   ${({ theme }) => theme.media.mobile} {
-    font-size: 0.5vw;
+    font-size: 12px;
     padding: 10px;
   }
 `;
@@ -188,11 +188,15 @@ const BoardItem = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
-const RegisterButton = styled.button<{ status?: string }>`
+const RegisterButton = styled.button<{ active: boolean }>`
   border-radius: 17px;
-  background: ${(props) => (props.status === 'NONE' ? '#848586' : '#0025ff')};
+  background: ${(props) => (props.active ? '#0025ff' : '#848586')};
+  pointer-events: ${({ active }) => (active ? 'default' : 'none')};
   color: #fff;
   width: 80px;
   height: 34px;
@@ -209,7 +213,7 @@ const RegisterButton = styled.button<{ status?: string }>`
 
 const CancleButton = styled(RegisterButton)<{ active: boolean }>`
   border-radius: 17px;
-  background: #848586;
+  background: ${(props) => (props.active ? '#0025ff' : '#848586')};
   color: #fff;
   width: 80px;
   height: 34px;
@@ -369,11 +373,10 @@ const ErrorMsg = styled.p`
   color: red;
 `;
 
-
 const modalStyle = {
   overlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    zIndex: '9999', 
+    zIndex: '9999',
   },
   content: {
     maxWidth: '850px',
@@ -401,6 +404,7 @@ interface BusInfoProps {
 
 export default function ReturnBus() {
   const { getAccessToken } = useLogin();
+  const [registerStatus, setRegisterStatus] = useState('NONE');
   const [busInfo, setBusInfo] = useState<BusInfoProps[]>([]);
   const [showTicket, setShowTicket] = useState(false);
   const [userTicketInfo, setUserTicketInfo] = useState<TicketInfoProps>({
@@ -451,6 +455,7 @@ export default function ReturnBus() {
           Authorization: `Bearer ${getAccessToken()}`,
         },
       });
+      console.log(data);
       setBusInfo(data);
     } catch (error) {
       console.log(error);
@@ -467,6 +472,10 @@ export default function ReturnBus() {
   useEffect(() => {
     busInfo.forEach((item) => {
       if (item.status !== 'NONE') {
+        setRegisterStatus(item.status);
+      }
+
+      if (item.status === 'ISSUED' || item.status === 'NEED_CANCEL_APPROVAL') {
         setUserTicketInfo({
           hasTicket: true,
           destination: item.destination,
@@ -569,9 +578,14 @@ export default function ReturnBus() {
   const handleShowTicket = () => {
     setModalOpen({
       open: true,
-      content: <ReturnBusTicket ticketInfo={userTicketInfo}/>,
+      content: <ReturnBusTicket ticketInfo={userTicketInfo} />,
     });
   };
+
+  useEffect(() => {
+    console.log(registerStatus)
+    console.log(registerStatus === "NEED_APPROVAL" || registerStatus === "NONE");
+  }, [registerStatus]);
 
   return (
     <>
@@ -627,7 +641,7 @@ export default function ReturnBus() {
             {busInfo.map((item) => {
               return (
                 <BoardRow key={item.id}>
-                  <BoardItem>{item.id}호차</BoardItem>
+                  <BoardItem>{item.label}</BoardItem>
                   <BoardItem>
                     {item.path[0]}
                     {item.path.slice(1).map((pathItem) => {
@@ -640,11 +654,18 @@ export default function ReturnBus() {
                   </BoardItem>
                   <BoardItem>
                     {item.status === 'NEED_APPROVAL' ||
-                    item.status === 'NEED_CANCEL_APPROVAL' ? (
+                    item.status === 'NEED_CANCEL_APPROVAL' ||
+                    item.status === 'ISSUED' ? (
                       <CancleButton
-                        active={item.status === 'NEED_APPROVAL'}
+                        active={
+                          item.status === 'NEED_APPROVAL' ||
+                          item.status === 'ISSUED'
+                        }
                         onClick={() => {
-                          if (item.status === 'NEED_APPROVAL') {
+                          if (
+                            item.status === 'NEED_APPROVAL' ||
+                            item.status === 'ISSUED'
+                          ) {
                             handleModalState(true);
                             setCancleTicketInfo((prev) => {
                               return { ...prev, try: true, busId: item.id };
@@ -664,6 +685,9 @@ export default function ReturnBus() {
                       </CancleButton>
                     ) : (
                       <RegisterButton
+                        active={
+                          registerStatus === "NONE"
+                        }
                         onClick={() => {
                           handleModalState(true);
                           if (item.remainingSeats !== 0) {

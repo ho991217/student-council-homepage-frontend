@@ -1,3 +1,6 @@
+import axios from 'axios';
+import { useLogin } from 'hooks/UseLogin';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const TicketContainer = styled.div`
@@ -16,7 +19,18 @@ const TicketNotice = styled.div`
   padding: 2px;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  display: flex;
+`;
+const TicketNoticeText = styled.p`
+  animation: moving 60s infinite linear;
+  position: relative;
+  margin-right: 3px;
+
+  @keyframes moving {
+    from   { transform: translateX(0%); }
+  to { transform: translateX(-50%); }
+  }
+
 `;
 const TicketHeader = styled.div`
   width: 100%;
@@ -45,11 +59,11 @@ const TicketPlace = styled.span`
     width: 100px;
   }
 `;
-const TicketPathGrid = styled.div<{row: number}>`
+const TicketPathGrid = styled.div<{ row: number }>`
   display: grid;
   justify-content: center;
   text-align: center;
-  grid-template-columns: repeat(${props => props.row}, 1fr);
+  grid-template-columns: repeat(${(props) => props.row}, 1fr);
   padding: 40px 0 30px 0;
   row-gap: 10px;
   width: 400px;
@@ -74,28 +88,78 @@ const TicketDescTitle = styled.h1`
 
 const TicketFooter = styled(TicketNotice)`
   text-align: center;
+  display: flex;
+  justify-content: center;
 `;
 
 export interface TicketInfoProps {
-    hasTicket: boolean;
-    destination: string;
-    id: number;
-    label: string;
-    path: string[];
+  hasTicket: boolean;
+  destination: string;
+  id: number;
+  label: string;
+  path: string[];
 }
 
-export default function ReturnBusTicket({ticketInfo}: {ticketInfo: TicketInfoProps}) {
+interface UserProps {
+  studentId: string;
+  username: string;
+  nickname: string;
+  yearOfAdmission: string;
+  major: string;
+  department: string;
+  phoneNumber: string;
+  writePostCount: number;
+  commentedPostCount: number;
+  likedPostCount: number;
+  admin: boolean;
+}
+
+export default function ReturnBusTicket({
+  ticketInfo,
+}: {
+  ticketInfo: TicketInfoProps;
+}) {
+  const { getAccessToken } = useLogin();
+  const [userInfo, setUserInfo] = useState<UserProps>();
+
+  const getUserInfo = async () => {
+    try {
+      const { data } = await axios({
+        method: 'get',
+        url: `/user`,
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      });
+      setUserInfo(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
   return (
     <TicketContainer>
       <TicketNotice>
-        위변조 방지 중입니다. 보안 정책에 따라 화면을 캡쳐하실 수 없습니다.
-        위변조 방지 중입니다. 보안 정책에 따라 화면을 캡쳐하실 수 없습니다.
+        <TicketNoticeText>
+          위변조 방지 중입니다. 보안 정책에 따라 화면을 캡쳐하실 수 없습니다.
+          위변조 방지 중입니다. 보안 정책에 따라 화면을 캡쳐하실 수 없습니다.
+          위변조 방지 중입니다. 보안 정책에 따라 화면을 캡쳐하실 수 없습니다.
+          위변조 방지 중입니다. 보안 정책에 따라 화면을 캡쳐하실 수 없습니다.
+          위변조 방지 중입니다. 보안 정책에 따라 화면을 캡쳐하실 수 없습니다.
+        </TicketNoticeText>
       </TicketNotice>
       <TicketHeader>
         <TicketTitle>TICKET</TicketTitle>
         <TicketRow>
           <TicketBusNumber>{ticketInfo.label}호선</TicketBusNumber>
-          <TicketBusNumber>{ticketInfo.id}호차</TicketBusNumber>
+          <TicketBusNumber>{`${userInfo?.username} (${userInfo?.studentId.slice(
+            0,
+            4,
+          )}****)`}</TicketBusNumber>
         </TicketRow>
         <TicketRow>
           <TicketPlace>{ticketInfo.path[0]}</TicketPlace>
@@ -110,7 +174,9 @@ export default function ReturnBusTicket({ticketInfo}: {ticketInfo: TicketInfoPro
             <circle cx="12" cy="2" r="2" fill="white" />
             <circle cx="22" cy="2" r="2" fill="white" />
           </svg>
-          <TicketPlace>{ticketInfo.path[ticketInfo.path.length - 1]}</TicketPlace>
+          <TicketPlace>
+            {ticketInfo.path[ticketInfo.path.length - 1]}
+          </TicketPlace>
         </TicketRow>
       </TicketHeader>
       <TicketPathGrid row={ticketInfo.path ? ticketInfo.path.length : 0}>
@@ -120,15 +186,13 @@ export default function ReturnBusTicket({ticketInfo}: {ticketInfo: TicketInfoPro
             if (index !== 0 && index !== ticketInfo.path.length - 1) {
               return <strong>경유</strong>;
             }
-          } 
-          return null
-        }
-        )}
+          }
+          return null;
+        })}
         <strong>도착</strong>
         {ticketInfo.path.map((item) => {
-              return <span key={item}>{item}</span>;
-        }
-        )}
+          return <span key={item}>{item}</span>;
+        })}
       </TicketPathGrid>
       <TicketDesc>
         <TicketDescTitle>주의사항</TicketDescTitle>
