@@ -686,7 +686,7 @@ export default function ReturnBus() {
                     ) : (
                       <RegisterButton
                         active={
-                          registerStatus === "NONE"
+                          registerStatus === "NONE" || registerStatus === "CANCELLED"
                         }
                         onClick={() => {
                           handleModalState(true);
