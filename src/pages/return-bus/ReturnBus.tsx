@@ -246,7 +246,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 50px 20px;
+  padding: 50px 30px;
   width: 50%;
   max-width: 1200px;
   gap: 15px;
@@ -268,7 +268,6 @@ const ModalNoticeTitle = styled.h3`
 `;
 const ModalNoticeContent = styled.div`
   list-style: outside;
-  text-align: center;
   ${({ theme }) => theme.media.mobile} {
     font-size: 12px;
   }
@@ -873,7 +872,7 @@ export default function ReturnBus() {
                     ㆍ x월 x일(신청 마감일) 이후 취소자는 유고결석 인정기준에
                     준하는 사유가 없을 시 보증금을 환급받으실 수 없습니다.
                   </p>
-                  
+                  <br/>
                   <p>[단국대학교 총학생회 홈페이지] 개인정보 제 3자 제공 동의서</p>
                   <p>[단국대학교 총학생회 홈페이지] 제공받는 자: 단국대학교 학생팀 학생처</p>
                   <p>[단국대학교 총학생회 홈페이지] 이름, 학번, 학과, 휴대전화번호 제 3자 제공 동의</p>
@@ -881,6 +880,7 @@ export default function ReturnBus() {
                   <p>[단국대학교 총학생회 홈페이지] 관련법규: 개인정보 보호법 제 15조, 제 22조, 제 24조</p>
                   <p>[단국대학교 총학생회 홈페이지] 활용기간 및 보유기간: 귀향버스 운행기간(제출일로부터 1개월 보관)</p>
                   <p>[단국대학교 총학생회 홈페이지] 제 3자 제공의 목적: 탑승자 여행자보험 가입을 위한 단국대학교 학생팀에 제공</p>     
+                  <br/>
                   
                   <p>[단국대학교] 개인정보 수집 및 활용 동의서(주체: 단국대학교)</p>
                   <p>[단국대학교] 이름, 주민번호 수집 및 활용 동의</p>
