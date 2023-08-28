@@ -159,6 +159,8 @@ const BoardHeader = styled.div`
   ${({ theme }) => theme.media.mobile} {
     font-size: 11px;
   }
+  padding: 0 10px;
+  box-sizing: border-box;
 `;
 
 const BoardItemTitle = styled.span`
