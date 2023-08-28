@@ -157,8 +157,10 @@ const BoardHeader = styled.div`
   display: grid;
   grid-template-columns: 1fr 3fr 1fr 1fr 1fr;
   ${({ theme }) => theme.media.mobile} {
-    font-size: 0.5vw;
+    font-size: 11px;
   }
+  padding: 0 10px;
+  box-sizing: border-box;
 `;
 
 const BoardItemTitle = styled.span`
@@ -206,7 +208,7 @@ const RegisterButton = styled.button<{ active: boolean }>`
     width: fit-content;
     height: fit-content;
     padding: 4px 10px;
-    font-size: 0.5vw;
+    font-size: 11px;
     border-radius: 10px;
   }
 `;
@@ -223,7 +225,7 @@ const CancleButton = styled(RegisterButton)<{ active: boolean }>`
     width: fit-content;
     height: fit-content;
     padding: 4px 10px;
-    font-size: 0.5vw;
+    font-size: 11px;
     border-radius: 10px;
   }
 `;
@@ -250,7 +252,6 @@ const ModalContainer = styled.div`
   width: 50%;
   max-width: 1200px;
   gap: 15px;
-  height: fit-content;
   border: none;
   box-shadow: 0px 4px 5px 2px rgba(0, 0, 0, 0.05);
   border-radius: 15px;
@@ -267,6 +268,8 @@ const ModalNoticeTitle = styled.h3`
   }
 `;
 const ModalNoticeContent = styled.div`
+  overflow-y: auto;
+  
   list-style: outside;
   ${({ theme }) => theme.media.mobile} {
     font-size: 12px;
@@ -278,6 +281,9 @@ const ModalNoticeContent = styled.div`
     line-height: 1.5;
   }
   margin-bottom: 20px;
+  ${({theme})=>theme.media.mobile} {
+    max-height: 200px;
+  }
 `;
 const ModalNoticeRadioLabel = styled.label<{ animation: boolean }>`
   display: flex;
@@ -657,12 +663,10 @@ export default function ReturnBus() {
                     item.status === 'ISSUED' ? (
                       <CancleButton
                         active={
-                          item.status === 'NEED_APPROVAL' ||
                           item.status === 'ISSUED'
                         }
                         onClick={() => {
                           if (
-                            item.status === 'NEED_APPROVAL' ||
                             item.status === 'ISSUED'
                           ) {
                             handleModalState(true);
@@ -678,9 +682,15 @@ export default function ReturnBus() {
                           setError(false);
                         }}
                       >
-                        {item.status === 'NEED_CANCEL_APPROVAL'
-                          ? '취소대기'
-                          : '취소'}
+                        {
+                          (function(){
+                            let text = ""
+                            if (item.status === 'NEED_CANCEL_APPROVAL') text = "취소 대기"
+                            else if (item.status === 'NEED_APPROVAL') text = "처리 중"
+                            else text = "취소"
+                            return text
+                          })()
+                          }
                       </CancleButton>
                     ) : (
                       <RegisterButton
@@ -881,7 +891,6 @@ export default function ReturnBus() {
                   <p>[단국대학교 총학생회 홈페이지] 활용기간 및 보유기간: 귀향버스 운행기간(제출일로부터 1개월 보관)</p>
                   <p>[단국대학교 총학생회 홈페이지] 제 3자 제공의 목적: 탑승자 여행자보험 가입을 위한 단국대학교 학생팀에 제공</p>     
                   <br/>
-                  
                   <p>[단국대학교] 개인정보 수집 및 활용 동의서(주체: 단국대학교)</p>
                   <p>[단국대학교] 이름, 주민번호 수집 및 활용 동의</p>
                   <p>[단국대학교] 관리부서: 단국대학교 총학생회, 단국대학교 학생팀 학생처</p>

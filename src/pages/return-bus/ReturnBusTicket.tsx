@@ -155,7 +155,7 @@ export default function ReturnBusTicket({
       <TicketHeader>
         <TicketTitle>TICKET</TicketTitle>
         <TicketRow>
-          <TicketBusNumber>{ticketInfo.label}호선</TicketBusNumber>
+          <TicketBusNumber>{ticketInfo.label}</TicketBusNumber>
           <TicketBusNumber>{`${userInfo?.username} (${userInfo?.studentId.slice(
             0,
             4,
