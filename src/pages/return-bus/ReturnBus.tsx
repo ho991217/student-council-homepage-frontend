@@ -780,7 +780,7 @@ export default function ReturnBus() {
                     </CancleTimeFlexBox>
                     <CancleTextInput
                       type="number"
-                      placeholder="입금 받을 계좌 번호 입력"
+                      placeholder="입금 받을 계좌 번호 입력("-", 또는 은행명 빼고 입력(ex:12345678))"
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setUserCancleTicketInfo((prev) => {
                           return {
