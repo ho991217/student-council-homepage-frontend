@@ -600,7 +600,7 @@ export default function ReturnBus() {
           <InfoContainer>
             <Notice>
               <NoticeTitle>
-                모든 버스는 단국대학교 곰상에서 2023/12/32 12:00 에 출발합니다.
+                모든 버스는 단국대학교 곰상에서 2023/09/27 10:00 에 출발합니다.
               </NoticeTitle>
               <NoticeDesc>
                 <p>· 계좌에 보증급 입금이 완료되어야 승차권 확정이 됩니다.</p>
@@ -780,7 +780,7 @@ export default function ReturnBus() {
                     </CancleTimeFlexBox>
                     <CancleTextInput
                       type="number"
-                      placeholder="입금 받을 계좌 번호 입력("-", 또는 은행명 빼고 입력(ex:12345678))"
+                      placeholder="입금 받을 계좌 번호 입력"
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setUserCancleTicketInfo((prev) => {
                           return {
@@ -791,6 +791,9 @@ export default function ReturnBus() {
                       }}
                     />
                   </CancleInfoForm>
+                  <p>
+                    계좌번호 입력시 주의사항: 숫자만 입력해주세요.("-", 또는 은행명 빼고 입력(ex:12345678))
+                  </p>
                 </ModalNoticeContent>
                 <ModalNoticeRadioLabel animation={animation}>
                   <ModalNoticeRadioButton
