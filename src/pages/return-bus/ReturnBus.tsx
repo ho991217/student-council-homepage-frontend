@@ -761,7 +761,7 @@ export default function ReturnBus() {
                     />
                     <CancleTextInput
                       type="text"
-                      placeholder="은행명 입력"
+                      placeholder="입금 받을 은행명 입력"
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setUserCancleTicketInfo((prev) => {
                           return { ...prev, bankName: e.target.value };
@@ -791,6 +791,7 @@ export default function ReturnBus() {
                       }}
                     />
                   </CancleInfoForm>
+                  <br/>
                   <p>
                     계좌번호 입력시 주의사항: 숫자만 입력해주세요.(&#45;, 또는 은행명 빼고 입력(ex:12345678)
                   </p>
