@@ -792,7 +792,7 @@ export default function ReturnBus() {
                     />
                   </CancleInfoForm>
                   <p>
-                    계좌번호 입력시 주의사항: 숫자만 입력해주세요.("-", 또는 은행명 빼고 입력(ex:12345678))
+                    계좌번호 입력시 주의사항: 숫자만 입력해주세요.(&#45;, 또는 은행명 빼고 입력(ex:12345678)
                   </p>
                 </ModalNoticeContent>
                 <ModalNoticeRadioLabel animation={animation}>
