@@ -793,7 +793,7 @@ export default function ReturnBus() {
                   </CancleInfoForm>
                   <br/>
                   <p>
-                    계좌번호 입력시 주의사항: 숫자만 입력해주세요.(&#45;, 또는 은행명 빼고 입력(ex:12345678)
+                    계좌번호 입력시 주의사항: <strong>숫자만 입력해주세요.</strong>(&#45;, 또는 은행명 빼고 입력(ex:12345678)
                   </p>
                 </ModalNoticeContent>
                 <ModalNoticeRadioLabel animation={animation}>
@@ -879,11 +879,11 @@ export default function ReturnBus() {
                     있습니다.
                   </p>
                   <p>
-                    ㆍ x월xx일 xx시 이후로는 취소가 불가능합니다. 일정
+                    ㆍ 9월20일 12:00시 이후로는 취소가 불가능합니다. 일정
                     참고해주시기 바랍니다.
                   </p>
                   <p>
-                    ㆍ x월 x일(신청 마감일) 이후 취소자는 유고결석 인정기준에
+                    ㆍ 9월 20일(신청 마감일) 이후 취소자는 유고결석 인정기준에
                     준하는 사유가 없을 시 보증금을 환급받으실 수 없습니다.
                   </p>
                   <br/>
