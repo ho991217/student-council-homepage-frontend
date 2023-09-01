@@ -175,24 +175,21 @@ export default function ReturnBusTicket({
             <circle cx="22" cy="2" r="2" fill="white" />
           </svg>
           <TicketPlace>
-            {ticketInfo.path[ticketInfo.path.length - 1]}
+            {ticketInfo.destination}
           </TicketPlace>
         </TicketRow>
       </TicketHeader>
       <TicketPathGrid row={ticketInfo.path ? ticketInfo.path.length : 0}>
         <strong>출발</strong>
-        {ticketInfo.path.map((_, index) => {
-          if (ticketInfo.path.length > 2) {
-            if (index !== 0 && index !== ticketInfo.path.length - 1) {
-              return <strong>경유</strong>;
-            }
+        <span>곰상</span>
+        {ticketInfo.path.map((item, index) => {
+          if (index !== 0) {
+            return <strong key={index}>경유</strong>;
           }
           return null;
         })}
         <strong>도착</strong>
-        {ticketInfo.path.map((item) => {
-          return <span key={item}>{item}</span>;
-        })}
+        <span>{ticketInfo.destination}</span>
       </TicketPathGrid>
       <TicketDesc>
         <TicketDescTitle>주의사항</TicketDescTitle>
