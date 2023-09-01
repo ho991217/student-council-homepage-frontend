@@ -181,12 +181,15 @@ export default function ReturnBusTicket({
       </TicketHeader>
       <TicketPathGrid row={ticketInfo.path ? ticketInfo.path.length : 0}>
         <strong>출발</strong>
-        <span>곰상</span>
         {ticketInfo.path.map((_, index) => {
-          return <strong >경유</strong>;
+          return <strong>경유</strong>;
         })}
         <strong>도착</strong>
-        <span>{ticketInfo.destination}</span>
+        <span key = "bearbuild">곰상</span>
+        {ticketInfo.path.map((item) => {
+          return <span key={item}>{item}</span>;
+        })}
+        <span key={ticketInfo.destination}>ticketInfo.destination</span>
       </TicketPathGrid>
       <TicketDesc>
         <TicketDescTitle>주의사항</TicketDescTitle>
