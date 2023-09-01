@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
 import styled from 'styled-components';
 
-const Container = styled.div<{ type: MessageProps['type'] }>`
+const Container = styled.div<{ type: MessageProps['type'], margin: MessageProps['margin'] }>`
   color: ${({ type }) => (type === 'error' ? '#ff6565' : '#4a4a4a')};
   width: 100%;
-  margin-top: 1rem;
+  margin-top: ${({ margin }) => margin ? "1rem" : "-1.2rem" };
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -29,11 +29,16 @@ interface MessageProps {
   type: 'error' | 'notice';
   message: ReactNode;
   open: boolean;
+  margin?: boolean;
 }
 
-function Message({ type, message, open }: MessageProps) {
+Message.defaultProps = {
+  margin: true
+}
+
+function Message({ type, message, open, margin }: MessageProps) {
   return open ? (
-    <Container type={type}>
+    <Container type={type} margin={margin}>
       <ExpIcon>!</ExpIcon>
       {message}
     </Container>

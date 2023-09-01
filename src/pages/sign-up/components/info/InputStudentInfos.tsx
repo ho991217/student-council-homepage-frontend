@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { useNavigate } from 'react-router-dom';
+import qs, { ParsedQs } from 'qs';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import { StudentInfoAtom } from '../verification/StudentInfoAtom';
@@ -124,6 +125,16 @@ function InputStudentInfos() {
   const [isAllValid, setIsAllValid] = useState(false);
   const [info] = useRecoilState(StudentInfoAtom);
   const navigate = useNavigate();
+  const [redirectUri, setRedirectUri] = useState<ParsedQs | null>(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    setRedirectUri(
+      qs.parse(location.search, {
+        ignoreQueryPrefix: true,
+      }),
+    );
+  }, []);
 
   const onTelNumberAuth = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -169,7 +180,8 @@ function InputStudentInfos() {
           password: password.content,
         },
       });
-      navigate('/sign-up/success');
+      if (redirectUri?.redirect) navigate(redirectUri.redirect as string);
+      else navigate('/sign-up/success');
     } catch (error) {
       // 모달 추가
       alert(error);

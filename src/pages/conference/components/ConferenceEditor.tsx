@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -16,24 +16,22 @@ function ConferenceEditor() {
   const [title, setTitle] = useState<string>('');
   const [files, setFiles] = useState<File[]>([]); // [File
   const [form, setForm] = useState<FormData>();
+  const formData = new FormData();
   const navigate = useNavigate();
   const { renderModal, setErrorMessage, setErrorTitle, open } = useErrorModal();
 
-  const onRoundHandler = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setRound(value);
-  };
-
-  const onTitleHandler = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setTitle(value);
-  };
-
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    formData.append('title', title);
+    formData.append('body', 'body');
+    formData.append('round', round);
+    formData.append('date', date.toISOString().split('T')[0]);
+    files.forEach((item) => {
+      formData.append('files', item);
+    });
+
+    setForm(formData);
+    console.log(formData?.get('title'));
+
     e.preventDefault();
     setErrorTitle('회의록 등록 실패');
     if (round === '') {
@@ -45,14 +43,14 @@ function ConferenceEditor() {
     } else if (date === undefined) {
       setErrorMessage('날짜를 입력해주세요');
       open();
-    } else if (form === undefined) {
+    } else if (files.length === 0) {
       setErrorMessage('파일을 선택해주세요');
       open();
     } else {
       const config = {
         method: 'post',
-        url: '/conference',
-        data: form,
+        url: '/post/conference',
+        data: formData,
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -60,12 +58,7 @@ function ConferenceEditor() {
 
       axios(config)
         .then(({ data }) => {
-          if (data.successful) {
-            navigate('/conference');
-          } else {
-            setErrorMessage(data.message);
-            open();
-          }
+          navigate('/conference');
         })
         .catch(({ response }) => {
           setErrorMessage(response.data.message);
@@ -82,14 +75,18 @@ function ConferenceEditor() {
             <NumBoxS
               label="회차"
               value={round}
-              onChange={onRoundHandler}
+              onChange={(e) => {
+                setRound(e.currentTarget.value);
+              }}
               placeholder="회차를 입력해주세요."
             />
             <DatePickerM label="개최 일자" date={date} onChange={setDate} />
             <TextBoxS
               label="회의록명"
               value={title}
-              onChange={onTitleHandler}
+              onChange={(e) => {
+                setTitle(e.currentTarget.value);
+              }}
               placeholder="회의록명을 입력해주세요."
             />
             <FileBoxS setter={setFiles} />

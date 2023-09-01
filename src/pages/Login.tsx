@@ -349,7 +349,7 @@ function Login() {
             <Extras>
               <SignUpButton to="/sign-up/agreements">회원가입</SignUpButton>
               <Vseparator />
-              <FindPasswordButton to="/password">
+              <FindPasswordButton to="/password/verification">
                 비밀번호 찾기
               </FindPasswordButton>
             </Extras>
