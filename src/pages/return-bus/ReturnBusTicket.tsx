@@ -162,7 +162,7 @@ export default function ReturnBusTicket({
           )}****)`}</TicketBusNumber>
         </TicketRow>
         <TicketRow>
-          <TicketPlace>곰상</TicketPlace>
+          <TicketPlace>단국대</TicketPlace>
           <svg
             width="24"
             height="4"
@@ -188,7 +188,7 @@ export default function ReturnBusTicket({
           return null;
         })}
         <strong>도착</strong>
-        <span key='departure'>곰상</span>
+        <span key='departure'>단국대</span>
         {ticketInfo.path.map((item) => {
           return <span key={item}>{item}</span>;
         })}
